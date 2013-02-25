@@ -1,5 +1,5 @@
 //
-//  NNAppDelegate.h
+//  despatch.m
 //  Switch
 //
 //  Created by Scott Perry on 02/24/13.
@@ -12,10 +12,42 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import <Cocoa/Cocoa.h>
+#include <assert.h>
+#include <dispatch/dispatch.h>
 
-@interface NNAppDelegate : NSObject <NSApplicationDelegate>
+dispatch_queue_t despatch_lock_create(const char *label)
+{
+    dispatch_queue_t result = dispatch_queue_create(label, DISPATCH_QUEUE_SERIAL);
+    dispatch_queue_set_specific(result, (__bridge const void *)(result), (__bridge void *)(result), NULL);
+    return result;
+}
 
-@property (assign) IBOutlet NSWindow *window;
+inline static void despatch_assert_is_lock(dispatch_queue_t lock)
+{
+    assert(dispatch_queue_get_specific(lock, (__bridge const void *)(lock)));
+}
 
-@end
+void despatch_lock_assert(dispatch_queue_t lock)
+{
+    despatch_assert_is_lock(lock);
+    assert(dispatch_get_specific((__bridge const void *)(lock)));
+}
+
+void despatch_lock_assert_not(dispatch_queue_t lock)
+{
+    despatch_assert_is_lock(lock);
+    assert(!dispatch_get_specific((__bridge const void *)(lock)));
+}
+
+//void despatch_lock_async(dispatch_queue_t lock, dispatch_block_t block)
+//{
+//    despatch_assert_is_lock(lock);
+//    dispatch_async(lock, block);
+//}
+//
+//void despatch_lock_sync(dispatch_queue_t lock, dispatch_block_t block)
+//{
+//    despatch_assert_is_lock(lock);
+//    // TODO: stack tracking
+//    dispatch_sync(lock, block);
+//}
