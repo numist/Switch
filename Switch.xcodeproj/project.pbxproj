@@ -140,12 +140,10 @@
 		BCA734E616DAC53F00CD4C74 /* Switch */ = {
 			isa = PBXGroup;
 			children = (
+				BCA7353516DB2E2500CD4C74 /* Controller */,
 				BCA7353016DB2BDC00CD4C74 /* Logic */,
 				BCA7351416DAC54C00CD4C74 /* Model */,
 				BCA7352C16DB237E00CD4C74 /* View */,
-				BCA734F216DAC53F00CD4C74 /* NNAppDelegate.h */,
-				BCA734F316DAC53F00CD4C74 /* NNAppDelegate.m */,
-				BCA734F516DAC53F00CD4C74 /* MainMenu.xib */,
 				BCA734E716DAC53F00CD4C74 /* Supporting Files */,
 			);
 			path = Switch;
@@ -154,8 +152,6 @@
 		BCA734E716DAC53F00CD4C74 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				BCA7352916DB1E9C00CD4C74 /* despatch.h */,
-				BCA7352A16DB1E9C00CD4C74 /* despatch.m */,
 				BCA734E816DAC53F00CD4C74 /* Switch-Info.plist */,
 				BCA734E916DAC53F00CD4C74 /* InfoPlist.strings */,
 				BCA734EC16DAC53F00CD4C74 /* main.m */,
@@ -199,6 +195,7 @@
 		BCA7352C16DB237E00CD4C74 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				BCA734F516DAC53F00CD4C74 /* MainMenu.xib */,
 				BCA7352D16DB239900CD4C74 /* NNWindowThumbnailView.h */,
 				BCA7352E16DB239900CD4C74 /* NNWindowThumbnailView.m */,
 			);
@@ -208,6 +205,10 @@
 		BCA7353016DB2BDC00CD4C74 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				BCA7352916DB1E9C00CD4C74 /* despatch.h */,
+				BCA7352A16DB1E9C00CD4C74 /* despatch.m */,
+				BCA734F216DAC53F00CD4C74 /* NNAppDelegate.h */,
+				BCA734F316DAC53F00CD4C74 /* NNAppDelegate.m */,
 				BCA7353116DB2C0100CD4C74 /* NNHotKeyManager.h */,
 				BCA7353216DB2C0100CD4C74 /* NNHotKeyManager.m */,
 				BCA7352016DAC6A900CD4C74 /* NNWindowWorker.h */,
@@ -219,6 +220,13 @@
 				BCA7351616DAC59000CD4C74 /* NNWindowStore.m */,
 			);
 			name = Logic;
+			sourceTree = "<group>";
+		};
+		BCA7353516DB2E2500CD4C74 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -529,6 +537,7 @@
 				BCA7351016DAC54000CD4C74 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		BCA7351116DAC54000CD4C74 /* Build configuration list for PBXNativeTarget "SwitchTests" */ = {
 			isa = XCConfigurationList;
@@ -537,6 +546,7 @@
 				BCA7351316DAC54000CD4C74 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
