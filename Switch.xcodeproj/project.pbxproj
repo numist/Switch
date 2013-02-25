@@ -24,6 +24,7 @@
 		BCA7352516DAC93C00CD4C74 /* NNApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7352416DAC93C00CD4C74 /* NNApplication.m */; };
 		BCA7352B16DB1E9C00CD4C74 /* despatch.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7352A16DB1E9C00CD4C74 /* despatch.m */; };
 		BCA7352F16DB239900CD4C74 /* NNWindowThumbnailView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7352E16DB239900CD4C74 /* NNWindowThumbnailView.m */; };
+		BCA7353316DB2C0100CD4C74 /* NNHotKeyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7353216DB2C0100CD4C74 /* NNHotKeyManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +73,8 @@
 		BCA7352A16DB1E9C00CD4C74 /* despatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = despatch.m; sourceTree = "<group>"; };
 		BCA7352D16DB239900CD4C74 /* NNWindowThumbnailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNWindowThumbnailView.h; sourceTree = "<group>"; };
 		BCA7352E16DB239900CD4C74 /* NNWindowThumbnailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNWindowThumbnailView.m; sourceTree = "<group>"; };
+		BCA7353116DB2C0100CD4C74 /* NNHotKeyManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHotKeyManager.h; sourceTree = "<group>"; };
+		BCA7353216DB2C0100CD4C74 /* NNHotKeyManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHotKeyManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +140,7 @@
 		BCA734E616DAC53F00CD4C74 /* Switch */ = {
 			isa = PBXGroup;
 			children = (
+				BCA7353016DB2BDC00CD4C74 /* Logic */,
 				BCA7351416DAC54C00CD4C74 /* Model */,
 				BCA7352C16DB237E00CD4C74 /* View */,
 				BCA734F216DAC53F00CD4C74 /* NNAppDelegate.h */,
@@ -188,13 +192,6 @@
 				BCA7351C16DAC61F00CD4C74 /* NNWindowData.h */,
 				BCA7351F16DAC62C00CD4C74 /* NNWindowData+Private.h */,
 				BCA7351D16DAC61F00CD4C74 /* NNWindowData.m */,
-				BCA7352016DAC6A900CD4C74 /* NNWindowWorker.h */,
-				BCA7352116DAC6A900CD4C74 /* NNWindowWorker.m */,
-				BCA7351916DAC5E200CD4C74 /* NNWindowListWorker.h */,
-				BCA7351A16DAC5E200CD4C74 /* NNWindowListWorker.m */,
-				BCA7351516DAC59000CD4C74 /* NNWindowStore.h */,
-				BCA7351816DAC5BB00CD4C74 /* NNWindowStore+Private.h */,
-				BCA7351616DAC59000CD4C74 /* NNWindowStore.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -206,6 +203,22 @@
 				BCA7352E16DB239900CD4C74 /* NNWindowThumbnailView.m */,
 			);
 			name = View;
+			sourceTree = "<group>";
+		};
+		BCA7353016DB2BDC00CD4C74 /* Logic */ = {
+			isa = PBXGroup;
+			children = (
+				BCA7353116DB2C0100CD4C74 /* NNHotKeyManager.h */,
+				BCA7353216DB2C0100CD4C74 /* NNHotKeyManager.m */,
+				BCA7352016DAC6A900CD4C74 /* NNWindowWorker.h */,
+				BCA7352116DAC6A900CD4C74 /* NNWindowWorker.m */,
+				BCA7351916DAC5E200CD4C74 /* NNWindowListWorker.h */,
+				BCA7351A16DAC5E200CD4C74 /* NNWindowListWorker.m */,
+				BCA7351516DAC59000CD4C74 /* NNWindowStore.h */,
+				BCA7351816DAC5BB00CD4C74 /* NNWindowStore+Private.h */,
+				BCA7351616DAC59000CD4C74 /* NNWindowStore.m */,
+			);
+			name = Logic;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -326,6 +339,7 @@
 				BCA7352516DAC93C00CD4C74 /* NNApplication.m in Sources */,
 				BCA7352B16DB1E9C00CD4C74 /* despatch.m in Sources */,
 				BCA7352F16DB239900CD4C74 /* NNWindowThumbnailView.m in Sources */,
+				BCA7353316DB2C0100CD4C74 /* NNHotKeyManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
