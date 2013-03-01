@@ -14,8 +14,7 @@
 
 #import "NNWindowThumbnailView.h"
 
-#import "NNApplication.h"
-#import "NNWindowData.h"
+#import "constants.h"
 
 @implementation NNWindowThumbnailView
 
@@ -36,7 +35,7 @@
     
     // Draw the window
     {
-        NSImage *windowImage = [self.windowData image];
+        NSImage *windowImage = self.windowThumbnail;
         
         NSSize imageSize = windowImage.size;
         CGFloat scale = thumbSize / MAX(imageSize.width, imageSize.height);
@@ -61,7 +60,7 @@
     
     // Draw the application icon
     {
-        NSImage *applicationIcon = [self.windowData.application icon];
+        NSImage *applicationIcon = self.applicationIcon;
         // imageSize is a LIE, but it does give the correct aspect ratio (empirically it's always been a square, but you can't be too careful!)
         NSSize imageSize = applicationIcon.size;
         
@@ -84,6 +83,19 @@
         [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
         [applicationIcon drawInRect:iconFrame fromRect:imageRect operation:NSCompositeSourceOver fraction:1.0];
     }
+}
+
+- (void)setWindowThumbnail:(NSImage *)windowThumbnail;
+{
+    _windowThumbnail = windowThumbnail;
+    [self setNeedsDisplay:YES];
+}
+
+- (void)setSelected:(BOOL)selected;
+{
+    NSLog(@"View doesn't draw selection state yet");
+    _selected = selected;
+    [self setNeedsDisplay:YES];
 }
 
 @end

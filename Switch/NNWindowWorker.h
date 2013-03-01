@@ -16,9 +16,18 @@
 
 
 @class NNWindowData;
+@class NNWindowWorker;
+
+@protocol NNWindowWorkerDelegate <NSObject>
+
+- (void)windowWorker:(NNWindowWorker *)worker didUpdateContentsOfWindow:(NNWindowData *)window;
+
+@end
 
 
 @interface NNWindowWorker : NSObject
+
+@property (nonatomic, weak) id<NNWindowWorkerDelegate> delegate;
 
 - (instancetype)initWithModelObject:(NNWindowData *)window;
 

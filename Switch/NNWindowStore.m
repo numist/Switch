@@ -110,7 +110,9 @@
         self.updatingWindowContents = YES;
         self.windowWorkers = [NSMutableDictionary dictionaryWithCapacity:[_windows count]];
         for (NNWindowData *window in _windows) {
-            [self.windowWorkers setObject:[[NNWindowWorker alloc] initWithModelObject:window] forKey:window];
+            NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window];
+            worker.delegate = (id<NNWindowWorkerDelegate>)self;
+            [self.windowWorkers setObject:worker forKey:window];
         }
     });
 }
@@ -125,6 +127,18 @@
     });
 }
 
+#pragma mark NNWindowWorkerDelegate
+
+- (void)windowWorker:(NNWindowWorker *)worker didUpdateContentsOfWindow:(NNWindowData *)window;
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        id<NNWindowStoreDelegate> delegate = self.delegate;
+        if ([delegate respondsToSelector:@selector(windowStore:contentsOfWindowDidChange:)]) {
+            [delegate windowStore:self contentsOfWindowDidChange:window];
+        }
+    });
+}
+
 #pragma mark Private
 
 - (void)setWindows:(NSArray *)newArray;
@@ -135,7 +149,7 @@
         NSArray *oldArray = _windows;
         _windows = newArray;
         
-        BOOL windowsChanged = [oldArray isEqualToArray:newArray];
+        BOOL windowsChanged = ![oldArray isEqualToArray:newArray];
         
         if (self.updatingWindowContents) {
             for (NNWindowData *window in oldArray) {

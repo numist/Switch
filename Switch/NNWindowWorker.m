@@ -95,7 +95,7 @@ static NSTimeInterval NNPollingIntervalSlow = 1.0;
         } else {
             self.updateInterval = MAX(NNPollingIntervalFast, self.updateInterval / 2.0);
             self.previousCapture = result;
-            NSLog(@"Updated window image for %@", [_window description]);
+            [self.delegate windowWorker:self didUpdateContentsOfWindow:self.window];
             self.window.image = [result copy];
         }
     } else if (self.window.exists) {

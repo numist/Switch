@@ -14,8 +14,10 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class NNWindowData;
-
 @interface NNWindowThumbnailView : NSView
-@property (nonatomic, retain) NNWindowData *windowData;
+
+@property (nonatomic, strong) NSImage *windowThumbnail;
+@property (nonatomic, strong) NSImage *applicationIcon;
+@property (nonatomic, assign) BOOL selected;
+
 @end

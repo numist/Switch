@@ -25,6 +25,11 @@
 		BCA7352B16DB1E9C00CD4C74 /* despatch.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7352A16DB1E9C00CD4C74 /* despatch.m */; };
 		BCA7352F16DB239900CD4C74 /* NNWindowThumbnailView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7352E16DB239900CD4C74 /* NNWindowThumbnailView.m */; };
 		BCA7353316DB2C0100CD4C74 /* NNHotKeyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7353216DB2C0100CD4C74 /* NNHotKeyManager.m */; };
+		BCA7353816E148EF00CD4C74 /* NNRoundedRectView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7353716E148EF00CD4C74 /* NNRoundedRectView.m */; };
+		BCA7353A16E14EF000CD4C74 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCA7353916E14EF000CD4C74 /* QuartzCore.framework */; };
+		BCA7354016E159F400CD4C74 /* NNSwitcherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7353F16E159F400CD4C74 /* NNSwitcherViewController.m */; };
+		BCA7354316E1621400CD4C74 /* constants.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354216E1621400CD4C74 /* constants.m */; };
+		BCA7354616E1657000CD4C74 /* NNSwitcher.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354516E1657000CD4C74 /* NNSwitcher.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +80,15 @@
 		BCA7352E16DB239900CD4C74 /* NNWindowThumbnailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNWindowThumbnailView.m; sourceTree = "<group>"; };
 		BCA7353116DB2C0100CD4C74 /* NNHotKeyManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHotKeyManager.h; sourceTree = "<group>"; };
 		BCA7353216DB2C0100CD4C74 /* NNHotKeyManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHotKeyManager.m; sourceTree = "<group>"; };
+		BCA7353616E148EF00CD4C74 /* NNRoundedRectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNRoundedRectView.h; sourceTree = "<group>"; };
+		BCA7353716E148EF00CD4C74 /* NNRoundedRectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNRoundedRectView.m; sourceTree = "<group>"; };
+		BCA7353916E14EF000CD4C74 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		BCA7353E16E159F400CD4C74 /* NNSwitcherViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNSwitcherViewController.h; sourceTree = "<group>"; };
+		BCA7353F16E159F400CD4C74 /* NNSwitcherViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNSwitcherViewController.m; sourceTree = "<group>"; };
+		BCA7354116E1621400CD4C74 /* constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = constants.h; sourceTree = "<group>"; };
+		BCA7354216E1621400CD4C74 /* constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = constants.m; sourceTree = "<group>"; };
+		BCA7354416E1657000CD4C74 /* NNSwitcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNSwitcher.h; sourceTree = "<group>"; };
+		BCA7354516E1657000CD4C74 /* NNSwitcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNSwitcher.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +96,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BCA7353A16E14EF000CD4C74 /* QuartzCore.framework in Frameworks */,
 				BCA734E116DAC53F00CD4C74 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -101,6 +116,7 @@
 		BCA734D416DAC53F00CD4C74 = {
 			isa = PBXGroup;
 			children = (
+				BCA7353916E14EF000CD4C74 /* QuartzCore.framework */,
 				BCA734E616DAC53F00CD4C74 /* Switch */,
 				BCA7350316DAC54000CD4C74 /* SwitchTests */,
 				BCA734DF16DAC53F00CD4C74 /* Frameworks */,
@@ -152,6 +168,8 @@
 		BCA734E716DAC53F00CD4C74 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				BCA7354116E1621400CD4C74 /* constants.h */,
+				BCA7354216E1621400CD4C74 /* constants.m */,
 				BCA734E816DAC53F00CD4C74 /* Switch-Info.plist */,
 				BCA734E916DAC53F00CD4C74 /* InfoPlist.strings */,
 				BCA734EC16DAC53F00CD4C74 /* main.m */,
@@ -198,6 +216,8 @@
 				BCA734F516DAC53F00CD4C74 /* MainMenu.xib */,
 				BCA7352D16DB239900CD4C74 /* NNWindowThumbnailView.h */,
 				BCA7352E16DB239900CD4C74 /* NNWindowThumbnailView.m */,
+				BCA7353616E148EF00CD4C74 /* NNRoundedRectView.h */,
+				BCA7353716E148EF00CD4C74 /* NNRoundedRectView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -218,6 +238,8 @@
 				BCA7351516DAC59000CD4C74 /* NNWindowStore.h */,
 				BCA7351816DAC5BB00CD4C74 /* NNWindowStore+Private.h */,
 				BCA7351616DAC59000CD4C74 /* NNWindowStore.m */,
+				BCA7354416E1657000CD4C74 /* NNSwitcher.h */,
+				BCA7354516E1657000CD4C74 /* NNSwitcher.m */,
 			);
 			name = Logic;
 			sourceTree = "<group>";
@@ -225,6 +247,8 @@
 		BCA7353516DB2E2500CD4C74 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				BCA7353E16E159F400CD4C74 /* NNSwitcherViewController.h */,
+				BCA7353F16E159F400CD4C74 /* NNSwitcherViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -348,6 +372,10 @@
 				BCA7352B16DB1E9C00CD4C74 /* despatch.m in Sources */,
 				BCA7352F16DB239900CD4C74 /* NNWindowThumbnailView.m in Sources */,
 				BCA7353316DB2C0100CD4C74 /* NNHotKeyManager.m in Sources */,
+				BCA7353816E148EF00CD4C74 /* NNRoundedRectView.m in Sources */,
+				BCA7354016E159F400CD4C74 /* NNSwitcherViewController.m in Sources */,
+				BCA7354316E1621400CD4C74 /* constants.m in Sources */,
+				BCA7354616E1657000CD4C74 /* NNSwitcher.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

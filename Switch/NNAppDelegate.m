@@ -14,13 +14,55 @@
 
 #import "NNAppDelegate.h"
 
-#import "NNWindowStore.h"
+#import "NNSwitcher.h"
+
+
+@interface NNAppDelegate ()
+
+@property (nonatomic, strong) NNSwitcher *switcher;
+
+@end
+
 
 @implementation NNAppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     // Insert code here to initialize your application
+
+    [self invokeSwitcher];
+}
+
+#pragma mark Internal
+
+- (void)invokeSwitcher;
+{
+    self.switcher = [NNSwitcher new];
+}
+
+- (void)dismissSwitcher;
+{
+    self.switcher = nil;
+}
+
+- (void)incrementKeyDown;
+{
+    self.switcher.index += 1;
+}
+
+- (void)incrementKeyUp;
+{
+    NSLog(@"Stop incrementing");
+}
+
+- (void)decrementKeyDown;
+{
+    self.switcher.index -= 1;
+}
+
+- (void)decrementKeyUp;
+{
+    NSLog(@"Stop decrementing");
 }
 
 @end
