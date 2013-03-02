@@ -95,12 +95,4 @@
     [self setNeedsDisplay:YES];
 }
 
-- (void)setSelected:(BOOL)selected;
-{
-    // TODO: selection state needs to be drawn
-    NSLog(@"View doesn't draw selection state yet");
-    _selected = selected;
-    [self setNeedsDisplay:YES];
-}
-
 @end
