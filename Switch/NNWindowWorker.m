@@ -85,7 +85,7 @@ static NSTimeInterval NNPollingIntervalSlow = 1.0;
                     imageChanged = YES;
                     NSLog(@"Window %@ changed size", self.window);
                 } else {
-                    
+                    // TODO: test contents of window changed
                 }
             }
         }

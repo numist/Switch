@@ -47,22 +47,28 @@
 
 - (void)incrementKeyDown;
 {
+    // TODO: key repeat support
     self.switcher.index += 1;
 }
 
 - (void)incrementKeyUp;
 {
+    // TODO: key repeat support
     NSLog(@"Stop incrementing");
 }
 
 - (void)decrementKeyDown;
 {
+    // TODO: key repeat support
     self.switcher.index -= 1;
 }
 
 - (void)decrementKeyUp;
 {
+    // TODO: key repeat support
     NSLog(@"Stop decrementing");
 }
+
+// TODO: support for closing windows, quitting apps, mouse events?
 
 @end

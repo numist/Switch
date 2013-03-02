@@ -116,7 +116,6 @@
 		BCA734D416DAC53F00CD4C74 = {
 			isa = PBXGroup;
 			children = (
-				BCA7353916E14EF000CD4C74 /* QuartzCore.framework */,
 				BCA734E616DAC53F00CD4C74 /* Switch */,
 				BCA7350316DAC54000CD4C74 /* SwitchTests */,
 				BCA734DF16DAC53F00CD4C74 /* Frameworks */,
@@ -137,6 +136,7 @@
 			isa = PBXGroup;
 			children = (
 				BCA734E016DAC53F00CD4C74 /* Cocoa.framework */,
+				BCA7353916E14EF000CD4C74 /* QuartzCore.framework */,
 				BCA734FE16DAC54000CD4C74 /* SenTestingKit.framework */,
 				BCA734E216DAC53F00CD4C74 /* Other Frameworks */,
 			);

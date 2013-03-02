@@ -48,6 +48,6 @@ void despatch_lock_assert_not(dispatch_queue_t lock)
 //void despatch_lock_sync(dispatch_queue_t lock, dispatch_block_t block)
 //{
 //    despatch_assert_is_lock(lock);
-//    // TODO: stack tracking
+//    // stack tracking?
 //    dispatch_sync(lock, block);
 //}

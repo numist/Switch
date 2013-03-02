@@ -13,16 +13,19 @@
 //
 
 #import "NNSwitcherViewController.h"
+
+#import "constants.h"
 #import "NNRoundedRectView.h"
 #import "NNWindowThumbnailView.h"
 #import "NNWindowData.h"
+#import "NNApplication.h"
 
 @interface NNSwitcherViewController ()
 
 @property (nonatomic, weak) NNSwitcher *switcher;
 
 @property (nonatomic, strong) NNWindowThumbnailView *selectedView;
-@property (nonatomic, strong) NSDictionary *thumbViews;
+@property (nonatomic, strong) NSMutableDictionary *thumbViews;
 @property (nonatomic, assign) BOOL firstUpdate;
 
 @end
@@ -48,11 +51,42 @@
 
 - (void)updateViewsWithWindowList:(NSArray *)windows;
 {
+    CGFloat thumbSize = maxWindowThumbnailSize;
+    NSScreen *mainScreen = [NSScreen mainScreen];
+    NSUInteger numWindows = [windows count];
+    CGFloat requiredPaddings = windowToItemInset + numWindows * (itemToThumbInset + itemToThumbInset) + windowToItemInset;
+    CGFloat maxTheoreticalWindowWidth = requiredPaddings + thumbSize * numWindows;
+    CGFloat maxAllowedWindowWidth = mainScreen.frame.size.width - (screenToSwitcherWindowInset * 2.0);
+    
+    if (maxTheoreticalWindowWidth > maxAllowedWindowWidth) {
+        thumbSize = floor((maxAllowedWindowWidth - requiredPaddings) / numWindows);
+    }
+    
+    NSRect windowFrame;
+    {
+        windowFrame.size.width = MIN(maxAllowedWindowWidth, maxTheoreticalWindowWidth);
+        windowFrame.size.height = windowToThumbInset + thumbSize + windowToThumbInset;
+        windowFrame.origin.x = floor((mainScreen.frame.size.width - windowFrame.size.width) / 2.0);
+        windowFrame.origin.y = floor((mainScreen.frame.size.height - windowFrame.size.height) / 2.0);
+    }
+
     if (self.firstUpdate) {
         self.firstUpdate = NO;
-        NSLog(@"First draw, no need to animate!");
+        [self.view.window setFrame:windowFrame display:YES animate:NO];
+        self.thumbViews = [NSMutableDictionary dictionaryWithCapacity:numWindows];
+        
+        for (unsigned i = 0; i < numWindows; i++) {
+            NNWindowData *window = [windows objectAtIndex:i];
+            NNWindowThumbnailView *thumbView = [[NNWindowThumbnailView alloc] initWithFrame:[self frameForThumbnailViewAtIndex:i thumbSize:thumbSize]];
+            thumbView.applicationIcon = window.application.icon;
+            thumbView.windowThumbnail = window.image;
+            [self.view addSubview:thumbView];
+            [self.thumbViews setObject:thumbView forKey:window];
+        }
     } else {
+        // TODO: animations
         NSLog(@"Animation needed");
+        [self.view.window setFrame:windowFrame display:YES animate:YES];
     }
 }
 
@@ -81,5 +115,17 @@
 }
 
 #pragma mark Internal
+
+- (NSRect)frameForThumbnailViewAtIndex:(unsigned)index thumbSize:(CGFloat)thumbSize;
+{
+    NSRect thumbFrame;
+    {
+        thumbFrame.origin.x = windowToThumbInset + index * (itemToThumbInset + thumbSize + itemToThumbInset);
+        thumbFrame.origin.y = windowToThumbInset;
+        thumbFrame.size.width = thumbSize;
+        thumbFrame.size.height = thumbSize;
+    }
+    return thumbFrame;
+}
 
 @end
