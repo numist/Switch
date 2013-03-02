@@ -31,10 +31,7 @@
 - (void)drawRect:(NSRect)dirtyRect
 {
     NSRect thumbFrame = self.bounds;
-    thumbFrame.origin.x = thumbFrame.origin.y = itemToThumbInset;
-    thumbFrame.size.height -= itemToThumbInset * 2.0;
-    thumbFrame.size.width -= itemToThumbInset * 2.0;
-    CGFloat thumbSize = thumbFrame.size.width - (itemToThumbInset * 2.0);
+    CGFloat thumbSize = thumbFrame.size.width;
     
     // Draw the window
     {
