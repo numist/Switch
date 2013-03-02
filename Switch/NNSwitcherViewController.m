@@ -80,9 +80,29 @@
             thumbView.frame = [self frameForThumbnailViewAtIndex:i thumbSize:thumbSize];
         }
     } else {
-        // TODO: animations
-        NSLog(@"Animation needed");
+        // TODO: Only do this if necessary
         [self.view.window setFrame:windowFrame display:YES animate:YES];
+        
+        // Iterating over a copy because destroyThumbViewForWindow: mutates the thumbViews dictionary
+        for (NNWindowData *window in [self.thumbViews copy]) {
+            if (![windows containsObject:window]) {
+                // TODO: animations
+                [self destroyThumbViewForWindow:window];
+            }
+        }
+        
+        for (unsigned i = 0; i < numWindows; i++) {
+            NNWindowData *window = [windows objectAtIndex:i];
+            
+            NNWindowThumbnailView *thumbView = [self.thumbViews objectForKey:window];
+            if (!thumbView) {
+                // TODO: Should set the thumbView's frame to vertically-centered origin of it's indexes frame, size zero to animate in
+                thumbView = [self createThumbViewForWindow:window];
+            }
+            
+            // TODO: animations
+            thumbView.frame = [self frameForThumbnailViewAtIndex:i thumbSize:thumbSize];
+        }
     }
 }
 
