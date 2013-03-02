@@ -14,10 +14,12 @@
 
 #import "constants.h"
 
-CGFloat screenToSwitcherWindowInset = 16.0;
-CGFloat maxWindowThumbnailSize = 128.0;
-CGFloat maxApplicationIconSize = 64.0;
-CGFloat itemToThumbInset = 8.0;
-CGFloat windowToItemInset = 24.0;
+const CGFloat screenToSwitcherWindowInset = 16.0;
+const CGFloat maxWindowThumbnailSize = 128.0;
+const CGFloat maxApplicationIconSize = 64.0;
+const CGFloat itemToThumbInset = 8.0;
+const CGFloat windowToItemInset = 20.0;
+const CGFloat windowRoundRectRadius = 32.0;
+const CGFloat windowToSelectionInset = 5.0; // TODO: this is probably a computable constant based on the thumb insets or something.
 
-NSTimeInterval delayBeforePresentingSwitcherWindow = 0.25;
+const NSTimeInterval delayBeforePresentingSwitcherWindow = 0.25;

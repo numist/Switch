@@ -15,12 +15,15 @@
 #import <Foundation/Foundation.h>
 
 // Points
-extern CGFloat screenToSwitcherWindowInset;
-extern CGFloat maxWindowThumbnailSize;
-extern CGFloat maxApplicationIconSize;
-extern CGFloat itemToThumbInset;
-extern CGFloat windowToItemInset;
+extern const  CGFloat screenToSwitcherWindowInset;
+extern const CGFloat maxWindowThumbnailSize;
+extern const CGFloat maxApplicationIconSize;
+extern const CGFloat itemToThumbInset;
+extern const CGFloat windowToItemInset;
+extern const CGFloat windowRoundRectRadius;
+extern const CGFloat windowToSelectionInset;
 #define windowToThumbInset (windowToItemInset + itemToThumbInset)
+#define itemSize(thumbSize) (itemToThumbInset + thumbSize + itemToThumbInset)
 
 // Seconds
-extern NSTimeInterval delayBeforePresentingSwitcherWindow;
+extern const NSTimeInterval delayBeforePresentingSwitcherWindow;
