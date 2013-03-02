@@ -160,7 +160,9 @@
             
             for (NNWindowData *window in newArray) {
                 if (![oldArray containsObject:window]) {
-                    [self.windowWorkers setObject:[[NNWindowWorker alloc] initWithModelObject:window] forKey:window];
+                    NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window];
+                    worker.delegate = (id<NNWindowWorkerDelegate>)self;
+                    [self.windowWorkers setObject:worker forKey:window];
                 }
             }
         }
