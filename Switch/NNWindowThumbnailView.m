@@ -30,8 +30,11 @@
 
 - (void)drawRect:(NSRect)dirtyRect
 {
-    NSRect drawFrame = self.bounds;
-    CGFloat thumbSize = drawFrame.size.width;
+    NSRect thumbFrame = self.bounds;
+    thumbFrame.origin.x = thumbFrame.origin.y = itemToThumbInset;
+    thumbFrame.size.height -= itemToThumbInset * 2.0;
+    thumbFrame.size.width -= itemToThumbInset * 2.0;
+    CGFloat thumbSize = thumbFrame.size.width - (itemToThumbInset * 2.0);
     
     // Draw the window
     {
@@ -49,13 +52,14 @@
         imageRect.origin = NSZeroPoint;
         imageRect.size = imageSize;
         
-        NSRect thumbFrame = drawFrame;
-        thumbFrame.size = imageRect.size;
-        thumbFrame.origin.x += (drawFrame.size.width - imageRect.size.width) / 2.0;
-        thumbFrame.origin.y += (drawFrame.size.height - imageRect.size.height) / 2.0;
+        NSRect windowFrame = thumbFrame;
+        windowFrame.size = imageRect.size;
+        windowFrame.origin.x += (thumbFrame.size.width - imageRect.size.width) / 2.0;
+        windowFrame.origin.y += (thumbFrame.size.height - imageRect.size.height) / 2.0;
+        // TODO: WTB: helper rect function to align to pixel boundaries
         
         [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-        [windowImage drawInRect:thumbFrame fromRect:imageRect operation:NSCompositeSourceOver fraction:1.0];
+        [windowImage drawInRect:windowFrame fromRect:imageRect operation:NSCompositeSourceOver fraction:1.0];
     }
     
     // Draw the application icon
@@ -76,9 +80,9 @@
         imageRect.origin = NSZeroPoint;
         imageRect.size = imageSize;
         
-        NSRect iconFrame = drawFrame;
+        NSRect iconFrame = thumbFrame;
         iconFrame.size = imageRect.size;
-        iconFrame.origin.x += drawFrame.size.width - imageRect.size.width;
+        iconFrame.origin.x += thumbFrame.size.width - imageRect.size.width;
         
         [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
         [applicationIcon drawInRect:iconFrame fromRect:imageRect operation:NSCompositeSourceOver fraction:1.0];
