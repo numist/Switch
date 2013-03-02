@@ -14,6 +14,9 @@
 
 #import "NNRoundedRectView.h"
 
+#import "constants.h"
+
+
 @implementation NNRoundedRectView
 
 - (instancetype)initWithFrame:(NSRect)frameRect;
@@ -29,7 +32,7 @@
 - (void)drawRect:(NSRect)dirtyRect;
 {
     NSRect drawRect = self.bounds;
-    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:drawRect xRadius:20.0 yRadius:20.0];
+    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:drawRect xRadius:windowRoundRectRadius yRadius:windowRoundRectRadius];
     [[[NSColor blackColor] colorWithAlphaComponent:0.3] set];
     [path fill];
 }
