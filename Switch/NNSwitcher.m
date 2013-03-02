@@ -117,8 +117,18 @@
 {
     [self createSwitcherWindowIfNeeded];
     
+    NNWindowData *selectedWindow = [self.windows objectAtIndex:self.index];
     self.windows = store.windows;
     [self.delegate switcher:self didUpdateWindowList:self.windows];
+    
+    NSUInteger newIndex = [self.windows indexOfObject:selectedWindow];
+    if (![self.windows containsObject:selectedWindow]) {
+        // Window destroyed
+        self.index = MIN(self.index, [self.windows count] - 1);
+    } else if (self.index != newIndex) {
+        // Window moved
+        self.index = newIndex;
+    }
 }
 
 - (void)windowStore:(NNWindowStore *)store contentsOfWindowDidChange:(NNWindowData *)window;
