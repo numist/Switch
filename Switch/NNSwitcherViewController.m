@@ -24,7 +24,6 @@
 
 @property (nonatomic, weak) NNSwitcher *switcher;
 
-@property (nonatomic, strong) NNWindowThumbnailView *selectedView;
 @property (nonatomic, strong) NSMutableDictionary *thumbViews;
 @property (nonatomic, assign) BOOL firstUpdate;
 
@@ -77,11 +76,8 @@
         
         for (unsigned i = 0; i < numWindows; i++) {
             NNWindowData *window = [windows objectAtIndex:i];
-            NNWindowThumbnailView *thumbView = [[NNWindowThumbnailView alloc] initWithFrame:[self frameForThumbnailViewAtIndex:i thumbSize:thumbSize]];
-            thumbView.applicationIcon = window.application.icon;
-            thumbView.windowThumbnail = window.image;
-            [self.view addSubview:thumbView];
-            [self.thumbViews setObject:thumbView forKey:window];
+            NNWindowThumbnailView *thumbView = [self createThumbViewForWindow:window];
+            thumbView.frame = [self frameForThumbnailViewAtIndex:i thumbSize:thumbSize];
         }
     } else {
         // TODO: animations
@@ -90,18 +86,11 @@
     }
 }
 
-- (void)setSelectedView:(NNWindowThumbnailView *)selectedView;
-{
-    _selectedView.selected = NO;
-    selectedView.selected = YES;
-    _selectedView = selectedView;
-}
-
 #pragma mark NNSwitcherDelegate
 
 - (void)switcher:(NNSwitcher *)switcher didUpdateIndex:(unsigned int)index;
 {
-    self.selectedView = [self.thumbViews objectForKey:[self.switcher.windows objectAtIndex:index]];
+    // TODO: update selected thingy
 }
 
 - (void)switcher:(NNSwitcher *)switcher didUpdateWindowList:(NSArray *)windows;
@@ -116,16 +105,32 @@
 
 #pragma mark Internal
 
+- (NNWindowThumbnailView *)createThumbViewForWindow:(NNWindowData *)window;
+{
+    NNWindowThumbnailView *result = [[NNWindowThumbnailView alloc] initWithFrame:NSZeroRect];
+    result.applicationIcon = window.application.icon;
+    result.windowThumbnail = window.image;
+    [self.thumbViews setObject:result forKey:window];
+    [self.view addSubview:result];
+    return result;
+}
+
+- (void)destroyThumbViewForWindow:(NNWindowData *)window;
+{
+    [[self.thumbViews objectForKey:window] removeFromSuperview];
+    [self.thumbViews removeObjectForKey:window];
+}
+
 - (NSRect)frameForThumbnailViewAtIndex:(unsigned)index thumbSize:(CGFloat)thumbSize;
 {
-    NSRect thumbFrame;
+    NSRect result;
     {
-        thumbFrame.origin.x = windowToThumbInset + index * (itemToThumbInset + thumbSize + itemToThumbInset);
-        thumbFrame.origin.y = windowToThumbInset;
-        thumbFrame.size.width = thumbSize;
-        thumbFrame.size.height = thumbSize;
+        result.origin.x = windowToItemInset + index * itemSize(thumbSize) + itemToThumbInset;
+        result.origin.y = windowToThumbInset;
+        result.size.width = thumbSize;
+        result.size.height = thumbSize;
     }
-    return thumbFrame;
+    return result;
 }
 
 @end
