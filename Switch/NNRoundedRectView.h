@@ -14,6 +14,10 @@
 
 #import <Cocoa/Cocoa.h>
 
+
 @interface NNRoundedRectView : NSView
+
+@property (nonatomic, assign, getter = hasBorder) BOOL border;
+@property (nonatomic, assign) CGFloat radius;
 
 @end

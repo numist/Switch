@@ -15,7 +15,7 @@
 #import "NNSelectionBoxView.h"
 
 #import "constants.h"
-// TODO: this should be a subclass of NNRoundedRectView
+
 
 @implementation NNSelectionBoxView
 
@@ -23,30 +23,12 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code here.
+        self.border = YES;
+        self.radius = windowRoundRectRadius - windowToSelectionInset;
+        self.autoresizingMask = NSViewNotSizable;
     }
     
     return self;
-}
-
-- (void)drawRect:(NSRect)dirtyRect
-{
-    CGRect drawRect = self.bounds;
-    {
-        CGFloat inset = 0.5;
-        drawRect.origin.x += inset;
-        drawRect.origin.y += inset;
-        drawRect.size.width -= inset * 2;
-        drawRect.size.height -= inset * 2;
-    }
-    CGFloat radius = windowRoundRectRadius - windowToSelectionInset;
-    
-    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:drawRect xRadius:radius yRadius:radius];
-    [path setLineWidth:3.0];
-    [[[NSColor whiteColor] colorWithAlphaComponent:0.8] setStroke];
-    [[[NSColor blackColor] colorWithAlphaComponent:0.3] setFill];
-    [path fill];
-    [path stroke];
 }
 
 @end

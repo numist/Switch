@@ -15,10 +15,12 @@
 #import "NNSwitcherViewController.h"
 
 #import "constants.h"
-#import "NNRoundedRectView.h"
+#import "NNHUDView.h"
+#import "NNSelectionBoxView.h"
 #import "NNWindowThumbnailView.h"
 #import "NNWindowData.h"
 #import "NNApplication.h"
+
 
 @interface NNSwitcherViewController ()
 
@@ -28,6 +30,7 @@
 @property (nonatomic, assign) BOOL firstUpdate;
 
 @end
+
 
 @implementation NNSwitcherViewController
 
@@ -45,7 +48,7 @@
 - (void)loadView;
 {
     NSLog(@"View loaded");
-    self.view = [[NNRoundedRectView alloc] initWithFrame:NSZeroRect];
+    self.view = [[NNHUDView alloc] initWithFrame:NSZeroRect];
 }
 
 - (void)updateViewsWithWindowList:(NSArray *)windows;

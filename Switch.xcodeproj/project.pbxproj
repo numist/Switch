@@ -31,6 +31,7 @@
 		BCA7354316E1621400CD4C74 /* constants.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354216E1621400CD4C74 /* constants.m */; };
 		BCA7354616E1657000CD4C74 /* NNSwitcher.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354516E1657000CD4C74 /* NNSwitcher.m */; };
 		BCA7354916E1F14D00CD4C74 /* NNSelectionBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354816E1F14D00CD4C74 /* NNSelectionBoxView.m */; };
+		BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,6 +94,8 @@
 		BCA7354716E1F14D00CD4C74 /* NNSelectionBoxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNSelectionBoxView.h; sourceTree = "<group>"; };
 		BCA7354816E1F14D00CD4C74 /* NNSelectionBoxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNSelectionBoxView.m; sourceTree = "<group>"; };
 		BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = imageComparators.h; sourceTree = "<group>"; };
+		BCA7354B16E2ED5000CD4C74 /* NNHUDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHUDView.h; sourceTree = "<group>"; };
+		BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,14 +175,13 @@
 		BCA734E716DAC53F00CD4C74 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */,
 				BCA7354116E1621400CD4C74 /* constants.h */,
 				BCA7354216E1621400CD4C74 /* constants.m */,
-				BCA734E816DAC53F00CD4C74 /* Switch-Info.plist */,
+				BCA734EF16DAC53F00CD4C74 /* Credits.rtf */,
 				BCA734E916DAC53F00CD4C74 /* InfoPlist.strings */,
 				BCA734EC16DAC53F00CD4C74 /* main.m */,
+				BCA734E816DAC53F00CD4C74 /* Switch-Info.plist */,
 				BCA734EE16DAC53F00CD4C74 /* Switch-Prefix.pch */,
-				BCA734EF16DAC53F00CD4C74 /* Credits.rtf */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -219,12 +221,14 @@
 			isa = PBXGroup;
 			children = (
 				BCA734F516DAC53F00CD4C74 /* MainMenu.xib */,
-				BCA7352D16DB239900CD4C74 /* NNWindowThumbnailView.h */,
-				BCA7352E16DB239900CD4C74 /* NNWindowThumbnailView.m */,
-				BCA7354716E1F14D00CD4C74 /* NNSelectionBoxView.h */,
-				BCA7354816E1F14D00CD4C74 /* NNSelectionBoxView.m */,
+				BCA7354B16E2ED5000CD4C74 /* NNHUDView.h */,
+				BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */,
 				BCA7353616E148EF00CD4C74 /* NNRoundedRectView.h */,
 				BCA7353716E148EF00CD4C74 /* NNRoundedRectView.m */,
+				BCA7354716E1F14D00CD4C74 /* NNSelectionBoxView.h */,
+				BCA7354816E1F14D00CD4C74 /* NNSelectionBoxView.m */,
+				BCA7352D16DB239900CD4C74 /* NNWindowThumbnailView.h */,
+				BCA7352E16DB239900CD4C74 /* NNWindowThumbnailView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -234,10 +238,13 @@
 			children = (
 				BCA7352916DB1E9C00CD4C74 /* despatch.h */,
 				BCA7352A16DB1E9C00CD4C74 /* despatch.m */,
+				BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */,
 				BCA734F216DAC53F00CD4C74 /* NNAppDelegate.h */,
 				BCA734F316DAC53F00CD4C74 /* NNAppDelegate.m */,
 				BCA7353116DB2C0100CD4C74 /* NNHotKeyManager.h */,
 				BCA7353216DB2C0100CD4C74 /* NNHotKeyManager.m */,
+				BCA7354416E1657000CD4C74 /* NNSwitcher.h */,
+				BCA7354516E1657000CD4C74 /* NNSwitcher.m */,
 				BCA7352016DAC6A900CD4C74 /* NNWindowWorker.h */,
 				BCA7352116DAC6A900CD4C74 /* NNWindowWorker.m */,
 				BCA7351916DAC5E200CD4C74 /* NNWindowListWorker.h */,
@@ -245,8 +252,6 @@
 				BCA7351516DAC59000CD4C74 /* NNWindowStore.h */,
 				BCA7351816DAC5BB00CD4C74 /* NNWindowStore+Private.h */,
 				BCA7351616DAC59000CD4C74 /* NNWindowStore.m */,
-				BCA7354416E1657000CD4C74 /* NNSwitcher.h */,
-				BCA7354516E1657000CD4C74 /* NNSwitcher.m */,
 			);
 			name = Logic;
 			sourceTree = "<group>";
@@ -384,6 +389,7 @@
 				BCA7354316E1621400CD4C74 /* constants.m in Sources */,
 				BCA7354616E1657000CD4C74 /* NNSwitcher.m in Sources */,
 				BCA7354916E1F14D00CD4C74 /* NNSelectionBoxView.m in Sources */,
+				BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
