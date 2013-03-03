@@ -26,8 +26,10 @@
 
 @property (nonatomic, weak) NNSwitcher *switcher;
 
+@property (nonatomic, strong) NSMutableDictionary *deadWindows;
 @property (nonatomic, strong) NSMutableDictionary *thumbViews;
 @property (nonatomic, assign) BOOL firstUpdate;
+@property (nonatomic, weak) NSAnimation *currentAnimation;
 
 @end
 
@@ -76,37 +78,93 @@
         self.firstUpdate = NO;
         [self.view.window setFrame:windowFrame display:YES animate:NO];
         self.thumbViews = [NSMutableDictionary dictionaryWithCapacity:numWindows];
+        self.deadWindows = [NSMutableDictionary new];
         
-        for (unsigned i = 0; i < numWindows; i++) {
+        for (NSUInteger i = 0; i < numWindows; i++) {
             NNWindowData *window = [windows objectAtIndex:i];
             NNWindowThumbnailView *thumbView = [self createThumbViewForWindow:window];
-            thumbView.frame = [self frameForThumbnailViewAtIndex:i thumbSize:thumbSize];
+            thumbView.frame = [self finalFrameForThumbnailViewAtIndex:i thumbSize:thumbSize];
         }
     } else {
-        // TODO: Only do this if necessary
-        [self.view.window setFrame:windowFrame display:YES animate:YES];
-        
-        // Iterating over a copy because destroyThumbViewForWindow: mutates the thumbViews dictionary
-        for (NNWindowData *window in [self.thumbViews copy]) {
-            if (![windows containsObject:window]) {
-                // TODO: animations
-                [self destroyThumbViewForWindow:window];
-            }
-        }
-        
-        for (unsigned i = 0; i < numWindows; i++) {
+        // Create views for newly-arrived windows
+        NSMutableDictionary *newWindows = [NSMutableDictionary new];
+        for (NSUInteger i = 0; i < numWindows; i++) {
             NNWindowData *window = [windows objectAtIndex:i];
-            
             NNWindowThumbnailView *thumbView = [self.thumbViews objectForKey:window];
             if (!thumbView) {
-                // TODO: Should set the thumbView's frame to vertically-centered origin of it's indexes frame, size zero to animate in
                 thumbView = [self createThumbViewForWindow:window];
+                thumbView.frame = [self initialFrameForThumbnailViewAtIndex:i thumbSize:thumbSize];
+                [newWindows setObject:thumbView forKey:window];
+            }
+        }
+        
+        // Mark views for removal
+        for (NNWindowData *window in [self.thumbViews copy]) {
+            if (![windows containsObject:window]) {
+                [self.deadWindows setObject:[self.thumbViews objectForKey:window] forKey:window];
+            }
+        }
+        
+        NSMutableArray *animations = [NSMutableArray new];
+        {
+            NSDictionary *(^animationForWindow)(NNWindowData *) = ^(NNWindowData *window) {
+                NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:3];
+                NSUInteger index = [windows indexOfObject:window];
+                NNWindowThumbnailView *view = [self.thumbViews objectForKey:window];
+                
+                [result setObject:view forKey:NSViewAnimationTargetKey];
+                //[result setObject:[NSValue valueWithRect:view.frame] forKey:NSViewAnimationStartFrameKey];
+                if (index == NSNotFound) {
+                    [result setObject:[NSValue valueWithRect:[self collapseFrame:view.frame]] forKey:NSViewAnimationEndFrameKey];
+                    [result setObject:NSViewAnimationFadeOutEffect forKey:NSViewAnimationEffectKey];
+                } else {
+                    [result setObject:[NSValue valueWithRect:[self finalFrameForThumbnailViewAtIndex:index thumbSize:thumbSize]] forKey:NSViewAnimationEndFrameKey];
+                }
+                
+                return result;
+            };
+            
+            // Animations for new and pre-existent windows
+            for (NNWindowData *window in windows) {
+                [animations addObject:animationForWindow(window)];
             }
             
-            // TODO: animations
-            thumbView.frame = [self frameForThumbnailViewAtIndex:i thumbSize:thumbSize];
+            // Animations for ex-windows
+            for (NNWindowData *window in self.deadWindows) {
+                [animations addObject:animationForWindow(window)];
+            }
+            
+            // Animation for the NSWindow
+            [animations addObject:@{
+                NSViewAnimationTargetKey: self.view.window,
+                NSViewAnimationStartFrameKey: [NSValue valueWithRect:self.view.window.frame],
+                NSViewAnimationEndFrameKey: [NSValue valueWithRect:windowFrame]
+            }];
         }
+
+        NSViewAnimation *theAnim;
+        theAnim = [[NSViewAnimation alloc] initWithViewAnimations:animations];
+        [theAnim setDuration:0.2];
+        [theAnim setAnimationCurve:NSAnimationEaseIn];
+        theAnim.delegate = (id<NSAnimationDelegate>)self;
+        
+        NSAnimation *currentAnimation = self.currentAnimation;
+        if (currentAnimation) {
+            [currentAnimation stopAnimation];
+        }
+        self.currentAnimation = theAnim;
+        [theAnim startAnimation];
     }
+}
+
+#pragma mark NSAnimationDelegate
+
+- (void)animationDidEnd:(NSAnimation *)animation;
+{
+    for (NNWindowData *window in self.deadWindows) {
+        [self destroyThumbViewForWindow:window];
+    }
+    [self.deadWindows removeAllObjects];
 }
 
 #pragma mark NNSwitcherDelegate
@@ -144,7 +202,22 @@
     [self.thumbViews removeObjectForKey:window];
 }
 
-- (NSRect)frameForThumbnailViewAtIndex:(unsigned)index thumbSize:(CGFloat)thumbSize;
+- (NSRect)collapseFrame:(NSRect)frame;
+{
+    NSRect result = frame;
+    {
+        result.origin.y += result.size.height / 2.0;
+        result.size = NSZeroSize;
+    }
+    return result;
+}
+
+- (NSRect)initialFrameForThumbnailViewAtIndex:(NSUInteger)index thumbSize:(CGFloat)thumbSize;
+{
+    return [self collapseFrame:[self finalFrameForThumbnailViewAtIndex:index thumbSize:thumbSize]];
+}
+
+- (NSRect)finalFrameForThumbnailViewAtIndex:(NSUInteger)index thumbSize:(CGFloat)thumbSize;
 {
     NSRect result;
     {
