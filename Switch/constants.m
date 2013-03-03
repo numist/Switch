@@ -14,6 +14,7 @@
 
 #import "constants.h"
 
+
 const CGFloat screenToSwitcherWindowInset = 16.0;
 const CGFloat maxWindowThumbnailSize = 128.0;
 const CGFloat maxApplicationIconSize = 64.0;

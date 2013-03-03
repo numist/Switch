@@ -14,6 +14,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+
 @interface NNWindowThumbnailView : NSView
 
 @property (nonatomic, strong) NSImage *windowThumbnail;

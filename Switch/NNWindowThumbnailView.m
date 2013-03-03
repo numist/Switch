@@ -16,6 +16,7 @@
 
 #import "constants.h"
 
+
 @implementation NNWindowThumbnailView
 
 - (id)initWithFrame:(NSRect)frame

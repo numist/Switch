@@ -18,6 +18,7 @@
 
 #include <ApplicationServices/ApplicationServices.h>
 
+
 @interface NNHotKeyManager ()
 
 @property (nonatomic, assign) CFMachPortRef eventTap;
@@ -28,12 +29,14 @@
 
 @end
 
+
 static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
                                     CGEventRef event, void *refcon)
 {
     return event;
 //    return [(__bridge NNHotKeyManager *)refcon eventTapProxy:proxy didReceiveEvent:event ofType:type];
 }
+
 
 @implementation NNHotKeyManager
 

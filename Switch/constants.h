@@ -14,6 +14,7 @@
 
 #import <Foundation/Foundation.h>
 
+
 // Points
 extern const  CGFloat screenToSwitcherWindowInset;
 extern const CGFloat maxWindowThumbnailSize;

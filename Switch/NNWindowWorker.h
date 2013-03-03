@@ -18,6 +18,7 @@
 @class NNWindowData;
 @class NNWindowWorker;
 
+
 @protocol NNWindowWorkerDelegate <NSObject>
 
 - (void)windowWorker:(NNWindowWorker *)worker didUpdateContentsOfWindow:(NNWindowData *)window;
