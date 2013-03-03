@@ -156,19 +156,11 @@
 {
     NSImage *result;
     
-    CGImageRef cgImage = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, self.windowID, kCGWindowImageDefault);
+    CGImageRef cgImage = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, self.windowID, kCGWindowImageBoundsIgnoreFraming);
     if (cgImage) {
         NSSize imageSize = {CGImageGetWidth(cgImage), CGImageGetHeight(cgImage)};
         if (imageSize.width > 1.0 && imageSize.height > 1.0) {
             result = [[NSImage alloc] initWithCGImage:cgImage size:imageSize];
-            
-            // CG sometimes hands back a template image (entirely transparent blackColor) when we win the race against the WindowServer when changing spaces.
-            // XXX: Worse, sometimes we get *part* of an image, which this code doesn't handle.
-            NSRect rect = {NSZeroPoint, result.size};
-            [result setTemplate:![result hitTestRect:rect withImageDestinationRect:rect context:nil hints:NULL flipped:NO]];
-            if ([result isTemplate]) {
-                result = nil;
-            }
         }
         CFRelease(cgImage);
     }
