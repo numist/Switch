@@ -89,6 +89,7 @@
 		BCA7354216E1621400CD4C74 /* constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = constants.m; sourceTree = "<group>"; };
 		BCA7354416E1657000CD4C74 /* NNSwitcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNSwitcher.h; sourceTree = "<group>"; };
 		BCA7354516E1657000CD4C74 /* NNSwitcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNSwitcher.m; sourceTree = "<group>"; };
+		BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = imageComparators.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +169,7 @@
 		BCA734E716DAC53F00CD4C74 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */,
 				BCA7354116E1621400CD4C74 /* constants.h */,
 				BCA7354216E1621400CD4C74 /* constants.m */,
 				BCA734E816DAC53F00CD4C74 /* Switch-Info.plist */,

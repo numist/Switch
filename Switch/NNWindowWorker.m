@@ -15,6 +15,7 @@
 #import "NNWindowWorker.h"
 
 #import "despatch.h"
+#import "imageComparators.h"
 #import "NNWindowData+Private.h"
 
 
@@ -83,9 +84,8 @@ static NSTimeInterval NNPollingIntervalSlow = 1.0;
                 
                 if (newImageSize.width != oldImageSize.width || newImageSize.height != oldImageSize.height) {
                     imageChanged = YES;
-                    NSLog(@"Window %@ changed size", self.window);
                 } else {
-                    // TODO: test contents of window changed
+                    imageChanged = imagesDifferByCachedBitmapContextComparison(result, self.previousCapture);
                 }
             }
         }
