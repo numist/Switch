@@ -15,6 +15,8 @@
 #ifndef Switch_despatch_h
 #define Switch_despatch_h
 
+#include <dispatch/dispatch.h>
+
 dispatch_queue_t despatch_lock_create(const char *label);
 void despatch_lock_assert(dispatch_queue_t lock);
 void despatch_lock_assert_not(dispatch_queue_t lock);
