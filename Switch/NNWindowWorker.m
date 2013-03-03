@@ -71,6 +71,7 @@ static NSTimeInterval NNPollingIntervalSlow = 1.0;
         return;
     }
     
+    NSDate *start = [NSDate date];
     NSImage *result = [self.window getCGWindowImage];
     
     if (result) {
@@ -93,7 +94,7 @@ static NSTimeInterval NNPollingIntervalSlow = 1.0;
         if (!imageChanged) {
             self.updateInterval = MIN(NNPollingIntervalSlow, self.updateInterval * 2.0);
         } else {
-            self.updateInterval = MAX(NNPollingIntervalFast, self.updateInterval / 2.0);
+            self.updateInterval = NNPollingIntervalFast;
             self.previousCapture = result;
             [self.delegate windowWorker:self didUpdateContentsOfWindow:self.window];
             self.window.image = [result copy];
@@ -105,7 +106,11 @@ static NSTimeInterval NNPollingIntervalSlow = 1.0;
     
     // All done, schedule the next update.
     __weak NNWindowWorker *this = self;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.updateInterval * NSEC_PER_SEC));
+    double delayInSeconds = self.updateInterval - [[NSDate date] timeIntervalSinceDate:start];
+    if (delayInSeconds < 0.0) {
+//        NSLog(@"WARNING: Window content analysis for %@ took %f seconds longer than update interval %f", self.window, fabs(delayInSeconds), self.updateInterval);
+    }
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(MAX(0.01, delayInSeconds) * NSEC_PER_SEC));
     dispatch_after(popTime, self.lock, ^(void){
         [this workerLoop];
     });
