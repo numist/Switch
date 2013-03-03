@@ -56,7 +56,7 @@
         // TODO: WTB: helper rect function to align to pixel boundaries
         
         [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-        [windowImage drawInRect:windowFrame fromRect:imageRect operation:NSCompositeSourceOver fraction:1.0];
+        [windowImage drawInRect:windowFrame fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
     }
     
     // Draw the application icon
@@ -82,7 +82,7 @@
         iconFrame.origin.x += thumbFrame.size.width - imageRect.size.width;
         
         [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-        [applicationIcon drawInRect:iconFrame fromRect:imageRect operation:NSCompositeSourceOver fraction:1.0];
+        [applicationIcon drawInRect:iconFrame fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
     }
 }
 
