@@ -1,8 +1,8 @@
 //
-//  NNRoundedRectView.m
+//  NNSelectionBoxView.m
 //  Switch
 //
-//  Created by Scott Perry on 03/01/13.
+//  Created by Scott Perry on 03/02/13.
 //  Copyright © 2013 Scott Perry.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -12,29 +12,41 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "NNRoundedRectView.h"
+#import "NNSelectionBoxView.h"
 
 #import "constants.h"
-// TODO: This should be NNHUDView
+// TODO: this should be a subclass of NNRoundedRectView
 
-@implementation NNRoundedRectView
+@implementation NNSelectionBoxView
 
-- (instancetype)initWithFrame:(NSRect)frameRect;
+- (id)initWithFrame:(NSRect)frame
 {
-    self = [super initWithFrame:frameRect];
-    if (!self) return nil;
-    
-    self.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+    self = [super initWithFrame:frame];
+    if (self) {
+        // Initialization code here.
+    }
     
     return self;
 }
 
-- (void)drawRect:(NSRect)dirtyRect;
+- (void)drawRect:(NSRect)dirtyRect
 {
-    NSRect drawRect = self.bounds;
-    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:drawRect xRadius:windowRoundRectRadius yRadius:windowRoundRectRadius];
-    [[[NSColor blackColor] colorWithAlphaComponent:0.3] set];
+    CGRect drawRect = self.bounds;
+    {
+        CGFloat inset = 0.5;
+        drawRect.origin.x += inset;
+        drawRect.origin.y += inset;
+        drawRect.size.width -= inset * 2;
+        drawRect.size.height -= inset * 2;
+    }
+    CGFloat radius = windowRoundRectRadius - windowToSelectionInset;
+    
+    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:drawRect xRadius:radius yRadius:radius];
+    [path setLineWidth:3.0];
+    [[[NSColor whiteColor] colorWithAlphaComponent:0.8] setStroke];
+    [[[NSColor blackColor] colorWithAlphaComponent:0.3] setFill];
     [path fill];
+    [path stroke];
 }
 
 @end

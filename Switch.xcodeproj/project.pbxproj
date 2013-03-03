@@ -30,6 +30,7 @@
 		BCA7354016E159F400CD4C74 /* NNSwitcherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7353F16E159F400CD4C74 /* NNSwitcherViewController.m */; };
 		BCA7354316E1621400CD4C74 /* constants.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354216E1621400CD4C74 /* constants.m */; };
 		BCA7354616E1657000CD4C74 /* NNSwitcher.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354516E1657000CD4C74 /* NNSwitcher.m */; };
+		BCA7354916E1F14D00CD4C74 /* NNSelectionBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354816E1F14D00CD4C74 /* NNSelectionBoxView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +90,8 @@
 		BCA7354216E1621400CD4C74 /* constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = constants.m; sourceTree = "<group>"; };
 		BCA7354416E1657000CD4C74 /* NNSwitcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNSwitcher.h; sourceTree = "<group>"; };
 		BCA7354516E1657000CD4C74 /* NNSwitcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNSwitcher.m; sourceTree = "<group>"; };
+		BCA7354716E1F14D00CD4C74 /* NNSelectionBoxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNSelectionBoxView.h; sourceTree = "<group>"; };
+		BCA7354816E1F14D00CD4C74 /* NNSelectionBoxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNSelectionBoxView.m; sourceTree = "<group>"; };
 		BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = imageComparators.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -218,6 +221,8 @@
 				BCA734F516DAC53F00CD4C74 /* MainMenu.xib */,
 				BCA7352D16DB239900CD4C74 /* NNWindowThumbnailView.h */,
 				BCA7352E16DB239900CD4C74 /* NNWindowThumbnailView.m */,
+				BCA7354716E1F14D00CD4C74 /* NNSelectionBoxView.h */,
+				BCA7354816E1F14D00CD4C74 /* NNSelectionBoxView.m */,
 				BCA7353616E148EF00CD4C74 /* NNRoundedRectView.h */,
 				BCA7353716E148EF00CD4C74 /* NNRoundedRectView.m */,
 			);
@@ -378,6 +383,7 @@
 				BCA7354016E159F400CD4C74 /* NNSwitcherViewController.m in Sources */,
 				BCA7354316E1621400CD4C74 /* constants.m in Sources */,
 				BCA7354616E1657000CD4C74 /* NNSwitcher.m in Sources */,
+				BCA7354916E1F14D00CD4C74 /* NNSelectionBoxView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

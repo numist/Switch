@@ -55,6 +55,7 @@
         windowFrame.origin.y += (thumbFrame.size.height - imageRect.size.height) / 2.0;
         // TODO: WTB: helper rect function to align to pixel boundaries
         
+        // TODO: calls to drawInRect called from this method (cumulatively) takes up 13% of the main thread!
         [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
         [windowImage drawInRect:windowFrame fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
     }
@@ -81,6 +82,7 @@
         iconFrame.size = imageRect.size;
         iconFrame.origin.x += thumbFrame.size.width - imageRect.size.width;
         
+        // TODO: calls to drawInRect called from this method (cumulatively) takes up 13% of the main thread!
         [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
         [applicationIcon drawInRect:iconFrame fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
     }
