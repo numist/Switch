@@ -117,10 +117,11 @@
 
 - (void)windowStoreDidUpdateWindowList:(NNWindowStore *)store;
 {
-    [self createSwitcherWindowIfNeeded];
-    
     NNWindowData *selectedWindow = [self.windows objectAtIndex:self.index];
     self.windows = store.windows;
+    
+    [self createSwitcherWindowIfNeeded];
+
     [self.delegate switcher:self didUpdateWindowList:self.windows];
     
     NSUInteger newIndex = [self.windows indexOfObject:selectedWindow];
