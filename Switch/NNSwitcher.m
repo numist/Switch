@@ -47,7 +47,6 @@
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayBeforePresentingSwitcherWindow * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         this.shouldShowWindow = YES;
-        [self.store startUpdatingWindowContents];
         [this createSwitcherWindowIfNeeded];
     });
     
@@ -77,6 +76,9 @@
         // Not needed.
         return;
     }
+    
+    // Showtime! Start updating graphics assets.
+    [self.store startUpdatingWindowContents];
     
     NSRect windowRect;
     {
