@@ -15,6 +15,7 @@
 #import "NNWindowListWorker.h"
 
 #import "despatch.h"
+#import "NNObjectSerializer.h"
 #import "NNWindowData.h"
 #import "NNWindowStore+Private.h"
 
@@ -25,7 +26,6 @@ static NSTimeInterval refreshInterval = 0.1;
 @interface NNWindowListWorker ()
 
 @property (nonatomic, weak) NNWindowStore *store;
-@property (nonatomic, retain) dispatch_queue_t lock;
 @property (nonatomic, retain) NSMutableDictionary *windowDict;
 
 @end
@@ -40,15 +40,12 @@ static NSTimeInterval refreshInterval = 0.1;
     
     _store = store;
     
-    _lock = despatch_lock_create([[NSString stringWithFormat:@"%@: %p lock", [self class], self] UTF8String]);
+    NNWindowListWorker *serializedSelf = [NNObjectSerializer serializedObjectForObject:self];
     
-    __weak NNWindowListWorker *this = self;
-    dispatch_async(self.lock, ^{
-        NSLog(@"Started refreshing window list");
-        [this refresh];
-    });
+    [serializedSelf refresh];
     
-    return self;
+    // All calls made by the owner of this object should be serialized.
+    return serializedSelf;
 }
 
 - (void)dealloc;
@@ -60,8 +57,8 @@ static NSTimeInterval refreshInterval = 0.1;
 
 - (void)refresh;
 {
-    despatch_lock_assert(self.lock);
-    
+    despatch_lock_assert([NNObjectSerializer queueForObject:self]);
+
     CFArrayRef cgInfo = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements,  kCGNullWindowID);
     NSArray *info = CFBridgingRelease(cgInfo);
     
@@ -87,7 +84,7 @@ static NSTimeInterval refreshInterval = 0.1;
     
     __weak NNWindowListWorker *this = self;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(refreshInterval * NSEC_PER_SEC));
-    dispatch_after(popTime, self.lock, ^(void){
+    dispatch_after(popTime, [NNObjectSerializer queueForObject:self], ^(void){
         [this refresh];
     });
 }

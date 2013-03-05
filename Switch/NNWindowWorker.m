@@ -16,6 +16,7 @@
 
 #import "despatch.h"
 #import "imageComparators.h"
+#import "NNObjectSerializer.h"
 #import "NNWindowData+Private.h"
 
 
@@ -28,7 +29,6 @@ static NSTimeInterval NNPollingIntervalSlow = 1.0;
 @property (nonatomic, weak) NNWindowData *window;
 @property (nonatomic, assign) NSTimeInterval updateInterval;
 @property (nonatomic, strong) NSImage *previousCapture;
-@property (nonatomic, strong) dispatch_queue_t lock;
 
 @end
 
@@ -42,17 +42,17 @@ static NSTimeInterval NNPollingIntervalSlow = 1.0;
     
     _window = window;
     
-    _lock = despatch_lock_create([[NSString stringWithFormat:@"%@: %p lock", [self class], self] UTF8String]);
+    NNWindowWorker *serializedSelf = [NNObjectSerializer serializedObjectForObject:self];
     
     // Start the polling interval thing.
     _updateInterval = NNPollingIntervalFast;
     __weak NNWindowWorker *this = self;
-    dispatch_async(self.lock, ^{
+    dispatch_async([NNObjectSerializer queueForObject:self], ^{
         NSLog(@"Started refreshing window contents for %@", [_window description]);
         [this workerLoop];
     });
     
-    return self;
+    return serializedSelf;
 }
 
 - (void)dealloc;
@@ -64,7 +64,8 @@ static NSTimeInterval NNPollingIntervalSlow = 1.0;
 
 - (void)workerLoop;
 {
-    despatch_lock_assert(self.lock);
+    despatch_lock_assert([NNObjectSerializer queueForObject:self]);
+    
     // Short circuit in case the window went away or we were told to stop.
     if (!self.window) {
         NSLog(@"Worker stopped—no window");
@@ -96,7 +97,7 @@ static NSTimeInterval NNPollingIntervalSlow = 1.0;
         } else {
             self.updateInterval = NNPollingIntervalFast;
             self.previousCapture = result;
-            [self.delegate windowWorker:self didUpdateContentsOfWindow:self.window];
+            [self.delegate windowWorker:[NNObjectSerializer serializedObjectForObject:self] didUpdateContentsOfWindow:self.window];
             self.window.image = [result copy];
         }
     } else if (self.window.exists) {
@@ -111,7 +112,7 @@ static NSTimeInterval NNPollingIntervalSlow = 1.0;
 //        NSLog(@"WARNING: Window content analysis for %@ took %f seconds longer than update interval %f", self.window, fabs(delayInSeconds), self.updateInterval);
     }
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(MAX(0.01, delayInSeconds) * NSEC_PER_SEC));
-    dispatch_after(popTime, self.lock, ^(void){
+    dispatch_after(popTime, [NNObjectSerializer queueForObject:self], ^(void){
         [this workerLoop];
     });
 }

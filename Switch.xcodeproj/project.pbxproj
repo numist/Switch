@@ -32,6 +32,7 @@
 		BCA7354616E1657000CD4C74 /* NNSwitcher.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354516E1657000CD4C74 /* NNSwitcher.m */; };
 		BCA7354916E1F14D00CD4C74 /* NNSelectionBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354816E1F14D00CD4C74 /* NNSelectionBoxView.m */; };
 		BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */; };
+		BCA7355016E5442100CD4C74 /* NNObjectSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354F16E5442000CD4C74 /* NNObjectSerializer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,6 +97,8 @@
 		BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = imageComparators.h; sourceTree = "<group>"; };
 		BCA7354B16E2ED5000CD4C74 /* NNHUDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHUDView.h; sourceTree = "<group>"; };
 		BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDView.m; sourceTree = "<group>"; };
+		BCA7354E16E5441F00CD4C74 /* NNObjectSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNObjectSerializer.h; sourceTree = "<group>"; };
+		BCA7354F16E5442000CD4C74 /* NNObjectSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNObjectSerializer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -236,6 +239,8 @@
 		BCA7353016DB2BDC00CD4C74 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				BCA7354E16E5441F00CD4C74 /* NNObjectSerializer.h */,
+				BCA7354F16E5442000CD4C74 /* NNObjectSerializer.m */,
 				BCA7352916DB1E9C00CD4C74 /* despatch.h */,
 				BCA7352A16DB1E9C00CD4C74 /* despatch.m */,
 				BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */,
@@ -390,6 +395,7 @@
 				BCA7354616E1657000CD4C74 /* NNSwitcher.m in Sources */,
 				BCA7354916E1F14D00CD4C74 /* NNSelectionBoxView.m in Sources */,
 				BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */,
+				BCA7355016E5442100CD4C74 /* NNObjectSerializer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
