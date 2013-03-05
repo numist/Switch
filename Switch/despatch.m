@@ -13,13 +13,19 @@
 //
 
 #include <assert.h>
+#include "despatch.h"
 
 
 dispatch_queue_t despatch_lock_create(const char *label)
 {
     dispatch_queue_t result = dispatch_queue_create(label, DISPATCH_QUEUE_SERIAL);
-    dispatch_queue_set_specific(result, (__bridge const void *)(result), (__bridge void *)(result), NULL);
+    despatch_lock_promote(result);
     return result;
+}
+
+void despatch_lock_promote(dispatch_queue_t queue)
+{
+    dispatch_queue_set_specific(queue, (__bridge const void *)(queue), (__bridge void *)(queue), NULL);
 }
 
 inline static void despatch_assert_is_lock(dispatch_queue_t lock)

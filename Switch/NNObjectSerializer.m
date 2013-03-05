@@ -42,6 +42,14 @@ static void *kNNSerializerKey = (void *)1784668075; // Guaranteed random by arc4
     return objc_getAssociatedObject(obj, kNNSerializerKey) ?: [[self alloc] initWithObject:obj];
 }
 
++ (void)useMainQueueForObject:(id)obj;
+{
+    NNObjectSerializer *proxy = [self serializedObjectForObject:obj];
+    dispatch_queue_t queue = dispatch_get_main_queue();
+    despatch_lock_promote(queue);
+    proxy->queue = queue;
+}
+
 #pragma mark Instance Methods
 
 - (id)initWithObject:(id)obj;

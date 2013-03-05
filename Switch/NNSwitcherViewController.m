@@ -16,6 +16,7 @@
 
 #import "constants.h"
 #import "NNHUDView.h"
+#import "NNObjectSerializer.h"
 #import "NNSelectionBoxView.h"
 #import "NNWindowThumbnailView.h"
 #import "NNWindowData.h"
@@ -44,7 +45,9 @@
     _switcher = switcher;
     _firstUpdate = YES;
     
-    return self;
+    [NNObjectSerializer useMainQueueForObject:self];
+    
+    return [NNObjectSerializer serializedObjectForObject:self];
 }
 
 - (void)loadView;

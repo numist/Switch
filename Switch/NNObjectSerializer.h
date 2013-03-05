@@ -18,5 +18,6 @@
 
 + (id)serializedObjectForObject:(id)obj;
 + (dispatch_queue_t)queueForObject:(id)obj;
++ (void)useMainQueueForObject:(id)obj;
 
 @end
