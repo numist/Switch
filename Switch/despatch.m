@@ -16,6 +16,9 @@
 #include "despatch.h"
 
 
+inline static BOOL despatch_queue_is_lock(dispatch_queue_t queue);
+
+
 dispatch_queue_t despatch_lock_create(const char *label)
 {
     dispatch_queue_t result = dispatch_queue_create(label, DISPATCH_QUEUE_SERIAL);
@@ -25,35 +28,28 @@ dispatch_queue_t despatch_lock_create(const char *label)
 
 void despatch_lock_promote(dispatch_queue_t queue)
 {
-    dispatch_queue_set_specific(queue, (__bridge const void *)(queue), (__bridge void *)(queue), NULL);
+    if (!despatch_queue_is_lock(queue)) {
+        dispatch_queue_set_specific(queue, (__bridge const void *)(queue), (__bridge void *)(queue), NULL);
+    }
 }
 
-inline static void despatch_assert_is_lock(dispatch_queue_t lock)
+inline static BOOL despatch_queue_is_lock(dispatch_queue_t queue)
 {
-    assert(dispatch_queue_get_specific(lock, (__bridge const void *)(lock)));
+    return !!dispatch_queue_get_specific(queue, (__bridge const void *)(queue));
 }
 
 void despatch_lock_assert(dispatch_queue_t lock)
 {
-    despatch_assert_is_lock(lock);
-    assert(dispatch_get_specific((__bridge const void *)(lock)));
+    assert(despatch_lock_is_held(lock));
 }
 
 void despatch_lock_assert_not(dispatch_queue_t lock)
 {
-    despatch_assert_is_lock(lock);
-    assert(!dispatch_get_specific((__bridge const void *)(lock)));
+    assert(!despatch_lock_is_held(lock));
 }
 
-//void despatch_lock_async(dispatch_queue_t lock, dispatch_block_t block)
-//{
-//    despatch_assert_is_lock(lock);
-//    dispatch_async(lock, block);
-//}
-//
-//void despatch_lock_sync(dispatch_queue_t lock, dispatch_block_t block)
-//{
-//    despatch_assert_is_lock(lock);
-//    // stack tracking?
-//    dispatch_sync(lock, block);
-//}
+BOOL despatch_lock_is_held(dispatch_queue_t lock)
+{
+    assert(despatch_queue_is_lock(lock));
+    return !!dispatch_get_specific((__bridge const void *)(lock));
+}

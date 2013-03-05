@@ -21,5 +21,6 @@ dispatch_queue_t despatch_lock_create(const char *label);
 void despatch_lock_promote(dispatch_queue_t queue);
 void despatch_lock_assert(dispatch_queue_t lock);
 void despatch_lock_assert_not(dispatch_queue_t lock);
+BOOL despatch_lock_is_held(dispatch_queue_t lock);
 
 #endif

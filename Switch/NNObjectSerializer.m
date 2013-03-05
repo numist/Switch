@@ -78,10 +78,14 @@ static void *kNNSerializerKey = (void *)1784668075; // Guaranteed random by arc4
     [invocation setTarget:self->target];
     dispatch_block_t invoke = ^{ [invocation invoke]; };
     
-    if ([[invocation methodSignature] methodReturnLength]) {
-        dispatch_sync(self->queue, invoke);
+    if (despatch_lock_is_held(self->queue)) {
+        invoke();
     } else {
-        dispatch_async(self->queue, invoke);
+        if ([[invocation methodSignature] methodReturnLength]) {
+            dispatch_sync(self->queue, invoke);
+        } else {
+            dispatch_async(self->queue, invoke);
+        }
     }
 }
 
