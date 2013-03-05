@@ -55,17 +55,15 @@
 
 - (void)dealloc;
 {
-    // set the active window to the currently-indexed window.
+    // TODO: set the active window to the currently-indexed window.
 }
 
 - (void)setIndex:(unsigned int)index;
 {
     _index = index;
     
-    // TODO: constrain to number of windows—add concurrency and make sure updating the windows array modifies the index appropriately!
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.delegate switcher:self didUpdateIndex:index];
-    });
+    // TODO: constrain to number of windows—make sure updating the windows array modifies the index appropriately!
+    [self.delegate switcher:self didUpdateIndex:index];
 }
 
 #pragma mark Internal
@@ -110,7 +108,6 @@
     self.delegate = controller;
     self.switcherWindowController = controller;
     self.switcherWindow = switcherWindow;
-    NSLog(@"Created new switcher window and controller");
 }
 
 #pragma mark NNWindowStoreDelegate

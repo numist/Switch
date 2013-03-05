@@ -62,7 +62,6 @@ static void *kNNSerializerKey = (void *)1784668075; // Guaranteed random by arc4
 
 - (void)dealloc;
 {
-    NSLog(@"dealloc called on proxy for target %p", self->target);
     objc_setAssociatedObject(self->target, kNNSerializerKey, nil, OBJC_ASSOCIATION_ASSIGN);
 }
 

@@ -49,7 +49,6 @@
 
 - (void)loadView;
 {
-    NSLog(@"View loaded");
     self.view = [[NNHUDView alloc] initWithFrame:NSZeroRect];
 }
 

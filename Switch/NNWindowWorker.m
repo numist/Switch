@@ -41,23 +41,18 @@ static NSTimeInterval NNPollingIntervalSlow = 1.0;
     if (!self) { return nil; }
     
     _window = window;
+    _updateInterval = NNPollingIntervalFast;
     
     NNWindowWorker *serializedSelf = [NNObjectSerializer serializedObjectForObject:self];
     
     // Start the polling interval thing.
-    _updateInterval = NNPollingIntervalFast;
+    [serializedSelf workerLoop];
     __weak NNWindowWorker *this = self;
     dispatch_async([NNObjectSerializer queueForObject:self], ^{
-        NSLog(@"Started refreshing window contents for %@", [_window description]);
         [this workerLoop];
     });
     
     return serializedSelf;
-}
-
-- (void)dealloc;
-{
-    NSLog(@"Worker for window %@ killed by dealloc", [_window description]);
 }
 
 #pragma Internal
@@ -68,7 +63,6 @@ static NSTimeInterval NNPollingIntervalSlow = 1.0;
     
     // Short circuit in case the window went away or we were told to stop.
     if (!self.window) {
-        NSLog(@"Worker stopped—no window");
         return;
     }
     

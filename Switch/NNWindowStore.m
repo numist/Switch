@@ -110,11 +110,9 @@
         NSLog(@"Window array changed, tracks %lu windows", [newArray count]);
         id<NNWindowStoreDelegate> delegate = self.delegate;
         if (delegate) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ([delegate respondsToSelector:@selector(windowStoreDidUpdateWindowList:)]) {
-                    [delegate windowStoreDidUpdateWindowList:[NNObjectSerializer serializedObjectForObject:self]];
-                }
-            });
+            if ([delegate respondsToSelector:@selector(windowStoreDidUpdateWindowList:)]) {
+                [delegate windowStoreDidUpdateWindowList:[NNObjectSerializer serializedObjectForObject:self]];
+            }
         }
     }
 }

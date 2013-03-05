@@ -48,11 +48,6 @@ static NSTimeInterval refreshInterval = 0.1;
     return serializedSelf;
 }
 
-- (void)dealloc;
-{
-    NSLog(@"Window list worker killed by dealloc");
-}
-
 #pragma mark Internal
 
 - (void)refresh;
