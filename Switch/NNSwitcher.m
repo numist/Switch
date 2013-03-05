@@ -59,13 +59,25 @@
     // TODO: set the active window to the currently-indexed window.
 }
 
+@synthesize index = _index;
+
 - (void)setIndex:(unsigned int)index;
 {
-    index %= [self.windows count];
     _index = index;
     
     // TODO: make sure updating the windows array modifies the index appropriately!
-    [self.delegate switcher:self didUpdateIndex:index];
+    if ([self.windows count]) {
+        [self.delegate switcher:self didUpdateIndex:self.index];
+    }
+}
+
+- (unsigned)index;
+{
+    if ([self.windows count]) {
+        return _index % [self.windows count];
+    } else {
+        return _index;
+    }
 }
 
 #pragma mark Internal
@@ -116,7 +128,7 @@
 
 - (void)windowStoreDidUpdateWindowList:(NNWindowStore *)store;
 {
-    NNWindowData *selectedWindow = [self.windows objectAtIndex:self.index];
+    NNWindowData *selectedWindow = [self.windows count] > self.index ? [self.windows objectAtIndex:self.index] : nil;
     self.windows = store.windows;
     
     [self createSwitcherWindowIfNeeded];
@@ -124,12 +136,14 @@
     [self.delegate switcher:self didUpdateWindowList:self.windows];
     
     NSUInteger newIndex = [self.windows indexOfObject:selectedWindow];
-    if (![self.windows containsObject:selectedWindow]) {
-        // Window destroyed
-        self.index = MIN(self.index, [self.windows count] - 1);
-    } else if (self.index != newIndex) {
-        // Window moved
-        self.index = newIndex;
+    if (selectedWindow) {
+        if (![self.windows containsObject:selectedWindow]) {
+            // Window destroyed
+            self.index = MIN(self.index, [self.windows count] - 1);
+        } else if (self.index != newIndex) {
+            // Window moved
+            self.index = newIndex;
+        }
     }
 }
 
