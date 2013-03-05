@@ -14,16 +14,10 @@
 
 #import <Foundation/Foundation.h>
 
+#import "NNWindowWorkerDelegate.h"
+
 
 @class NNWindowData;
-@class NNWindowWorker;
-
-
-@protocol NNWindowWorkerDelegate <NSObject>
-
-- (void)windowWorker:(NNWindowWorker *)worker didUpdateContentsOfWindow:(NNWindowData *)window;
-
-@end
 
 
 @interface NNWindowWorker : NSObject

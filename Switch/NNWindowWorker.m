@@ -91,8 +91,8 @@ static NSTimeInterval NNPollingIntervalSlow = 1.0;
         } else {
             self.updateInterval = NNPollingIntervalFast;
             self.previousCapture = result;
-            [self.delegate windowWorker:[NNObjectSerializer serializedObjectForObject:self] didUpdateContentsOfWindow:self.window];
             self.window.image = [result copy];
+            [self.delegate windowWorker:[NNObjectSerializer serializedObjectForObject:self] didUpdateContentsOfWindow:self.window];
         }
     } else if (self.window.exists) {
         // Didn't get a real image, but the window exists. Try again ASAP.

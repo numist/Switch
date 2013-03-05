@@ -99,6 +99,10 @@
 		BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDView.m; sourceTree = "<group>"; };
 		BCA7354E16E5441F00CD4C74 /* NNObjectSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNObjectSerializer.h; sourceTree = "<group>"; };
 		BCA7354F16E5442000CD4C74 /* NNObjectSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNObjectSerializer.m; sourceTree = "<group>"; };
+		BCA7359016E5929300CD4C74 /* NNSwitcherDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NNSwitcherDelegate.h; sourceTree = "<group>"; };
+		BCA7359116E5930900CD4C74 /* NNWindowStoreDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NNWindowStoreDelegate.h; sourceTree = "<group>"; };
+		BCA7359216E5936000CD4C74 /* NNWindowWorkerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NNWindowWorkerDelegate.h; sourceTree = "<group>"; };
+		BCA7359316E5939600CD4C74 /* NNHotKeyManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NNHotKeyManagerDelegate.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -219,6 +223,7 @@
 				BCA7351516DAC59000CD4C74 /* NNWindowStore.h */,
 				BCA7351816DAC5BB00CD4C74 /* NNWindowStore+Private.h */,
 				BCA7351616DAC59000CD4C74 /* NNWindowStore.m */,
+				BCA7359116E5930900CD4C74 /* NNWindowStoreDelegate.h */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -249,8 +254,10 @@
 				BCA734F316DAC53F00CD4C74 /* NNAppDelegate.m */,
 				BCA7353116DB2C0100CD4C74 /* NNHotKeyManager.h */,
 				BCA7353216DB2C0100CD4C74 /* NNHotKeyManager.m */,
+				BCA7359316E5939600CD4C74 /* NNHotKeyManagerDelegate.h */,
 				BCA7354416E1657000CD4C74 /* NNSwitcher.h */,
 				BCA7354516E1657000CD4C74 /* NNSwitcher.m */,
+				BCA7359016E5929300CD4C74 /* NNSwitcherDelegate.h */,
 			);
 			name = Logic;
 			sourceTree = "<group>";
@@ -280,6 +287,7 @@
 			children = (
 				BCA7352016DAC6A900CD4C74 /* NNWindowWorker.h */,
 				BCA7352116DAC6A900CD4C74 /* NNWindowWorker.m */,
+				BCA7359216E5936000CD4C74 /* NNWindowWorkerDelegate.h */,
 				BCA7351916DAC5E200CD4C74 /* NNWindowListWorker.h */,
 				BCA7351A16DAC5E200CD4C74 /* NNWindowListWorker.m */,
 			);

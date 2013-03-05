@@ -14,17 +14,7 @@
 
 #import <Foundation/Foundation.h>
 
-
-@class NNHotKeyManager;
-
-
-@protocol NNHotKeyManagerDelegate <NSObject>
-
-- (void)hotKeyManagerDidInvokeSwitcher:(NNHotKeyManager *)manager;
-- (void)hotKeyManagerDidDismissSwitcher:(NNHotKeyManager *)manager;
-// …?
-
-@end
+#import "NNHotKeyManagerDelegate.h"
 
 
 @interface NNHotKeyManager : NSObject

@@ -14,18 +14,7 @@
 
 #import <Foundation/Foundation.h>
 
-
-@class NNWindowStore;
-@class NNWindowData;
-
-
-@protocol NNWindowStoreDelegate <NSObject>
-@optional
-
-- (void)windowStoreDidUpdateWindowList:(NNWindowStore *)store;
-- (void)windowStore:(NNWindowStore *)store contentsOfWindowDidChange:(NNWindowData *)window;
-
-@end
+#import "NNWindowStoreDelegate.h"
 
 
 @interface NNWindowStore : NSObject

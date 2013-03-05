@@ -25,24 +25,31 @@
 
 @interface NNSwitcherViewController ()
 
-@property (nonatomic, weak) NNSwitcher *switcher;
-
+// Window objects to purge with their corresponding views after they've been animated out.
 @property (nonatomic, strong) NSMutableDictionary *deadWindows;
-@property (nonatomic, strong) NSMutableDictionary *thumbViews;
+
+// First draw is not animated, subsequent draws are
 @property (nonatomic, assign) BOOL firstUpdate;
+
+// The current animation, if there is one.
 @property (nonatomic, weak) NSAnimation *currentAnimation;
+
+// Mapping window objects to thumbnail views
+@property (nonatomic, strong) NSMutableDictionary *thumbViews;
+
+// I guess these would normally be IB connections
+@property (nonatomic, weak) NNSelectionBoxView *selectionBox;
 
 @end
 
 
 @implementation NNSwitcherViewController
 
-- (id)initWithSwitcher:(NNSwitcher *)switcher;
+- (id)init;
 {
     self = [super initWithNibName:nil bundle:nil];
     if (!self) return nil;
 
-    _switcher = switcher;
     _firstUpdate = YES;
     
     [NNObjectSerializer useMainQueueForObject:self];

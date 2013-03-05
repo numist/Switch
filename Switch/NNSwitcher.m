@@ -16,6 +16,7 @@
 
 #import "constants.h"
 #import "NNSwitcherViewController.h"
+#import "NNWindowStore.h"
 
 
 @interface NNSwitcher ()
@@ -96,7 +97,7 @@
         switcherWindow.level = NSPopUpMenuWindowLevel;
     }
     
-    NNSwitcherViewController *controller = [[NNSwitcherViewController alloc] initWithSwitcher:self];
+    NNSwitcherViewController *controller = [NNSwitcherViewController new];
     {
         NSView *contentView = [controller view];
         contentView.frame = ((NSView *)switcherWindow.contentView).bounds;
