@@ -216,6 +216,7 @@
 
 - (NSRect)frameForSelectionBox;
 {
+    // TODO: This is the wrong way to compute thumbSize! There might be a different target!
     return nnItemRect((self.view.frame.size.height - kNNWindowToThumbInset * 2.0), self.selectionBoxIndex);
 }
 

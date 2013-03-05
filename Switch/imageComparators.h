@@ -26,6 +26,8 @@
  *
  * • The worst case cache times (cache miss) are the same as the worst case of their uncached counterparts, plus the cost of looking up and setting an associated object, but the cache is only invalidated when a window is created or resized, which are far less common operations.
  * • The tiff technique is 100% accurate whereas the bitmap technique effectively samples the image at regular intervals.
+ * • Explore using the CGImage's CGDataProvider to save a drawInRect/TIFFRepresentation
+ * • Explore using IOSurfaces if possible?
  */
 
 __attribute__((unused)) static BOOL (^imagesDifferByCachedTIFFComparison)(NSImage *, NSImage *) = ^(NSImage *a, NSImage *b) {
