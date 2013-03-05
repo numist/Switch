@@ -216,6 +216,9 @@
 				BCA7351C16DAC61F00CD4C74 /* NNWindowData.h */,
 				BCA7351F16DAC62C00CD4C74 /* NNWindowData+Private.h */,
 				BCA7351D16DAC61F00CD4C74 /* NNWindowData.m */,
+				BCA7351516DAC59000CD4C74 /* NNWindowStore.h */,
+				BCA7351816DAC5BB00CD4C74 /* NNWindowStore+Private.h */,
+				BCA7351616DAC59000CD4C74 /* NNWindowStore.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -239,24 +242,15 @@
 		BCA7353016DB2BDC00CD4C74 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
-				BCA7352916DB1E9C00CD4C74 /* despatch.h */,
-				BCA7352A16DB1E9C00CD4C74 /* despatch.m */,
+				BCA7358E16E585B800CD4C74 /* Concurrency */,
+				BCA7358F16E585D400CD4C74 /* Polling */,
 				BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */,
 				BCA734F216DAC53F00CD4C74 /* NNAppDelegate.h */,
 				BCA734F316DAC53F00CD4C74 /* NNAppDelegate.m */,
 				BCA7353116DB2C0100CD4C74 /* NNHotKeyManager.h */,
 				BCA7353216DB2C0100CD4C74 /* NNHotKeyManager.m */,
-				BCA7354E16E5441F00CD4C74 /* NNObjectSerializer.h */,
-				BCA7354F16E5442000CD4C74 /* NNObjectSerializer.m */,
 				BCA7354416E1657000CD4C74 /* NNSwitcher.h */,
 				BCA7354516E1657000CD4C74 /* NNSwitcher.m */,
-				BCA7352016DAC6A900CD4C74 /* NNWindowWorker.h */,
-				BCA7352116DAC6A900CD4C74 /* NNWindowWorker.m */,
-				BCA7351916DAC5E200CD4C74 /* NNWindowListWorker.h */,
-				BCA7351A16DAC5E200CD4C74 /* NNWindowListWorker.m */,
-				BCA7351516DAC59000CD4C74 /* NNWindowStore.h */,
-				BCA7351816DAC5BB00CD4C74 /* NNWindowStore+Private.h */,
-				BCA7351616DAC59000CD4C74 /* NNWindowStore.m */,
 			);
 			name = Logic;
 			sourceTree = "<group>";
@@ -268,6 +262,28 @@
 				BCA7353F16E159F400CD4C74 /* NNSwitcherViewController.m */,
 			);
 			name = Controller;
+			sourceTree = "<group>";
+		};
+		BCA7358E16E585B800CD4C74 /* Concurrency */ = {
+			isa = PBXGroup;
+			children = (
+				BCA7352916DB1E9C00CD4C74 /* despatch.h */,
+				BCA7352A16DB1E9C00CD4C74 /* despatch.m */,
+				BCA7354E16E5441F00CD4C74 /* NNObjectSerializer.h */,
+				BCA7354F16E5442000CD4C74 /* NNObjectSerializer.m */,
+			);
+			name = Concurrency;
+			sourceTree = "<group>";
+		};
+		BCA7358F16E585D400CD4C74 /* Polling */ = {
+			isa = PBXGroup;
+			children = (
+				BCA7352016DAC6A900CD4C74 /* NNWindowWorker.h */,
+				BCA7352116DAC6A900CD4C74 /* NNWindowWorker.m */,
+				BCA7351916DAC5E200CD4C74 /* NNWindowListWorker.h */,
+				BCA7351A16DAC5E200CD4C74 /* NNWindowListWorker.m */,
+			);
+			name = Polling;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
