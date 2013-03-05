@@ -37,18 +37,18 @@ const CGFloat kNNSelectionRoundRectRadius = kNNWindowRoundRectRadius - kNNWindow
 const NSTimeInterval delayBeforePresentingSwitcherWindow = 0.25;
 
 // Maths
-static CGFloat nnItemSideLength(CGFloat thumbSize)
+__attribute__((const)) static CGFloat nnItemSideLength(CGFloat thumbSize)
 {
     return kNNItemToThumbInset * 2.0 + thumbSize;
 }
 
-static NSSize nnItemSize(CGFloat thumbSize)
+__attribute__((const)) static NSSize nnItemSize(CGFloat thumbSize)
 {
     return NSMakeSize(nnItemSideLength(thumbSize),
                       nnItemSideLength(thumbSize));
 }
 
-NSRect nnItemRect(CGFloat thumbSize, NSUInteger index)
+__attribute__((const)) NSRect nnItemRect(CGFloat thumbSize, NSUInteger index)
 {
     return NSMakeRect(kNNWindowToItemInset + (index * (nnItemSideLength(thumbSize) - kNNItemBorderWidth)),
                       kNNWindowToItemInset,
@@ -56,12 +56,12 @@ NSRect nnItemRect(CGFloat thumbSize, NSUInteger index)
                       nnItemSideLength(thumbSize));
 }
 
-static NSSize nnThumbSize(CGFloat thumbSize)
+__attribute__((const)) static NSSize nnThumbSize(CGFloat thumbSize)
 {
     return NSMakeSize(thumbSize, thumbSize);
 }
 
-NSRect nnThumbRect(CGFloat thumbSize, NSUInteger index)
+__attribute__((const)) NSRect nnThumbRect(CGFloat thumbSize, NSUInteger index)
 {
     return NSMakeRect(kNNWindowToThumbInset + index * (nnItemSideLength(thumbSize) - kNNItemBorderWidth),
                       kNNWindowToThumbInset,
@@ -69,12 +69,12 @@ NSRect nnThumbRect(CGFloat thumbSize, NSUInteger index)
                       thumbSize);
 }
 
-CGFloat nnTotalPadding(NSUInteger numWindows)
+__attribute__((const)) CGFloat nnTotalPadding(NSUInteger numWindows)
 {
     return kNNWindowToItemInset * 2.0 + numWindows * (kNNItemToThumbInset * 2.0 - kNNItemBorderWidth) + kNNItemBorderWidth;
 }
 
-CGFloat nnTotalWidth(CGFloat thumbSize, NSUInteger numWindows)
+__attribute__((const)) CGFloat nnTotalWidth(CGFloat thumbSize, NSUInteger numWindows)
 {
     NSRect lastItem = nnItemRect(thumbSize, (numWindows - 1));
     return lastItem.origin.x + lastItem.size.width + kNNWindowToItemInset;
