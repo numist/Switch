@@ -17,7 +17,10 @@
 @interface NNObjectSerializer : NSProxy
 
 + (id)serializedObjectForObject:(id)obj;
-+ (dispatch_queue_t)queueForObject:(id)obj;
 + (void)useMainQueueForObject:(id)obj;
+
++ (void)performOnObject:(id)obj block:(dispatch_block_t)work;
++ (void)performAndWaitOnObject:(id)obj block:(dispatch_block_t)work;
++ (void)performOnObject:(id)obj afterDelay:(NSTimeInterval)delayInSeconds block:(dispatch_block_t)work;
 
 @end

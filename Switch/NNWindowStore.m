@@ -45,7 +45,8 @@
 - (void)startUpdatingWindowList;
 {
     if (!self.listWorker) {
-        self.listWorker = [[NNWindowListWorker alloc] initWithWindowStore:self];
+        self.listWorker = [[NNWindowListWorker alloc] initWithWindowStore:[NNObjectSerializer serializedObjectForObject:self]];
+        [self.listWorker start];
     }
 }
 
@@ -60,7 +61,8 @@
     self.windowWorkers = [NSMutableDictionary dictionaryWithCapacity:[_windows count]];
     for (NNWindowData *window in _windows) {
         NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window];
-        worker.delegate = (id<NNWindowWorkerDelegate>)self;
+        worker.delegate = (id<NNWindowWorkerDelegate>)[NNObjectSerializer serializedObjectForObject:self];
+        [worker start];
         [self.windowWorkers setObject:worker forKey:window];
     }
 }
@@ -76,14 +78,14 @@
 - (void)windowWorker:(NNWindowWorker *)worker didUpdateContentsOfWindow:(NNWindowData *)window;
 {
     id<NNWindowStoreDelegate> delegate = self.delegate;
-    if ([delegate respondsToSelector:@selector(windowStore:contentsOfWindowDidChange:)]) {
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [delegate windowStore:[NNObjectSerializer serializedObjectForObject:self] contentsOfWindowDidChange:window];
-    }
+    });
 }
 
 #pragma mark Private
 
-- (void)setWindows:(NSArray *)newArray;
+- (oneway void)setWindows:(NSArray *)newArray;
 {
     NSArray *oldArray = _windows;
     _windows = newArray;
@@ -100,7 +102,8 @@
         for (NNWindowData *window in newArray) {
             if (![oldArray containsObject:window]) {
                 NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window];
-                worker.delegate = (id<NNWindowWorkerDelegate>)self;
+                worker.delegate = (id<NNWindowWorkerDelegate>)[NNObjectSerializer serializedObjectForObject:self];
+                [worker start];
                 [self.windowWorkers setObject:worker forKey:window];
             }
         }
@@ -109,11 +112,9 @@
     if (windowsChanged) {
         NSLog(@"Window array changed, tracks %lu windows", [newArray count]);
         id<NNWindowStoreDelegate> delegate = self.delegate;
-        if (delegate) {
-            if ([delegate respondsToSelector:@selector(windowStoreDidUpdateWindowList:)]) {
-                [delegate windowStoreDidUpdateWindowList:[NNObjectSerializer serializedObjectForObject:self]];
-            }
-        }
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            [delegate windowStoreDidUpdateWindowList:[NNObjectSerializer serializedObjectForObject:self]];
+        });
     }
 }
 

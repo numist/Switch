@@ -40,20 +40,19 @@ static NSTimeInterval refreshInterval = 0.1;
     
     _store = store;
     
-    NNWindowListWorker *serializedSelf = [NNObjectSerializer serializedObjectForObject:self];
-    
-    [serializedSelf refresh];
-    
     // All calls made by the owner of this object should be serialized.
-    return serializedSelf;
+    return [NNObjectSerializer serializedObjectForObject:self];
+}
+
+- (oneway void)start;
+{
+    [self refresh];
 }
 
 #pragma mark Internal
 
-- (void)refresh;
+- (oneway void)refresh;
 {
-    despatch_lock_assert([NNObjectSerializer queueForObject:self]);
-
     CFArrayRef cgInfo = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements,  kCGNullWindowID);
     NSArray *info = CFBridgingRelease(cgInfo);
     
@@ -75,13 +74,16 @@ static NSTimeInterval refreshInterval = 0.1;
     }
     
     self.windowDict = newWindowDict;
-    self.store.windows = windows;
+    // TODO: This should probably be a delegate mechanism, for clarity.
+    __weak NNWindowStore *store = self.store;
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        store.windows = windows;
+    });
     
     __weak NNWindowListWorker *this = self;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(refreshInterval * NSEC_PER_SEC));
-    dispatch_after(popTime, [NNObjectSerializer queueForObject:self], ^(void){
+    [NNObjectSerializer performOnObject:self afterDelay:refreshInterval block:^{
         [this refresh];
-    });
+    }];
 }
 
 @end

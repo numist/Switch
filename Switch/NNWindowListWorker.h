@@ -21,5 +21,6 @@
 @interface NNWindowListWorker : NSObject
 
 - (instancetype)initWithWindowStore:(NNWindowStore *)store;
+- (void)start;
 
 @end

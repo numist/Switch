@@ -45,22 +45,18 @@ static NSTimeInterval NNPollingIntervalSlow = 1.0;
     
     NNWindowWorker *serializedSelf = [NNObjectSerializer serializedObjectForObject:self];
     
-    // Start the polling interval thing.
-    [serializedSelf workerLoop];
-    __weak NNWindowWorker *this = self;
-    dispatch_async([NNObjectSerializer queueForObject:self], ^{
-        [this workerLoop];
-    });
-    
     return serializedSelf;
+}
+
+- (oneway void)start;
+{
+    [self workerLoop];
 }
 
 #pragma Internal
 
-- (void)workerLoop;
+- (oneway void)workerLoop;
 {
-    despatch_lock_assert([NNObjectSerializer queueForObject:self]);
-    
     // Short circuit in case the window went away or we were told to stop.
     if (!self.window) {
         return;
@@ -92,7 +88,11 @@ static NSTimeInterval NNPollingIntervalSlow = 1.0;
             self.updateInterval = NNPollingIntervalFast;
             self.previousCapture = result;
             self.window.image = [result copy];
-            [self.delegate windowWorker:[NNObjectSerializer serializedObjectForObject:self] didUpdateContentsOfWindow:self.window];
+            id<NNWindowWorkerDelegate> delegate = self.delegate;
+            NNWindowData *window = self.window;
+            dispatch_async(dispatch_get_global_queue(0, 0), ^{
+                [delegate windowWorker:[NNObjectSerializer serializedObjectForObject:self] didUpdateContentsOfWindow:window];
+            });
         }
     } else if (self.window.exists) {
         // Didn't get a real image, but the window exists. Try again ASAP.
@@ -105,10 +105,9 @@ static NSTimeInterval NNPollingIntervalSlow = 1.0;
     if (delayInSeconds < 0.0) {
 //        NSLog(@"WARNING: Window content analysis for %@ took %f seconds longer than update interval %f", self.window, fabs(delayInSeconds), self.updateInterval);
     }
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(MAX(0.01, delayInSeconds) * NSEC_PER_SEC));
-    dispatch_after(popTime, [NNObjectSerializer queueForObject:self], ^(void){
+    [NNObjectSerializer performOnObject:self afterDelay:MAX(0.01, delayInSeconds) block:^{
         [this workerLoop];
-    });
+    }];
 }
 
 @end

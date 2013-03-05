@@ -17,7 +17,6 @@
 
 
 @protocol NNWindowStoreDelegate <NSObject>
-@optional
 
 - (void)windowStoreDidUpdateWindowList:(NNWindowStore *)store;
 - (void)windowStore:(NNWindowStore *)store contentsOfWindowDidChange:(NNWindowData *)window;

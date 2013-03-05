@@ -32,11 +32,6 @@ static void *kNNSerializerKey = (void *)1784668075; // Guaranteed random by arc4
 
 #pragma mark Class Functionality Methods
 
-+ (dispatch_queue_t)queueForObject:(id)obj;
-{
-    return ((NNObjectSerializer *)[self serializedObjectForObject:obj])->lock;
-}
-
 + (id)serializedObjectForObject:(id)obj;
 {
     return objc_getAssociatedObject(obj, kNNSerializerKey) ?: [[self alloc] initWithObject:obj];
@@ -48,6 +43,29 @@ static void *kNNSerializerKey = (void *)1784668075; // Guaranteed random by arc4
     dispatch_queue_t queue = dispatch_get_main_queue();
     despatch_lock_promote(queue);
     proxy->lock = queue;
+}
+
++ (void)performOnObject:(id)obj block:(dispatch_block_t)work;
+{
+    dispatch_async([self queueForObject:obj], work);
+}
+
++ (void)performAndWaitOnObject:(id)obj block:(dispatch_block_t)work;
+{
+    dispatch_sync([self queueForObject:obj], work);
+}
+
++ (void)performOnObject:(id)obj afterDelay:(NSTimeInterval)delayInSeconds block:(dispatch_block_t)work;
+{
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, [self queueForObject:obj], work);
+}
+
+#pragma mark Internal Class Methods
+
++ (dispatch_queue_t)queueForObject:(id)obj;
+{
+    return ((NNObjectSerializer *)[self serializedObjectForObject:obj])->lock;
 }
 
 #pragma mark Instance Methods
@@ -78,17 +96,20 @@ static void *kNNSerializerKey = (void *)1784668075; // Guaranteed random by arc4
     [invocation setTarget:self->target];
     dispatch_block_t invoke = ^{ [invocation invoke]; };
     
-    if ([[invocation methodSignature] methodReturnLength]) {
+    if ([[invocation methodSignature] isOneway]) {
+        // Oneway methods are automatically asynchronous.
+        [invocation retainArguments];
+        dispatch_async(self->lock, invoke);
+    } else {
         if (despatch_lock_is_held(self->lock)) {
+            // Recursive lock acquisition has to be supported for objects that have to do most of their work on the main queue (like views—and maybe their controllers), but taking any other lock recursively is a sign that maybe something is wrong with your program. Things you call synchronously should not call back into you synchronously!
+            if (self->lock != dispatch_get_main_queue()) {
+                NSLog(@"WARNING: Taking lock %@ recursively!", self->lock);
+            }
             invoke();
         } else {
             dispatch_sync(self->lock, invoke);
         }
-    } else {
-        if (![invocation argumentsRetained]) {
-            [invocation retainArguments];
-        }
-        dispatch_async(self->lock, invoke);
     }
 }
 
@@ -96,5 +117,14 @@ static void *kNNSerializerKey = (void *)1784668075; // Guaranteed random by arc4
 {
     return [self->target methodSignatureForSelector:sel] ?: [super methodSignatureForSelector:sel];
 }
+
+@end
+
+@interface UnsafeDemo : NSObject
+
+// Calling foo and bar at similar times will crash!
+- (NSUInteger)foo;
+// And let's say bar could be run asynchronously if we could be bothered.
+- (oneway void)bar;
 
 @end
