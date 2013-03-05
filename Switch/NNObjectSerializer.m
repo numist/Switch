@@ -23,7 +23,7 @@ static void *kNNSerializerKey = (void *)1784668075; // Guaranteed random by arc4
 
 @interface NNObjectSerializer () {
     NSObject *target;
-    dispatch_queue_t queue;
+    dispatch_queue_t lock;
 }
 @end
 
@@ -34,7 +34,7 @@ static void *kNNSerializerKey = (void *)1784668075; // Guaranteed random by arc4
 
 + (dispatch_queue_t)queueForObject:(id)obj;
 {
-    return ((NNObjectSerializer *)[self serializedObjectForObject:obj])->queue;
+    return ((NNObjectSerializer *)[self serializedObjectForObject:obj])->lock;
 }
 
 + (id)serializedObjectForObject:(id)obj;
@@ -47,7 +47,7 @@ static void *kNNSerializerKey = (void *)1784668075; // Guaranteed random by arc4
     NNObjectSerializer *proxy = [self serializedObjectForObject:obj];
     dispatch_queue_t queue = dispatch_get_main_queue();
     despatch_lock_promote(queue);
-    proxy->queue = queue;
+    proxy->lock = queue;
 }
 
 #pragma mark Instance Methods
@@ -57,7 +57,7 @@ static void *kNNSerializerKey = (void *)1784668075; // Guaranteed random by arc4
     assert(!objc_getAssociatedObject(obj, kNNSerializerKey));
     
     self->target = obj;
-    self->queue = despatch_lock_create([[NSString stringWithFormat:@"Locking queue for %@ <%p>", [obj class], obj] UTF8String]);
+    self->lock = despatch_lock_create([[NSString stringWithFormat:@"Lock for %@", [obj description]] UTF8String]);
     objc_setAssociatedObject(obj, kNNSerializerKey, self, OBJC_ASSOCIATION_ASSIGN);
     
     return self;
@@ -78,14 +78,14 @@ static void *kNNSerializerKey = (void *)1784668075; // Guaranteed random by arc4
     [invocation setTarget:self->target];
     dispatch_block_t invoke = ^{ [invocation invoke]; };
     
-    if (despatch_lock_is_held(self->queue)) {
-        invoke();
-    } else {
-        if ([[invocation methodSignature] methodReturnLength]) {
-            dispatch_sync(self->queue, invoke);
+    if ([[invocation methodSignature] methodReturnLength]) {
+        if (despatch_lock_is_held(self->lock)) {
+            invoke();
         } else {
-            dispatch_async(self->queue, invoke);
+            dispatch_sync(self->lock, invoke);
         }
+    } else {
+        dispatch_async(self->lock, invoke);
     }
 }
 
