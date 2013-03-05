@@ -14,13 +14,68 @@
 
 #import "constants.h"
 
+// Maxima
+const CGFloat kNNMaxWindowThumbnailSize = 128.0;
+const CGFloat kNNMaxApplicationIconSize = kNNMaxWindowThumbnailSize / 2.0;
 
-const CGFloat screenToSwitcherWindowInset = 16.0;
-const CGFloat maxWindowThumbnailSize = 128.0;
-const CGFloat maxApplicationIconSize = 64.0;
-const CGFloat itemToThumbInset = 8.0;
-const CGFloat windowToItemInset = 20.0;
-const CGFloat windowRoundRectRadius = 32.0;
-const CGFloat windowToSelectionInset = 5.0; // TODO: this is probably a computable constant based on the thumb insets or something.
+// Window
+const CGFloat kNNScreenToWindowInset = 16.0;
 
+// Items
+const CGFloat kNNWindowToItemInset = 8.0;
+const CGFloat kNNItemBorderWidth = 3.0;
+
+// Thumbs
+const CGFloat kNNItemToThumbInset = kNNItemBorderWidth + 8.0;
+const CGFloat kNNWindowToThumbInset = kNNWindowToItemInset + kNNItemToThumbInset;
+
+// Round rect radii
+const CGFloat kNNWindowRoundRectRadius = 20.0;
+const CGFloat kNNSelectionRoundRectRadius = kNNWindowRoundRectRadius - kNNWindowToItemInset;
+
+// Timing
 const NSTimeInterval delayBeforePresentingSwitcherWindow = 0.25;
+
+// Maths
+static CGFloat nnItemSideLength(CGFloat thumbSize)
+{
+    return kNNItemToThumbInset * 2.0 + thumbSize;
+}
+
+static NSSize nnItemSize(CGFloat thumbSize)
+{
+    return NSMakeSize(nnItemSideLength(thumbSize),
+                      nnItemSideLength(thumbSize));
+}
+
+NSRect nnItemRect(CGFloat thumbSize, NSUInteger index)
+{
+    return NSMakeRect(kNNWindowToItemInset + (index * (nnItemSideLength(thumbSize) - kNNItemBorderWidth)),
+                      kNNWindowToItemInset,
+                      nnItemSideLength(thumbSize),
+                      nnItemSideLength(thumbSize));
+}
+
+static NSSize nnThumbSize(CGFloat thumbSize)
+{
+    return NSMakeSize(thumbSize, thumbSize);
+}
+
+NSRect nnThumbRect(CGFloat thumbSize, NSUInteger index)
+{
+    return NSMakeRect(kNNWindowToThumbInset + index * (nnItemSideLength(thumbSize) - kNNItemBorderWidth),
+                      kNNWindowToThumbInset,
+                      thumbSize,
+                      thumbSize);
+}
+
+CGFloat nnTotalPadding(NSUInteger numWindows)
+{
+    return kNNWindowToItemInset * 2.0 + numWindows * (kNNItemToThumbInset * 2.0 - kNNItemBorderWidth) + kNNItemBorderWidth;
+}
+
+CGFloat nnTotalWidth(CGFloat thumbSize, NSUInteger numWindows)
+{
+    NSRect lastItem = nnItemRect(thumbSize, (numWindows - 1));
+    return lastItem.origin.x + lastItem.size.width + kNNWindowToItemInset;
+}

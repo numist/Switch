@@ -23,8 +23,8 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.border = YES;
-        self.radius = windowRoundRectRadius - windowToSelectionInset;
+        self.border = kNNItemBorderWidth;
+        self.radius = kNNSelectionRoundRectRadius;
         self.autoresizingMask = NSViewNotSizable;
     }
     

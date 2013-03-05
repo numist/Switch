@@ -61,9 +61,10 @@
 
 - (void)setIndex:(unsigned int)index;
 {
+    index %= [self.windows count];
     _index = index;
     
-    // TODO: constrain to number of windows—make sure updating the windows array modifies the index appropriately!
+    // TODO: make sure updating the windows array modifies the index appropriately!
     [self.delegate switcher:self didUpdateIndex:index];
 }
 
@@ -82,7 +83,7 @@
     NSRect windowRect;
     {
         NSScreen *mainScreen = [NSScreen mainScreen];
-        windowRect.size.width = windowToThumbInset + maxWindowThumbnailSize + windowToThumbInset;
+        windowRect.size.width = kNNWindowToThumbInset + kNNMaxWindowThumbnailSize + kNNWindowToThumbInset;
         windowRect.size.height = windowRect.size.width;
         windowRect.origin.x = floor((mainScreen.frame.size.width - windowRect.size.width) / 2.0);
         windowRect.origin.y = floor((mainScreen.frame.size.height - windowRect.size.height) / 2.0);

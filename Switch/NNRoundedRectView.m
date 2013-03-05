@@ -20,13 +20,21 @@
 - (void)drawRect:(NSRect)dirtyRect;
 {
     NSRect drawRect = self.bounds;
+    if (self.border) {
+        const CGFloat drawingInset = self.border / 2.0;
+        drawRect.origin.x += drawingInset;
+        drawRect.origin.y += drawingInset;
+        drawRect.size.width -= self.border;
+        drawRect.size.height -= self.border;
+    }
+    
     NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:drawRect xRadius:self.radius yRadius:self.radius];
 
     [[[NSColor blackColor] colorWithAlphaComponent:0.3] setFill];
     [path fill];
 
-    if (self.border) {
-        [path setLineWidth:4.0];
+    if (self.border > 0.0) {
+        [path setLineWidth:self.border];
         [[[NSColor whiteColor] colorWithAlphaComponent:0.8] setStroke];
         [path stroke];
     }

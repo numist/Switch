@@ -16,15 +16,21 @@
 
 
 // Points
-extern const  CGFloat screenToSwitcherWindowInset;
-extern const CGFloat maxWindowThumbnailSize;
-extern const CGFloat maxApplicationIconSize;
-extern const CGFloat itemToThumbInset;
-extern const CGFloat windowToItemInset;
-extern const CGFloat windowRoundRectRadius;
-extern const CGFloat windowToSelectionInset;
-#define windowToThumbInset (windowToItemInset + itemToThumbInset)
-#define itemSize(thumbSize) (itemToThumbInset + thumbSize + itemToThumbInset)
+extern const CGFloat kNNMaxWindowThumbnailSize;
+extern const CGFloat kNNMaxApplicationIconSize;
+extern const CGFloat kNNScreenToWindowInset;
+extern const CGFloat kNNWindowToItemInset;
+extern const CGFloat kNNItemBorderWidth;
+extern const CGFloat kNNItemToThumbInset;
+extern const CGFloat kNNWindowToThumbInset;
+extern const CGFloat kNNWindowRoundRectRadius;
+extern const CGFloat kNNSelectionRoundRectRadius;
 
 // Seconds
 extern const NSTimeInterval delayBeforePresentingSwitcherWindow;
+
+// Maths
+NSRect nnItemRect(CGFloat thumbSize, NSUInteger index);
+NSRect nnThumbRect(CGFloat thumbSize, NSUInteger index);
+CGFloat nnTotalPadding(NSUInteger numWindows);
+CGFloat nnTotalWidth(CGFloat thumbSize, NSUInteger numWindows);

@@ -65,7 +65,7 @@
         // imageSize is a LIE, but it does give the correct aspect ratio (empirically it's always been a square, but you can't be too careful!)
         NSSize imageSize = applicationIcon.size;
         
-        CGFloat iconSize = thumbSize / 2.0;
+        CGFloat iconSize = thumbSize * kNNMaxApplicationIconSize / kNNMaxWindowThumbnailSize;
         CGFloat scale = iconSize / MAX(imageSize.width, imageSize.height);
         
         // make the size fit correctly

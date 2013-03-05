@@ -23,8 +23,8 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.border = NO;
-        self.radius = windowRoundRectRadius;
+        self.border = 0.0;
+        self.radius = kNNWindowRoundRectRadius;
         self.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     }
     

@@ -39,6 +39,7 @@
 
 // I guess these would normally be IB connections
 @property (nonatomic, weak) NNSelectionBoxView *selectionBox;
+@property (nonatomic, assign) unsigned selectionBoxIndex;
 
 @end
 
@@ -59,17 +60,25 @@
 
 - (void)loadView;
 {
-    self.view = [[NNHUDView alloc] initWithFrame:NSZeroRect];
+    NSView *view = [[NNHUDView alloc] initWithFrame:NSZeroRect];
+    
+    {
+        NNSelectionBoxView *selectionBox = [[NNSelectionBoxView alloc] initWithFrame:NSZeroRect];
+        [view addSubview:selectionBox];
+        self.selectionBox = selectionBox;
+    }
+
+    self.view = view;
 }
 
 - (void)updateViewsWithWindowList:(NSArray *)windows;
 {
-    CGFloat thumbSize = maxWindowThumbnailSize;
+    CGFloat thumbSize = kNNMaxWindowThumbnailSize;
     NSScreen *mainScreen = [NSScreen mainScreen];
     NSUInteger numWindows = [windows count];
-    CGFloat requiredPaddings = windowToItemInset + numWindows * (itemToThumbInset + itemToThumbInset) + windowToItemInset;
-    CGFloat maxTheoreticalWindowWidth = requiredPaddings + thumbSize * numWindows;
-    CGFloat maxAllowedWindowWidth = mainScreen.frame.size.width - (screenToSwitcherWindowInset * 2.0);
+    CGFloat requiredPaddings = nnTotalPadding(numWindows);
+    CGFloat maxTheoreticalWindowWidth = nnTotalWidth(thumbSize, numWindows);
+    CGFloat maxAllowedWindowWidth = mainScreen.frame.size.width - (kNNScreenToWindowInset * 2.0);
     
     if (maxTheoreticalWindowWidth > maxAllowedWindowWidth) {
         thumbSize = floor((maxAllowedWindowWidth - requiredPaddings) / numWindows);
@@ -78,7 +87,7 @@
     NSRect windowFrame;
     {
         windowFrame.size.width = MIN(maxAllowedWindowWidth, maxTheoreticalWindowWidth);
-        windowFrame.size.height = windowToThumbInset + thumbSize + windowToThumbInset;
+        windowFrame.size.height = kNNWindowToThumbInset + thumbSize + kNNWindowToThumbInset;
         windowFrame.origin.x = floor((mainScreen.frame.size.width - windowFrame.size.width) / 2.0);
         windowFrame.origin.y = floor((mainScreen.frame.size.height - windowFrame.size.height) / 2.0);
     }
@@ -94,6 +103,9 @@
             NNWindowThumbnailView *thumbView = [self createThumbViewForWindow:window];
             thumbView.frame = [self finalFrameForThumbnailViewAtIndex:i thumbSize:thumbSize];
         }
+        
+        self.selectionBox.frame = [self frameForSelectionBox];
+        [self.selectionBox setNeedsDisplay:YES];
     } else {
         // Create views for newly-arrived windows
         NSMutableDictionary *newWindows = [NSMutableDictionary new];
@@ -149,6 +161,13 @@
                 NSViewAnimationStartFrameKey: [NSValue valueWithRect:self.view.window.frame],
                 NSViewAnimationEndFrameKey: [NSValue valueWithRect:windowFrame]
             }];
+            
+            // Animation for the selection box
+            [animations addObject:@{
+                NSViewAnimationTargetKey: self.selectionBox,
+                NSViewAnimationStartFrameKey: [NSValue valueWithRect:self.selectionBox.frame],
+                NSViewAnimationEndFrameKey: [NSValue valueWithRect:[self frameForSelectionBox]]
+            }];
         }
 
         NSViewAnimation *theAnim;
@@ -180,7 +199,7 @@
 
 - (void)switcher:(NNSwitcher *)switcher didUpdateIndex:(unsigned int)index;
 {
-    // TODO: update selected thingy
+    self.selectionBoxIndex = index;
 }
 
 - (void)switcher:(NNSwitcher *)switcher didUpdateWindowList:(NSArray *)windows;
@@ -195,13 +214,28 @@
 
 #pragma mark Internal
 
+- (NSRect)frameForSelectionBox;
+{
+    return nnItemRect((self.view.frame.size.height - kNNWindowToThumbInset * 2.0), self.selectionBoxIndex);
+}
+
+- (void)setSelectionBoxIndex:(unsigned int)index;
+{
+    _selectionBoxIndex = index;
+    
+    if (self.selectionBox) {
+        self.selectionBox.frame = [self frameForSelectionBox];
+        [self.selectionBox setNeedsDisplay:YES];
+    }
+}
+
 - (NNWindowThumbnailView *)createThumbViewForWindow:(NNWindowData *)window;
 {
     NNWindowThumbnailView *result = [[NNWindowThumbnailView alloc] initWithFrame:NSZeroRect];
     result.applicationIcon = window.application.icon;
     result.windowThumbnail = window.image;
     [self.thumbViews setObject:result forKey:window];
-    [self.view addSubview:result];
+    [self.view addSubview:result positioned:NSWindowAbove relativeTo:self.selectionBox];
     return result;
 }
 
@@ -228,14 +262,7 @@
 
 - (NSRect)finalFrameForThumbnailViewAtIndex:(NSUInteger)index thumbSize:(CGFloat)thumbSize;
 {
-    NSRect result;
-    {
-        result.origin.x = windowToItemInset + index * itemSize(thumbSize) + itemToThumbInset;
-        result.origin.y = windowToThumbInset;
-        result.size.width = thumbSize;
-        result.size.height = thumbSize;
-    }
-    return result;
+    return nnThumbRect(thumbSize, index);
 }
 
 @end
