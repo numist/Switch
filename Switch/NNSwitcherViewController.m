@@ -197,17 +197,17 @@
 
 #pragma mark NNSwitcherDelegate
 
-- (void)switcher:(NNSwitcher *)switcher didUpdateIndex:(unsigned int)index;
+- (oneway void)switcher:(NNSwitcher *)switcher didUpdateIndex:(unsigned int)index;
 {
     self.selectionBoxIndex = index;
 }
 
-- (void)switcher:(NNSwitcher *)switcher didUpdateWindowList:(NSArray *)windows;
+- (oneway void)switcher:(NNSwitcher *)switcher didUpdateWindowList:(NSArray *)windows;
 {
     [self updateViewsWithWindowList:windows];
 }
 
-- (void)switcher:(NNSwitcher *)switcher contentsOfWindowDidChange:(NNWindowData *)window;
+- (oneway void)switcher:(NNSwitcher *)switcher contentsOfWindowDidChange:(NNWindowData *)window;
 {
     [[self.thumbViews objectForKey:window] setWindowThumbnail:window.image];
 }

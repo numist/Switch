@@ -15,12 +15,15 @@
 #import "NNSwitcher.h"
 
 #import "constants.h"
-#import "NNSwitcherViewController.h"
+#import "NNDelegateProxy.h"
 #import "NNObjectSerializer.h"
+#import "NNSwitcherViewController.h"
 #import "NNWindowStore.h"
 
 
-@interface NNSwitcher ()
+@interface NNSwitcher () {
+    id<NNSwitcherDelegate> delegateProxy;
+}
 
 @property (nonatomic, strong) NNWindowStore *store;
 @property (nonatomic, strong) NSArray *windows;
@@ -60,6 +63,8 @@
     // TODO: set the active window to the currently-indexed window.
 }
 
+generateDelegateAccessors(self->delegateProxy, NNSwitcherDelegate)
+
 @synthesize index = _index;
 
 - (void)setIndex:(unsigned int)index;
@@ -67,14 +72,9 @@
     _index = index;
     
     // TODO: make sure updating the windows array modifies the index appropriately!
-    NSUInteger windowCount = [self.windows count];
-    id<NNSwitcherDelegate> delegate = self.delegate;
-    index = self.index;
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        if (windowCount) {
-            [delegate switcher:[NNObjectSerializer serializedObjectForObject:self] didUpdateIndex:index];
-        }
-    });
+    if ([self.windows count]) {
+            [self.delegate switcher:[NNObjectSerializer serializedObjectForObject:self] didUpdateIndex:self.index];
+    }
 }
 
 - (unsigned)index;
@@ -132,39 +132,30 @@
 
 #pragma mark NNWindowStoreDelegate
 
-- (void)windowStoreDidUpdateWindowList:(NNWindowStore *)store;
+- (oneway void)windowStoreDidUpdateWindowList:(NNWindowStore *)store;
 {
     NNWindowData *selectedWindow = [self.windows count] > self.index ? [self.windows objectAtIndex:self.index] : nil;
     self.windows = store.windows;
     
     [self createSwitcherWindowIfNeeded];
 
-    NSArray *windows = self.windows;
-    id<NNSwitcherDelegate> delegate = self.delegate;
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [delegate switcher:[NNObjectSerializer serializedObjectForObject:self] didUpdateWindowList:windows];
-        
-        [NNObjectSerializer performOnObject:self block:^{
-            NSUInteger newIndex = [self.windows indexOfObject:selectedWindow];
-            if (selectedWindow) {
-                if (![self.windows containsObject:selectedWindow]) {
-                    // Window destroyed
-                    self.index = MIN(self.index, [self.windows count] - 1);
-                } else if (self.index != newIndex) {
-                    // Window moved
-                    self.index = newIndex;
-                }
-            }
-        }];
-    });
+    [self.delegate switcher:[NNObjectSerializer serializedObjectForObject:self] didUpdateWindowList:self.windows];
+    
+    NSUInteger newIndex = [self.windows indexOfObject:selectedWindow];
+    if (selectedWindow) {
+        if (![self.windows containsObject:selectedWindow]) {
+            // Window destroyed
+            self.index = MIN(self.index, [self.windows count] - 1);
+        } else if (self.index != newIndex) {
+            // Window moved
+            self.index = newIndex;
+        }
+    }
 }
 
-- (void)windowStore:(NNWindowStore *)store contentsOfWindowDidChange:(NNWindowData *)window;
+- (oneway void)windowStore:(NNWindowStore *)store contentsOfWindowDidChange:(NNWindowData *)window;
 {
-    id<NNSwitcherDelegate> delegate = self.delegate;
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [delegate switcher:[NNObjectSerializer serializedObjectForObject:self] contentsOfWindowDidChange:window];
-    });
+    [self.delegate switcher:[NNObjectSerializer serializedObjectForObject:self] contentsOfWindowDidChange:window];
 }
 
 @end

@@ -18,6 +18,6 @@
 
 @protocol NNWindowWorkerDelegate <NSObject>
 
-- (void)windowWorker:(NNWindowWorker *)worker didUpdateContentsOfWindow:(NNWindowData *)window;
+- (oneway void)windowWorker:(NNWindowWorker *)worker didUpdateContentsOfWindow:(NNWindowData *)window;
 
 @end

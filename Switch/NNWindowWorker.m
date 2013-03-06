@@ -16,6 +16,7 @@
 
 #import "despatch.h"
 #import "imageComparators.h"
+#import "NNDelegateProxy.h"
 #import "NNObjectSerializer.h"
 #import "NNWindowData+Private.h"
 
@@ -24,7 +25,9 @@ static NSTimeInterval NNPollingIntervalFast = 0.05;
 static NSTimeInterval NNPollingIntervalSlow = 1.0;
 
 
-@interface NNWindowWorker ()
+@interface NNWindowWorker () {
+    id<NNWindowWorkerDelegate> delegateProxy;
+}
 
 @property (nonatomic, weak) NNWindowData *window;
 @property (nonatomic, assign) NSTimeInterval updateInterval;
@@ -52,6 +55,8 @@ static NSTimeInterval NNPollingIntervalSlow = 1.0;
 {
     [self workerLoop];
 }
+
+generateDelegateAccessors(self->delegateProxy, NNWindowWorkerDelegate)
 
 #pragma Internal
 
@@ -88,11 +93,7 @@ static NSTimeInterval NNPollingIntervalSlow = 1.0;
             self.updateInterval = NNPollingIntervalFast;
             self.previousCapture = result;
             self.window.image = [result copy];
-            id<NNWindowWorkerDelegate> delegate = self.delegate;
-            NNWindowData *window = self.window;
-            dispatch_async(dispatch_get_global_queue(0, 0), ^{
-                [delegate windowWorker:[NNObjectSerializer serializedObjectForObject:self] didUpdateContentsOfWindow:window];
-            });
+            [self.delegate windowWorker:[NNObjectSerializer serializedObjectForObject:self] didUpdateContentsOfWindow:self.window];
         }
     } else if (self.window.exists) {
         // Didn't get a real image, but the window exists. Try again ASAP.

@@ -23,4 +23,7 @@
 + (void)performAndWaitOnObject:(id)obj block:(dispatch_block_t)work;
 + (void)performOnObject:(id)obj afterDelay:(NSTimeInterval)delayInSeconds block:(dispatch_block_t)work;
 
++ (void)assertObjectLockHeld:(id)obj;
++ (void)assertObjectLockNotHeld:(id)obj;
+
 @end

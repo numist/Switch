@@ -31,9 +31,13 @@ static void *kNNSerializerKey = (void *)1784668075; // Guaranteed random by arc4
 @implementation NNObjectSerializer
 
 #pragma mark Class Functionality Methods
-
+// TODO: createSerializedObjectForObject vs serializedObjectForObject. Solves the race.
 + (id)serializedObjectForObject:(id)obj;
 {
+    if (object_getClass(obj) == [NNObjectSerializer class]) {
+        return obj;
+    }
+    // TODO: Race! Sure hope the first time you do this is in init before anyone else knows who you are!
     return objc_getAssociatedObject(obj, kNNSerializerKey) ?: [[self alloc] initWithObject:obj];
 }
 
@@ -61,7 +65,22 @@ static void *kNNSerializerKey = (void *)1784668075; // Guaranteed random by arc4
     dispatch_after(popTime, [self queueForObject:obj], work);
 }
 
++ (void)assertObjectLockHeld:(id)obj;
+{
+    assert([self objectLockHeld:obj]);
+}
+
++ (void)assertObjectLockNotHeld:(id)obj;
+{
+    assert(![self objectLockHeld:obj]);
+}
+
 #pragma mark Internal Class Methods
+
++ (BOOL)objectLockHeld:(id)obj;
+{
+    return despatch_lock_is_held([self queueForObject:obj]);
+}
 
 + (dispatch_queue_t)queueForObject:(id)obj;
 {
@@ -115,7 +134,10 @@ static void *kNNSerializerKey = (void *)1784668075; // Guaranteed random by arc4
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)sel;
 {
-    return [self->target methodSignatureForSelector:sel] ?: [super methodSignatureForSelector:sel];
+    if ([self->target respondsToSelector:sel]) {
+        return [self->target methodSignatureForSelector:sel];
+    }
+    return [super methodSignatureForSelector:sel];
 }
 
 @end

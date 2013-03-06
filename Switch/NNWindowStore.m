@@ -14,13 +14,16 @@
 
 #import "NNWindowStore+Private.h"
 
+#import "NNDelegateProxy.h"
 #import "NNObjectSerializer.h"
 #import "NNWindowData.h"
 #import "NNWindowListWorker.h"
 #import "NNWindowWorker.h"
 
 
-@interface NNWindowStore ()
+@interface NNWindowStore () {
+    id<NNWindowStoreDelegate> delegateProxy;
+}
 
 @property (nonatomic, strong) NNWindowListWorker *listWorker;
 
@@ -39,6 +42,8 @@
     
     return [NNObjectSerializer serializedObjectForObject:self];
 }
+
+generateDelegateAccessors(self->delegateProxy, NNWindowStoreDelegate)
 
 #pragma mark Actions
 
@@ -77,10 +82,7 @@
 
 - (void)windowWorker:(NNWindowWorker *)worker didUpdateContentsOfWindow:(NNWindowData *)window;
 {
-    id<NNWindowStoreDelegate> delegate = self.delegate;
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [delegate windowStore:[NNObjectSerializer serializedObjectForObject:self] contentsOfWindowDidChange:window];
-    });
+    [self.delegate windowStore:[NNObjectSerializer serializedObjectForObject:self] contentsOfWindowDidChange:window];
 }
 
 #pragma mark Private
@@ -111,10 +113,7 @@
     
     if (windowsChanged) {
         NSLog(@"Window array changed, tracks %lu windows", [newArray count]);
-        id<NNWindowStoreDelegate> delegate = self.delegate;
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            [delegate windowStoreDidUpdateWindowList:[NNObjectSerializer serializedObjectForObject:self]];
-        });
+        [self.delegate windowStoreDidUpdateWindowList:[NNObjectSerializer serializedObjectForObject:self]];
     }
 }
 

@@ -19,8 +19,8 @@
 
 @protocol NNSwitcherDelegate <NSObject>
 
-- (void)switcher:(NNSwitcher *)switcher didUpdateIndex:(unsigned)index;
-- (void)switcher:(NNSwitcher *)switcher didUpdateWindowList:(NSArray *)windows;
-- (void)switcher:(NNSwitcher *)switcher contentsOfWindowDidChange:(NNWindowData *)window;
+- (oneway void)switcher:(NNSwitcher *)switcher didUpdateIndex:(unsigned)index;
+- (oneway void)switcher:(NNSwitcher *)switcher didUpdateWindowList:(NSArray *)windows;
+- (oneway void)switcher:(NNSwitcher *)switcher contentsOfWindowDidChange:(NNWindowData *)window;
 
 @end
