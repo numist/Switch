@@ -31,7 +31,7 @@ static NSTimeInterval NNPollingIntervalSlow = 1.0;
 
 @property (nonatomic, weak) NNWindowData *window;
 @property (nonatomic, assign) NSTimeInterval updateInterval;
-@property (nonatomic, strong) NSImage *previousCapture;
+@property (nonatomic, strong) __attribute__((NSObject)) CGImageRef previousCapture;
 
 @end
 
@@ -46,9 +46,7 @@ static NSTimeInterval NNPollingIntervalSlow = 1.0;
     _window = window;
     _updateInterval = NNPollingIntervalFast;
     
-    NNWindowWorker *serializedSelf = [NNObjectSerializer createSerializedObjectForObject:self];
-    
-    return serializedSelf;
+    return [NNObjectSerializer createSerializedObjectForObject:self];
 }
 
 - (oneway void)start;
@@ -68,21 +66,24 @@ generateDelegateAccessors(self->delegateProxy, NNWindowWorkerDelegate)
     }
     
     NSDate *start = [NSDate date];
-    NSImage *result = [self.window getCGWindowImage];
+    CGImageRef cgImage = [self.window createCGWindowImage];
     
-    if (result) {
+    if (cgImage) {
         BOOL imageChanged = NO;
+        
+        size_t newWidth = CGImageGetWidth(cgImage);
+        size_t newHeight = CGImageGetHeight(cgImage);
         { // Did the image change?
             if (!self.previousCapture) {
                 imageChanged = YES;
             } else {
-                NSSize newImageSize = result.size;
-                NSSize oldImageSize = self.previousCapture.size;
+                size_t oldWidth = CGImageGetWidth(self.previousCapture);
+                size_t oldHeight = CGImageGetHeight(self.previousCapture);
                 
-                if (newImageSize.width != oldImageSize.width || newImageSize.height != oldImageSize.height) {
+                if (newWidth != oldWidth || newHeight != oldHeight) {
                     imageChanged = YES;
                 } else {
-                    imageChanged = imagesDifferByCachedBitmapContextComparison(result, self.previousCapture);
+                    imageChanged = imagesDifferByCGDataProviderComparison(cgImage, self.previousCapture);
                 }
             }
         }
@@ -91,10 +92,12 @@ generateDelegateAccessors(self->delegateProxy, NNWindowWorkerDelegate)
             self.updateInterval = MIN(NNPollingIntervalSlow, self.updateInterval * 2.0);
         } else {
             self.updateInterval = NNPollingIntervalFast;
-            self.previousCapture = result;
-            self.window.image = [result copy];
+            self.previousCapture = cgImage;
+            self.window.image = [[NSImage alloc] initWithCGImage:cgImage size:NSMakeSize(newWidth, newHeight)];
             [self.delegate windowWorker:[NNObjectSerializer serializedObjectForObject:self] didUpdateContentsOfWindow:self.window];
         }
+        
+        CFRelease(cgImage); cgImage = NULL;
     } else if (self.window.exists) {
         // Didn't get a real image, but the window exists. Try again ASAP.
         self.updateInterval = NNPollingIntervalFast;

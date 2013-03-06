@@ -18,6 +18,6 @@
 @interface NNWindowData (Private)
 
 - (void)setImage:(NSImage *)image;
-- (NSImage *)getCGWindowImage;
+- (CGImageRef)createCGWindowImage;
 
 @end

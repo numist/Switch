@@ -152,17 +152,13 @@
 
 #pragma mark Private
 
-- (NSImage *)getCGWindowImage;
+- (CGImageRef)createCGWindowImage;
 {
-    NSImage *result;
+    CGImageRef result = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, self.windowID, kCGWindowImageBoundsIgnoreFraming);
     
-    CGImageRef cgImage = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, self.windowID, kCGWindowImageBoundsIgnoreFraming);
-    if (cgImage) {
-        NSSize imageSize = {CGImageGetWidth(cgImage), CGImageGetHeight(cgImage)};
-        if (imageSize.width > 1.0 && imageSize.height > 1.0) {
-            result = [[NSImage alloc] initWithCGImage:cgImage size:imageSize];
-        }
-        CFRelease(cgImage);
+    if (CGImageGetHeight(result) < 1.0 || CGImageGetWidth(result) < 1.0) {
+        CFRelease(result);
+        return NULL;
     }
     
     return result;
