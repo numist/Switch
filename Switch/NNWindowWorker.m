@@ -46,7 +46,7 @@ static NSTimeInterval NNPollingIntervalSlow = 1.0;
     _window = window;
     _updateInterval = NNPollingIntervalFast;
     
-    NNWindowWorker *serializedSelf = [NNObjectSerializer serializedObjectForObject:self];
+    NNWindowWorker *serializedSelf = [NNObjectSerializer createSerializedObjectForObject:self];
     
     return serializedSelf;
 }

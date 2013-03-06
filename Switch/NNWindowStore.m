@@ -40,7 +40,7 @@
     self = [super init];
     if (!self) return nil;
     
-    return [NNObjectSerializer serializedObjectForObject:self];
+    return [NNObjectSerializer createSerializedObjectForObject:self];
 }
 
 generateDelegateAccessors(self->delegateProxy, NNWindowStoreDelegate)

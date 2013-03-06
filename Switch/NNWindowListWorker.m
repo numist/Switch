@@ -41,7 +41,7 @@ static NSTimeInterval refreshInterval = 0.1;
     _store = store;
     
     // All calls made by the owner of this object should be serialized.
-    return [NNObjectSerializer serializedObjectForObject:self];
+    return [NNObjectSerializer createSerializedObjectForObject:self];
 }
 
 - (oneway void)start;

@@ -31,14 +31,19 @@ static void *kNNSerializerKey = (void *)1784668075; // Guaranteed random by arc4
 @implementation NNObjectSerializer
 
 #pragma mark Class Functionality Methods
-// TODO: createSerializedObjectForObject vs serializedObjectForObject. Solves the race.
+
++ (id)createSerializedObjectForObject:(id)obj;
+{
+    assert(!objc_getAssociatedObject(obj, kNNSerializerKey));
+    
+    return [[self alloc] initWithObject:obj];
+}
+
 + (id)serializedObjectForObject:(id)obj;
 {
-    if (object_getClass(obj) == [NNObjectSerializer class]) {
-        return obj;
-    }
-    // TODO: Race! Sure hope the first time you do this is in init before anyone else knows who you are!
-    return objc_getAssociatedObject(obj, kNNSerializerKey) ?: [[self alloc] initWithObject:obj];
+    id result = [self internalSerializedObjectForObject:obj];
+    assert(result);
+    return result;
 }
 
 + (void)useMainQueueForObject:(id)obj;
@@ -77,6 +82,21 @@ static void *kNNSerializerKey = (void *)1784668075; // Guaranteed random by arc4
 
 #pragma mark Internal Class Methods
 
++ (id)internalSerializedObjectForObject:(id)obj;
+{
+    id result = nil;
+    
+    if (object_getClass(obj) == [NNObjectSerializer class]) {
+        result = obj;
+    }
+    
+    if (!result) {
+        result = objc_getAssociatedObject(obj, kNNSerializerKey);
+    }
+    
+    return result;
+}
+
 + (BOOL)objectLockHeld:(id)obj;
 {
     return despatch_lock_is_held([self queueForObject:obj]);
@@ -84,14 +104,19 @@ static void *kNNSerializerKey = (void *)1784668075; // Guaranteed random by arc4
 
 + (dispatch_queue_t)queueForObject:(id)obj;
 {
-    return ((NNObjectSerializer *)[self serializedObjectForObject:obj])->lock;
+    NNObjectSerializer *serializedObject = [self internalSerializedObjectForObject:obj];
+    if (serializedObject) {
+        return serializedObject->lock;
+    } else {
+        return dispatch_get_main_queue();
+    }
 }
 
 #pragma mark Instance Methods
 
 - (id)initWithObject:(id)obj;
 {
-    assert(!objc_getAssociatedObject(obj, kNNSerializerKey));
+    assert(![NNObjectSerializer internalSerializedObjectForObject:obj]);
     
     self->target = obj;
     self->lock = despatch_lock_create([[NSString stringWithFormat:@"Lock for %@", [obj description]] UTF8String]);

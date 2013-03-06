@@ -16,6 +16,7 @@
 
 @interface NNObjectSerializer : NSProxy
 
++ (id)createSerializedObjectForObject:(id)obj;
 + (id)serializedObjectForObject:(id)obj;
 + (void)useMainQueueForObject:(id)obj;
 

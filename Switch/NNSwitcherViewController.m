@@ -53,9 +53,9 @@
 
     _firstUpdate = YES;
     
+    NNObjectSerializer *serializedSelf = [NNObjectSerializer createSerializedObjectForObject:self];
     [NNObjectSerializer useMainQueueForObject:self];
-    
-    return [NNObjectSerializer serializedObjectForObject:self];
+    return (id)serializedSelf;
 }
 
 - (void)loadView;

@@ -43,7 +43,7 @@
     if (!self) return nil;
     
     NNWindowStore *store = [NNWindowStore new];
-    store.delegate = [NNObjectSerializer serializedObjectForObject:self];
+    store.delegate = [NNObjectSerializer createSerializedObjectForObject:self];
     [store startUpdatingWindowList];
     _store = store;
     _index = 0;
