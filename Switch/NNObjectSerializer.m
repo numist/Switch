@@ -166,12 +166,3 @@ static void *kNNSerializerKey = (void *)1784668075; // Guaranteed random by arc4
 }
 
 @end
-
-@interface UnsafeDemo : NSObject
-
-// Calling foo and bar at similar times will crash!
-- (NSUInteger)foo;
-// And let's say bar could be run asynchronously if we could be bothered.
-- (oneway void)bar;
-
-@end
