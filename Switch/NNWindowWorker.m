@@ -21,8 +21,8 @@
 #import "NNWindowData+Private.h"
 
 
-static NSTimeInterval NNPollingIntervalFast = 0.05;
-static NSTimeInterval NNPollingIntervalSlow = 1.0;
+static const NSTimeInterval NNPollingIntervalFast = 1.0 / (24.0 * 1000.0 / 1001.0); // 24p applied to NTSC, drawn on 1's.
+static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 
 
 @interface NNWindowWorker () {
