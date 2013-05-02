@@ -124,7 +124,7 @@ generateDelegateAccessors(self->delegateProxy, NNSwitcherDelegate)
         [controller updateViewsWithWindowList:self.windows];
     }
     
-    [switcherWindow makeKeyAndOrderFront:nil];
+    [switcherWindow orderFront:self];
     self.delegate = controller;
     self.switcherWindowController = controller;
     self.switcherWindow = switcherWindow;
