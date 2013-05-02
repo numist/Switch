@@ -106,9 +106,6 @@ generateDelegateAccessors(self->delegateProxy, NNWindowWorkerDelegate)
     // All done, schedule the next update.
     __weak NNWindowWorker *this = self;
     double delayInSeconds = self.updateInterval - [[NSDate date] timeIntervalSinceDate:start];
-    if (delayInSeconds < 0.0) {
-//        NSLog(@"WARNING: Window content analysis for %@ took %f seconds longer than update interval %f", self.window, fabs(delayInSeconds), self.updateInterval);
-    }
     [NNObjectSerializer performOnObject:self afterDelay:MAX(0.01, delayInSeconds) block:^{
         [this workerLoop];
     }];

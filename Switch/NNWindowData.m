@@ -136,9 +136,7 @@
     NSArray *list = CFBridgingRelease(cgList);
     
     if (!list || ![list count]) {
-        if (!list) {
-            NSLog(@"Is there no window server? How did we even get here?!");
-        }
+        NSAssert(list, @"Is there no window server? How did we even get here?!");
         _exists = NO;
     }
     

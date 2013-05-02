@@ -112,7 +112,6 @@ generateDelegateAccessors(self->delegateProxy, NNWindowStoreDelegate)
     }
     
     if (windowsChanged) {
-        NSLog(@"Window array changed, tracks %lu windows", [newArray count]);
         [self.delegate windowStoreDidUpdateWindowList:[NNObjectSerializer serializedObjectForObject:self]];
     }
 }
