@@ -1,5 +1,5 @@
 //
-//  NNWindowData.m
+//  NNWindow.m
 //  Docking
 //
 //  Created by Scott Perry on 02/21/13.
@@ -12,20 +12,21 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "NNWindowData+Private.h"
+#import "NNWindow+Private.h"
 
 #import "NNApplication.h"
 
 
-@interface NNWindowData ()
+@interface NNWindow ()
 
 @property (atomic, strong) NSImage *image;
 @property (nonatomic, strong, readonly) NSDictionary *windowDescription;
+@property (nonatomic, readonly) BOOL exists;
 
 @end
 
 
-@implementation NNWindowData
+@implementation NNWindow
 
 - (instancetype)initWithDescription:(NSDictionary *)description;
 {
@@ -59,7 +60,7 @@
 
 - (instancetype)copyWithZone:(NSZone *)zone;
 {
-    return [[NNWindowData alloc] initInternalWithDescription:self.windowDescription];
+    return [[NNWindow alloc] initInternalWithDescription:self.windowDescription];
 }
 
 - (NSUInteger)hash;
@@ -77,7 +78,7 @@
     return [NSString stringWithFormat:@"%u (%@)", self.windowID, self.name];
 }
 
-#pragma mark NNWindowData
+#pragma mark NNWindow
 
 - (BOOL)isValidWindow;
 {
@@ -116,7 +117,6 @@
 
 #pragma mark Dynamic accessors
 @dynamic name;
-@dynamic windowID;
 
 - (CGWindowID)windowID;
 {

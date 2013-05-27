@@ -19,7 +19,7 @@
 		BCA7350B16DAC54000CD4C74 /* SwitchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7350A16DAC54000CD4C74 /* SwitchTests.m */; };
 		BCA7351716DAC59000CD4C74 /* NNWindowStore.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7351616DAC59000CD4C74 /* NNWindowStore.m */; };
 		BCA7351B16DAC5E200CD4C74 /* NNWindowListWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7351A16DAC5E200CD4C74 /* NNWindowListWorker.m */; };
-		BCA7351E16DAC61F00CD4C74 /* NNWindowData.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7351D16DAC61F00CD4C74 /* NNWindowData.m */; };
+		BCA7351E16DAC61F00CD4C74 /* NNWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7351D16DAC61F00CD4C74 /* NNWindow.m */; };
 		BCA7352216DAC6A900CD4C74 /* NNWindowWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7352116DAC6A900CD4C74 /* NNWindowWorker.m */; };
 		BCA7352516DAC93C00CD4C74 /* NNApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7352416DAC93C00CD4C74 /* NNApplication.m */; };
 		BCA7352B16DB1E9C00CD4C74 /* despatch.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7352A16DB1E9C00CD4C74 /* despatch.m */; };
@@ -71,9 +71,9 @@
 		BCA7351816DAC5BB00CD4C74 /* NNWindowStore+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NNWindowStore+Private.h"; sourceTree = "<group>"; };
 		BCA7351916DAC5E200CD4C74 /* NNWindowListWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNWindowListWorker.h; sourceTree = "<group>"; };
 		BCA7351A16DAC5E200CD4C74 /* NNWindowListWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNWindowListWorker.m; sourceTree = "<group>"; };
-		BCA7351C16DAC61F00CD4C74 /* NNWindowData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNWindowData.h; sourceTree = "<group>"; };
-		BCA7351D16DAC61F00CD4C74 /* NNWindowData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNWindowData.m; sourceTree = "<group>"; };
-		BCA7351F16DAC62C00CD4C74 /* NNWindowData+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NNWindowData+Private.h"; sourceTree = "<group>"; };
+		BCA7351C16DAC61F00CD4C74 /* NNWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNWindow.h; sourceTree = "<group>"; };
+		BCA7351D16DAC61F00CD4C74 /* NNWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNWindow.m; sourceTree = "<group>"; };
+		BCA7351F16DAC62C00CD4C74 /* NNWindow+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NNWindow+Private.h"; sourceTree = "<group>"; };
 		BCA7352016DAC6A900CD4C74 /* NNWindowWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNWindowWorker.h; sourceTree = "<group>"; };
 		BCA7352116DAC6A900CD4C74 /* NNWindowWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNWindowWorker.m; sourceTree = "<group>"; };
 		BCA7352316DAC93C00CD4C74 /* NNApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNApplication.h; sourceTree = "<group>"; };
@@ -220,9 +220,9 @@
 			children = (
 				BCA7352316DAC93C00CD4C74 /* NNApplication.h */,
 				BCA7352416DAC93C00CD4C74 /* NNApplication.m */,
-				BCA7351C16DAC61F00CD4C74 /* NNWindowData.h */,
-				BCA7351F16DAC62C00CD4C74 /* NNWindowData+Private.h */,
-				BCA7351D16DAC61F00CD4C74 /* NNWindowData.m */,
+				BCA7351C16DAC61F00CD4C74 /* NNWindow.h */,
+				BCA7351F16DAC62C00CD4C74 /* NNWindow+Private.h */,
+				BCA7351D16DAC61F00CD4C74 /* NNWindow.m */,
 				BCA7351516DAC59000CD4C74 /* NNWindowStore.h */,
 				BCA7351816DAC5BB00CD4C74 /* NNWindowStore+Private.h */,
 				BCA7351616DAC59000CD4C74 /* NNWindowStore.m */,
@@ -412,7 +412,7 @@
 				BCA734F416DAC53F00CD4C74 /* NNAppDelegate.m in Sources */,
 				BCA7351716DAC59000CD4C74 /* NNWindowStore.m in Sources */,
 				BCA7351B16DAC5E200CD4C74 /* NNWindowListWorker.m in Sources */,
-				BCA7351E16DAC61F00CD4C74 /* NNWindowData.m in Sources */,
+				BCA7351E16DAC61F00CD4C74 /* NNWindow.m in Sources */,
 				BCA7352216DAC6A900CD4C74 /* NNWindowWorker.m in Sources */,
 				BCA7352516DAC93C00CD4C74 /* NNApplication.m in Sources */,
 				BCA7352B16DB1E9C00CD4C74 /* despatch.m in Sources */,

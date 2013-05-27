@@ -17,14 +17,14 @@
 #import "NNWindowWorkerDelegate.h"
 
 
-@class NNWindowData;
+@class NNWindow;
 
 
 @interface NNWindowWorker : NSObject
 
 @property (nonatomic, weak) id<NNWindowWorkerDelegate> delegate;
 
-- (instancetype)initWithModelObject:(NNWindowData *)window;
+- (instancetype)initWithModelObject:(NNWindow *)window;
 - (void)start;
 
 @end

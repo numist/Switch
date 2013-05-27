@@ -134,7 +134,7 @@ generateDelegateAccessors(self->delegateProxy, NNSwitcherDelegate)
 
 - (oneway void)windowStoreDidUpdateWindowList:(NNWindowStore *)store;
 {
-    NNWindowData *selectedWindow = [self.windows count] > self.index ? [self.windows objectAtIndex:self.index] : nil;
+    NNWindow *selectedWindow = [self.windows count] > self.index ? [self.windows objectAtIndex:self.index] : nil;
     self.windows = store.windows;
     
     [self createSwitcherWindowIfNeeded];
@@ -153,7 +153,7 @@ generateDelegateAccessors(self->delegateProxy, NNSwitcherDelegate)
     }
 }
 
-- (oneway void)windowStore:(NNWindowStore *)store contentsOfWindowDidChange:(NNWindowData *)window;
+- (oneway void)windowStore:(NNWindowStore *)store contentsOfWindowDidChange:(NNWindow *)window;
 {
     [self.delegate switcher:[NNObjectSerializer serializedObjectForObject:self] contentsOfWindowDidChange:window];
 }

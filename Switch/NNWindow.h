@@ -1,5 +1,5 @@
 //
-//  NNWindowData.h
+//  NNWindow.h
 //  Switch
 //
 //  Created by Scott Perry on 02/21/13.
@@ -18,14 +18,10 @@
 @class NNApplication;
 
 
-@interface NNWindowData : NSObject <NSCopying>
+@interface NNWindow : NSObject <NSCopying>
 
 @property (nonatomic, readonly) NNApplication *application;
-@property (nonatomic, readonly) BOOL exists;
 @property (atomic, strong, readonly) NSImage *image;
 @property (nonatomic, readonly) NSString *name;
-@property (nonatomic, readonly) CGWindowID windowID;
-
-- (instancetype)initWithDescription:(NSDictionary *)description;
 
 @end

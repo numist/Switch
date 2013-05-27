@@ -18,7 +18,7 @@
 #import "imageComparators.h"
 #import "NNDelegateProxy.h"
 #import "NNObjectSerializer.h"
-#import "NNWindowData+Private.h"
+#import "NNWindow+Private.h"
 
 
 static const NSTimeInterval NNPollingIntervalFast = 1.0 / (24.0 * 1000.0 / 1001.0); // 24p applied to NTSC, drawn on 1's.
@@ -29,7 +29,7 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
     id<NNWindowWorkerDelegate> delegateProxy;
 }
 
-@property (nonatomic, weak) NNWindowData *window;
+@property (nonatomic, weak) NNWindow *window;
 @property (nonatomic, assign) NSTimeInterval updateInterval;
 @property (nonatomic, strong) __attribute__((NSObject)) CGImageRef previousCapture;
 
@@ -38,7 +38,7 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 
 @implementation NNWindowWorker
 
-- (instancetype)initWithModelObject:(NNWindowData *)window;
+- (instancetype)initWithModelObject:(NNWindow *)window;
 {
     self = [super init];
     if (!self) { return nil; }

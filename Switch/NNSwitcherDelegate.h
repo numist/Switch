@@ -14,13 +14,13 @@
 
 
 @class NNSwitcher;
-@class NNWindowData;
+@class NNWindow;
 
 
 @protocol NNSwitcherDelegate <NSObject>
 
 - (oneway void)switcher:(NNSwitcher *)switcher didUpdateIndex:(unsigned)index;
 - (oneway void)switcher:(NNSwitcher *)switcher didUpdateWindowList:(NSArray *)windows;
-- (oneway void)switcher:(NNSwitcher *)switcher contentsOfWindowDidChange:(NNWindowData *)window;
+- (oneway void)switcher:(NNSwitcher *)switcher contentsOfWindowDidChange:(NNWindow *)window;
 
 @end

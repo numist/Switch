@@ -19,7 +19,7 @@
 #import "NNObjectSerializer.h"
 #import "NNSelectionBoxView.h"
 #import "NNWindowThumbnailView.h"
-#import "NNWindowData.h"
+#import "NNWindow.h"
 #import "NNApplication.h"
 
 
@@ -99,7 +99,7 @@
         self.deadWindows = [NSMutableDictionary new];
         
         for (NSUInteger i = 0; i < numWindows; i++) {
-            NNWindowData *window = [windows objectAtIndex:i];
+            NNWindow *window = [windows objectAtIndex:i];
             NNWindowThumbnailView *thumbView = [self createThumbViewForWindow:window];
             thumbView.frame = [self finalFrameForThumbnailViewAtIndex:i thumbSize:thumbSize];
         }
@@ -110,7 +110,7 @@
         // Create views for newly-arrived windows
         NSMutableDictionary *newWindows = [NSMutableDictionary new];
         for (NSUInteger i = 0; i < numWindows; i++) {
-            NNWindowData *window = [windows objectAtIndex:i];
+            NNWindow *window = [windows objectAtIndex:i];
             NNWindowThumbnailView *thumbView = [self.thumbViews objectForKey:window];
             if (!thumbView) {
                 thumbView = [self createThumbViewForWindow:window];
@@ -120,7 +120,7 @@
         }
         
         // Mark views for removal
-        for (NNWindowData *window in [self.thumbViews copy]) {
+        for (NNWindow *window in [self.thumbViews copy]) {
             if (![windows containsObject:window]) {
                 [self.deadWindows setObject:[self.thumbViews objectForKey:window] forKey:window];
             }
@@ -128,7 +128,7 @@
         
         NSMutableArray *animations = [NSMutableArray new];
         {
-            NSDictionary *(^animationForWindow)(NNWindowData *) = ^(NNWindowData *window) {
+            NSDictionary *(^animationForWindow)(NNWindow *) = ^(NNWindow *window) {
                 NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:3];
                 NSUInteger index = [windows indexOfObject:window];
                 NNWindowThumbnailView *view = [self.thumbViews objectForKey:window];
@@ -146,12 +146,12 @@
             };
             
             // Animations for new and pre-existent windows
-            for (NNWindowData *window in windows) {
+            for (NNWindow *window in windows) {
                 [animations addObject:animationForWindow(window)];
             }
             
             // Animations for ex-windows
-            for (NNWindowData *window in self.deadWindows) {
+            for (NNWindow *window in self.deadWindows) {
                 [animations addObject:animationForWindow(window)];
             }
             
@@ -189,7 +189,7 @@
 
 - (void)animationDidEnd:(NSAnimation *)animation;
 {
-    for (NNWindowData *window in self.deadWindows) {
+    for (NNWindow *window in self.deadWindows) {
         [self destroyThumbViewForWindow:window];
     }
     [self.deadWindows removeAllObjects];
@@ -207,7 +207,7 @@
     [self updateViewsWithWindowList:windows];
 }
 
-- (oneway void)switcher:(NNSwitcher *)switcher contentsOfWindowDidChange:(NNWindowData *)window;
+- (oneway void)switcher:(NNSwitcher *)switcher contentsOfWindowDidChange:(NNWindow *)window;
 {
     [[self.thumbViews objectForKey:window] setWindowThumbnail:window.image];
 }
@@ -230,7 +230,7 @@
     }
 }
 
-- (NNWindowThumbnailView *)createThumbViewForWindow:(NNWindowData *)window;
+- (NNWindowThumbnailView *)createThumbViewForWindow:(NNWindow *)window;
 {
     NNWindowThumbnailView *result = [[NNWindowThumbnailView alloc] initWithFrame:NSZeroRect];
     result.applicationIcon = window.application.icon;
@@ -240,7 +240,7 @@
     return result;
 }
 
-- (void)destroyThumbViewForWindow:(NNWindowData *)window;
+- (void)destroyThumbViewForWindow:(NNWindow *)window;
 {
     [[self.thumbViews objectForKey:window] removeFromSuperview];
     [self.thumbViews removeObjectForKey:window];

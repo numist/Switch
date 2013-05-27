@@ -16,7 +16,7 @@
 
 #import "NNDelegateProxy.h"
 #import "NNObjectSerializer.h"
-#import "NNWindowData.h"
+#import "NNWindow.h"
 #import "NNWindowListWorker.h"
 #import "NNWindowWorker.h"
 
@@ -64,7 +64,7 @@ generateDelegateAccessors(self->delegateProxy, NNWindowStoreDelegate)
 {
     self.updatingWindowContents = YES;
     self.windowWorkers = [NSMutableDictionary dictionaryWithCapacity:[_windows count]];
-    for (NNWindowData *window in _windows) {
+    for (NNWindow *window in _windows) {
         NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window];
         worker.delegate = (id<NNWindowWorkerDelegate>)[NNObjectSerializer serializedObjectForObject:self];
         [worker start];
@@ -80,7 +80,7 @@ generateDelegateAccessors(self->delegateProxy, NNWindowStoreDelegate)
 
 #pragma mark NNWindowWorkerDelegate
 
-- (void)windowWorker:(NNWindowWorker *)worker didUpdateContentsOfWindow:(NNWindowData *)window;
+- (void)windowWorker:(NNWindowWorker *)worker didUpdateContentsOfWindow:(NNWindow *)window;
 {
     [self.delegate windowStore:[NNObjectSerializer serializedObjectForObject:self] contentsOfWindowDidChange:window];
 }
@@ -95,13 +95,13 @@ generateDelegateAccessors(self->delegateProxy, NNWindowStoreDelegate)
     BOOL windowsChanged = ![oldArray isEqualToArray:newArray];
     
     if (self.updatingWindowContents) {
-        for (NNWindowData *window in oldArray) {
+        for (NNWindow *window in oldArray) {
             if (![newArray containsObject:window]) {
                 [self.windowWorkers removeObjectForKey:window];
             }
         }
         
-        for (NNWindowData *window in newArray) {
+        for (NNWindow *window in newArray) {
             if (![oldArray containsObject:window]) {
                 NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window];
                 worker.delegate = (id<NNWindowWorkerDelegate>)[NNObjectSerializer serializedObjectForObject:self];

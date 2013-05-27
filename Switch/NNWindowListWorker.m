@@ -16,7 +16,7 @@
 
 #import "despatch.h"
 #import "NNObjectSerializer.h"
-#import "NNWindowData.h"
+#import "NNWindow+Private.h"
 #import "NNWindowStore+Private.h"
 
 
@@ -61,10 +61,10 @@ static NSTimeInterval refreshInterval = 0.1;
     
     for (unsigned i = 0; i < [info count]; i++) {
         NSNumber *windowID = [[(NSArray *)info objectAtIndex:i] objectForKey:(NSString *)kCGWindowNumber];
-        NNWindowData *window = [self.windowDict objectForKey:windowID];
+        NNWindow *window = [self.windowDict objectForKey:windowID];
         
         if (!window) {
-            window = [[NNWindowData alloc] initWithDescription:[info objectAtIndex:i]];
+            window = [[NNWindow alloc] initWithDescription:[info objectAtIndex:i]];
         }
         
         if (window) {

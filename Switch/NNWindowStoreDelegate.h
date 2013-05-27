@@ -13,12 +13,12 @@
 //
 
 @class NNWindowStore;
-@class NNWindowData;
+@class NNWindow;
 
 
 @protocol NNWindowStoreDelegate <NSObject>
 
 - (oneway void)windowStoreDidUpdateWindowList:(NNWindowStore *)store;
-- (oneway void)windowStore:(NNWindowStore *)store contentsOfWindowDidChange:(NNWindowData *)window;
+- (oneway void)windowStore:(NNWindowStore *)store contentsOfWindowDidChange:(NNWindow *)window;
 
 @end
