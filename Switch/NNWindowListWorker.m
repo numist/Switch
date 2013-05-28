@@ -25,6 +25,7 @@ static NSTimeInterval refreshInterval = 0.1;
 
 @interface NNWindowListWorker ()
 
+@property (atomic, strong, readonly) dispatch_queue_t lock;
 @property (nonatomic, weak) NNWindowStore *store;
 @property (nonatomic, retain) NSMutableDictionary *windowDict;
 
@@ -38,21 +39,26 @@ static NSTimeInterval refreshInterval = 0.1;
     self = [super init];
     if (!self) return nil;
     
+    _lock = despatch_lock_create([[NSString stringWithFormat:@"%@ <%p>", [self class], self] UTF8String]);
     _store = store;
     
     // All calls made by the owner of this object should be serialized.
-    return [NNObjectSerializer createSerializedObjectForObject:self];
+    return self;
 }
 
 - (oneway void)start;
 {
-    [self refresh];
+    dispatch_async(self.lock, ^{
+        [self workerLoop];
+    });
 }
 
 #pragma mark Internal
 
-- (oneway void)refresh;
+- (oneway void)workerLoop;
 {
+    despatch_lock_assert(self.lock);
+    
     CFArrayRef cgInfo = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements,  kCGNullWindowID);
     NSArray *info = CFBridgingRelease(cgInfo);
     
@@ -63,10 +69,12 @@ static NSTimeInterval refreshInterval = 0.1;
         NSNumber *windowID = [[(NSArray *)info objectAtIndex:i] objectForKey:(NSString *)kCGWindowNumber];
         NNWindow *window = [self.windowDict objectForKey:windowID];
         
+        // Not a window we already know about? Try building a new one.
         if (!window) {
             window = [[NNWindow alloc] initWithDescription:[info objectAtIndex:i]];
         }
         
+        // Window found or info valid for creating a new window.
         if (window) {
             [windows addObject:window];
             [newWindowDict setObject:window forKey:windowID];
@@ -75,15 +83,19 @@ static NSTimeInterval refreshInterval = 0.1;
     
     self.windowDict = newWindowDict;
     // TODO: This should probably be a delegate mechanism, for clarity.
-    __weak NNWindowStore *store = self.store;
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong __typeof__(self.store) store = self.store;
         store.windows = windows;
     });
     
-    __weak NNWindowListWorker *this = self;
-    [NNObjectSerializer performOnObject:self afterDelay:refreshInterval block:^{
-        [this refresh];
-    }];
+    // All done, schedule the next update.
+    __weak __typeof__(self) weakSelf = self;
+    double delayInSeconds = refreshInterval;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, self.lock, ^(void){
+        __strong __typeof__(self) self = weakSelf;
+        [self workerLoop];
+    });
 }
 
 @end
