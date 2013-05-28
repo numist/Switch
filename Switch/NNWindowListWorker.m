@@ -15,7 +15,6 @@
 #import "NNWindowListWorker.h"
 
 #import "despatch.h"
-#import "NNObjectSerializer.h"
 #import "NNWindow+Private.h"
 #import "NNWindowStore+Private.h"
 

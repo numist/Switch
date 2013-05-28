@@ -16,8 +16,6 @@
 
 #import "despatch.h"
 #import "imageComparators.h"
-#import "NNDelegateProxy.h"
-#import "NNObjectSerializer.h"
 #import "NNWindow+Private.h"
 
 
