@@ -14,19 +14,17 @@
 
 #import "NNWindowStore+Private.h"
 
+#import "despatch.h"
 #import "NNDelegateProxy.h"
-#import "NNObjectSerializer.h"
 #import "NNWindow.h"
 #import "NNWindowListWorker.h"
 #import "NNWindowWorker.h"
 
 
-@interface NNWindowStore () {
-    id<NNWindowStoreDelegate> delegateProxy;
-}
+@interface NNWindowStore ()
 
 @property (nonatomic, strong) NNWindowListWorker *listWorker;
-
+@property (nonatomic, strong, readonly) dispatch_queue_t lock;
 @property (nonatomic, assign) BOOL updatingWindowContents;
 @property (nonatomic, strong) NSMutableDictionary *windowWorkers;
 
@@ -40,80 +38,96 @@
     self = [super init];
     if (!self) return nil;
     
-    return [NNObjectSerializer createSerializedObjectForObject:self];
+    despatch_lock_promote(dispatch_get_main_queue());
+    _lock = despatch_lock_create([[NSString stringWithFormat:@"%@ <%p>", [self class], self] UTF8String]);
+    
+    return self;
 }
-
-generateDelegateAccessors(self->delegateProxy, NNWindowStoreDelegate)
 
 #pragma mark Actions
 
 - (void)startUpdatingWindowList;
 {
-    if (!self.listWorker) {
-        self.listWorker = [[NNWindowListWorker alloc] initWithWindowStore:[NNObjectSerializer serializedObjectForObject:self]];
-        [self.listWorker start];
-    }
+    dispatch_async(self.lock, ^{
+        if (!self.listWorker) {
+            self.listWorker = [[NNWindowListWorker alloc] initWithWindowStore:self];
+            [self.listWorker start];
+        }
+    });
 }
 
 - (void)stopUpdatingWindowList;
 {
-    self.listWorker = nil;
+    dispatch_async(self.lock, ^{
+        self.listWorker = nil;
+    });
 }
 
 - (void)startUpdatingWindowContents;
 {
-    self.updatingWindowContents = YES;
-    self.windowWorkers = [NSMutableDictionary dictionaryWithCapacity:[_windows count]];
-    for (NNWindow *window in _windows) {
-        NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window];
-        worker.delegate = (id<NNWindowWorkerDelegate>)[NNObjectSerializer serializedObjectForObject:self];
-        [worker start];
-        [self.windowWorkers setObject:worker forKey:window];
-    }
+    dispatch_async(self.lock, ^{
+        self.updatingWindowContents = YES;
+        self.windowWorkers = [NSMutableDictionary dictionaryWithCapacity:[_windows count]];
+        for (NNWindow *window in _windows) {
+            NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window];
+            worker.delegate = (id<NNWindowWorkerDelegate>)self;
+            [worker start];
+            [self.windowWorkers setObject:worker forKey:window];
+        }
+    });
 }
 
 - (void)stopUpdatingWindowContents;
 {
-    self.updatingWindowContents = NO;
-    self.windowWorkers = nil;
+    dispatch_async(self.lock, ^{
+        self.updatingWindowContents = NO;
+        self.windowWorkers = nil;
+    });
 }
 
 #pragma mark NNWindowWorkerDelegate
 
 - (void)windowWorker:(NNWindowWorker *)worker didUpdateContentsOfWindow:(NNWindow *)window;
 {
-    [self.delegate windowStore:[NNObjectSerializer serializedObjectForObject:self] contentsOfWindowDidChange:window];
+    despatch_lock_assert(dispatch_get_main_queue());
+
+    [self.delegate windowStore:self contentsOfWindowDidChange:window];
 }
 
 #pragma mark Private
 
 - (oneway void)setWindows:(NSArray *)newArray;
 {
-    NSArray *oldArray = _windows;
-    _windows = newArray;
-    
-    BOOL windowsChanged = ![oldArray isEqualToArray:newArray];
-    
-    if (self.updatingWindowContents) {
-        for (NNWindow *window in oldArray) {
-            if (![newArray containsObject:window]) {
-                [self.windowWorkers removeObjectForKey:window];
+    dispatch_async(self.lock, ^{
+        NSArray *oldArray = _windows;
+        _windows = newArray;
+        
+        BOOL windowsChanged = ![oldArray isEqualToArray:newArray];
+        
+        // Have to catch which windows are old/new if updating window contents to manage the workers.
+        if (self.updatingWindowContents) {
+            for (NNWindow *window in oldArray) {
+                if (![newArray containsObject:window]) {
+                    [self.windowWorkers removeObjectForKey:window];
+                }
+            }
+            
+            for (NNWindow *window in newArray) {
+                if (![oldArray containsObject:window]) {
+                    NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window];
+                    worker.delegate = (id<NNWindowWorkerDelegate>)self;
+                    [worker start];
+                    [self.windowWorkers setObject:worker forKey:window];
+                }
             }
         }
         
-        for (NNWindow *window in newArray) {
-            if (![oldArray containsObject:window]) {
-                NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window];
-                worker.delegate = (id<NNWindowWorkerDelegate>)[NNObjectSerializer serializedObjectForObject:self];
-                [worker start];
-                [self.windowWorkers setObject:worker forKey:window];
-            }
+        if (windowsChanged) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.delegate windowStoreDidUpdateWindowList:self];
+            });
         }
-    }
-    
-    if (windowsChanged) {
-        [self.delegate windowStoreDidUpdateWindowList:[NNObjectSerializer serializedObjectForObject:self]];
-    }
+    });
 }
 
 @end
