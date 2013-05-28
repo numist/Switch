@@ -29,7 +29,6 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 
 @property (nonatomic, strong, readonly) dispatch_queue_t lock;
 @property (nonatomic, strong) __attribute__((NSObject)) CGImageRef previousCapture;
-@property (nonatomic, assign) BOOL running;
 @property (nonatomic, assign) NSTimeInterval updateInterval;
 @property (nonatomic, weak) NNWindow *window;
 
@@ -46,7 +45,6 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
     _lock = despatch_lock_create([[NSString stringWithFormat:@"%@ <%p>", [self class], self] UTF8String]);
     _window = window;
     _updateInterval = NNPollingIntervalFast;
-    _running = NO;
     
     return self;
 }
@@ -54,15 +52,7 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 - (oneway void)start;
 {
     dispatch_async(self.lock, ^{
-        self.running = YES;
         [self workerLoop];
-    });
-}
-
-- (oneway void)stop;
-{
-    dispatch_async(self.lock, ^{
-        self.running = NO;
     });
 }
 
@@ -73,7 +63,7 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
     despatch_lock_assert(self.lock);
 
     // Short circuit in case the window went away or we were told to stop.
-    if (!self.window || !self.running) {
+    if (!self.window) {
         return;
     }
     

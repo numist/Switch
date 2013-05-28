@@ -26,6 +26,5 @@
 
 - (instancetype)initWithModelObject:(NNWindow *)window;
 - (void)start;
-- (void)stop;
 
 @end
