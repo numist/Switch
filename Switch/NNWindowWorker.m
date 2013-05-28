@@ -25,13 +25,13 @@ static const NSTimeInterval NNPollingIntervalFast = 1.0 / (24.0 * 1000.0 / 1001.
 static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 
 
-@interface NNWindowWorker () {
-    id<NNWindowWorkerDelegate> delegateProxy;
-}
+@interface NNWindowWorker ()
 
-@property (nonatomic, weak) NNWindow *window;
-@property (nonatomic, assign) NSTimeInterval updateInterval;
+@property (nonatomic, strong, readonly) dispatch_queue_t lock;
 @property (nonatomic, strong) __attribute__((NSObject)) CGImageRef previousCapture;
+@property (nonatomic, assign) BOOL running;
+@property (nonatomic, assign) NSTimeInterval updateInterval;
+@property (nonatomic, weak) NNWindow *window;
 
 @end
 
@@ -43,25 +43,37 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
     self = [super init];
     if (!self) { return nil; }
     
+    _lock = despatch_lock_create([[NSString stringWithFormat:@"%@ <%p>", [self class], self] UTF8String]);
     _window = window;
     _updateInterval = NNPollingIntervalFast;
+    _running = NO;
     
-    return [NNObjectSerializer createSerializedObjectForObject:self];
+    return self;
 }
 
 - (oneway void)start;
 {
-    [self workerLoop];
+    dispatch_async(self.lock, ^{
+        self.running = YES;
+        [self workerLoop];
+    });
 }
 
-generateDelegateAccessors(self->delegateProxy, NNWindowWorkerDelegate)
+- (oneway void)stop;
+{
+    dispatch_async(self.lock, ^{
+        self.running = NO;
+    });
+}
 
 #pragma Internal
 
 - (oneway void)workerLoop;
 {
+    despatch_lock_assert(self.lock);
+
     // Short circuit in case the window went away or we were told to stop.
-    if (!self.window) {
+    if (!self.window || !self.running) {
         return;
     }
     
@@ -93,8 +105,11 @@ generateDelegateAccessors(self->delegateProxy, NNWindowWorkerDelegate)
         } else {
             self.updateInterval = NNPollingIntervalFast;
             self.previousCapture = cgImage;
-            self.window.image = [[NSImage alloc] initWithCGImage:cgImage size:NSMakeSize(newWidth, newHeight)];
-            [self.delegate windowWorker:[NNObjectSerializer serializedObjectForObject:self] didUpdateContentsOfWindow:self.window];
+            NSImage *image = [[NSImage alloc] initWithCGImage:cgImage size:NSMakeSize(newWidth, newHeight)];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.window.image = image;
+                [self.delegate windowWorker:self didUpdateContentsOfWindow:self.window];
+            });
         }
         
         CFRelease(cgImage); cgImage = NULL;
@@ -104,11 +119,13 @@ generateDelegateAccessors(self->delegateProxy, NNWindowWorkerDelegate)
     }
     
     // All done, schedule the next update.
-    __weak NNWindowWorker *this = self;
+    __weak __typeof__(self) weakSelf = self;
     double delayInSeconds = self.updateInterval - [[NSDate date] timeIntervalSinceDate:start];
-    [NNObjectSerializer performOnObject:self afterDelay:MAX(0.01, delayInSeconds) block:^{
-        [this workerLoop];
-    }];
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, self.lock, ^(void){
+        __strong __typeof__(self) self = weakSelf;
+        [self workerLoop];
+    });
 }
 
 @end
