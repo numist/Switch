@@ -110,7 +110,7 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
     
     // All done, schedule the next update.
     __weak __typeof__(self) weakSelf = self;
-    double delayInSeconds = self.updateInterval - [[NSDate date] timeIntervalSinceDate:start];
+    double delayInSeconds = MAX(self.updateInterval - [[NSDate date] timeIntervalSinceDate:start], 0.0);
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, self.lock, ^(void){
         __strong __typeof__(self) self = weakSelf;
