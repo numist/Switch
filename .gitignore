@@ -1,6 +1,7 @@
 # Project specific ignores:
 
 *-local.*
+*-local/
 
 # Xcode-specific ignores:
 
