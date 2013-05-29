@@ -33,8 +33,7 @@
 static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
                                     CGEventRef event, void *refcon)
 {
-    return event;
-//    return [(__bridge NNHotKeyManager *)refcon eventTapProxy:proxy didReceiveEvent:event ofType:type];
+    return [(__bridge NNHotKeyManager *)refcon eventTapProxy:proxy didReceiveEvent:event ofType:type];
 }
 
 
@@ -51,8 +50,8 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     }
     
     // Create an event tap. We are interested in key presses.
-    CGEventMask        eventMask;
-    eventMask = (CGEventMaskBit(kCGEventKeyDown) | CGEventMaskBit(kCGEventKeyUp) | CGEventMaskBit(kCGEventFlagsChanged));
+    CGEventMask eventMask = (CGEventMaskBit(kCGEventKeyDown) | CGEventMaskBit(kCGEventKeyUp) | CGEventMaskBit(kCGEventFlagsChanged));
+    
     _eventTap = CGEventTapCreate(kCGSessionEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault, eventMask, nnCGEventCallback, (__bridge void *)(self));
     if (!_eventTap) {
         return nil;
@@ -78,6 +77,12 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
 
 - (CGEventRef)eventTapProxy:(CGEventTapProxy)proxy didReceiveEvent:(CGEventRef)event ofType:(CGEventType)type;
 {
+    if (type == kCGEventTapDisabledByTimeout) {
+        // Re-enable the event tap.
+        NSLog(@"Event tap timed out?!");
+        CGEventTapEnable(self.eventTap, true);
+    }
+    
     // Paranoid sanity check.
     if ((type != kCGEventKeyDown) && (type != kCGEventKeyUp) && (type != kCGEventFlagsChanged))
         return event;
