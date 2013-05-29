@@ -141,7 +141,7 @@
 
 #pragma mark Private
 
-- (CGImageRef)createCGWindowImage;
+- (CGImageRef)copyCGWindowImage;
 {
     CGImageRef result = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, self.windowID, kCGWindowImageBoundsIgnoreFraming);
     

@@ -22,6 +22,6 @@
 
 - (instancetype)initWithDescription:(NSDictionary *)description;
 - (void)setImage:(NSImage *)image;
-- (CGImageRef)createCGWindowImage;
+- (CGImageRef)copyCGWindowImage;
 
 @end

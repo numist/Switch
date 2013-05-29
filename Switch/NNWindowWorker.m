@@ -68,7 +68,7 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
     }
     
     NSDate *start = [NSDate date];
-    CGImageRef cgImage = [window createCGWindowImage];
+    CGImageRef cgImage = [window copyCGWindowImage];
     
     if (cgImage) {
         BOOL imageChanged = NO;
