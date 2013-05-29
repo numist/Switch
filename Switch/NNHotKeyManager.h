@@ -20,13 +20,20 @@
 
 @interface NNHotKeyManager : NSObject
 
+@property (nonatomic, weak) id<NNHotKeyManagerDelegate> delegate;
+
 @end
 
 
 @protocol NNHotKeyManagerDelegate <NSObject>
 
-- (void)hotKeyManagerDidInvokeSwitcher:(NNHotKeyManager *)manager;
-- (void)hotKeyManagerDidDismissSwitcher:(NNHotKeyManager *)manager;
-// …?
+- (void)hotKeyManagerInvokedInterface:(NNHotKeyManager *)manager;
+- (void)hotKeyManagerDismissedInterface:(NNHotKeyManager *)manager;
+- (void)hotKeyManagerBeginIncrementingSelection:(NNHotKeyManager *)manager;
+- (void)hotKeyManagerBeginDecrementingSelection:(NNHotKeyManager *)manager;
+- (void)hotKeyManagerEndIncrementingSelection:(NNHotKeyManager *)manager;
+- (void)hotKeyManagerEndDecrementingSelection:(NNHotKeyManager *)manager;
+- (void)hotKeyManagerClosedWindow:(NNHotKeyManager *)manager;
+- (void)hotKeyManagerClosedApplication:(NNHotKeyManager *)manager;
 
 @end

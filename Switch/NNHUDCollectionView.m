@@ -85,7 +85,7 @@
 {
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
     
-    NSParameterAssert(index < self.numberOfCells);
+//    NSParameterAssert(index < self.numberOfCells);
 
     NNSelectionBoxView *selectionBox;
     

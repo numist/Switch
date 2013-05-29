@@ -44,10 +44,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     self = [super init];
     if (!self) return nil;
     
-    if (![[NSThread currentThread] isMainThread]) {
-        NSLog(@"%@ must be instanciated on the main thread", [self class]);
-        return nil;
-    }
+    NSAssert([[NSThread currentThread] isMainThread], @"%@ must be instanciated on the main thread", [self class]);
     
     // Create an event tap. We are interested in key presses.
     CGEventMask eventMask = (CGEventMaskBit(kCGEventKeyDown) | CGEventMaskBit(kCGEventKeyUp) | CGEventMaskBit(kCGEventFlagsChanged));
@@ -95,32 +92,64 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     if (commandKeyIsPressed && keycode == 48 && type == kCGEventKeyDown && !self.activatedSwitcher) {
         self.activatedSwitcher = YES;
         dispatch_async(dispatch_get_main_queue(), ^{
-            //            [NSApp postEvent:<#(NSEvent *)#> atStart:<#(BOOL)#>];
-            NSLog(@"RELEZSE THE KRZKEN!");
-        });
-        return NULL;
-    } else if (!commandKeyIsPressed && self.activatedSwitcher) {
-        self.activatedSwitcher = NO;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            //            [NSApp postEvent:<#(NSEvent *)#> atStart:<#(BOOL)#>];
-            NSLog(@"RECALL THE KRAKEN!");
+            [self.delegate hotKeyManagerInvokedInterface:self];
         });
         return NULL;
     } else if (self.activatedSwitcher) {
-        if (keycode == 48) {
-            if (type == kCGEventKeyDown) {
+        if (!commandKeyIsPressed) {
+            self.activatedSwitcher = NO;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.delegate hotKeyManagerDismissedInterface:self];
+            });
+            return NULL;
+        }
+        
+        switch (keycode) {
+            case 48: { // Tab key
                 if (!shiftKeyIsPressed) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        //                    [NSApp postEvent:￼ atStart:￼];
-                        NSLog(@"ITERATE THE KRAKEN!");
-                    });
+                    if (type == kCGEventKeyDown) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.delegate hotKeyManagerBeginIncrementingSelection:self];
+                        });
+                    } else {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.delegate hotKeyManagerEndIncrementingSelection:self];
+                        });
+                    }
                 } else {
+                    if (type == kCGEventKeyDown) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.delegate hotKeyManagerBeginDecrementingSelection:self];
+                        });
+                    } else {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.delegate hotKeyManagerEndDecrementingSelection:self];
+                        });
+                    }
+                }
+                break;
+            }
+            
+            case 13: { // W key
+                if (type == kCGEventKeyDown) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        //                    [NSApp postEvent:￼ atStart:￼];
-                        NSLog(@"ITERATE THE KRAKEN BACKWARDS!");
+                        [self.delegate hotKeyManagerClosedWindow:self];
                     });
                 }
+                break;
             }
+                
+            case 12: { // Q key
+                if (type == kCGEventKeyDown) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.delegate hotKeyManagerClosedApplication:self];
+                    });
+                }
+                break;
+            }
+                
+            default:
+                break;
         }
         return NULL;
     }

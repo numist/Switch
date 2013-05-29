@@ -20,9 +20,14 @@
 #import "NNWindow.h"
 #import "NNApplication.h"
 #import "NNWindowThumbnailView.h"
+#import "NNHotKeyManager.h"
 
 
-@interface NNAppDelegate () <NNWindowStoreDelegate, NNHUDCollectionViewDataSource>
+@interface NNAppDelegate () <NNWindowStoreDelegate, NNHUDCollectionViewDataSource, NNHotKeyManagerDelegate>
+
+@property (nonatomic, strong) NNHotKeyManager *keyManager;
+@property (nonatomic, assign) BOOL incrementing;
+@property (nonatomic, assign) BOOL decrementing;
 
 @property (nonatomic, strong) NSWindow *appWindow;
 @property (nonatomic, strong) NNHUDCollectionView *collectionView;
@@ -55,27 +60,25 @@
     }
     self.appWindow = switcherWindow;
     
+    NNHUDCollectionView *collectionView = [[NNHUDCollectionView alloc] initWithFrame:NSMakeRect(self.appWindow.frame.size.width / 2.0, self.appWindow.frame.size.height / 2.0, 0.0, 0.0)];
+    {
+        collectionView.maxWidth = [NSScreen mainScreen].frame.size.width - (kNNScreenToWindowInset * 2.0);
+        collectionView.maxCellSize = 128;
+        collectionView.dataSource = self;
+    }
+    self.collectionView = collectionView;
+    [self.appWindow.contentView addSubview:self.collectionView];
+
+    
     
     
     
     self.windows = [NSMutableArray new];
     self.store = [[NNWindowStore alloc] initWithDelegate:self];
     
-    [self invokeSwitcher];
     
-    
-    // lol if you…
-    __block dispatch_block_t incrementBlock;
-    double delayInSeconds = 2.0;
-    
-    incrementBlock = ^{
-        [self incrementKeyDown];
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-        dispatch_after(popTime, dispatch_get_main_queue(), incrementBlock);
-    };
-    
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_main_queue(), incrementBlock);
+    self.keyManager = [NNHotKeyManager new];
+    self.keyManager.delegate = self;
 }
 
 #pragma mark Properties
@@ -99,39 +102,6 @@
 }
 
 #pragma mark Internal
-
-- (void)invokeSwitcher;
-{
-    [self.store startUpdatingWindowList];
-}
-
-- (void)dismissSwitcher;
-{
-}
-
-- (void)incrementKeyDown;
-{
-    // TODO: key repeat support
-    self.selectedIndex = (self.selectedIndex + 1) % [self.windows count];
-}
-
-- (void)incrementKeyUp;
-{
-    // TODO: key repeat support
-    NSLog(@"Stop incrementing");
-}
-
-- (void)decrementKeyDown;
-{
-    // TODO: key repeat support
-//    self.switcher.index -= 1;
-}
-
-- (void)decrementKeyUp;
-{
-    // TODO: key repeat support
-    NSLog(@"Stop decrementing");
-}
 
 // TODO: support for closing windows, quitting apps, mouse events?
 
@@ -162,21 +132,14 @@
 {
 //    [self createSwitcherWindowIfNeeded];
     // endUpdates, etc.
-    if (self.selectedIndex < [self.windows count]) {
-        [self.collectionView selectCellAtIndex:self.selectedIndex];
-    }
+    [self.collectionView reloadData];
     
-    if (self.collectionView) {
-        [self.collectionView reloadData];
-    } else {
-        self.collectionView = [[NNHUDCollectionView alloc] initWithFrame:NSMakeRect(self.appWindow.frame.size.width / 2.0, self.appWindow.frame.size.height / 2.0, 0.0, 0.0)];
-        self.collectionView.maxWidth = [NSScreen mainScreen].frame.size.width - (kNNScreenToWindowInset * 2.0);
-        self.collectionView.maxCellSize = 128;
-        self.collectionView.dataSource = self;
-        [self.appWindow.contentView addSubview:self.collectionView];
-        [self.appWindow orderFront:self];
+    if ([self.windows count]) {
+        if (self.selectedIndex >= NSNotFound) {
+            self.selectedIndex = 0;
+        }
         
-        [self.store startUpdatingWindowContents];
+        [self.collectionView selectCellAtIndex:self.selectedIndex];
     }
 }
 
@@ -194,6 +157,73 @@
     result.applicationIcon = window.application.icon;
     result.windowThumbnail = window.image;
     return result;
+}
+
+#pragma mark - NNHotKeyManagerDelegate
+
+- (void)hotKeyManagerInvokedInterface:(NNHotKeyManager *)manager;
+{
+    [self.store startUpdatingWindowList];
+
+    [self.appWindow orderFront:self];
+    
+    [self.store startUpdatingWindowContents];
+}
+
+- (void)hotKeyManagerDismissedInterface:(NNHotKeyManager *)manager;
+{
+    [self.appWindow orderOut:self];
+    self.selectedIndex = NSNotFound;
+}
+
+- (void)hotKeyManagerBeginIncrementingSelection:(NNHotKeyManager *)manager;
+{
+    if (![self.windows count]) {
+        return;
+    }
+
+    if (self.selectedIndex >= NSNotFound) {
+        self.selectedIndex = 0;
+    } else if (!self.incrementing || self.selectedIndex != [self.windows count] - 1) {
+        self.selectedIndex = (self.selectedIndex + 1) % [self.windows count];
+    }
+    
+    self.incrementing = YES;
+}
+
+- (void)hotKeyManagerEndIncrementingSelection:(NNHotKeyManager *)manager;
+{
+    self.incrementing = NO;
+}
+
+- (void)hotKeyManagerBeginDecrementingSelection:(NNHotKeyManager *)manager;
+{
+    if (![self.windows count]) {
+        return;
+    }
+    
+    if (self.selectedIndex >= NSNotFound) {
+        self.selectedIndex = [self.windows count] - 1;
+    } else if (!self.decrementing || self.selectedIndex != 0) {
+        self.selectedIndex = self.selectedIndex == 0 ? [self.windows count] - 1 : self.selectedIndex - 1;
+    }
+    
+    self.decrementing = YES;
+}
+
+- (void)hotKeyManagerEndDecrementingSelection:(NNHotKeyManager *)manager;
+{
+    self.decrementing = NO;
+}
+
+- (void)hotKeyManagerClosedWindow:(NNHotKeyManager *)manager;
+{
+    NSLog(@"Boom.");
+}
+
+- (void)hotKeyManagerClosedApplication:(NNHotKeyManager *)manager;
+{
+    NSLog(@"BOOM!");
 }
 
 @end
