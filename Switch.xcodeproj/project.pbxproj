@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BC63AB8F1755907D00016B9E /* NNHUDCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */; };
 		BCA734E116DAC53F00CD4C74 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCA734E016DAC53F00CD4C74 /* Cocoa.framework */; };
 		BCA734EB16DAC53F00CD4C74 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BCA734E916DAC53F00CD4C74 /* InfoPlist.strings */; };
 		BCA734ED16DAC53F00CD4C74 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA734EC16DAC53F00CD4C74 /* main.m */; };
@@ -27,9 +28,7 @@
 		BCA7353316DB2C0100CD4C74 /* NNHotKeyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7353216DB2C0100CD4C74 /* NNHotKeyManager.m */; };
 		BCA7353816E148EF00CD4C74 /* NNRoundedRectView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7353716E148EF00CD4C74 /* NNRoundedRectView.m */; };
 		BCA7353A16E14EF000CD4C74 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCA7353916E14EF000CD4C74 /* QuartzCore.framework */; };
-		BCA7354016E159F400CD4C74 /* NNSwitcherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7353F16E159F400CD4C74 /* NNSwitcherViewController.m */; };
 		BCA7354316E1621400CD4C74 /* constants.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354216E1621400CD4C74 /* constants.m */; };
-		BCA7354616E1657000CD4C74 /* NNSwitcher.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354516E1657000CD4C74 /* NNSwitcher.m */; };
 		BCA7354916E1F14D00CD4C74 /* NNSelectionBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354816E1F14D00CD4C74 /* NNSelectionBoxView.m */; };
 		BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */; };
 /* End PBXBuildFile section */
@@ -45,6 +44,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		BC63AB8D1755907D00016B9E /* NNHUDCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHUDCollectionView.h; sourceTree = "<group>"; };
+		BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDCollectionView.m; sourceTree = "<group>"; };
 		BCA734DD16DAC53F00CD4C74 /* Switch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Switch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCA734E016DAC53F00CD4C74 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		BCA734E316DAC53F00CD4C74 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -84,18 +85,13 @@
 		BCA7353616E148EF00CD4C74 /* NNRoundedRectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNRoundedRectView.h; sourceTree = "<group>"; };
 		BCA7353716E148EF00CD4C74 /* NNRoundedRectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNRoundedRectView.m; sourceTree = "<group>"; };
 		BCA7353916E14EF000CD4C74 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		BCA7353E16E159F400CD4C74 /* NNSwitcherViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNSwitcherViewController.h; sourceTree = "<group>"; };
-		BCA7353F16E159F400CD4C74 /* NNSwitcherViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNSwitcherViewController.m; sourceTree = "<group>"; };
 		BCA7354116E1621400CD4C74 /* constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = constants.h; sourceTree = "<group>"; };
 		BCA7354216E1621400CD4C74 /* constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = constants.m; sourceTree = "<group>"; };
-		BCA7354416E1657000CD4C74 /* NNSwitcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNSwitcher.h; sourceTree = "<group>"; };
-		BCA7354516E1657000CD4C74 /* NNSwitcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNSwitcher.m; sourceTree = "<group>"; };
 		BCA7354716E1F14D00CD4C74 /* NNSelectionBoxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNSelectionBoxView.h; sourceTree = "<group>"; };
 		BCA7354816E1F14D00CD4C74 /* NNSelectionBoxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNSelectionBoxView.m; sourceTree = "<group>"; };
 		BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = imageComparators.h; sourceTree = "<group>"; };
 		BCA7354B16E2ED5000CD4C74 /* NNHUDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHUDView.h; sourceTree = "<group>"; };
 		BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDView.m; sourceTree = "<group>"; };
-		BCA7359016E5929300CD4C74 /* NNSwitcherDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NNSwitcherDelegate.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,14 +125,13 @@
 			name = Utero;
 			sourceTree = "<group>";
 		};
-		BC63AB8C17558E5B00016B9E /* Death Row */ = {
+		BC63AB901755C6EC00016B9E /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				BCA7354416E1657000CD4C74 /* NNSwitcher.h */,
-				BCA7354516E1657000CD4C74 /* NNSwitcher.m */,
-				BCA7359016E5929300CD4C74 /* NNSwitcherDelegate.h */,
+				BCA734F216DAC53F00CD4C74 /* NNAppDelegate.h */,
+				BCA734F316DAC53F00CD4C74 /* NNAppDelegate.m */,
 			);
-			name = "Death Row";
+			name = Controller;
 			sourceTree = "<group>";
 		};
 		BCA734D416DAC53F00CD4C74 = {
@@ -182,9 +177,8 @@
 		BCA734E616DAC53F00CD4C74 /* Switch */ = {
 			isa = PBXGroup;
 			children = (
-				BC63AB8C17558E5B00016B9E /* Death Row */,
 				BC63AB8B17558E4C00016B9E /* Utero */,
-				BCA7353516DB2E2500CD4C74 /* Controller */,
+				BC63AB901755C6EC00016B9E /* Controller */,
 				BCA7353016DB2BDC00CD4C74 /* Logic */,
 				BCA7351416DAC54C00CD4C74 /* Model */,
 				BCA7352C16DB237E00CD4C74 /* View */,
@@ -246,6 +240,8 @@
 				BCA734F516DAC53F00CD4C74 /* MainMenu.xib */,
 				BCA7354B16E2ED5000CD4C74 /* NNHUDView.h */,
 				BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */,
+				BC63AB8D1755907D00016B9E /* NNHUDCollectionView.h */,
+				BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */,
 				BCA7353616E148EF00CD4C74 /* NNRoundedRectView.h */,
 				BCA7353716E148EF00CD4C74 /* NNRoundedRectView.m */,
 				BCA7354716E1F14D00CD4C74 /* NNSelectionBoxView.h */,
@@ -262,19 +258,8 @@
 				BCA7358E16E585B800CD4C74 /* Concurrency */,
 				BCA7358F16E585D400CD4C74 /* Polling */,
 				BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */,
-				BCA734F216DAC53F00CD4C74 /* NNAppDelegate.h */,
-				BCA734F316DAC53F00CD4C74 /* NNAppDelegate.m */,
 			);
 			name = Logic;
-			sourceTree = "<group>";
-		};
-		BCA7353516DB2E2500CD4C74 /* Controller */ = {
-			isa = PBXGroup;
-			children = (
-				BCA7353E16E159F400CD4C74 /* NNSwitcherViewController.h */,
-				BCA7353F16E159F400CD4C74 /* NNSwitcherViewController.m */,
-			);
-			name = Controller;
 			sourceTree = "<group>";
 		};
 		BCA7358E16E585B800CD4C74 /* Concurrency */ = {
@@ -417,11 +402,10 @@
 				BCA7352F16DB239900CD4C74 /* NNWindowThumbnailView.m in Sources */,
 				BCA7353316DB2C0100CD4C74 /* NNHotKeyManager.m in Sources */,
 				BCA7353816E148EF00CD4C74 /* NNRoundedRectView.m in Sources */,
-				BCA7354016E159F400CD4C74 /* NNSwitcherViewController.m in Sources */,
 				BCA7354316E1621400CD4C74 /* constants.m in Sources */,
-				BCA7354616E1657000CD4C74 /* NNSwitcher.m in Sources */,
 				BCA7354916E1F14D00CD4C74 /* NNSelectionBoxView.m in Sources */,
 				BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */,
+				BC63AB8F1755907D00016B9E /* NNHUDCollectionView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

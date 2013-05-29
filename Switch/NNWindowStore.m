@@ -46,7 +46,6 @@
     if (!self) return nil;
     
     despatch_lock_promote(dispatch_get_main_queue());
-    _lock = dispatch_get_main_queue();
     
     _delegate = delegate;
     _windows = [NSArray new];
@@ -58,40 +57,40 @@
 
 - (void)startUpdatingWindowList;
 {
-    dispatch_async(self.lock, ^{
-        if (!self.listWorker) {
-            self.listWorker = [[NNWindowListWorker alloc] initWithDelegate:self];
-        }
-    });
+    despatch_lock_assert(dispatch_get_main_queue());
+
+    if (!self.listWorker) {
+        self.listWorker = [[NNWindowListWorker alloc] initWithDelegate:self];
+    }
 }
 
 - (void)stopUpdatingWindowList;
 {
-    dispatch_async(self.lock, ^{
-        self.listWorker = nil;
-    });
+    despatch_lock_assert(dispatch_get_main_queue());
+
+    self.listWorker = nil;
 }
 
 - (void)startUpdatingWindowContents;
 {
-    dispatch_async(self.lock, ^{
-        self.updatingWindowContents = YES;
-        self.windowWorkers = [NSMutableDictionary dictionaryWithCapacity:[_windows count]];
-        for (NNWindow *window in _windows) {
-            NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window];
-            worker.delegate = (id<NNWindowWorkerDelegate>)self;
-            [worker start];
-            [self.windowWorkers setObject:worker forKey:window];
-        }
-    });
+    despatch_lock_assert(dispatch_get_main_queue());
+
+    self.updatingWindowContents = YES;
+    self.windowWorkers = [NSMutableDictionary dictionaryWithCapacity:[_windows count]];
+    for (NNWindow *window in _windows) {
+        NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window];
+        worker.delegate = (id<NNWindowWorkerDelegate>)self;
+        [worker start];
+        [self.windowWorkers setObject:worker forKey:window];
+    }
 }
 
 - (void)stopUpdatingWindowContents;
 {
-    dispatch_async(self.lock, ^{
-        self.updatingWindowContents = NO;
-        self.windowWorkers = nil;
-    });
+    despatch_lock_assert(dispatch_get_main_queue());
+    
+    self.updatingWindowContents = NO;
+    self.windowWorkers = nil;
 }
 
 #pragma mark NNWindowWorkerDelegate
@@ -116,88 +115,79 @@
 
 - (void)listWorker:(NNWindowListWorker *)worker didUpdateWindowList:(NSArray *)newArray;
 {
-    dispatch_async(self.lock, ^{
-        NSMutableArray *oldArray = [_windows mutableCopy];
-        
-        BOOL windowsChanged = ![oldArray isEqualToArray:newArray];
-        __strong __typeof__(self.delegate) delegate = nil;
-        
-        if (windowsChanged) {
-            delegate = self.delegate;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ([delegate respondsToSelector:@selector(storeWillChangeContent:)]) {
-                    [delegate storeWillChangeContent:self];
-                }
-            });
-        }
-        
-        NSMutableArray *changes = [NSMutableArray new];
-        for (NNWindow *window in oldArray) {
-            if (![newArray containsObject:window]) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if ([delegate respondsToSelector:@selector(store:didChangeWindow:atIndex:forChangeType:newIndex:)]) {
-                        [delegate store:self didChangeWindow:window atIndex:[oldArray indexOfObject:window] forChangeType:NNWindowStoreChangeDelete newIndex:NSNotFound];
-                    }
-                });
-                
-                if (self.updatingWindowContents) {
-                    [self.windowWorkers removeObjectForKey:window];
-                    [changes addObject:window];
-                }
-            }
-        }
-        // Match old array with new.
-        [oldArray removeObjectsInArray:changes];
-        [changes removeAllObjects];
+    despatch_lock_assert(dispatch_get_main_queue());
 
-        
-        for (NNWindow *window in newArray) {
-            if (![oldArray containsObject:window]) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if ([delegate respondsToSelector:@selector(store:didChangeWindow:atIndex:forChangeType:newIndex:)]) {
-                        [delegate store:self didChangeWindow:window atIndex:NSNotFound forChangeType:NNWindowStoreChangeInsert newIndex:[newArray indexOfObject:window]];
-                    }
-                });
-                
-                // Match old array with new.
-                [oldArray insertObject:window atIndex:[newArray indexOfObject:window]];
-                
-                if (self.updatingWindowContents) {
-                    NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window];
-                    worker.delegate = (id<NNWindowWorkerDelegate>)self;
-                    [worker start];
-                    [self.windowWorkers setObject:worker forKey:window];
-                }
-            }
+    NSMutableArray *oldArray = [_windows mutableCopy];
+    
+    BOOL windowsChanged = ![oldArray isEqualToArray:newArray];
+    __strong __typeof__(self.delegate) delegate = nil;
+    
+    if (windowsChanged) {
+        delegate = self.delegate;
+        if ([delegate respondsToSelector:@selector(storeWillChangeContent:)]) {
+            [delegate storeWillChangeContent:self];
         }
+    }
         
-        
-        for (NNWindow *window in newArray) {
-            NSUInteger oldIndex = [oldArray indexOfObject:window];
-            NSUInteger newIndex = [newArray indexOfObject:window];
-
-            if (oldIndex != newIndex) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if ([delegate respondsToSelector:@selector(store:didChangeWindow:atIndex:forChangeType:newIndex:)]) {
-                        [delegate store:self didChangeWindow:window atIndex:oldIndex forChangeType:NNWindowStoreChangeMove newIndex:newIndex];
-                    }
-                });
-                [oldArray removeObject:window];
-                [oldArray insertObject:window atIndex:[newArray indexOfObject:window]];
+    NSMutableArray *changes = [NSMutableArray new];
+    for (NNWindow *window in oldArray) {
+        if (![newArray containsObject:window]) {
+            if ([delegate respondsToSelector:@selector(store:didChangeWindow:atIndex:forChangeType:newIndex:)]) {
+                [delegate store:self didChangeWindow:window atIndex:[oldArray indexOfObject:window] forChangeType:NNWindowStoreChangeDelete newIndex:NSNotFound];
             }
-        }
-        
-        
-        if (windowsChanged) {
-            _windows = newArray;
             
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ([delegate respondsToSelector:@selector(storeDidChangeContent:)]) {
-                    [delegate storeDidChangeContent:self];
-                }
-            });
+            [changes addObject:window];
+
+            if (self.updatingWindowContents) {
+                [self.windowWorkers removeObjectForKey:window];
+            }
         }
-    });
+    }
+    // Match old array with new.
+    [oldArray removeObjectsInArray:changes];
+    [changes removeAllObjects];
+
+    
+    for (NNWindow *window in newArray) {
+        if (![oldArray containsObject:window]) {
+            if ([delegate respondsToSelector:@selector(store:didChangeWindow:atIndex:forChangeType:newIndex:)]) {
+                [delegate store:self didChangeWindow:window atIndex:NSNotFound forChangeType:NNWindowStoreChangeInsert newIndex:[newArray indexOfObject:window]];
+            }
+            
+            // Match old array with new.
+            [oldArray insertObject:window atIndex:[newArray indexOfObject:window]];
+            
+            if (self.updatingWindowContents) {
+                NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window];
+                worker.delegate = (id<NNWindowWorkerDelegate>)self;
+                [worker start];
+                [self.windowWorkers setObject:worker forKey:window];
+            }
+        }
+    }
+    
+    
+    for (NNWindow *window in newArray) {
+        NSUInteger oldIndex = [oldArray indexOfObject:window];
+        NSUInteger newIndex = [newArray indexOfObject:window];
+
+        if (oldIndex != newIndex) {
+            if ([delegate respondsToSelector:@selector(store:didChangeWindow:atIndex:forChangeType:newIndex:)]) {
+                [delegate store:self didChangeWindow:window atIndex:oldIndex forChangeType:NNWindowStoreChangeMove newIndex:newIndex];
+            }
+            [oldArray removeObjectAtIndex:oldIndex];
+            [oldArray insertObject:window atIndex:[newArray indexOfObject:window]];
+        }
+    }
+    
+    
+    if (windowsChanged) {
+        _windows = newArray;
+        
+        if ([delegate respondsToSelector:@selector(storeDidChangeContent:)]) {
+            [delegate storeDidChangeContent:self];
+        }
+    }
 }
 
 @end
