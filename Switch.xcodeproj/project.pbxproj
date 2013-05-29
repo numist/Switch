@@ -68,7 +68,6 @@
 		BCA7350A16DAC54000CD4C74 /* SwitchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SwitchTests.m; sourceTree = "<group>"; };
 		BCA7351516DAC59000CD4C74 /* NNWindowStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNWindowStore.h; sourceTree = "<group>"; };
 		BCA7351616DAC59000CD4C74 /* NNWindowStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNWindowStore.m; sourceTree = "<group>"; };
-		BCA7351816DAC5BB00CD4C74 /* NNWindowStore+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NNWindowStore+Private.h"; sourceTree = "<group>"; };
 		BCA7351916DAC5E200CD4C74 /* NNWindowListWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNWindowListWorker.h; sourceTree = "<group>"; };
 		BCA7351A16DAC5E200CD4C74 /* NNWindowListWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNWindowListWorker.m; sourceTree = "<group>"; };
 		BCA7351C16DAC61F00CD4C74 /* NNWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNWindow.h; sourceTree = "<group>"; };
@@ -224,7 +223,6 @@
 				BCA7351F16DAC62C00CD4C74 /* NNWindow+Private.h */,
 				BCA7351D16DAC61F00CD4C74 /* NNWindow.m */,
 				BCA7351516DAC59000CD4C74 /* NNWindowStore.h */,
-				BCA7351816DAC5BB00CD4C74 /* NNWindowStore+Private.h */,
 				BCA7351616DAC59000CD4C74 /* NNWindowStore.m */,
 				BCA7359116E5930900CD4C74 /* NNWindowStoreDelegate.h */,
 			);

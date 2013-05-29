@@ -18,7 +18,16 @@
 
 @protocol NNWindowStoreDelegate <NSObject>
 
-- (oneway void)windowStoreDidUpdateWindowList:(NNWindowStore *)store;
-- (oneway void)windowStore:(NNWindowStore *)store contentsOfWindowDidChange:(NNWindow *)window;
+typedef NS_ENUM(NSUInteger, NNWindowStoreChangeType) {
+    NNWindowStoreChangeInsert,
+    NNWindowStoreChangeDelete,
+    NNWindowStoreChangeMove,
+    NNWindowStoreChangeUpdate
+};
+
+@optional
+- (void)storeWillChangeContent:(NNWindowStore *)store;
+- (void)store:(NNWindowStore *)store didChangeWindow:(NNWindow *)window atIndex:(NSUInteger)index forChangeType:(NNWindowStoreChangeType)type newIndex:(NSUInteger)newIndex;
+- (void)storeDidChangeContent:(NNWindowStore *)store;
 
 @end

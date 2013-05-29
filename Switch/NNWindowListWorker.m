@@ -16,7 +16,6 @@
 
 #import "despatch.h"
 #import "NNWindow+Private.h"
-#import "NNWindowStore+Private.h"
 
 
 static NSTimeInterval refreshInterval = 0.1;
@@ -25,7 +24,7 @@ static NSTimeInterval refreshInterval = 0.1;
 @interface NNWindowListWorker ()
 
 @property (atomic, strong, readonly) dispatch_queue_t lock;
-@property (nonatomic, weak) NNWindowStore *store;
+@property (nonatomic, weak) id<NNWindowListWorkerDelegate> delegate;
 @property (nonatomic, retain) NSMutableDictionary *windowDict;
 
 @end
@@ -33,23 +32,19 @@ static NSTimeInterval refreshInterval = 0.1;
 
 @implementation NNWindowListWorker
 
-- (instancetype)initWithWindowStore:(NNWindowStore *)store;
+- (instancetype)initWithDelegate:(id<NNWindowListWorkerDelegate>)delegate;
 {
     self = [super init];
     if (!self) return nil;
     
     _lock = despatch_lock_create([[NSString stringWithFormat:@"%@ <%p>", [self class], self] UTF8String]);
-    _store = store;
+    _delegate = delegate;
     
-    // All calls made by the owner of this object should be serialized.
-    return self;
-}
-
-- (oneway void)start;
-{
-    dispatch_async(self.lock, ^{
+    dispatch_async(_lock, ^{
         [self workerLoop];
     });
+
+    return self;
 }
 
 #pragma mark Internal
@@ -81,14 +76,19 @@ static NSTimeInterval refreshInterval = 0.1;
     }
     
     self.windowDict = newWindowDict;
-    // TODO: This should probably be a delegate mechanism, for clarity.
+
+    // Schedule delegate update and next iteration of worker loop.
+    __weak __typeof__(self) weakSelf = self;
+
+    NSArray *result = [windows copy];
     dispatch_async(dispatch_get_main_queue(), ^{
-        __strong __typeof__(self.store) store = self.store;
-        store.windows = windows;
+        __strong __typeof__(self.delegate) delegate = self.delegate;
+        __strong __typeof__(self) self = weakSelf;
+        if (self) {
+            [delegate listWorker:self didUpdateWindowList:result];
+        }
     });
     
-    // All done, schedule the next update.
-    __weak __typeof__(self) weakSelf = self;
     double delayInSeconds = refreshInterval;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, self.lock, ^(void){

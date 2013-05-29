@@ -19,8 +19,7 @@
 
 @interface NNWindowStore : NSObject
 
-@property (nonatomic, weak) id<NNWindowStoreDelegate> delegate;
-@property (nonatomic, readonly) NSArray *windows;
+- (instancetype)initWithDelegate:(id<NNWindowStoreDelegate>)delegate;
 
 - (void)startUpdatingWindowList;
 - (void)stopUpdatingWindowList;

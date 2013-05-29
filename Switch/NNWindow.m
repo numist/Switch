@@ -21,7 +21,6 @@
 
 @property (atomic, strong) NSImage *image;
 @property (nonatomic, strong, readonly) NSDictionary *windowDescription;
-@property (nonatomic, readonly) BOOL exists;
 
 @end
 
@@ -53,14 +52,15 @@
     
     _windowDescription = [description copy];
     _application = [[NNApplication alloc] initWithPID:[[self.windowDescription objectForKey:(NSString *)kCGWindowOwnerPID] intValue]];
-    _exists = YES;
     
     return self;
 }
 
 - (instancetype)copyWithZone:(NSZone *)zone;
 {
-    return [[NNWindow alloc] initInternalWithDescription:self.windowDescription];
+    NNWindow *copy = [[NNWindow alloc] initInternalWithDescription:self.windowDescription];
+    [copy setImage:self.image];
+    return copy;
 }
 
 - (NSUInteger)hash;
@@ -123,24 +123,15 @@
     return (CGWindowID)[[self.windowDescription objectForKey:(NSString *)kCGWindowNumber] unsignedLongValue];
 }
 
-@synthesize exists = _exists;
-
 - (BOOL)exists;
 {
-    // If the window ceased to exist, don't rediscover it if the window ID gets reused.
-    if (!_exists) {
+    CFArrayRef cgList = CGWindowListCreate(kCGWindowListOptionIncludingWindow, self.windowID);
+    
+    if (![CFBridgingRelease(cgList) count]) {
         return NO;
     }
     
-    CFArrayRef cgList = CGWindowListCreate(kCGWindowListOptionIncludingWindow, self.windowID);
-    NSArray *list = CFBridgingRelease(cgList);
-    
-    if (!list || ![list count]) {
-        NSAssert(list, @"Is there no window server? How did we even get here?!");
-        _exists = NO;
-    }
-    
-    return _exists;
+    return YES;
 }
 
 - (NSString *)name;

@@ -15,22 +15,19 @@
 #import "NNSwitcher.h"
 
 #import "constants.h"
-#import "NNDelegateProxy.h"
-#import "NNObjectSerializer.h"
+#import "despatch.h"
 #import "NNSwitcherViewController.h"
 #import "NNWindowStore.h"
 
 
-@interface NNSwitcher () {
-    id<NNSwitcherDelegate> delegateProxy;
-}
+@interface NNSwitcher ()
 
-@property (nonatomic, strong) NNWindowStore *store;
-@property (nonatomic, strong) NSArray *windows;
-
+@property (nonatomic, strong, readonly) dispatch_queue_t lock;
 @property (nonatomic, assign) BOOL shouldShowWindow;
+@property (nonatomic, strong) NNWindowStore *store;
 @property (nonatomic, strong) NSWindow *switcherWindow;
 @property (nonatomic, strong) NNSwitcherViewController *switcherWindowController;
+@property (nonatomic, strong) NSArray *windows;
 
 @end
 
@@ -42,28 +39,29 @@
     self = [super init];
     if (!self) return nil;
     
-    NNWindowStore *store = [NNWindowStore new];
-    store.delegate = [NNObjectSerializer createSerializedObjectForObject:self];
+    _lock = despatch_lock_create([[NSString stringWithFormat:@"%@ <%p>", [self class], self] UTF8String]);
+
+    NNWindowStore *store = [[NNWindowStore alloc] initWithDelegate:self];
     [store startUpdatingWindowList];
     _store = store;
     _index = 0;
+    _windows = [NSMutableArray new];
     
-    __weak NNSwitcher *this = self;
+    __weak __typeof__(self) weakSelf = self;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayBeforePresentingSwitcherWindow * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        this.shouldShowWindow = YES;
-        [this createSwitcherWindowIfNeeded];
+        __strong __typeof__(self) self = weakSelf;
+        self.shouldShowWindow = YES;
+        [self createSwitcherWindowIfNeeded];
     });
     
-    return [NNObjectSerializer serializedObjectForObject:self];
+    return self;
 }
 
 - (void)dealloc;
 {
     // TODO: set the active window to the currently-indexed window.
 }
-
-generateDelegateAccessors(self->delegateProxy, NNSwitcherDelegate)
 
 @synthesize index = _index;
 
@@ -73,7 +71,9 @@ generateDelegateAccessors(self->delegateProxy, NNSwitcherDelegate)
     
     // TODO: make sure updating the windows array modifies the index appropriately!
     if ([self.windows count]) {
-            [self.delegate switcher:[NNObjectSerializer serializedObjectForObject:self] didUpdateIndex:self.index];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate switcher:self didUpdateIndex:self.index];
+        });
     }
 }
 
@@ -132,30 +132,50 @@ generateDelegateAccessors(self->delegateProxy, NNSwitcherDelegate)
 
 #pragma mark NNWindowStoreDelegate
 
-- (oneway void)windowStoreDidUpdateWindowList:(NNWindowStore *)store;
+- (void)store:(NNWindowStore *)store didChangeWindow:(NNWindow *)window atIndex:(NSUInteger)index forChangeType:(NNWindowStoreChangeType)type newIndex:(NSUInteger)newIndex;
 {
-    NNWindow *selectedWindow = [self.windows count] > self.index ? [self.windows objectAtIndex:self.index] : nil;
-    self.windows = store.windows;
-    
-    [self createSwitcherWindowIfNeeded];
+    despatch_lock_assert(dispatch_get_main_queue());
 
-    [self.delegate switcher:[NNObjectSerializer serializedObjectForObject:self] didUpdateWindowList:self.windows];
+    NSMutableArray *windows = (NSMutableArray *)self.windows;
     
-    NSUInteger newIndex = [self.windows indexOfObject:selectedWindow];
-    if (selectedWindow) {
-        if (![self.windows containsObject:selectedWindow]) {
-            // Window destroyed
-            self.index = MIN(self.index, [self.windows count] - 1);
-        } else if (self.index != newIndex) {
-            // Window moved
-            self.index = newIndex;
-        }
+    switch (type) {
+        case NNWindowStoreChangeInsert:
+            [windows insertObject:window atIndex:newIndex];
+            break;
+            
+        case NNWindowStoreChangeMove:
+            [windows removeObjectAtIndex:index];
+            [windows insertObject:window atIndex:newIndex];
+            
+            if (self.index == index) {
+                self.index = newIndex;
+            }
+            break;
+            
+        case NNWindowStoreChangeDelete:
+            [windows removeObjectAtIndex:index];
+            
+            // TODO(numist): What happens when there are zero windows! :o
+            if (self.index == index) {
+                self.index = MIN(index - 1, [windows count] - 1);
+            }
+            break;
+            
+        case NNWindowStoreChangeUpdate:
+            [self.delegate switcher:self contentsOfWindowDidChange:window];
+            break;
     }
 }
 
-- (oneway void)windowStore:(NNWindowStore *)store contentsOfWindowDidChange:(NNWindow *)window;
+- (void)storeDidChangeContent:(NNWindowStore *)store;
 {
-    [self.delegate switcher:[NNObjectSerializer serializedObjectForObject:self] contentsOfWindowDidChange:window];
+    [self createSwitcherWindowIfNeeded];
+
+    // TODO: don't be passing self.windows into here!
+    NSArray *windows = [self.windows copy];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate switcher:self didUpdateWindowList:windows];
+    });
 }
 
 @end

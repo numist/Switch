@@ -15,12 +15,18 @@
 #import <Foundation/Foundation.h>
 
 
-@class NNWindowStore;
+@protocol NNWindowListWorkerDelegate;
 
 
 @interface NNWindowListWorker : NSObject
 
-- (instancetype)initWithWindowStore:(NNWindowStore *)store;
-- (void)start;
+- (instancetype)initWithDelegate:(id<NNWindowListWorkerDelegate>)delegate;
+
+@end
+
+
+@protocol NNWindowListWorkerDelegate <NSObject>
+
+- (void)listWorker:(NNWindowListWorker *)worker didUpdateWindowList:(NSArray *)windowList;
 
 @end
