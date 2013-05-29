@@ -22,8 +22,8 @@
 - (id)initWithFrame:(NSRect)frame
 {
     self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code here.
+    if (!self) {
+        return nil;
     }
     
     return self;

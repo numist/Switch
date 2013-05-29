@@ -15,25 +15,30 @@
 #import "NNAppDelegate.h"
 
 #import "constants.h"
-#import "NNHUDCollectionView.h"
-#import "NNWindowStore.h"
-#import "NNWindow.h"
 #import "NNApplication.h"
-#import "NNWindowThumbnailView.h"
 #import "NNHotKeyManager.h"
+#import "NNHUDCollectionView.h"
+#import "NNWindow.h"
+#import "NNWindowStore.h"
+#import "NNWindowThumbnailView.h"
 
 
 @interface NNAppDelegate () <NNWindowStoreDelegate, NNHUDCollectionViewDataSource, NNHotKeyManagerDelegate>
 
+#pragma mark Event tap and state
 @property (nonatomic, strong) NNHotKeyManager *keyManager;
 @property (nonatomic, assign) BOOL incrementing;
 @property (nonatomic, assign) BOOL decrementing;
 
+#pragma mark AppKit window and view hierarchy data
 @property (nonatomic, strong) NSWindow *appWindow;
 @property (nonatomic, strong) NNHUDCollectionView *collectionView;
+
+#pragma mark Model
 @property (nonatomic, strong) NSMutableArray *windows;
 @property (nonatomic, strong) NNWindowStore *store;
 
+#pragma mark State
 @property (nonatomic, assign) NSUInteger selectedIndex;
 @property (nonatomic, weak) NNWindow *selectedWindow;
 
@@ -44,35 +49,6 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    NSRect windowRect;
-    {
-        NSScreen *mainScreen = [NSScreen mainScreen];
-        windowRect = mainScreen.frame;
-    }
-
-    NSWindow *switcherWindow = [[NSWindow alloc] initWithContentRect:windowRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
-    {
-        switcherWindow.movableByWindowBackground = NO;
-        switcherWindow.hasShadow = NO;
-        switcherWindow.opaque = NO;
-        switcherWindow.backgroundColor = [NSColor clearColor];
-        switcherWindow.level = NSPopUpMenuWindowLevel;
-    }
-    self.appWindow = switcherWindow;
-    
-    NNHUDCollectionView *collectionView = [[NNHUDCollectionView alloc] initWithFrame:NSMakeRect(self.appWindow.frame.size.width / 2.0, self.appWindow.frame.size.height / 2.0, 0.0, 0.0)];
-    {
-        collectionView.maxWidth = [NSScreen mainScreen].frame.size.width - (kNNScreenToWindowInset * 2.0);
-        collectionView.maxCellSize = 128;
-        collectionView.dataSource = self;
-    }
-    self.collectionView = collectionView;
-    [self.appWindow.contentView addSubview:self.collectionView];
-
-    
-    
-    
-    
     self.windows = [NSMutableArray new];
     self.store = [[NNWindowStore alloc] initWithDelegate:self];
     
@@ -81,7 +57,8 @@
     self.keyManager.delegate = self;
 }
 
-#pragma mark Properties
+#pragma mark - Dynamic properties
+
 @dynamic selectedIndex;
 
 - (void)setSelectedIndex:(NSUInteger)selectedIndex;
@@ -103,28 +80,71 @@
 
 #pragma mark Internal
 
-// TODO: support for closing windows, quitting apps, mouse events?
+- (void)createWindowIfNeeded;
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSRect windowRect;
+        {
+            NSScreen *mainScreen = [NSScreen mainScreen];
+            windowRect = mainScreen.frame;
+        }
+        
+        NSWindow *switcherWindow = [[NSWindow alloc] initWithContentRect:windowRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
+        {
+            switcherWindow.movableByWindowBackground = NO;
+            switcherWindow.hasShadow = NO;
+            switcherWindow.opaque = NO;
+            switcherWindow.backgroundColor = [NSColor clearColor];
+            switcherWindow.level = NSPopUpMenuWindowLevel;
+        }
+        self.appWindow = switcherWindow;
+        
+        NNHUDCollectionView *collectionView = [[NNHUDCollectionView alloc] initWithFrame:NSMakeRect(self.appWindow.frame.size.width / 2.0, self.appWindow.frame.size.height / 2.0, 0.0, 0.0)];
+        {
+            collectionView.maxWidth = [NSScreen mainScreen].frame.size.width - (kNNScreenToWindowInset * 2.0);
+            collectionView.maxCellSize = kNNMaxWindowThumbnailSize;
+            collectionView.dataSource = self;
+        }
+        self.collectionView = collectionView;
+        [self.appWindow.contentView addSubview:self.collectionView];
+    });
+}
 
-#pragma mark NNWindowStoreDelegate
+#pragma mark - NNWindowStoreDelegate
+
+static BOOL needsReset;
+
+- (void)storeWillChangeContent:(NNWindowStore *)store;
+{
+    needsReset = NO;
+}
 
 - (void)store:(NNWindowStore *)store didChangeWindow:(NNWindow *)window atIndex:(NSUInteger)index forChangeType:(NNWindowStoreChangeType)type newIndex:(NSUInteger)newIndex;
 {
     switch (type) {
         case NNWindowStoreChangeInsert:
             [self.windows insertObject:window atIndex:newIndex];
+            needsReset = YES;
             break;
             
         case NNWindowStoreChangeMove:
             [self.windows removeObjectAtIndex:index];
             [self.windows insertObject:window atIndex:newIndex];
+            needsReset = YES;
             break;
             
         case NNWindowStoreChangeDelete:
             [self.windows removeObjectAtIndex:index];
+            needsReset = YES;
             break;
             
-        case NNWindowStoreChangeUpdate:
+        case NNWindowStoreChangeUpdate: {
+            NNWindowThumbnailView *thumb = (NNWindowThumbnailView *)[self.collectionView cellForIndex:index];
+            [thumb setWindowThumbnail:window.image];
+            [thumb setNeedsDisplay:YES];
             break;
+        }
     }
 }
 
@@ -132,7 +152,10 @@
 {
 //    [self createSwitcherWindowIfNeeded];
     // endUpdates, etc.
-    [self.collectionView reloadData];
+    if (needsReset) {
+        NSLog(@"Resetting windows");
+        [self.collectionView reloadData];
+    }
     
     if ([self.windows count]) {
         if (self.selectedIndex >= NSNotFound) {
@@ -143,7 +166,7 @@
     }
 }
 
-#pragma mark - NNHUDCollectionViewDataSource
+#pragma mark NNHUDCollectionViewDataSource
 
 - (NSUInteger)HUDViewNumberOfCells:(NNHUDCollectionView *)view;
 {
@@ -159,14 +182,16 @@
     return result;
 }
 
-#pragma mark - NNHotKeyManagerDelegate
+#pragma mark NNHotKeyManagerDelegate
 
 - (void)hotKeyManagerInvokedInterface:(NNHotKeyManager *)manager;
 {
     [self.store startUpdatingWindowList];
 
     // TODO(numist): put this on a time delay. NSTimer!
+    [self createWindowIfNeeded];
     [self.appWindow orderFront:self];
+    [self.collectionView reloadData];
     
     [self.store startUpdatingWindowContents];
 }
