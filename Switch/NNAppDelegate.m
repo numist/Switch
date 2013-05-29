@@ -165,6 +165,7 @@
 {
     [self.store startUpdatingWindowList];
 
+    // TODO(numist): put this on a time delay. NSTimer!
     [self.appWindow orderFront:self];
     
     [self.store startUpdatingWindowContents];
@@ -174,6 +175,8 @@
 {
     [self.appWindow orderOut:self];
     self.selectedIndex = NSNotFound;
+    [self.store stopUpdatingWindowList];
+    [self.store stopUpdatingWindowContents];
 }
 
 - (void)hotKeyManagerBeginIncrementingSelection:(NNHotKeyManager *)manager;
@@ -218,12 +221,12 @@
 
 - (void)hotKeyManagerClosedWindow:(NNHotKeyManager *)manager;
 {
-    NSLog(@"Boom.");
+    NSLog(@"Close window: %@", self.selectedWindow);
 }
 
 - (void)hotKeyManagerClosedApplication:(NNHotKeyManager *)manager;
 {
-    NSLog(@"BOOM!");
+    NSLog(@"Close Application: %@", self.selectedWindow.application);
 }
 
 @end
