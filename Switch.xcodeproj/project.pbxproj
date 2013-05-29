@@ -116,15 +116,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		BC63AB8B17558E4C00016B9E /* Utero */ = {
-			isa = PBXGroup;
-			children = (
-				BCA7353116DB2C0100CD4C74 /* NNHotKeyManager.h */,
-				BCA7353216DB2C0100CD4C74 /* NNHotKeyManager.m */,
-			);
-			name = Utero;
-			sourceTree = "<group>";
-		};
 		BC63AB901755C6EC00016B9E /* Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -177,7 +168,6 @@
 		BCA734E616DAC53F00CD4C74 /* Switch */ = {
 			isa = PBXGroup;
 			children = (
-				BC63AB8B17558E4C00016B9E /* Utero */,
 				BC63AB901755C6EC00016B9E /* Controller */,
 				BCA7353016DB2BDC00CD4C74 /* Logic */,
 				BCA7351416DAC54C00CD4C74 /* Model */,
@@ -258,6 +248,8 @@
 				BCA7358E16E585B800CD4C74 /* Concurrency */,
 				BCA7358F16E585D400CD4C74 /* Polling */,
 				BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */,
+				BCA7353116DB2C0100CD4C74 /* NNHotKeyManager.h */,
+				BCA7353216DB2C0100CD4C74 /* NNHotKeyManager.m */,
 			);
 			name = Logic;
 			sourceTree = "<group>";
