@@ -31,6 +31,8 @@
         return nil;
     }
     
+    _cells = [NSMutableArray new];
+    
     return self;
 }
 
@@ -55,7 +57,10 @@
 {
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
 
-    return [self.cells objectAtIndex:index];
+    if (index < [self.cells count]) {
+        return [self.cells objectAtIndex:index];
+    }
+    return nil;
 }
 
 - (NSUInteger)indexForCell:(NSView *)cell;
