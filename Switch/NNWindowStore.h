@@ -14,7 +14,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "NNWindowStoreDelegate.h"
+
+@class NNWindow;
+@protocol NNWindowStoreDelegate;
 
 
 @interface NNWindowStore : NSObject
@@ -26,5 +28,22 @@
 
 - (void)startUpdatingWindowContents;
 - (void)stopUpdatingWindowContents;
+
+@end
+
+
+@protocol NNWindowStoreDelegate <NSObject>
+
+typedef NS_ENUM(NSUInteger, NNWindowStoreChangeType) {
+    NNWindowStoreChangeInsert,
+    NNWindowStoreChangeDelete,
+    NNWindowStoreChangeMove,
+    NNWindowStoreChangeUpdate
+};
+
+@optional
+- (void)storeWillChangeContent:(NNWindowStore *)store;
+- (void)store:(NNWindowStore *)store didChangeWindow:(NNWindow *)window atIndex:(NSUInteger)index forChangeType:(NNWindowStoreChangeType)type newIndex:(NSUInteger)newIndex;
+- (void)storeDidChangeContent:(NNWindowStore *)store;
 
 @end

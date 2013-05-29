@@ -14,10 +14,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "NNWindowWorkerDelegate.h"
-
 
 @class NNWindow;
+@protocol NNWindowWorkerDelegate;
 
 
 @interface NNWindowWorker : NSObject
@@ -26,5 +25,12 @@
 
 - (instancetype)initWithModelObject:(NNWindow *)window;
 - (void)start;
+
+@end
+
+
+@protocol NNWindowWorkerDelegate <NSObject>
+
+- (oneway void)windowWorker:(NNWindowWorker *)worker didUpdateContentsOfWindow:(NNWindow *)window;
 
 @end

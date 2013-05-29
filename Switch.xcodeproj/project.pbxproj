@@ -32,8 +32,6 @@
 		BCA7354616E1657000CD4C74 /* NNSwitcher.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354516E1657000CD4C74 /* NNSwitcher.m */; };
 		BCA7354916E1F14D00CD4C74 /* NNSelectionBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354816E1F14D00CD4C74 /* NNSelectionBoxView.m */; };
 		BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */; };
-		BCA7355016E5442100CD4C74 /* NNObjectSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354F16E5442000CD4C74 /* NNObjectSerializer.m */; };
-		BCE7E92416E6A61F00C1F031 /* NNDelegateProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = BCE7E92316E6A61F00C1F031 /* NNDelegateProxy.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,14 +95,7 @@
 		BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = imageComparators.h; sourceTree = "<group>"; };
 		BCA7354B16E2ED5000CD4C74 /* NNHUDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHUDView.h; sourceTree = "<group>"; };
 		BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDView.m; sourceTree = "<group>"; };
-		BCA7354E16E5441F00CD4C74 /* NNObjectSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNObjectSerializer.h; sourceTree = "<group>"; };
-		BCA7354F16E5442000CD4C74 /* NNObjectSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNObjectSerializer.m; sourceTree = "<group>"; };
 		BCA7359016E5929300CD4C74 /* NNSwitcherDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NNSwitcherDelegate.h; sourceTree = "<group>"; };
-		BCA7359116E5930900CD4C74 /* NNWindowStoreDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NNWindowStoreDelegate.h; sourceTree = "<group>"; };
-		BCA7359216E5936000CD4C74 /* NNWindowWorkerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NNWindowWorkerDelegate.h; sourceTree = "<group>"; };
-		BCA7359316E5939600CD4C74 /* NNHotKeyManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NNHotKeyManagerDelegate.h; sourceTree = "<group>"; };
-		BCE7E92216E6A61F00C1F031 /* NNDelegateProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNDelegateProxy.h; sourceTree = "<group>"; };
-		BCE7E92316E6A61F00C1F031 /* NNDelegateProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNDelegateProxy.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,6 +120,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BC63AB8B17558E4C00016B9E /* Utero */ = {
+			isa = PBXGroup;
+			children = (
+				BCA7353116DB2C0100CD4C74 /* NNHotKeyManager.h */,
+				BCA7353216DB2C0100CD4C74 /* NNHotKeyManager.m */,
+			);
+			name = Utero;
+			sourceTree = "<group>";
+		};
+		BC63AB8C17558E5B00016B9E /* Death Row */ = {
+			isa = PBXGroup;
+			children = (
+				BCA7354416E1657000CD4C74 /* NNSwitcher.h */,
+				BCA7354516E1657000CD4C74 /* NNSwitcher.m */,
+				BCA7359016E5929300CD4C74 /* NNSwitcherDelegate.h */,
+			);
+			name = "Death Row";
+			sourceTree = "<group>";
+		};
 		BCA734D416DAC53F00CD4C74 = {
 			isa = PBXGroup;
 			children = (
@@ -172,6 +182,8 @@
 		BCA734E616DAC53F00CD4C74 /* Switch */ = {
 			isa = PBXGroup;
 			children = (
+				BC63AB8C17558E5B00016B9E /* Death Row */,
+				BC63AB8B17558E4C00016B9E /* Utero */,
 				BCA7353516DB2E2500CD4C74 /* Controller */,
 				BCA7353016DB2BDC00CD4C74 /* Logic */,
 				BCA7351416DAC54C00CD4C74 /* Model */,
@@ -224,7 +236,6 @@
 				BCA7351D16DAC61F00CD4C74 /* NNWindow.m */,
 				BCA7351516DAC59000CD4C74 /* NNWindowStore.h */,
 				BCA7351616DAC59000CD4C74 /* NNWindowStore.m */,
-				BCA7359116E5930900CD4C74 /* NNWindowStoreDelegate.h */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -253,12 +264,6 @@
 				BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */,
 				BCA734F216DAC53F00CD4C74 /* NNAppDelegate.h */,
 				BCA734F316DAC53F00CD4C74 /* NNAppDelegate.m */,
-				BCA7353116DB2C0100CD4C74 /* NNHotKeyManager.h */,
-				BCA7353216DB2C0100CD4C74 /* NNHotKeyManager.m */,
-				BCA7359316E5939600CD4C74 /* NNHotKeyManagerDelegate.h */,
-				BCA7354416E1657000CD4C74 /* NNSwitcher.h */,
-				BCA7354516E1657000CD4C74 /* NNSwitcher.m */,
-				BCA7359016E5929300CD4C74 /* NNSwitcherDelegate.h */,
 			);
 			name = Logic;
 			sourceTree = "<group>";
@@ -277,10 +282,6 @@
 			children = (
 				BCA7352916DB1E9C00CD4C74 /* despatch.h */,
 				BCA7352A16DB1E9C00CD4C74 /* despatch.m */,
-				BCE7E92216E6A61F00C1F031 /* NNDelegateProxy.h */,
-				BCE7E92316E6A61F00C1F031 /* NNDelegateProxy.m */,
-				BCA7354E16E5441F00CD4C74 /* NNObjectSerializer.h */,
-				BCA7354F16E5442000CD4C74 /* NNObjectSerializer.m */,
 			);
 			name = Concurrency;
 			sourceTree = "<group>";
@@ -290,7 +291,6 @@
 			children = (
 				BCA7352016DAC6A900CD4C74 /* NNWindowWorker.h */,
 				BCA7352116DAC6A900CD4C74 /* NNWindowWorker.m */,
-				BCA7359216E5936000CD4C74 /* NNWindowWorkerDelegate.h */,
 				BCA7351916DAC5E200CD4C74 /* NNWindowListWorker.h */,
 				BCA7351A16DAC5E200CD4C74 /* NNWindowListWorker.m */,
 			);
@@ -422,8 +422,6 @@
 				BCA7354616E1657000CD4C74 /* NNSwitcher.m in Sources */,
 				BCA7354916E1F14D00CD4C74 /* NNSelectionBoxView.m in Sources */,
 				BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */,
-				BCA7355016E5442100CD4C74 /* NNObjectSerializer.m in Sources */,
-				BCE7E92416E6A61F00C1F031 /* NNDelegateProxy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

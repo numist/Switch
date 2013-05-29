@@ -16,7 +16,6 @@
 
 #import "constants.h"
 #import "NNHUDView.h"
-#import "NNObjectSerializer.h"
 #import "NNSelectionBoxView.h"
 #import "NNWindowThumbnailView.h"
 #import "NNWindow.h"
@@ -53,9 +52,7 @@
 
     _firstUpdate = YES;
     
-    NNObjectSerializer *serializedSelf = [NNObjectSerializer createSerializedObjectForObject:self];
-    [NNObjectSerializer useMainQueueForObject:self];
-    return (id)serializedSelf;
+    return self;
 }
 
 - (void)loadView;
