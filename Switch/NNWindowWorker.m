@@ -60,13 +60,15 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 {
     despatch_lock_assert(self.lock);
 
-    // Short circuit in case the window went away or we were told to stop.
-    if (!self.window) {
+    NNWindow *window = self.window;
+
+    // Short circuit in case the window went away
+    if (!window.exists) {
         return;
     }
     
     NSDate *start = [NSDate date];
-    CGImageRef cgImage = [self.window createCGWindowImage];
+    CGImageRef cgImage = [window createCGWindowImage];
     
     if (cgImage) {
         BOOL imageChanged = NO;
@@ -95,13 +97,13 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
             self.previousCapture = cgImage;
             NSImage *image = [[NSImage alloc] initWithCGImage:cgImage size:NSMakeSize(newWidth, newHeight)];
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.window.image = image;
-                [self.delegate windowWorker:self didUpdateContentsOfWindow:self.window];
+                window.image = image;
+                [self.delegate windowWorker:self didUpdateContentsOfWindow:[window copy]];
             });
         }
         
         CFRelease(cgImage); cgImage = NULL;
-    } else if (self.window.exists) {
+    } else {
         // Didn't get a real image, but the window exists. Try again ASAP.
         self.updateInterval = NNPollingIntervalFast;
     }
