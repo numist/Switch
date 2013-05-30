@@ -54,7 +54,15 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
     });
 }
 
-#pragma Internal
+- (void)dealloc;
+{
+    // Oops ARC won't save me here.
+    if (_previousCapture) {
+        CFRelease(_previousCapture);
+    }
+}
+
+#pragma mark Internal
 
 - (oneway void)workerLoop;
 {
