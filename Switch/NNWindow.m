@@ -80,6 +80,10 @@
 
 #pragma mark NNWindow
 
+/* Broken:
+ * Doesn't see GitHub
+ * Doesn't see the entirety of TweetBot (like the New Tweets ribbon because some of the elements are technically both separate windows and desktop elements as reported by CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements,  kCGNullWindowID);)
+ */
 - (BOOL)isValidWindow;
 {
     // Real windows have names. Can't care about the others
