@@ -130,7 +130,9 @@
     }
         
     NSMutableArray *changes = [NSMutableArray new];
-    for (NNWindow *window in oldArray) {
+    for (int i = (int)[oldArray count] - 1; i >= 0; --i) {
+        NNWindow *window = [oldArray objectAtIndex:i];
+        
         if (![newArray containsObject:window]) {
             if ([delegate respondsToSelector:@selector(store:didChangeWindow:atIndex:forChangeType:newIndex:)]) {
                 [delegate store:self didChangeWindow:window atIndex:[oldArray indexOfObject:window] forChangeType:NNWindowStoreChangeDelete newIndex:NSNotFound];
