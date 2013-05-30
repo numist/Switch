@@ -153,7 +153,6 @@ static BOOL needsReset;
 //    [self createSwitcherWindowIfNeeded];
     // endUpdates, etc.
     if (needsReset) {
-        NSLog(@"Resetting windows");
         [self.collectionView reloadData];
     }
     
