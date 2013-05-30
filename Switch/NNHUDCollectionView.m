@@ -116,6 +116,8 @@
 {
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
     NSLog(@"Maybe don't call this yet");
+    
+    abort();
 }
 
 - (void)endUpdates;
@@ -127,19 +129,22 @@
 - (void)insertCellsAtIndexes:(NSArray *)indexes withAnimation:(BOOL)animate;
 {
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
-
+    
+    abort();
 }
 
 - (void)deleteCellsAtIndexes:(NSArray *)indexes withAnimation:(BOOL)animate;
 {
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
-
+    
+    abort();
 }
 
 - (void)moveCellAtIndex:(NSUInteger)index toIndex:(NSUInteger)newIndex;
 {
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
-
+    
+    abort();
 }
 
 - (void)reloadData;
