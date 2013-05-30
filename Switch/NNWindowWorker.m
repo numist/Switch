@@ -59,6 +59,7 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
     // Oops ARC won't save me here.
     if (_previousCapture) {
         CFRelease(_previousCapture);
+        _previousCapture = nil;
     }
 }
 
