@@ -195,11 +195,11 @@
 
 - (void)setSize:(NSSize)size;
 {
-    NSRect frame = self.frame;
-    frame.origin.x += (frame.size.width - size.width) / 2.0;
-    frame.origin.y += (frame.size.height - size.height) / 2.0;
-    frame.size = size;
-    self.frame = frame;
+    self.frame = (NSRect){
+        .size = size,
+        .origin.x = self.frame.origin.x + ((self.frame.size.width - size.width) / 2.0),
+        .origin.y = self.frame.origin.y + ((self.frame.size.height - size.height) / 2.0)
+    };
 }
 
 - (CGFloat)computeCellSize;
@@ -219,17 +219,19 @@
 {
     CGFloat cellSize = [self computeCellSize];
     CGFloat maxTheoreticalWindowWidth = nnTotalWidth(cellSize, self.numberOfCells);
-    NSSize newSize;
     
     if (self.numberOfCells == 0) {
-        newSize.height = MIN(self.maxCellSize, self.maxWidth);
-        newSize.width = newSize.height;
-        return newSize;
+        CGFloat min = MIN(self.maxCellSize, self.maxWidth);
+        return (NSSize){
+            .height = min,
+            .width = min
+        };
     }
-    
-    newSize.width = MIN(self.maxWidth, maxTheoreticalWindowWidth);
-    newSize.height = kNNWindowToThumbInset + cellSize + kNNWindowToThumbInset;
-    return newSize;
+
+    return (NSSize){
+        .width = MIN(self.maxWidth, maxTheoreticalWindowWidth),
+        .height = kNNWindowToThumbInset + cellSize + kNNWindowToThumbInset
+    };
 }
 
 - (NSRect)computeFrameForCellAtIndex:(NSUInteger)index;
