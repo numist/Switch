@@ -57,7 +57,7 @@
         windowFrame.origin.y += (thumbFrame.size.height - imageRect.size.height) / 2.0;
         
         [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-        [windowImage drawInRect:windowFrame fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+        [windowImage drawInRect:windowFrame fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:(self.windowIsResponsive ? 1.0 : 0.5)];
     }
     
     // Draw the application icon

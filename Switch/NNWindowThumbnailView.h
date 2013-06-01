@@ -19,5 +19,6 @@
 
 @property (nonatomic, strong) NSImage *windowThumbnail;
 @property (nonatomic, strong) NSImage *applicationIcon;
+@property (nonatomic, assign) BOOL windowIsResponsive;
 
 @end

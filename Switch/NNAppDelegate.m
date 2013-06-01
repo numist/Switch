@@ -18,7 +18,7 @@
 #import "NNApplication.h"
 #import "NNHotKeyManager.h"
 #import "NNHUDCollectionView.h"
-#import "NNWindow.h"
+#import "NNWindow+Private.h"
 #import "NNWindowStore.h"
 #import "NNWindowThumbnailView.h"
 
@@ -147,9 +147,12 @@ static BOOL needsReset;
             break;
         }
         
-        case NNWindowStoreChangeResponsive:
-            NSLog(@"Window %@ became responsive!", window);
+        case NNWindowStoreChangeResponsive: {
+            NNWindowThumbnailView *thumb = (NNWindowThumbnailView *)[self.collectionView cellForIndex:index];
+            thumb.windowIsResponsive = YES;
+            [thumb setNeedsDisplay:YES];
             break;
+        }
     }
 }
 
@@ -183,6 +186,7 @@ static BOOL needsReset;
     NNWindowThumbnailView *result = [[NNWindowThumbnailView alloc] initWithFrame:NSZeroRect];
     result.applicationIcon = window.application.icon;
     result.windowThumbnail = window.image;
+    result.windowIsResponsive = !!window.haxWindow;
     return result;
 }
 
