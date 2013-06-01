@@ -16,6 +16,9 @@
 #include "despatch.h"
 
 
+static uint64_t despatch_lock_marker = 0xffc32e78ccb0b485;
+
+
 inline static BOOL despatch_queue_is_lock(dispatch_queue_t queue);
 
 
@@ -30,12 +33,13 @@ void despatch_lock_promote(dispatch_queue_t queue)
 {
     if (!despatch_queue_is_lock(queue)) {
         dispatch_queue_set_specific(queue, (__bridge const void *)(queue), (__bridge void *)(queue), NULL);
+        dispatch_queue_set_specific(queue, &despatch_lock_marker, &despatch_lock_marker, NULL);
     }
 }
 
 inline static BOOL despatch_queue_is_lock(dispatch_queue_t queue)
 {
-    return !!dispatch_queue_get_specific(queue, (__bridge const void *)(queue));
+    return !!dispatch_queue_get_specific(queue, (__bridge const void *)(queue)) && !!dispatch_queue_get_specific(queue, &despatch_lock_marker);
 }
 
 void despatch_lock_assert(dispatch_queue_t lock)
@@ -52,4 +56,9 @@ BOOL despatch_lock_is_held(dispatch_queue_t lock)
 {
     assert(despatch_queue_is_lock(lock));
     return !!dispatch_get_specific((__bridge const void *)(lock));
+}
+
+BOOL despatch_any_locks_held()
+{
+    return !!dispatch_get_specific(&despatch_lock_marker);
 }

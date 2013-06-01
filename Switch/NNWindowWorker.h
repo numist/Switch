@@ -23,7 +23,7 @@
 
 @property (nonatomic, weak) id<NNWindowWorkerDelegate> delegate;
 
-- (instancetype)initWithModelObject:(NNWindow *)window;
+- (instancetype)initWithModelObject:(NNWindow *)window __attribute__((nonnull(1)));
 - (void)start;
 
 @end

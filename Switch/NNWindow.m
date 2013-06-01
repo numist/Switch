@@ -14,13 +14,14 @@
 
 #import "NNWindow+Private.h"
 
-#import "NNApplication.h"
+#import "NNApplication+Private.h"
 
 
 @interface NNWindow ()
 
 @property (atomic, strong) NSImage *image;
 @property (nonatomic, strong, readonly) NSDictionary *windowDescription;
+@property (nonatomic, strong) HAXWindow *haxWindow;
 
 @end
 
@@ -120,7 +121,20 @@
 }
 
 #pragma mark Dynamic accessors
+
+@dynamic cgBounds;
+- (NSRect)cgBounds;
+{
+    CGRect result;
+    CGRectMakeWithDictionaryRepresentation((__bridge CFDictionaryRef)[self.windowDescription objectForKey:(NSString *)kCGWindowBounds], &result);
+    return result;
+}
+
 @dynamic name;
+- (NSString *)name;
+{
+    return [self.windowDescription objectForKey:(NSString *)kCGWindowName];
+}
 
 - (CGWindowID)windowID;
 {
@@ -136,11 +150,6 @@
     }
     
     return YES;
-}
-
-- (NSString *)name;
-{
-    return [self.windowDescription objectForKey:(NSString *)kCGWindowName];
 }
 
 #pragma mark Private

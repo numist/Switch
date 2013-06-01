@@ -15,7 +15,8 @@
 #import "NNWindowStore.h"
 
 #import "despatch.h"
-#import "NNWindow.h"
+#import "NNApplication+Private.h"
+#import "NNWindow+Private.h"
 #import "NNWindowListWorker.h"
 #import "NNWindowWorker.h"
 
@@ -104,7 +105,7 @@
         [delegate storeWillChangeContent:self];
     }
     if ([delegate respondsToSelector:@selector(store:didChangeWindow:atIndex:forChangeType:newIndex:)]) {
-        [delegate store:self didChangeWindow:window atIndex:[self.windows indexOfObject:window] forChangeType:NNWindowStoreChangeUpdate newIndex:[self.windows indexOfObject:window]];
+        [delegate store:self didChangeWindow:window atIndex:[self.windows indexOfObject:window] forChangeType:NNWindowStoreChangeWindowContent newIndex:[self.windows indexOfObject:window]];
     }
     if ([delegate respondsToSelector:@selector(storeDidChangeContent:)]) {
         [delegate storeDidChangeContent:self];
@@ -139,7 +140,7 @@
             }
             
             [changes addObject:window];
-
+            
             if (self.updatingWindowContents) {
                 [self.windowWorkers removeObjectForKey:window];
             }
@@ -158,6 +159,8 @@
             
             // Match old array with new.
             [oldArray insertObject:window atIndex:[newArray indexOfObject:window]];
+            
+            [self loadHaxWindowForWindow:(NNWindow *)window];
             
             if (self.updatingWindowContents) {
                 NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window];
@@ -190,6 +193,26 @@
             [delegate storeDidChangeContent:self];
         }
     }
+}
+
+- (void)loadHaxWindowForWindow:(NNWindow *)window;
+{
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        window.haxWindow = [window.application haxWindowForWindow:window];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong __typeof__(self.delegate) delegate = self.delegate;
+            if ([delegate respondsToSelector:@selector(storeWillChangeContent:)]) {
+                [delegate storeWillChangeContent:self];
+            }
+            if ([delegate respondsToSelector:@selector(store:didChangeWindow:atIndex:forChangeType:newIndex:)]) {
+                [delegate store:self didChangeWindow:window atIndex:[self.windows indexOfObject:window] forChangeType:NNWindowStoreChangeResponsive newIndex:[self.windows indexOfObject:window]];
+            }
+            if ([delegate respondsToSelector:@selector(storeDidChangeContent:)]) {
+                [delegate storeDidChangeContent:self];
+            }
+        });
+    });
 }
 
 @end

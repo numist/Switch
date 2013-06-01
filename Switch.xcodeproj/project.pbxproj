@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		BC63AB8F1755907D00016B9E /* NNHUDCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */; };
+		BC63AB921756FBE400016B9E /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB911756FBE300016B9E /* Carbon.framework */; };
+		BC63AB9A175701D900016B9E /* Haxcessibility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
+		BC63ABA517598C4100016B9E /* debugger.c in Sources */ = {isa = PBXBuildFile; fileRef = BC63ABA217598C4100016B9E /* debugger.c */; };
 		BCA734E116DAC53F00CD4C74 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCA734E016DAC53F00CD4C74 /* Cocoa.framework */; };
 		BCA734EB16DAC53F00CD4C74 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BCA734E916DAC53F00CD4C74 /* InfoPlist.strings */; };
 		BCA734ED16DAC53F00CD4C74 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA734EC16DAC53F00CD4C74 /* main.m */; };
@@ -34,6 +37,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		BC63AB98175701C200016B9E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BC63AB94175701C200016B9E /* Haxcessibility.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = Haxcessibility;
+		};
+		BC63AB9B175701DD00016B9E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BC63AB94175701C200016B9E /* Haxcessibility.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = Haxcessibility;
+		};
 		BCA7350116DAC54000CD4C74 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BCA734D516DAC53F00CD4C74 /* Project object */;
@@ -46,6 +63,11 @@
 /* Begin PBXFileReference section */
 		BC63AB8D1755907D00016B9E /* NNHUDCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHUDCollectionView.h; sourceTree = "<group>"; };
 		BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDCollectionView.m; sourceTree = "<group>"; };
+		BC63AB911756FBE300016B9E /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		BC63AB94175701C200016B9E /* Haxcessibility.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Haxcessibility.xcodeproj; path = Frameworks/Haxcessibility/Haxcessibility.xcodeproj; sourceTree = "<group>"; };
+		BC63ABA217598C4100016B9E /* debugger.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = debugger.c; sourceTree = "<group>"; };
+		BC63ABA317598C4100016B9E /* debugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debugger.h; sourceTree = "<group>"; };
+		BC63ABA71759AB4900016B9E /* NNApplication+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NNApplication+Private.h"; sourceTree = "<group>"; };
 		BCA734DD16DAC53F00CD4C74 /* Switch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Switch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCA734E016DAC53F00CD4C74 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		BCA734E316DAC53F00CD4C74 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -99,6 +121,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BC63AB9A175701D900016B9E /* Haxcessibility.framework in Frameworks */,
+				BC63AB921756FBE400016B9E /* Carbon.framework in Frameworks */,
 				BCA7353A16E14EF000CD4C74 /* QuartzCore.framework in Frameworks */,
 				BCA734E116DAC53F00CD4C74 /* Cocoa.framework in Frameworks */,
 			);
@@ -125,6 +149,32 @@
 			name = Controller;
 			sourceTree = "<group>";
 		};
+		BC63AB93175701BA00016B9E /* Haxcessibility */ = {
+			isa = PBXGroup;
+			children = (
+				BC63AB94175701C200016B9E /* Haxcessibility.xcodeproj */,
+			);
+			name = Haxcessibility;
+			sourceTree = "<group>";
+		};
+		BC63AB95175701C200016B9E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BC63AB99175701C200016B9E /* Haxcessibility.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BC63ABA117598C4100016B9E /* debugger */ = {
+			isa = PBXGroup;
+			children = (
+				BC63ABA217598C4100016B9E /* debugger.c */,
+				BC63ABA317598C4100016B9E /* debugger.h */,
+			);
+			name = debugger;
+			path = Frameworks/debugger;
+			sourceTree = "<group>";
+		};
 		BCA734D416DAC53F00CD4C74 = {
 			isa = PBXGroup;
 			children = (
@@ -147,7 +197,10 @@
 		BCA734DF16DAC53F00CD4C74 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BC63AB911756FBE300016B9E /* Carbon.framework */,
 				BCA734E016DAC53F00CD4C74 /* Cocoa.framework */,
+				BC63ABA117598C4100016B9E /* debugger */,
+				BC63AB93175701BA00016B9E /* Haxcessibility */,
 				BCA7353916E14EF000CD4C74 /* QuartzCore.framework */,
 				BCA734FE16DAC54000CD4C74 /* SenTestingKit.framework */,
 				BCA734E216DAC53F00CD4C74 /* Other Frameworks */,
@@ -214,6 +267,7 @@
 			isa = PBXGroup;
 			children = (
 				BCA7352316DAC93C00CD4C74 /* NNApplication.h */,
+				BC63ABA71759AB4900016B9E /* NNApplication+Private.h */,
 				BCA7352416DAC93C00CD4C74 /* NNApplication.m */,
 				BCA7351C16DAC61F00CD4C74 /* NNWindow.h */,
 				BCA7351F16DAC62C00CD4C74 /* NNWindow+Private.h */,
@@ -288,6 +342,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				BC63AB9C175701DD00016B9E /* PBXTargetDependency */,
 			);
 			name = Switch;
 			productName = Switch;
@@ -333,6 +388,12 @@
 			mainGroup = BCA734D416DAC53F00CD4C74;
 			productRefGroup = BCA734DE16DAC53F00CD4C74 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = BC63AB95175701C200016B9E /* Products */;
+					ProjectRef = BC63AB94175701C200016B9E /* Haxcessibility.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				BCA734DC16DAC53F00CD4C74 /* Switch */,
@@ -340,6 +401,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		BC63AB99175701C200016B9E /* Haxcessibility.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Haxcessibility.framework;
+			remoteRef = BC63AB98175701C200016B9E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		BCA734DB16DAC53F00CD4C74 /* Resources */ = {
@@ -398,6 +469,7 @@
 				BCA7354916E1F14D00CD4C74 /* NNSelectionBoxView.m in Sources */,
 				BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */,
 				BC63AB8F1755907D00016B9E /* NNHUDCollectionView.m in Sources */,
+				BC63ABA517598C4100016B9E /* debugger.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -412,6 +484,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		BC63AB9C175701DD00016B9E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Haxcessibility;
+			targetProxy = BC63AB9B175701DD00016B9E /* PBXContainerItemProxy */;
+		};
 		BCA7350216DAC54000CD4C74 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = BCA734DC16DAC53F00CD4C74 /* Switch */;
@@ -509,6 +586,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
 			};

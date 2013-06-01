@@ -17,10 +17,11 @@
 
 #include <dispatch/dispatch.h>
 
-dispatch_queue_t despatch_lock_create(const char *label);
-void despatch_lock_promote(dispatch_queue_t queue);
-void despatch_lock_assert(dispatch_queue_t lock);
-void despatch_lock_assert_not(dispatch_queue_t lock);
-BOOL despatch_lock_is_held(dispatch_queue_t lock);
+dispatch_queue_t despatch_lock_create(const char *label) __attribute__((nonnull(1)));
+void despatch_lock_promote(dispatch_queue_t queue) __attribute__((nonnull(1)));
+void despatch_lock_assert(dispatch_queue_t lock) __attribute__((nonnull(1)));
+void despatch_lock_assert_not(dispatch_queue_t lock) __attribute__((nonnull(1)));
+BOOL despatch_lock_is_held(dispatch_queue_t lock) __attribute__((nonnull(1)));
+BOOL despatch_any_locks_held();
 
 #endif

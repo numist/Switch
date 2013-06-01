@@ -38,7 +38,8 @@ typedef NS_ENUM(NSUInteger, NNWindowStoreChangeType) {
     NNWindowStoreChangeInsert,
     NNWindowStoreChangeDelete,
     NNWindowStoreChangeMove,
-    NNWindowStoreChangeUpdate
+    NNWindowStoreChangeWindowContent,
+    NNWindowStoreChangeResponsive
 };
 
 @optional

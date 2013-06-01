@@ -124,6 +124,7 @@ static BOOL needsReset;
 {
     switch (type) {
         case NNWindowStoreChangeInsert:
+            NSLog(@"Added window %@", window);
             [self.windows insertObject:window atIndex:newIndex];
             needsReset = YES;
             break;
@@ -139,12 +140,16 @@ static BOOL needsReset;
             needsReset = YES;
             break;
             
-        case NNWindowStoreChangeUpdate: {
+        case NNWindowStoreChangeWindowContent: {
             NNWindowThumbnailView *thumb = (NNWindowThumbnailView *)[self.collectionView cellForIndex:index];
             [thumb setWindowThumbnail:window.image];
             [thumb setNeedsDisplay:YES];
             break;
         }
+        
+        case NNWindowStoreChangeResponsive:
+            NSLog(@"Window %@ became responsive!", window);
+            break;
     }
 }
 

@@ -21,6 +21,7 @@
 @interface NNWindow : NSObject <NSCopying>
 
 @property (nonatomic, readonly) NNApplication *application;
+@property (nonatomic, readonly) NSRect cgBounds;
 @property (atomic, strong, readonly) NSImage *image;
 @property (nonatomic, readonly) NSString *name;
 

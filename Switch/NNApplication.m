@@ -14,25 +14,50 @@
 
 #import "NNApplication.h"
 
+#import <Haxcessibility/Haxcessibility.h>
+
+#import "despatch.h"
+#import "NNWindow+Private.h"
+
+#define COMPARE_RECTS(a, b) ({ \
+    NSRect cmpA = (a); \
+    NSRect cmpB = (b); \
+    cmpA.origin.x == cmpB.origin.x && \
+           cmpA.origin.y == cmpB.origin.y && \
+           cmpA.size.width == cmpB.size.width && \
+           cmpA.size.height == cmpB.size.height; \
+})
+
 
 @interface NNApplication ()
 
-@property (nonatomic, retain) NSRunningApplication *app;
-@property (nonatomic, strong) NSImage *icon;
+@property (atomic, retain) NSRunningApplication *app;
+
+@property (nonatomic, strong) dispatch_queue_t haxLock;
+@property (atomic, strong) HAXApplication *haxApp;
 
 @end
 
 
 @implementation NNApplication
 
-- (instancetype)initWithPID:(int)pid;
+- (instancetype)initWithPID:(pid_t)pid;
 {
     self = [super init];
     if (!self) return nil;
     
     _pid = pid;
+    _haxLock = despatch_lock_create([[NSString stringWithFormat:@"%@ <%p>", [self class], self] UTF8String]);
     
     _app = [NSRunningApplication runningApplicationWithProcessIdentifier:pid];
+
+    // This could take a while…
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        HAXApplication *app = [HAXApplication applicationWithPID:pid];
+        dispatch_async(self.haxLock, ^{
+            self.haxApp = app;
+        });
+    });
     
     return self;
 }
@@ -42,11 +67,18 @@
     return [NSString stringWithFormat:@"%d (%@)", self.pid, self.name];
 }
 
+#pragma mark Properties
+
+@synthesize name = _name;
 - (NSString *)name;
 {
-    return [self.app localizedName];
+    if (!_name) {
+        _name = [self.app localizedName];
+    }
+    return _name;
 }
 
+@synthesize icon = _icon;
 - (NSImage *)icon;
 {
     if (!_icon) {
@@ -55,6 +87,37 @@
     }
     
     return _icon;
+}
+
+#pragma mark NNApplication
+
+- (HAXWindow *)haxWindowForWindow:(NNWindow *)window;
+{
+    if (despatch_any_locks_held()) {
+        NSLog(@"Bad idea to call %s while holding a lock!", __PRETTY_FUNCTION__);
+    }
+    
+    __block HAXWindow *result = nil;
+    
+    NSRect windowRect = window.cgBounds;
+    NSString *windowName = window.name;
+    
+    dispatch_sync(self.haxLock, ^{
+        NSArray *haxWindows = [self.haxApp windows];
+        for (HAXWindow *haxWindow in haxWindows) {
+            if (COMPARE_RECTS(windowRect, haxWindow.frame)) {
+                if (result) {
+                    result = [windowName isEqualToString:haxWindow.title] ? haxWindow : result;
+                } else {
+                    result = haxWindow;
+                }
+            }
+        }
+    });
+
+    Check(result);
+
+    return result;
 }
 
 @end

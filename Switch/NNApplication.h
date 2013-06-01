@@ -15,12 +15,14 @@
 #import <Foundation/Foundation.h>
 
 
+@class HAXWindow;
+@class NNWindow;
+
+
 @interface NNApplication : NSObject
 
-@property (nonatomic, readonly) NSImage *icon;
-@property (nonatomic, readonly) NSString *name;
+@property (nonatomic, strong, readonly) NSImage *icon;
+@property (nonatomic, strong, readonly) NSString *name;
 @property (nonatomic, readonly) int pid;
-
-- (instancetype)initWithPID:(int)pid;
 
 @end
