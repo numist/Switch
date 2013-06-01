@@ -92,6 +92,7 @@
     
     self.updatingWindowContents = NO;
     self.windowWorkers = nil;
+    [self listWorker:nil didUpdateWindowList:@[]];
 }
 
 #pragma mark NNWindowWorkerDelegate
@@ -201,15 +202,17 @@
         window.haxWindow = [window.application haxWindowForWindow:window];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            __strong __typeof__(self.delegate) delegate = self.delegate;
-            if ([delegate respondsToSelector:@selector(storeWillChangeContent:)]) {
-                [delegate storeWillChangeContent:self];
-            }
-            if ([delegate respondsToSelector:@selector(store:didChangeWindow:atIndex:forChangeType:newIndex:)]) {
-                [delegate store:self didChangeWindow:window atIndex:[self.windows indexOfObject:window] forChangeType:NNWindowStoreChangeResponsive newIndex:[self.windows indexOfObject:window]];
-            }
-            if ([delegate respondsToSelector:@selector(storeDidChangeContent:)]) {
-                [delegate storeDidChangeContent:self];
+            if (window.haxWindow && [self.windows containsObject:window]) {
+                __strong __typeof__(self.delegate) delegate = self.delegate;
+                if ([delegate respondsToSelector:@selector(storeWillChangeContent:)]) {
+                    [delegate storeWillChangeContent:self];
+                }
+                if ([delegate respondsToSelector:@selector(store:didChangeWindow:atIndex:forChangeType:newIndex:)]) {
+                    [delegate store:self didChangeWindow:window atIndex:[self.windows indexOfObject:window] forChangeType:NNWindowStoreChangeResponsive newIndex:[self.windows indexOfObject:window]];
+                }
+                if ([delegate respondsToSelector:@selector(storeDidChangeContent:)]) {
+                    [delegate storeDidChangeContent:self];
+                }
             }
         });
     });
