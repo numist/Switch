@@ -25,22 +25,22 @@
 
 @interface NNAppDelegate () <NNWindowStoreDelegate, NNHUDCollectionViewDataSource, NNHotKeyManagerDelegate>
 
-#pragma mark Event tap and state
-@property (nonatomic, strong) NNHotKeyManager *keyManager;
-@property (nonatomic, assign) BOOL incrementing;
-@property (nonatomic, assign) BOOL decrementing;
-
-#pragma mark AppKit window and view hierarchy data
-@property (nonatomic, strong) NSWindow *appWindow;
-@property (nonatomic, strong) NNHUDCollectionView *collectionView;
-
-#pragma mark Model
-@property (nonatomic, strong) NSMutableArray *windows;
-@property (nonatomic, strong) NNWindowStore *store;
-
 #pragma mark State
 @property (nonatomic, assign) NSUInteger selectedIndex;
 @property (nonatomic, weak) NNWindow *selectedWindow;
+
+#pragma mark UI
+@property (nonatomic, strong) NSWindow *appWindow;
+@property (nonatomic, strong) NNHUDCollectionView *collectionView;
+
+#pragma mark NNWindowStore and state
+@property (nonatomic, strong) NSMutableArray *windows;
+@property (nonatomic, strong) NNWindowStore *store;
+
+#pragma mark NNHotKeyManager and state
+@property (nonatomic, strong) NNHotKeyManager *keyManager;
+@property (nonatomic, assign) BOOL incrementing;
+@property (nonatomic, assign) BOOL decrementing;
 
 @end
 
@@ -111,7 +111,24 @@
     });
 }
 
-#pragma mark - NNWindowStoreDelegate
+#pragma mark - NNHUDCollectionViewDataSource
+
+- (NSUInteger)HUDViewNumberOfCells:(NNHUDCollectionView *)view;
+{
+    return [self.windows count];
+}
+
+- (NSView *)HUDView:(NNHUDCollectionView *)view viewForCellAtIndex:(NSUInteger)index;
+{
+    NNWindow *window = [self.windows objectAtIndex:index];
+    NNWindowThumbnailView *result = [[NNWindowThumbnailView alloc] initWithFrame:NSZeroRect];
+    result.applicationIcon = window.application.icon;
+    result.windowThumbnail = window.image;
+    result.windowIsResponsive = !!window.haxWindow;
+    return result;
+}
+
+#pragma mark NNWindowStoreDelegate
 
 static BOOL needsReset;
 
@@ -171,23 +188,6 @@ static BOOL needsReset;
         
         [self.collectionView selectCellAtIndex:self.selectedIndex];
     }
-}
-
-#pragma mark NNHUDCollectionViewDataSource
-
-- (NSUInteger)HUDViewNumberOfCells:(NNHUDCollectionView *)view;
-{
-    return [self.windows count];
-}
-
-- (NSView *)HUDView:(NNHUDCollectionView *)view viewForCellAtIndex:(NSUInteger)index;
-{
-    NNWindow *window = [self.windows objectAtIndex:index];
-    NNWindowThumbnailView *result = [[NNWindowThumbnailView alloc] initWithFrame:NSZeroRect];
-    result.applicationIcon = window.application.icon;
-    result.windowThumbnail = window.image;
-    result.windowIsResponsive = !!window.haxWindow;
-    return result;
 }
 
 #pragma mark NNHotKeyManagerDelegate
