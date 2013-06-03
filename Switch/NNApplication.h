@@ -23,6 +23,10 @@
 
 @property (nonatomic, strong, readonly) NSImage *icon;
 @property (nonatomic, strong, readonly) NSString *name;
-@property (nonatomic, readonly) int pid;
+
+- (BOOL)isCurrentApplication;
+- (BOOL)isFrontMostApplication;
+
+- (void)raise;
 
 @end

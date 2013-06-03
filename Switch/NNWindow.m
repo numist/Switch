@@ -14,6 +14,8 @@
 
 #import "NNWindow+Private.h"
 
+#import <Haxcessibility/Haxcessibility.h>
+
 #import "NNApplication+Private.h"
 
 
@@ -98,7 +100,7 @@
     }
     
     // Don't report own windows. Maybe later if there are ever preferences? For now, KISS
-    if (self.application.pid == [[NSProcessInfo processInfo] processIdentifier]) {
+    if ([self.application isCurrentApplication]) {
         return NO;
     }
     
@@ -150,6 +152,21 @@
     }
     
     return YES;
+}
+
+- (void)raise;
+{
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        // First, raise the window
+        
+        // TODO: do it right when haxWindow doesn't (yet) exist!
+        Check(self.haxWindow);
+        BOOL success = [self.haxWindow raise];
+        Check(success);
+        
+        // Then raise the application (if it's not already topmost)
+        [self.application raise];
+    });
 }
 
 #pragma mark Private

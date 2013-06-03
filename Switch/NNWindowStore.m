@@ -101,19 +101,21 @@
 {
     despatch_lock_assert(dispatch_get_main_queue());
 
-    __strong __typeof__(self.delegate) delegate = self.delegate;
-    if ([delegate respondsToSelector:@selector(storeWillChangeContent:)]) {
-        [delegate storeWillChangeContent:self];
-    }
-    if ([delegate respondsToSelector:@selector(store:didChangeWindow:atIndex:forChangeType:newIndex:)]) {
-        [delegate store:self didChangeWindow:window atIndex:[self.windows indexOfObject:window] forChangeType:NNWindowStoreChangeWindowContent newIndex:[self.windows indexOfObject:window]];
-    }
-    if ([delegate respondsToSelector:@selector(storeDidChangeContent:)]) {
-        [delegate storeDidChangeContent:self];
+    if ([self.windows containsObject:window]) {
+        __strong __typeof__(self.delegate) delegate = self.delegate;
+        if ([delegate respondsToSelector:@selector(storeWillChangeContent:)]) {
+            [delegate storeWillChangeContent:self];
+        }
+        if ([delegate respondsToSelector:@selector(store:didChangeWindow:atIndex:forChangeType:newIndex:)]) {
+            [delegate store:self didChangeWindow:window atIndex:[self.windows indexOfObject:window] forChangeType:NNWindowStoreChangeWindowContent newIndex:[self.windows indexOfObject:window]];
+        }
+        if ([delegate respondsToSelector:@selector(storeDidChangeContent:)]) {
+            [delegate storeDidChangeContent:self];
+        }
     }
 }
 
-#pragma mark Private
+#pragma mark NNWindowListWorkerDelegate
 
 - (void)listWorker:(NNWindowListWorker *)worker didUpdateWindowList:(NSArray *)newArray;
 {
@@ -130,7 +132,7 @@
             [delegate storeWillChangeContent:self];
         }
     }
-        
+    
     NSMutableArray *changes = [NSMutableArray new];
     for (int i = (int)[oldArray count] - 1; i >= 0; --i) {
         NNWindow *window = [oldArray objectAtIndex:i];
@@ -195,6 +197,8 @@
         }
     }
 }
+
+#pragma mark Private
 
 - (void)loadHaxWindowForWindow:(NNWindow *)window;
 {

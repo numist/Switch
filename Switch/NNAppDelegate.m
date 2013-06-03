@@ -34,6 +34,7 @@
 @property (nonatomic, strong) NNHUDCollectionView *collectionView;
 
 #pragma mark NNWindowStore and state
+@property (nonatomic, assign) BOOL firstUpdate;
 @property (nonatomic, strong) NSMutableArray *windows;
 @property (nonatomic, strong) NNWindowStore *store;
 
@@ -141,7 +142,6 @@ static BOOL needsReset;
 {
     switch (type) {
         case NNWindowStoreChangeInsert:
-            NSLog(@"Added window %@", window);
             [self.windows insertObject:window atIndex:newIndex];
             needsReset = YES;
             break;
@@ -153,6 +153,7 @@ static BOOL needsReset;
             break;
             
         case NNWindowStoreChangeDelete:
+            // TODO(numist): This needs to update the selectedWindow/selectedIndex properly.
             [self.windows removeObjectAtIndex:index];
             needsReset = YES;
             break;
@@ -181,11 +182,16 @@ static BOOL needsReset;
         [self.collectionView reloadData];
     }
     
-    if ([self.windows count]) {
-        if (self.selectedIndex >= NSNotFound) {
-            self.selectedIndex = 0;
-        }
+    if ([self.windows count] && self.selectedIndex >= NSNotFound) {
+        self.selectedIndex = 0;
         
+        if (self.firstUpdate) {
+            if ([self.windows count] > 1 && [((NNWindow *)[self.windows objectAtIndex:0]).application isFrontMostApplication]) {
+                self.selectedIndex += 1;
+            }
+            self.firstUpdate = NO;
+        }
+
         [self.collectionView selectCellAtIndex:self.selectedIndex];
     }
 }
@@ -194,6 +200,7 @@ static BOOL needsReset;
 
 - (void)hotKeyManagerInvokedInterface:(NNHotKeyManager *)manager;
 {
+    self.firstUpdate = YES;
     [self.store startUpdatingWindowList];
 
     // TODO(numist): put this on a time delay. NSTimer!
@@ -206,6 +213,9 @@ static BOOL needsReset;
 
 - (void)hotKeyManagerDismissedInterface:(NNHotKeyManager *)manager;
 {
+    Check(self.selectedWindow || [self.windows count] == 0);
+    [self.selectedWindow raise];
+    
     [self.appWindow orderOut:self];
     self.selectedIndex = NSNotFound;
     [self.store stopUpdatingWindowList];
@@ -221,7 +231,7 @@ static BOOL needsReset;
     if (self.selectedIndex >= NSNotFound) {
         self.selectedIndex = 0;
     } else if (!self.incrementing || self.selectedIndex != [self.windows count] - 1) {
-        self.selectedIndex = (self.selectedIndex + 1) % [self.windows count];
+        self.selectedIndex += 1;
     }
     
     self.incrementing = YES;

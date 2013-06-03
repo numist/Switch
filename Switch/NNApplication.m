@@ -31,7 +31,9 @@
 
 @interface NNApplication ()
 
+@property (nonatomic, readonly, assign) int pid;
 @property (atomic, retain) NSRunningApplication *app;
+@property (nonatomic, readonly, assign) ProcessSerialNumber psn;
 
 @property (nonatomic, strong) dispatch_queue_t haxLock;
 @property (atomic, strong) HAXApplication *haxApp;
@@ -47,7 +49,13 @@
     if (!self) return nil;
     
     _pid = pid;
+    
     _haxLock = despatch_lock_create([[NSString stringWithFormat:@"%@ <%p>", [self class], self] UTF8String]);
+
+    OSStatus status = GetProcessForPID(self.pid, &_psn);
+    if (status) {
+        return nil;
+    }
     
     _app = [NSRunningApplication runningApplicationWithProcessIdentifier:pid];
 
@@ -86,10 +94,34 @@
         _icon = icon;
     }
     
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [NSBundle bundleWithPath:[[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:[self.app bundleIdentifier]]];
+    });
+    
     return _icon;
 }
 
 #pragma mark NNApplication
+
+- (BOOL)isCurrentApplication;
+{
+    return self.pid == [[NSProcessInfo processInfo] processIdentifier];
+}
+
+- (BOOL)isFrontMostApplication;
+{
+    return self.app.active;
+}
+
+- (void)raise;
+{
+    if (![self isFrontMostApplication]) {
+        SetFrontProcessWithOptions(&_psn, kSetFrontProcessFrontWindowOnly);
+    }
+}
+
+#pragma mark Private
 
 - (HAXWindow *)haxWindowForWindow:(NNWindow *)window;
 {
