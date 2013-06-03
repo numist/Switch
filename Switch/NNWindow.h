@@ -26,5 +26,6 @@
 @property (nonatomic, readonly) NSString *name;
 
 - (void)raise;
+- (void)close;
 
 @end

@@ -169,6 +169,11 @@
     });
 }
 
+- (void)close;
+{
+    [self.haxWindow close];
+}
+
 #pragma mark Private
 
 - (CGImageRef)copyCGWindowImage;
