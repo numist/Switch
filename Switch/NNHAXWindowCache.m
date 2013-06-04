@@ -132,8 +132,6 @@ static void axCallback(AXObserverRef observer, AXUIElementRef element, CFStringR
     
     [self.cache removeObjectForKey:@(windowID)];
     [self removeAXObserverForWindow:window];
-    
-    NSLog(@"Removed dead window %@ from cache", window);
 }
 
 - (BOOL)addAXObserverForWindow:(HAXWindow *)window withID:(CGWindowID)windowID;
