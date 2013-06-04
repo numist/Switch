@@ -152,8 +152,12 @@ static BOOL needsReset;
             break;
             
         case NNWindowStoreChangeDelete:
-            // TODO(numist): This needs to update the selectedIndex properly.
             [self.windows removeObjectAtIndex:index];
+            
+            // Update the selected index so it doesn't go out of bounds (default value is zero).
+            if (index == self.selectedIndex && index >= [self.windows count]) {
+                self.selectedIndex = [self.windows count] ? [self.windows count] - 1 : 0;
+            }
             needsReset = YES;
             break;
             
