@@ -164,7 +164,7 @@
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         // First, raise the window
         
-        // TODO: do it right when haxWindow doesn't (yet) exist!
+        // TODO(numist): do it right when haxWindow doesn't (yet) exist!
         Check(self.haxWindow);
         BOOL success = [self.haxWindow raise];
         Check(success);
