@@ -115,7 +115,6 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
         self.updateInterval = NNPollingIntervalFast;
     } else {
         // Window does not exist. Stop the worker loop.
-        NotTested();
         return;
     }
     
