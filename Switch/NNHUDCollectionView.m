@@ -175,7 +175,6 @@
             // dataSource side effect may have called reloadData, in which case it's not safe to continue anymore.
             if (reloading) { return; }
             
-            // TODO(numist): Compute cell size and resize self as necessary.
             [self setSize:[self computeCollectionViewSize]];
             
             for (NSUInteger i = 0; i < self.numberOfCells; i++) {
