@@ -65,7 +65,7 @@ static NSTimeInterval refreshInterval = 0.1;
         
         // Not a window we already know about? Try building a new one.
         if (!window) {
-            window = [[NNWindow alloc] initWithDescription:[info objectAtIndex:i]];
+            window = [NNWindow windowWithDescription:[info objectAtIndex:i]];
         }
         
         // Window found or info valid for creating a new window.

@@ -30,6 +30,11 @@
 
 @implementation NNWindow
 
++ (instancetype)windowWithDescription:(NSDictionary *)description;
+{
+    return [[self alloc] initWithDescription:description];
+}
+
 - (instancetype)initWithDescription:(NSDictionary *)description;
 {
     self = [super init];
@@ -61,9 +66,7 @@
 
 - (instancetype)copyWithZone:(NSZone *)zone;
 {
-    NNWindow *copy = [[NNWindow alloc] initInternalWithDescription:self.windowDescription];
-    [copy setImage:self.image];
-    return copy;
+    return self;
 }
 
 - (NSUInteger)hash;

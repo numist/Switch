@@ -20,11 +20,12 @@
 
 @interface NNWindow (Private)
 
++ (instancetype)windowWithDescription:(NSDictionary *)description;
+
 @property (nonatomic, readonly) BOOL exists;
 @property (nonatomic, readonly) CGWindowID windowID;
 @property (nonatomic, strong) HAXWindow *haxWindow;
 
-- (instancetype)initWithDescription:(NSDictionary *)description;
 - (void)setImage:(NSImage *)image;
 - (CGImageRef)copyCGWindowImage;
 
