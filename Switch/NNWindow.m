@@ -54,7 +54,7 @@
     if (!self) return nil;
     
     _windowDescription = [description copy];
-    _application = [[NNApplication alloc] initWithPID:[[self.windowDescription objectForKey:(NSString *)kCGWindowOwnerPID] intValue]];
+    _application = [NNApplication applicationWithPID:[[self.windowDescription objectForKey:(NSString *)kCGWindowOwnerPID] intValue]];
     
     return self;
 }

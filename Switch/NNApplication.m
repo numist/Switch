@@ -43,6 +43,11 @@
 
 @implementation NNApplication
 
++ (instancetype)applicationWithPID:(pid_t)pid;
+{
+    return [[self alloc] initWithPID:pid];
+}
+
 - (instancetype)initWithPID:(pid_t)pid;
 {
     self = [super init];

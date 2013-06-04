@@ -21,7 +21,7 @@
 
 @interface NNApplication (Private)
 
-- (instancetype)initWithPID:(pid_t)pid;
++ (instancetype)applicationWithPID:(pid_t)pid;
 
 - (HAXWindow *)haxWindowForWindow:(NNWindow *)window __attribute__((nonnull(1)));
 
