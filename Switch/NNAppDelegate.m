@@ -207,8 +207,8 @@ static BOOL needsReset;
 
     // TODO(numist): put this on a time delay. NSTimer!
     [self createWindowIfNeeded];
-    [self.appWindow orderFront:self];
     [self.collectionView reloadData];
+    [self.appWindow orderFront:self];
     
     [self.store startUpdatingWindowContents];
 }
@@ -219,6 +219,7 @@ static BOOL needsReset;
     if (selectedWindow) {
         [selectedWindow raise];
     } else {
+        Check(self.selectedIndex == 0);
         Log(@"No windows to raise! (Selection index: %lu)", self.selectedIndex);
     }
     
