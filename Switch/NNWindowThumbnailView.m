@@ -29,7 +29,6 @@
     return self;
 }
 
-// TODO(numist): ~50% of app time (~90% of main thread time) is spent here.
 - (void)drawRect:(NSRect)dirtyRect
 {
     NSRect thumbFrame = self.bounds;

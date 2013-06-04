@@ -30,7 +30,6 @@
  * TODO: AVCaptureScreenInput? IOSurfaces?
  */
 
-// TODO(numist): ~18% of app time (0% of main thread time, 66% of background thread time) is spent here.
 static BOOL (^imagesDifferByCGDataProviderComparison)(CGImageRef, CGImageRef) = ^(CGImageRef a, CGImageRef b) {
     BOOL result = NO;
     
