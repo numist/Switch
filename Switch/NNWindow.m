@@ -17,13 +17,14 @@
 #import <Haxcessibility/Haxcessibility.h>
 
 #import "NNApplication+Private.h"
+#import "NNHAXWindowCache.h"
 
 
 @interface NNWindow ()
 
 @property (atomic, strong) NSImage *image;
 @property (nonatomic, strong, readonly) NSDictionary *windowDescription;
-@property (nonatomic, strong) HAXWindow *haxWindow;
+@property (atomic, strong) HAXWindow *haxWindow;
 
 @end
 
@@ -44,28 +45,22 @@
         return nil;
     }
 
-    self = [self initInternalWithDescription:description];
+    _windowDescription = [description copy];
+    _application = [NNApplication applicationWithPID:[[self.windowDescription objectForKey:(NSString *)kCGWindowOwnerPID] intValue]];
+
     
     if (!_application || ![self isValidWindow]) {
         return nil;
     }
     
-    return self;
-}
-
-- (instancetype)initInternalWithDescription:(NSDictionary *)description;
-{
-    self = [super init];
-    if (!self) return nil;
-    
-    _windowDescription = [description copy];
-    _application = [NNApplication applicationWithPID:[[self.windowDescription objectForKey:(NSString *)kCGWindowOwnerPID] intValue]];
+    _haxWindow = [[NNHAXWindowCache sharedCache] cachedWindowWithID:self.windowID];
     
     return self;
 }
 
 - (instancetype)copyWithZone:(NSZone *)zone;
 {
+    Check(!zone);
     return self;
 }
 

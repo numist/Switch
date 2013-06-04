@@ -16,6 +16,7 @@
 
 #import "despatch.h"
 #import "NNApplication+Private.h"
+#import "NNHAXWindowCache.h"
 #import "NNWindow+Private.h"
 #import "NNWindowListWorker.h"
 #import "NNWindowWorker.h"
@@ -198,24 +199,33 @@
 
 - (void)loadHaxWindowForWindow:(NNWindow *)window;
 {
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        window.haxWindow = [window.application haxWindowForWindow:window];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (window.haxWindow && [self.windows containsObject:window]) {
-                __strong __typeof__(self.delegate) delegate = self.delegate;
-                if ([delegate respondsToSelector:@selector(storeWillChangeContent:)]) {
-                    [delegate storeWillChangeContent:self];
-                }
-                if ([delegate respondsToSelector:@selector(store:didChangeWindow:atIndex:forChangeType:newIndex:)]) {
-                    [delegate store:self didChangeWindow:window atIndex:[self.windows indexOfObject:window] forChangeType:NNWindowStoreChangeResponsive newIndex:[self.windows indexOfObject:window]];
-                }
-                if ([delegate respondsToSelector:@selector(storeDidChangeContent:)]) {
-                    [delegate storeDidChangeContent:self];
-                }
+    dispatch_block_t notifyResponsive = ^{
+        if (window.haxWindow && [self.windows containsObject:window]) {
+            __strong __typeof__(self.delegate) delegate = self.delegate;
+            if ([delegate respondsToSelector:@selector(storeWillChangeContent:)]) {
+                [delegate storeWillChangeContent:self];
+            }
+            if ([delegate respondsToSelector:@selector(store:didChangeWindow:atIndex:forChangeType:newIndex:)]) {
+                [delegate store:self didChangeWindow:window atIndex:[self.windows indexOfObject:window] forChangeType:NNWindowStoreChangeResponsive newIndex:[self.windows indexOfObject:window]];
+            }
+            if ([delegate respondsToSelector:@selector(storeDidChangeContent:)]) {
+                [delegate storeDidChangeContent:self];
+            }
+        }
+    };
+    
+    if (window.haxWindow) {
+        dispatch_async(dispatch_get_main_queue(), notifyResponsive);
+    } else {
+        // TODO(numist): This should be in NNWindow, the window can declare itself responsive with a notification.
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            window.haxWindow = [window.application haxWindowForWindow:window];
+            
+            if (window.haxWindow) {
+                dispatch_async(dispatch_get_main_queue(), notifyResponsive);
             }
         });
-    });
+    }
 }
 
 @end
