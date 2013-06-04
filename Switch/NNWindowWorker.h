@@ -1,6 +1,6 @@
 //
 //  NNWindowWorker.h
-//  Docking
+//  Switch
 //
 //  Created by Scott Perry on 02/22/13.
 //  Copyright © 2013 Scott Perry.
