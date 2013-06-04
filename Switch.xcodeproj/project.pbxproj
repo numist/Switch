@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BC3B3B6F175E505D002AD452 /* NNHAXWindowCache.m in Sources */ = {isa = PBXBuildFile; fileRef = BC3B3B6E175E505C002AD452 /* NNHAXWindowCache.m */; };
 		BC63AB8F1755907D00016B9E /* NNHUDCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */; };
 		BC63AB921756FBE400016B9E /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB911756FBE300016B9E /* Carbon.framework */; };
 		BC63AB9A175701D900016B9E /* Haxcessibility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
@@ -61,6 +62,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		BC3B3B6D175E505C002AD452 /* NNHAXWindowCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHAXWindowCache.h; sourceTree = "<group>"; };
+		BC3B3B6E175E505C002AD452 /* NNHAXWindowCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHAXWindowCache.m; sourceTree = "<group>"; };
 		BC63AB8D1755907D00016B9E /* NNHUDCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHUDCollectionView.h; sourceTree = "<group>"; };
 		BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDCollectionView.m; sourceTree = "<group>"; };
 		BC63AB911756FBE300016B9E /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
@@ -266,6 +269,8 @@
 		BCA7351416DAC54C00CD4C74 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				BC3B3B6D175E505C002AD452 /* NNHAXWindowCache.h */,
+				BC3B3B6E175E505C002AD452 /* NNHAXWindowCache.m */,
 				BCA7352316DAC93C00CD4C74 /* NNApplication.h */,
 				BC63ABA71759AB4900016B9E /* NNApplication+Private.h */,
 				BCA7352416DAC93C00CD4C74 /* NNApplication.m */,
@@ -470,6 +475,7 @@
 				BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */,
 				BC63AB8F1755907D00016B9E /* NNHUDCollectionView.m in Sources */,
 				BC63ABA517598C4100016B9E /* debugger.c in Sources */,
+				BC3B3B6F175E505D002AD452 /* NNHAXWindowCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

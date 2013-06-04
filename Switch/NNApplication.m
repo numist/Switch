@@ -17,6 +17,7 @@
 #import <Haxcessibility/Haxcessibility.h>
 
 #import "despatch.h"
+#import "NNHAXWindowCache.h"
 #import "NNWindow+Private.h"
 
 #define COMPARE_RECTS(a, b) ({ \
@@ -136,6 +137,12 @@
     
     __block HAXWindow *result = nil;
     
+    result = [[NNHAXWindowCache sharedCache] cachedWindowWithID:window.windowID];
+    if (result) {
+        NSLog(@"Cache hit: found window %@ in cache for window %@", result, window);
+        return result;
+    }
+    
     NSRect windowRect = window.cgBounds;
     NSString *windowName = window.name;
     
@@ -153,6 +160,11 @@
     });
 
     Check(result);
+    
+    if (result) {
+        NSLog(@"Added window %@ to cache for window %@", result, window);
+        [[NNHAXWindowCache sharedCache] cacheWindow:result withID:window.windowID];
+    }
 
     return result;
 }
