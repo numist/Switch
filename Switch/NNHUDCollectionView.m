@@ -121,7 +121,7 @@
 - (void)beginUpdates;
 {
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
-    NSLog(@"Maybe don't call this yet");
+    Log(@"Maybe don't call this yet");
     
     abort();
 }

@@ -131,7 +131,7 @@
 - (HAXWindow *)haxWindowForWindow:(NNWindow *)window;
 {
     if (despatch_any_locks_held()) {
-        NSLog(@"Bad idea to call %s while holding a lock!", __PRETTY_FUNCTION__);
+        Log(@"Bad idea to call %s while holding a lock!", __PRETTY_FUNCTION__);
     }
     
     __block HAXWindow *result = nil;

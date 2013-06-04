@@ -269,7 +269,7 @@ static BOOL needsReset;
 
 - (void)hotKeyManagerClosedApplication:(NNHotKeyManager *)manager;
 {
-    NSLog(@"Close Application: %@", self.selectedWindow.application);
+    Log(@"Close Application: %@", [self selectedWindow].application);
 }
 
 @end
