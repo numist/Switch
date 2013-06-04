@@ -27,7 +27,6 @@
 
 #pragma mark State
 @property (nonatomic, assign) NSUInteger selectedIndex;
-@property (nonatomic, weak) NNWindow *selectedWindow;
 
 #pragma mark UI
 @property (nonatomic, strong) NSWindow *appWindow;
@@ -60,23 +59,15 @@
 
 #pragma mark - Dynamic properties
 
-@dynamic selectedIndex;
-
 - (void)setSelectedIndex:(NSUInteger)selectedIndex;
 {
     if (selectedIndex < NSNotFound) {
-        selectedIndex %= [self.windows count];
-        self.selectedWindow = [self.windows objectAtIndex:selectedIndex];
         [self.collectionView selectCellAtIndex:selectedIndex];
     } else {
-        self.selectedWindow = nil;
         [self.collectionView deselectCell];
     }
-}
-
-- (NSUInteger)selectedIndex;
-{
-    return [self.windows indexOfObject:self.selectedWindow];
+    
+    _selectedIndex = selectedIndex;
 }
 
 #pragma mark Internal
@@ -106,10 +97,18 @@
             collectionView.maxWidth = [NSScreen mainScreen].frame.size.width - (kNNScreenToWindowInset * 2.0);
             collectionView.maxCellSize = kNNMaxWindowThumbnailSize;
             collectionView.dataSource = self;
+            if (self.selectedIndex < NSNotFound) {
+                [collectionView selectCellAtIndex:self.selectedIndex];
+            }
         }
         self.collectionView = collectionView;
         [self.appWindow.contentView addSubview:self.collectionView];
     });
+}
+
+- (NNWindow *)selectedWindow;
+{
+    return self.selectedIndex < [self.windows count] ? [self.windows objectAtIndex:self.selectedIndex] : nil;
 }
 
 #pragma mark - NNHUDCollectionViewDataSource
@@ -153,7 +152,7 @@ static BOOL needsReset;
             break;
             
         case NNWindowStoreChangeDelete:
-            // TODO(numist): This needs to update the selectedWindow/selectedIndex properly.
+            // TODO(numist): This needs to update the selectedIndex properly.
             [self.windows removeObjectAtIndex:index];
             needsReset = YES;
             break;
@@ -182,12 +181,10 @@ static BOOL needsReset;
         [self.collectionView reloadData];
     }
     
-    if ([self.windows count] && self.selectedIndex >= NSNotFound) {
-        self.selectedIndex = 0;
-        
+    if ([self.windows count]) {
         if (self.firstUpdate) {
             if ([self.windows count] > 1 && [((NNWindow *)[self.windows objectAtIndex:0]).application isFrontMostApplication]) {
-                self.selectedIndex += 1;
+                self.selectedIndex = (self.selectedIndex + 1) % [self.windows count];
             }
             self.firstUpdate = NO;
         }
@@ -201,6 +198,7 @@ static BOOL needsReset;
 - (void)hotKeyManagerInvokedInterface:(NNHotKeyManager *)manager;
 {
     self.firstUpdate = YES;
+    self.selectedIndex = 0;
     [self.store startUpdatingWindowList];
 
     // TODO(numist): put this on a time delay. NSTimer!
@@ -213,8 +211,12 @@ static BOOL needsReset;
 
 - (void)hotKeyManagerDismissedInterface:(NNHotKeyManager *)manager;
 {
-    Check(self.selectedWindow || [self.windows count] == 0);
-    [self.selectedWindow raise];
+    NNWindow *selectedWindow = [self selectedWindow];
+    if (selectedWindow) {
+        [selectedWindow raise];
+    } else {
+        Log(@"No windows to raise! (Selection index: %lu)", self.selectedIndex);
+    }
     
     [self.appWindow orderOut:self];
     self.selectedIndex = NSNotFound;
@@ -231,7 +233,7 @@ static BOOL needsReset;
     if (self.selectedIndex >= NSNotFound) {
         self.selectedIndex = 0;
     } else if (!self.incrementing || self.selectedIndex != [self.windows count] - 1) {
-        self.selectedIndex += 1;
+        self.selectedIndex = (self.selectedIndex + 1) % [self.windows count];
     }
     
     self.incrementing = YES;
@@ -264,7 +266,7 @@ static BOOL needsReset;
 
 - (void)hotKeyManagerClosedWindow:(NNHotKeyManager *)manager;
 {
-    [self.selectedWindow close];
+    [[self selectedWindow] close];
 }
 
 - (void)hotKeyManagerClosedApplication:(NNHotKeyManager *)manager;
