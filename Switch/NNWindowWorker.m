@@ -25,6 +25,7 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 
 @interface NNWindowWorker ()
 
+@property (nonatomic, weak) id<NNWindowWorkerDelegate> delegate;
 @property (nonatomic, strong, readonly) dispatch_queue_t lock;
 @property (nonatomic, strong) __attribute__((NSObject)) CGImageRef previousCapture;
 @property (nonatomic, assign) NSTimeInterval updateInterval;
@@ -35,28 +36,28 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 
 @implementation NNWindowWorker
 
-- (instancetype)initWithModelObject:(NNWindow *)window;
+- (instancetype)initWithModelObject:(NNWindow *)window delegate:(id<NNWindowWorkerDelegate>)delegate;
 {
     self = [super init];
-    if (!self) { return nil; }
+    BailUnless(self, nil);
+    BailUnless(window, nil);
+    BailUnless(delegate, nil);
     
     _lock = despatch_lock_create([[NSString stringWithFormat:@"%@ <%p>", [self class], self] UTF8String]);
     _window = window;
+    _delegate = delegate;
     _updateInterval = NNPollingIntervalFast;
+    
+    dispatch_async(_lock, ^{
+        [self workerLoop];
+    });
     
     return self;
 }
 
-- (oneway void)start;
-{
-    dispatch_async(self.lock, ^{
-        [self workerLoop];
-    });
-}
-
 - (void)dealloc;
 {
-    // Oops ARC won't save me here.
+    // Oops ARC won't save me here. rdar://14018474
     if (_previousCapture) {
         CFRelease(_previousCapture);
         _previousCapture = nil;
@@ -71,11 +72,6 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 
     NNWindow *window = self.window;
 
-    // Short circuit in case the window went away
-    if (!window.exists) {
-        return;
-    }
-    
     NSDate *start = [NSDate date];
     CGImageRef cgImage = [window copyCGWindowImage];
     
@@ -108,14 +104,19 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
             NNWindow *update = [window copy];
             update.image = [[NSImage alloc] initWithCGImage:cgImage size:NSMakeSize(newWidth, newHeight)];
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.delegate windowWorker:self didUpdateContentsOfWindow:update];
+                __strong __typeof__(self.delegate) delegate = self.delegate;
+                [delegate windowWorker:self didUpdateContentsOfWindow:update];
             });
         }
         
         CFRelease(cgImage); cgImage = NULL;
-    } else {
+    } else if (window.exists) {
         // Didn't get a real image, but the window exists. Try again ASAP.
         self.updateInterval = NNPollingIntervalFast;
+    } else {
+        // Window does not exist. Stop the worker loop.
+        NotTested();
+        return;
     }
     
     // All done, schedule the next update.
@@ -124,7 +125,10 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, self.lock, ^(void){
         __strong __typeof__(self) self = weakSelf;
-        [self workerLoop];
+        __strong __typeof__(self.delegate) delegate = self.delegate;
+        if (delegate) {
+            [self workerLoop];
+        }
     });
 }
 

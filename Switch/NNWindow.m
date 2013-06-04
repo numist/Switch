@@ -73,6 +73,7 @@
 
 - (BOOL)isEqual:(id)object;
 {
+    Check(object);
     return ([object isKindOfClass:[self class]] && [self hash] == [object hash]);
 }
 
@@ -127,20 +128,21 @@
 @dynamic cgBounds;
 - (NSRect)cgBounds;
 {
-    CGRect result;
-    CGRectMakeWithDictionaryRepresentation((__bridge CFDictionaryRef)[self.windowDescription objectForKey:(NSString *)kCGWindowBounds], &result);
+    CGRect result = {0};
+    bool success = CGRectMakeWithDictionaryRepresentation((__bridge CFDictionaryRef)[self.windowDescription objectForKey:(NSString *)kCGWindowBounds], &result);
+    BailUnless(success, (NSRect){0});
     return result;
 }
 
 @dynamic name;
 - (NSString *)name;
 {
-    return [self.windowDescription objectForKey:(NSString *)kCGWindowName];
+    return [self.windowDescription objectForKey:(__bridge NSString *)kCGWindowName];
 }
 
 - (CGWindowID)windowID;
 {
-    return (CGWindowID)[[self.windowDescription objectForKey:(NSString *)kCGWindowNumber] unsignedLongValue];
+    return (CGWindowID)[[self.windowDescription objectForKey:(__bridge NSString *)kCGWindowNumber] unsignedLongValue];
 }
 
 - (BOOL)exists;
@@ -179,6 +181,8 @@
 - (CGImageRef)copyCGWindowImage;
 {
     CGImageRef result = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, self.windowID, kCGWindowImageBoundsIgnoreFraming);
+    
+    BailUnless(result, NULL);
     
     if (CGImageGetHeight(result) < 1.0 || CGImageGetWidth(result) < 1.0) {
         CFRelease(result);

@@ -21,7 +21,7 @@
 #import "NNWindowWorker.h"
 
 
-@interface NNWindowStore () <NNWindowListWorkerDelegate>
+@interface NNWindowStore () <NNWindowListWorkerDelegate, NNWindowWorkerDelegate>
 
 @property (nonatomic, weak) id<NNWindowStoreDelegate> delegate;
 
@@ -79,9 +79,7 @@
     self.updatingWindowContents = YES;
     self.windowWorkers = [NSMutableDictionary dictionaryWithCapacity:[_windows count]];
     for (NNWindow *window in _windows) {
-        NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window];
-        worker.delegate = (id<NNWindowWorkerDelegate>)self;
-        [worker start];
+        NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window delegate:self];
         [self.windowWorkers setObject:worker forKey:window];
     }
 }
@@ -97,7 +95,7 @@
 
 #pragma mark NNWindowWorkerDelegate
 
-- (void)windowWorker:(NNWindowWorker *)worker didUpdateContentsOfWindow:(NNWindow *)window;
+- (oneway void)windowWorker:(NNWindowWorker *)worker didUpdateContentsOfWindow:(NNWindow *)window;
 {
     despatch_lock_assert(dispatch_get_main_queue());
 
@@ -166,9 +164,7 @@
             [self loadHaxWindowForWindow:(NNWindow *)window];
             
             if (self.updatingWindowContents) {
-                NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window];
-                worker.delegate = (id<NNWindowWorkerDelegate>)self;
-                [worker start];
+                NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window delegate:self];
                 [self.windowWorkers setObject:worker forKey:window];
             }
         }

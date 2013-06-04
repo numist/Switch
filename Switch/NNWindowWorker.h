@@ -21,10 +21,7 @@
 
 @interface NNWindowWorker : NSObject
 
-@property (nonatomic, weak) id<NNWindowWorkerDelegate> delegate;
-
-- (instancetype)initWithModelObject:(NNWindow *)window __attribute__((nonnull(1)));
-- (void)start;
+- (instancetype)initWithModelObject:(NNWindow *)window delegate:(id<NNWindowWorkerDelegate>)delegate __attribute__((nonnull(1, 2)));
 
 @end
 
