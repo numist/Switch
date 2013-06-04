@@ -138,6 +138,10 @@ static void axCallback(AXObserverRef observer, AXUIElementRef element, CFStringR
 {
     despatch_lock_assert(self.lock);
 
+    if (objc_getAssociatedObject(window, (__bridge const void *)kNNHaxWindowCacheObserverKey)) {
+        return YES;
+    }
+    
     AXObserverRef observer;
     AXError err;
     pid_t pid;
@@ -160,6 +164,10 @@ static void axCallback(AXObserverRef observer, AXUIElementRef element, CFStringR
 
 - (void)removeAXObserverForWindow:(HAXWindow *)window;
 {
+    // TODO(numist): not safe against windows being added to multiple caches!
+    // XXX: if caches are explicitly add-only, then this can be ok; removal will only happen when the object is being removed from all caches!
+    despatch_lock_assert(self.lock);
+    
     AXObserverRef observer = (__bridge AXObserverRef)objc_getAssociatedObject(window, (__bridge const void *)kNNHaxWindowCacheObserverKey);
     BailUnless(observer,);
     
