@@ -24,6 +24,7 @@
 @property (nonatomic, strong) NSMutableArray *cells;
 
 @property (nonatomic, strong) NNSelectionBoxView *selectionBox;
+@property (nonatomic, assign) NSUInteger selectedIndex;
 
 @end
 
@@ -97,6 +98,7 @@
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
     
 //    NSParameterAssert(index < self.numberOfCells);
+    self.selectedIndex = index;
 
     NNSelectionBoxView *selectionBox;
     
@@ -104,11 +106,9 @@
         selectionBox = [[NNSelectionBoxView alloc] initWithFrame:NSZeroRect];
         [self addSubview:selectionBox positioned:NSWindowBelow relativeTo:nil];
         self.selectionBox = selectionBox;
-    } else {
-        selectionBox = self.selectionBox;
     }
     
-    self.selectionBox.frame = nnItemRect((self.frame.size.height - kNNWindowToThumbInset * 2.0), index);
+    self.selectionBox.frame = nnItemRect((self.frame.size.height - kNNWindowToThumbInset * 2.0), self.selectedIndex);
     [self.selectionBox setNeedsDisplay:YES];
 }
 
@@ -189,6 +189,7 @@
             }
             
             if (self.selectionBox) {
+                self.selectionBox.frame = nnItemRect((self.frame.size.height - kNNWindowToThumbInset * 2.0), self.selectedIndex);
                 [self addSubview:self.selectionBox positioned:NSWindowBelow relativeTo:nil];
             }
             
