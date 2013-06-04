@@ -228,7 +228,7 @@
     CGFloat maxTheoreticalWindowWidth = nnTotalWidth(cellSize, self.numberOfCells);
     
     if (self.numberOfCells == 0) {
-        CGFloat min = MIN(self.maxCellSize, self.maxWidth);
+        CGFloat min = MIN(kNNWindowToThumbInset + self.maxCellSize + kNNWindowToThumbInset, self.maxWidth);
         return (NSSize){
             .height = min,
             .width = min
