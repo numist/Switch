@@ -32,7 +32,7 @@
 
 @interface NNApplication ()
 
-@property (nonatomic, readonly, assign) int pid;
+@property (nonatomic, readonly, assign) pid_t pid;
 @property (atomic, retain) NSRunningApplication *app;
 @property (nonatomic, readonly, assign) ProcessSerialNumber psn;
 
