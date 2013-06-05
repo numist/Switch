@@ -24,7 +24,7 @@
 
 @property (atomic, strong) NSImage *image;
 @property (nonatomic, strong, readonly) NSDictionary *windowDescription;
-@property (atomic, strong) HAXWindow *haxWindow;
+@property (atomic, readonly) HAXWindow *haxWindow;
 
 @end
 
@@ -53,7 +53,10 @@
         return nil;
     }
     
-    _haxWindow = [[NNHAXWindowCache sharedCache] cachedWindowWithID:self.windowID];
+    // Load the HAXWindow ASAP, but without blocking.
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        (void)self.haxWindow;
+    });
     
     return self;
 }
@@ -123,6 +126,21 @@
 
 #pragma mark Dynamic accessors
 
+@dynamic haxWindow;
+- (HAXWindow *)haxWindow;
+{
+    HAXWindow *haxWindow;
+    
+    @synchronized(self) {
+        // TODO(numist): Should refetch haxWindow when it's invalidated, not on the next request. It's really expensive (in terms of time) to fetch!
+        if (!(haxWindow = [[NNHAXWindowCache sharedCache] cachedWindowWithID:self.windowID])) {
+            haxWindow = [self.application haxWindowForWindow:self];
+        }
+    }
+    
+    return haxWindow;
+}
+
 @dynamic cgBounds;
 - (NSRect)cgBounds;
 {
@@ -161,8 +179,7 @@
         
         // TODO(numist): do it right when haxWindow doesn't (yet) exist!
         Check(self.haxWindow);
-        BOOL success = [self.haxWindow raise];
-        Check(success);
+        Check([self.haxWindow raise]);
         
         // Then raise the application (if it's not already topmost)
         [self.application raise];
@@ -171,7 +188,7 @@
 
 - (void)close;
 {
-    [self.haxWindow close];
+    Check([self.haxWindow close]);
 }
 
 #pragma mark Private
