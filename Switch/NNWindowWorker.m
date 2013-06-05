@@ -14,7 +14,6 @@
 
 #import "NNWindowWorker.h"
 
-#import "despatch.h"
 #import "imageComparators.h"
 #import "NNWindow+Private.h"
 
@@ -25,11 +24,11 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 
 @interface NNWindowWorker ()
 
-@property (nonatomic, weak) id<NNWindowWorkerDelegate> delegate;
-@property (nonatomic, strong, readonly) dispatch_queue_t lock;
+@property (atomic, weak, readonly) id<NNWindowWorkerDelegate> delegate;
+@property (nonatomic, weak, readonly) NNWindow *window;
+
 @property (nonatomic, strong) __attribute__((NSObject)) CGImageRef previousCapture;
 @property (nonatomic, assign) NSTimeInterval updateInterval;
-@property (nonatomic, weak) NNWindow *window;
 
 @end
 
@@ -43,12 +42,11 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
     BailUnless(window, nil);
     BailUnless(delegate, nil);
     
-    _lock = despatch_lock_create([[NSString stringWithFormat:@"%@ <%p>", [self class], self] UTF8String]);
     _window = window;
     _delegate = delegate;
     _updateInterval = NNPollingIntervalFast;
     
-    dispatch_async(_lock, ^{
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [self workerLoop];
     });
     
@@ -68,8 +66,6 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 
 - (oneway void)workerLoop;
 {
-    despatch_lock_assert(self.lock);
-
     NNWindow *window = self.window;
 
     NSDate *start = [NSDate date];
@@ -122,7 +118,7 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
     __weak __typeof__(self) weakSelf = self;
     double delayInSeconds = MAX(self.updateInterval - [[NSDate date] timeIntervalSinceDate:start], 0.0);
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, self.lock, ^(void){
+    dispatch_after(popTime, dispatch_get_global_queue(0, 0), ^(void){
         __strong __typeof__(self) self = weakSelf;
         __strong __typeof__(self.delegate) delegate = self.delegate;
         if (delegate) {
