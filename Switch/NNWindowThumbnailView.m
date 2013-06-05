@@ -17,53 +17,53 @@
 #import "constants.h"
 
 
+@interface NNWindowThumbnailView ()
+
+@property (nonatomic, strong) CALayer *thumbnailLayer;
+@property (nonatomic, strong) CALayer *iconLayer;
+
+@end
+
+
 @implementation NNWindowThumbnailView
 
-- (id)initWithFrame:(NSRect)frame
+- (id)initWithFrame:(NSRect)frame;
 {
     self = [super initWithFrame:frame];
     if (!self) {
         return nil;
     }
     
+    [self setWantsLayer:YES];
+    
     return self;
 }
 
-- (void)drawRect:(NSRect)dirtyRect
+- (void)layout;
 {
+    [self createLayersIfNeeded];
+    
     NSRect thumbFrame = self.bounds;
     CGFloat thumbSize = thumbFrame.size.width;
-    
-    // Draw the window
+
     {
-        NSImage *windowImage = self.windowThumbnail;
-        
-        NSSize imageSize = windowImage.size;
+        NSSize imageSize = self.windowThumbnail.size;
         CGFloat scale = thumbSize / MAX(imageSize.width, imageSize.height);
         
         // make the size fit correctly
         imageSize.width = MIN(round(imageSize.width * scale), thumbSize);
         imageSize.height = MIN(round(imageSize.height * scale), thumbSize);
-        [windowImage setSize:imageSize];
         
-        NSRect imageRect;
-        imageRect.origin = NSZeroPoint;
-        imageRect.size = imageSize;
-        
-        NSRect windowFrame = thumbFrame;
-        windowFrame.size = imageRect.size;
-        windowFrame.origin.x += (thumbFrame.size.width - imageRect.size.width) / 2.0;
-        windowFrame.origin.y += (thumbFrame.size.height - imageRect.size.height) / 2.0;
-        
-        [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-        [windowImage drawInRect:windowFrame fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+        self.thumbnailLayer.frame = (NSRect){
+            .size = imageSize,
+            .origin.x = thumbFrame.origin.x + (thumbFrame.size.width - imageSize.width) / 2.0,
+            .origin.y = thumbFrame.origin.y + (thumbFrame.size.height - imageSize.height) / 2.0
+        };
     }
     
-    // Draw the application icon
     {
-        NSImage *applicationIcon = self.applicationIcon;
-        // imageSize is a LIE, but it does give the correct aspect ratio (empirically it's always been a square, but you can't be too careful!)
-        NSSize imageSize = applicationIcon.size;
+        // imageSize is a lie, but it does give the correct aspect ratio. It's always been a square anecdotally, but you can't be too careful!
+        NSSize imageSize = self.applicationIcon.size;
         
         CGFloat iconSize = thumbSize * kNNMaxApplicationIconSize / kNNMaxWindowThumbnailSize;
         CGFloat scale = iconSize / MAX(imageSize.width, imageSize.height);
@@ -71,25 +71,61 @@
         // make the size fit correctly
         imageSize.width = MIN(round(imageSize.width * scale), iconSize);
         imageSize.height = MIN(round(imageSize.height * scale), iconSize);
-        [applicationIcon setSize:imageSize];
         
-        NSRect imageRect;
-        imageRect.origin = NSZeroPoint;
-        imageRect.size = imageSize;
+        self.applicationIcon.size = imageSize;
         
-        NSRect iconFrame = thumbFrame;
-        iconFrame.size = imageRect.size;
-        iconFrame.origin.x += thumbFrame.size.width - imageRect.size.width;
-        
-        [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-        [applicationIcon drawInRect:iconFrame fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+        self.iconLayer.frame = (NSRect){
+            .size = imageSize,
+            .origin.x = thumbFrame.origin.x + (thumbFrame.size.width - imageSize.width),
+            .origin.y = thumbFrame.origin.y
+        };
     }
 }
 
 - (void)setWindowThumbnail:(NSImage *)windowThumbnail;
 {
+    if (!SIZES_EQUAL(windowThumbnail.size, _windowThumbnail.size)) {
+        [self setNeedsLayout:YES];
+    }
+    
     _windowThumbnail = windowThumbnail;
-    [self setNeedsDisplay:YES];
+    self.thumbnailLayer.contents = windowThumbnail;
+}
+
+- (void)setApplicationIcon:(NSImage *)applicationIcon;
+{
+    _applicationIcon = applicationIcon;
+    self.iconLayer.contents = applicationIcon;
+}
+
+#pragma mark Internal
+
+- (void)createLayersIfNeeded;
+{
+    CALayer *(^newLayer)() = ^{
+        CALayer *result = [CALayer layer];
+        result.magnificationFilter = kCAFilterTrilinear;
+        result.minificationFilter = kCAFilterTrilinear;
+        return result;
+    };
+    
+    if (!self.thumbnailLayer) {
+        self.thumbnailLayer = newLayer();
+        if (self.windowThumbnail) {
+            self.thumbnailLayer.contents = self.windowThumbnail;
+        }
+        self.iconLayer.zPosition = 1.0;
+        [self.layer addSublayer:self.thumbnailLayer];
+    }
+    
+    if (!self.iconLayer) {
+        self.iconLayer = newLayer();
+        if (self.applicationIcon) {
+            self.iconLayer.contents = self.applicationIcon;
+        }
+        self.iconLayer.zPosition = 2.0;
+        [self.layer addSublayer:self.iconLayer];
+    }
 }
 
 @end
