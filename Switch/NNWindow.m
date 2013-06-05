@@ -176,9 +176,6 @@
 {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         // First, raise the window
-        
-        // TODO(numist): do it right when haxWindow doesn't (yet) exist!
-        Check(self.haxWindow);
         Check([self.haxWindow raise]);
         
         // Then raise the application (if it's not already topmost)
