@@ -7,3 +7,18 @@
     #import <objc/runtime.h>
     #import "debugger.h"
 #endif
+
+#define SIZES_EQUAL(a, b) ({ \
+    NSSize sizeA = (a); \
+    NSSize sizeB = (b); \
+    sizeA.width == sizeB.width && \
+    sizeA.height == sizeB.height; \
+})
+
+#define RECTS_EQUAL(a, b) ({ \
+    NSRect rectA = (a); \
+    NSRect rectB = (b); \
+    rectA.origin.x == rectB.origin.x && \
+    rectA.origin.y == rectB.origin.y && \
+    SIZES_EQUAL(rectA.size, rectB.size); \
+})

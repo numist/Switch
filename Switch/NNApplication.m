@@ -20,15 +20,6 @@
 #import "NNHAXWindowCache.h"
 #import "NNWindow+Private.h"
 
-#define COMPARE_RECTS(a, b) ({ \
-    NSRect cmpA = (a); \
-    NSRect cmpB = (b); \
-    cmpA.origin.x == cmpB.origin.x && \
-           cmpA.origin.y == cmpB.origin.y && \
-           cmpA.size.width == cmpB.size.width && \
-           cmpA.size.height == cmpB.size.height; \
-})
-
 
 @interface NNApplication ()
 
@@ -139,7 +130,7 @@
     dispatch_sync(self.haxLock, ^{
         NSArray *haxWindows = [self.haxApp windows];
         for (HAXWindow *haxWindow in haxWindows) {
-            if (COMPARE_RECTS(windowRect, haxWindow.frame)) {
+            if (RECTS_EQUAL(windowRect, haxWindow.frame)) {
                 if (result) {
                     result = [windowName isEqualToString:haxWindow.title] ? haxWindow : result;
                 } else {
