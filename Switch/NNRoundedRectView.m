@@ -17,27 +17,25 @@
 
 @implementation NNRoundedRectView
 
-- (void)drawRect:(NSRect)dirtyRect;
+- (instancetype)initWithFrame:(NSRect)frameRect;
 {
-    NSRect drawRect = self.bounds;
+    self = [super initWithFrame:frameRect];
+    if (!self) { return nil; }
+    
+    [self setWantsLayer:YES];
+    
+    return self;
+}
+
+- (void)updateLayer;
+{
     if (self.border) {
-        const CGFloat drawingInset = self.border / 2.0;
-        drawRect.origin.x += drawingInset;
-        drawRect.origin.y += drawingInset;
-        drawRect.size.width -= self.border;
-        drawRect.size.height -= self.border;
+        self.layer.borderWidth = self.border;
+        self.layer.borderColor = [[[NSColor whiteColor] colorWithAlphaComponent:0.8] CGColor];
     }
     
-    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:drawRect xRadius:self.radius yRadius:self.radius];
-
-    [[[NSColor blackColor] colorWithAlphaComponent:0.3] setFill];
-    [path fill];
-
-    if (self.border > 0.0) {
-        [path setLineWidth:self.border];
-        [[[NSColor whiteColor] colorWithAlphaComponent:0.8] setStroke];
-        [path stroke];
-    }
+    self.layer.cornerRadius = self.radius;
+    self.layer.backgroundColor = [[[NSColor blackColor] colorWithAlphaComponent:0.3] CGColor];
 }
 
 @end

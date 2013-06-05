@@ -109,7 +109,6 @@
     }
     
     self.selectionBox.frame = nnItemRect((self.frame.size.height - kNNWindowToThumbInset * 2.0), self.selectedIndex);
-    [self.selectionBox setNeedsDisplay:YES];
 }
 
 - (void)deselectCell;
