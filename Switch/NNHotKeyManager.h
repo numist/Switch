@@ -27,8 +27,8 @@
 
 @protocol NNHotKeyManagerDelegate <NSObject>
 
-- (void)hotKeyManagerInvokedInterface:(NNHotKeyManager *)manager;
-- (void)hotKeyManagerDismissedInterface:(NNHotKeyManager *)manager;
+- (void)hotKeyManagerInvoked:(NNHotKeyManager *)manager;
+- (void)hotKeyManagerDismissed:(NNHotKeyManager *)manager;
 - (void)hotKeyManagerBeginIncrementingSelection:(NNHotKeyManager *)manager;
 - (void)hotKeyManagerBeginDecrementingSelection:(NNHotKeyManager *)manager;
 - (void)hotKeyManagerEndIncrementingSelection:(NNHotKeyManager *)manager;

@@ -186,7 +186,7 @@ static BOOL needsReset;
 
 #pragma mark NNHotKeyManagerDelegate
 
-- (void)hotKeyManagerInvokedInterface:(NNHotKeyManager *)manager;
+- (void)hotKeyManagerInvoked:(NNHotKeyManager *)manager;
 {
     self.firstUpdate = YES;
     self.selectedIndex = 0;
@@ -200,7 +200,7 @@ static BOOL needsReset;
     [self.store startUpdatingWindowContents];
 }
 
-- (void)hotKeyManagerDismissedInterface:(NNHotKeyManager *)manager;
+- (void)hotKeyManagerDismissed:(NNHotKeyManager *)manager;
 {
     NNWindow *selectedWindow = [self selectedWindow];
     if (selectedWindow) {

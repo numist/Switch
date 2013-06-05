@@ -92,14 +92,14 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     if (optionKeyIsPressed && keycode == 48 && type == kCGEventKeyDown && !self.activatedSwitcher) {
         self.activatedSwitcher = YES;
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate hotKeyManagerInvokedInterface:self];
+            [self.delegate hotKeyManagerInvoked:self];
         });
         return NULL;
     } else if (self.activatedSwitcher) {
         if (!optionKeyIsPressed) {
             self.activatedSwitcher = NO;
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.delegate hotKeyManagerDismissedInterface:self];
+                [self.delegate hotKeyManagerDismissed:self];
             });
             return NULL;
         }
