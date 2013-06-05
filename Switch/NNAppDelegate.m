@@ -159,7 +159,6 @@ static BOOL needsReset;
         case NNWindowStoreChangeWindowContent: {
             NNWindowThumbnailView *thumb = (NNWindowThumbnailView *)[self.collectionView cellForIndex:index];
             [thumb setWindowThumbnail:window.image];
-            [thumb setNeedsDisplay:YES];
             break;
         }
     }
