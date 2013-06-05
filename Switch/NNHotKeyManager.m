@@ -86,17 +86,17 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     
     // The incoming keycode and meta key information.
     CGKeyCode keycode = (CGKeyCode)CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
-    BOOL commandKeyIsPressed = (CGEventGetFlags(event) & kCGEventFlagMaskCommand) == kCGEventFlagMaskCommand;
+    BOOL optionKeyIsPressed = (CGEventGetFlags(event) & kCGEventFlagMaskAlternate) == kCGEventFlagMaskAlternate;
     BOOL shiftKeyIsPressed = (CGEventGetFlags(event) & kCGEventFlagMaskShift) == kCGEventFlagMaskShift;
     
-    if (commandKeyIsPressed && keycode == 48 && type == kCGEventKeyDown && !self.activatedSwitcher) {
+    if (optionKeyIsPressed && keycode == 48 && type == kCGEventKeyDown && !self.activatedSwitcher) {
         self.activatedSwitcher = YES;
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.delegate hotKeyManagerInvokedInterface:self];
         });
         return NULL;
     } else if (self.activatedSwitcher) {
-        if (!commandKeyIsPressed) {
+        if (!optionKeyIsPressed) {
             self.activatedSwitcher = NO;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.delegate hotKeyManagerDismissedInterface:self];
