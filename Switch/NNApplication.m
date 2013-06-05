@@ -131,16 +131,7 @@
 
 - (HAXWindow *)haxWindowForWindow:(NNWindow *)window;
 {
-    if (despatch_any_locks_held()) {
-        Log(@"Bad idea to call %s while holding a lock!", __PRETTY_FUNCTION__);
-    }
-    
     __block HAXWindow *result = nil;
-    
-    result = [[NNHAXWindowCache sharedCache] cachedWindowWithID:window.windowID];
-    if (result) {
-        return result;
-    }
     
     NSRect windowRect = window.cgBounds;
     NSString *windowName = window.name;
