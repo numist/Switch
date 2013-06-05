@@ -61,12 +61,8 @@
 
 - (void)setSelectedIndex:(NSUInteger)selectedIndex;
 {
-    if (selectedIndex < NSNotFound) {
-        [self.collectionView selectCellAtIndex:selectedIndex];
-    } else {
-        [self.collectionView deselectCell];
-    }
-    
+    Check(selectedIndex < NSNotFound);
+    [self.collectionView selectCellAtIndex:selectedIndex];
     _selectedIndex = selectedIndex;
 }
 
@@ -124,7 +120,6 @@
     NNWindowThumbnailView *result = [[NNWindowThumbnailView alloc] initWithFrame:NSZeroRect];
     result.applicationIcon = window.application.icon;
     result.windowThumbnail = window.image;
-    result.windowIsResponsive = !!window.haxWindow;
     return result;
 }
 
@@ -164,13 +159,6 @@ static BOOL needsReset;
         case NNWindowStoreChangeWindowContent: {
             NNWindowThumbnailView *thumb = (NNWindowThumbnailView *)[self.collectionView cellForIndex:index];
             [thumb setWindowThumbnail:window.image];
-            [thumb setNeedsDisplay:YES];
-            break;
-        }
-        
-        case NNWindowStoreChangeResponsive: {
-            NNWindowThumbnailView *thumb = (NNWindowThumbnailView *)[self.collectionView cellForIndex:index];
-            thumb.windowIsResponsive = YES;
             [thumb setNeedsDisplay:YES];
             break;
         }
@@ -224,7 +212,6 @@ static BOOL needsReset;
     }
     
     [self.appWindow orderOut:self];
-    self.selectedIndex = NSNotFound;
     [self.store stopUpdatingWindowList];
     [self.store stopUpdatingWindowContents];
 }
