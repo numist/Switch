@@ -55,6 +55,8 @@
     
     self.keyManager = [NNHotKeyManager new];
     self.keyManager.delegate = self;
+    
+    [self createWindow];
 }
 
 #pragma mark - Dynamic properties
@@ -68,7 +70,7 @@
 
 #pragma mark Internal
 
-- (void)createWindowIfNeeded;
+- (void)createWindow;
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -193,7 +195,6 @@ static BOOL needsReset;
     [self.store startUpdatingWindowList];
 
     // TODO(numist): put this on a time delay. NSTimer!
-    [self createWindowIfNeeded];
     [self.collectionView reloadData];
     [self.appWindow orderFront:self];
     
