@@ -172,20 +172,19 @@
     return YES;
 }
 
-- (void)raise;
+- (BOOL)raise;
 {
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        // First, raise the window
-        Check([self.haxWindow raise]);
-        
-        // Then raise the application (if it's not already topmost)
-        [self.application raise];
-    });
+    // First, raise the window
+    if (![self.haxWindow raise] ) { return NO; }
+    
+    // Then raise the application (if it's not already topmost)
+    [self.application raise];
+    return YES;
 }
 
-- (void)close;
+- (BOOL)close;
 {
-    Check([self.haxWindow close]);
+    return [self.haxWindow close];
 }
 
 #pragma mark Private

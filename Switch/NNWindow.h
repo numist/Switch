@@ -25,7 +25,7 @@
 @property (atomic, strong, readonly) NSImage *image;
 @property (nonatomic, readonly) NSString *name;
 
-- (void)raise;
-- (void)close;
+- (BOOL)raise;
+- (BOOL)close;
 
 @end
