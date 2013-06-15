@@ -4,3 +4,6 @@
 [submodule "Frameworks/debugger"]
 	path = Frameworks/debugger
 	url = git@github.com:numist/Debugger.git
+[submodule "Frameworks/ReactiveCocoa"]
+	path = Frameworks/ReactiveCocoa
+	url = git://github.com/ReactiveCocoa/ReactiveCocoa.git
