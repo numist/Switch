@@ -91,6 +91,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
     // Clean up all that crazy state when the activation state changes.
     [RACAble(self.active) subscribeNext:^(NSNumber *active) {
         if ([active boolValue]) {
+            // TODO(numist): when this gets hit things are going wrong and Switch stops working. Rapid switching will hit it easily.
             Check(![self.windows count]);
             Check(!self.displayTimer);
 
@@ -278,11 +279,8 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 - (void)hotKeyManagerInvoked:(NNHotKeyManager *)manager;
 {
     // If the interface is not being shown, bring it up.
-    if (!self.displayingInterface) {
-        Check(!self.active);
+    if (!self.active) {
         self.active = YES;
-    } else {
-        Check(self.active);
     }
 }
 
