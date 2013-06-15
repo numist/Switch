@@ -152,7 +152,10 @@ static void axCallback(AXObserverRef observer, AXUIElementRef element, CFStringR
     err = AXObserverCreate(pid, axCallback, &observer);
     BailUnless(err == kAXErrorSuccess, NO);
     
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wint-to-void-pointer-cast"
     err = AXObserverAddNotification(observer, window.elementRef, kAXUIElementDestroyedNotification, (void *)windowID);
+#pragma clang diagnostic pop
     BailUnless(err == kAXErrorSuccess, NO);
     
     CFRunLoopAddSource([[NSRunLoop mainRunLoop] getCFRunLoop], AXObserverGetRunLoopSource(observer), kCFRunLoopDefaultMode);
