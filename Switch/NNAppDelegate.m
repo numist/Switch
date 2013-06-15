@@ -14,6 +14,8 @@
 
 #import "NNAppDelegate.h"
 
+#import <ReactiveCocoa/ReactiveCocoa.h>
+
 #import "constants.h"
 #import "NNApplication.h"
 #import "NNHotKeyManager.h"
@@ -23,17 +25,25 @@
 #import "NNWindowThumbnailView.h"
 
 
+static NSTimeInterval kNNWindowDisplayDelay = 0.25;
+
+
 @interface NNAppDelegate () <NNWindowStoreDelegate, NNHUDCollectionViewDataSource, NNHotKeyManagerDelegate>
 
 #pragma mark State
+@property (nonatomic, assign) BOOL active;
+@property (nonatomic, assign) BOOL displayingInterface;
+@property (nonatomic, assign) BOOL windowListLoaded;
+@property (nonatomic, strong) NSTimer *displayTimer;
+@property (nonatomic, assign) BOOL pendingSwitch;
 @property (nonatomic, assign) NSUInteger selectedIndex;
 
 #pragma mark UI
 @property (nonatomic, strong) NSWindow *appWindow;
 @property (nonatomic, strong) NNHUDCollectionView *collectionView;
+@property (nonatomic, assign) BOOL needsReset;
 
 #pragma mark NNWindowStore and state
-@property (nonatomic, assign) BOOL firstUpdate;
 @property (nonatomic, strong) NSMutableArray *windows;
 @property (nonatomic, strong) NNWindowStore *store;
 
@@ -57,6 +67,47 @@
     self.keyManager.delegate = self;
     
     [self createWindow];
+    
+    // Interface is only visible when Switch is active, the window list has loaded, and the display timer has timed out.
+    [[RACSignal combineLatest:@[RACAbleWithStart(self, active), RACAbleWithStart(self, windowListLoaded), RACAbleWithStart(self, displayTimer)]
+                       reduce:^(NSNumber *active, NSNumber *windowListLoaded, NSTimer *displayTimer) {
+                           return @([active boolValue] && [windowListLoaded boolValue] && !displayTimer);
+                       }]
+        subscribeNext:^(NSNumber *shouldDisplayInterface) {
+            // Dedup changes.
+            if ([shouldDisplayInterface boolValue] == self.displayingInterface) {
+                return;
+            }
+            
+            if ([shouldDisplayInterface boolValue]) {
+                [self.appWindow orderFront:self];
+                [self.store startUpdatingWindowContents];
+            } else {
+                [self.appWindow orderOut:self];
+            }
+            self.displayingInterface = [shouldDisplayInterface boolValue];
+        }];
+    
+    // Clean up all that crazy state when the activation state changes.
+    [RACAble(self.active) subscribeNext:^(NSNumber *active) {
+        if ([active boolValue]) {
+            Check(![self.windows count]);
+            Check(!self.displayTimer);
+
+            [self.store startUpdatingWindowList];
+            self.displayTimer = [NSTimer scheduledTimerWithTimeInterval:kNNWindowDisplayDelay target:self selector:@selector(displayTimerFired:) userInfo:nil repeats:NO];
+        } else {
+            Check(!self.pendingSwitch);
+            
+            [self.store stopUpdatingWindowList];
+            [self.store stopUpdatingWindowContents];
+            [self.displayTimer invalidate];
+            self.displayTimer = nil;
+            self.pendingSwitch = NO;
+            self.windowListLoaded = NO;
+            self.selectedIndex = 0;
+        }
+    }];
 }
 
 #pragma mark - Dynamic properties
@@ -69,6 +120,11 @@
 }
 
 #pragma mark Internal
+
+- (NNWindow *)selectedWindow;
+{
+    return self.selectedIndex < [self.windows count] ? [self.windows objectAtIndex:self.selectedIndex] : nil;
+}
 
 - (void)createWindow;
 {
@@ -104,9 +160,38 @@
     });
 }
 
-- (NNWindow *)selectedWindow;
+- (void)displayTimerFired:(NSTimer *)timer;
 {
-    return self.selectedIndex < [self.windows count] ? [self.windows objectAtIndex:self.selectedIndex] : nil;
+    if (![timer isEqual:self.displayTimer]) {
+        return;
+    }
+
+    self.displayTimer = nil;
+}
+
+- (void)raise;
+{
+    self.pendingSwitch = NO;
+    
+    __block BOOL raiseSuccessful = YES;
+    NNWindow *selectedWindow = [self selectedWindow];
+
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        if (selectedWindow) {
+            raiseSuccessful = [selectedWindow raise];
+            Check(raiseSuccessful);
+        } else {
+            Check(self.selectedIndex == 0);
+            Log(@"No windows to raise! (Selection index: %lu)", self.selectedIndex);
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (raiseSuccessful) {
+                Check(self.active);
+                self.active = NO;
+            }
+        });
+    });
 }
 
 #pragma mark - NNHUDCollectionViewDataSource
@@ -127,11 +212,9 @@
 
 #pragma mark NNWindowStoreDelegate
 
-static BOOL needsReset;
-
 - (void)storeWillChangeContent:(NNWindowStore *)store;
 {
-    needsReset = NO;
+    self.needsReset = NO;
 }
 
 - (void)store:(NNWindowStore *)store didChangeWindow:(NNWindow *)window atIndex:(NSUInteger)index forChangeType:(NNWindowStoreChangeType)type newIndex:(NSUInteger)newIndex;
@@ -139,13 +222,13 @@ static BOOL needsReset;
     switch (type) {
         case NNWindowStoreChangeInsert:
             [self.windows insertObject:window atIndex:newIndex];
-            needsReset = YES;
+            self.needsReset = YES;
             break;
             
         case NNWindowStoreChangeMove:
             [self.windows removeObjectAtIndex:index];
             [self.windows insertObject:window atIndex:newIndex];
-            needsReset = YES;
+            self.needsReset = YES;
             break;
             
         case NNWindowStoreChangeDelete:
@@ -155,7 +238,7 @@ static BOOL needsReset;
             if (index == self.selectedIndex && index >= [self.windows count]) {
                 self.selectedIndex = [self.windows count] ? [self.windows count] - 1 : 0;
             }
-            needsReset = YES;
+            self.needsReset = YES;
             break;
             
         case NNWindowStoreChangeWindowContent: {
@@ -168,21 +251,25 @@ static BOOL needsReset;
 
 - (void)storeDidChangeContent:(NNWindowStore *)store;
 {
-//    [self createSwitcherWindowIfNeeded];
-    // endUpdates, etc.
-    if (needsReset) {
-        [self.collectionView reloadData];
+    if (self.pendingSwitch) {
+        // TODO(numist): raise the right thing.
+        return;
     }
     
+    // TODO(numist): due to timing issues, this should probably happen as late as possible--at the earlier of willDisplayInterface or willSwitch. During fast repeated invocations, this code is racing the system UI server bringing the correct application to the front.
     if ([self.windows count]) {
-        if (self.firstUpdate) {
+        if (!self.windowListLoaded) {
             if ([self.windows count] > 1 && [((NNWindow *)[self.windows objectAtIndex:0]).application isFrontMostApplication]) {
                 self.selectedIndex = (self.selectedIndex + 1) % [self.windows count];
             }
-            self.firstUpdate = NO;
         }
 
         [self.collectionView selectCellAtIndex:self.selectedIndex];
+    }
+    self.windowListLoaded = YES;
+    
+    if (self.needsReset) {
+        [self.collectionView reloadData];
     }
 }
 
@@ -190,30 +277,22 @@ static BOOL needsReset;
 
 - (void)hotKeyManagerInvoked:(NNHotKeyManager *)manager;
 {
-    self.firstUpdate = YES;
-    self.selectedIndex = 0;
-    [self.store startUpdatingWindowList];
-
-    // TODO(numist): put this on a time delay. NSTimer!
-    [self.collectionView reloadData];
-    [self.appWindow orderFront:self];
-    
-    [self.store startUpdatingWindowContents];
+    // If the interface is not being shown, bring it up.
+    if (!self.displayingInterface) {
+        Check(!self.active);
+        self.active = YES;
+    } else {
+        Check(self.active);
+    }
 }
 
 - (void)hotKeyManagerDismissed:(NNHotKeyManager *)manager;
 {
-    NNWindow *selectedWindow = [self selectedWindow];
-    if (selectedWindow) {
-        [selectedWindow raise];
-    } else {
-        Check(self.selectedIndex == 0);
-        Log(@"No windows to raise! (Selection index: %lu)", self.selectedIndex);
+    self.pendingSwitch = YES;
+
+    if (self.windowListLoaded) {
+        [self raise];
     }
-    
-    [self.appWindow orderOut:self];
-    [self.store stopUpdatingWindowList];
-    [self.store stopUpdatingWindowContents];
 }
 
 - (void)hotKeyManagerBeginIncrementingSelection:(NNHotKeyManager *)manager;
@@ -258,7 +337,18 @@ static BOOL needsReset;
 
 - (void)hotKeyManagerClosedWindow:(NNHotKeyManager *)manager;
 {
-    [[self selectedWindow] close];
+    // TODO(numist): grey out thumbnail for selectedWindow
+    
+    __block BOOL success;
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        success = [[self selectedWindow] close];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (!success) {
+                // TODO(numist): ungrey out thumbnail for selectedWindow
+            }
+        });
+    });
 }
 
 - (void)hotKeyManagerClosedApplication:(NNHotKeyManager *)manager;
