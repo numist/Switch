@@ -71,6 +71,7 @@
     despatch_lock_assert(dispatch_get_main_queue());
 
     self.listWorker = nil;
+    [self listWorker:nil didUpdateWindowList:@[]];
 }
 
 - (void)startUpdatingWindowContents;
@@ -91,7 +92,6 @@
     
     self.updatingWindowContents = NO;
     self.windowWorkers = nil;
-    [self listWorker:nil didUpdateWindowList:@[]];
 }
 
 #pragma mark NNWindowWorkerDelegate
