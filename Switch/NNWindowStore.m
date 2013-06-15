@@ -118,6 +118,8 @@
 
 - (void)listWorker:(NNWindowListWorker *)worker didUpdateWindowList:(NSArray *)newArray;
 {
+    if (worker != self.listWorker) { return; }
+    
     despatch_lock_assert(dispatch_get_main_queue());
 
     NSMutableArray *oldArray = [_windows mutableCopy];
