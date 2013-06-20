@@ -35,6 +35,7 @@
 		BCA7354316E1621400CD4C74 /* constants.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354216E1621400CD4C74 /* constants.m */; };
 		BCA7354916E1F14D00CD4C74 /* NNSelectionBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354816E1F14D00CD4C74 /* NNSelectionBoxView.m */; };
 		BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */; };
+		BCF357E9176CEEF200458AFF /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCF357E0176CEE9F00458AFF /* ReactiveCocoa.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,41 @@
 			proxyType = 1;
 			remoteGlobalIDString = BCA734DC16DAC53F00CD4C74;
 			remoteInfo = Switch;
+		};
+		BCF357DF176CEE9F00458AFF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BCF357D6176CEE9E00458AFF /* ReactiveCocoa.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 88037F8315056328001A5B19;
+			remoteInfo = ReactiveCocoa;
+		};
+		BCF357E1176CEE9F00458AFF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BCF357D6176CEE9E00458AFF /* ReactiveCocoa.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 88F440AB153DAC820097B4C3;
+			remoteInfo = "ReactiveCocoa-iOS";
+		};
+		BCF357E3176CEE9F00458AFF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BCF357D6176CEE9E00458AFF /* ReactiveCocoa.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 88CDF7DC15000FCF00163A9F;
+			remoteInfo = ReactiveCocoaTests;
+		};
+		BCF357E5176CEE9F00458AFF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BCF357D6176CEE9E00458AFF /* ReactiveCocoa.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5FAF5223174D4C2000CAC810;
+			remoteInfo = "ReactiveCocoaTests-iOS";
+		};
+		BCF357E7176CEEEB00458AFF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BCF357D6176CEE9E00458AFF /* ReactiveCocoa.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 88037F8215056328001A5B19;
+			remoteInfo = ReactiveCocoa;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -117,6 +153,7 @@
 		BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = imageComparators.h; sourceTree = "<group>"; };
 		BCA7354B16E2ED5000CD4C74 /* NNHUDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHUDView.h; sourceTree = "<group>"; };
 		BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDView.m; sourceTree = "<group>"; };
+		BCF357D6176CEE9E00458AFF /* ReactiveCocoa.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactiveCocoa.xcodeproj; path = Frameworks/ReactiveCocoa/ReactiveCocoaFramework/ReactiveCocoa.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +161,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BCF357E9176CEEF200458AFF /* ReactiveCocoa.framework in Frameworks */,
 				BC63AB9A175701D900016B9E /* Haxcessibility.framework in Frameworks */,
 				BC63AB921756FBE400016B9E /* Carbon.framework in Frameworks */,
 				BCA7353A16E14EF000CD4C74 /* QuartzCore.framework in Frameworks */,
@@ -200,12 +238,9 @@
 		BCA734DF16DAC53F00CD4C74 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				BC63AB911756FBE300016B9E /* Carbon.framework */,
-				BCA734E016DAC53F00CD4C74 /* Cocoa.framework */,
 				BC63ABA117598C4100016B9E /* debugger */,
 				BC63AB93175701BA00016B9E /* Haxcessibility */,
-				BCA7353916E14EF000CD4C74 /* QuartzCore.framework */,
-				BCA734FE16DAC54000CD4C74 /* SenTestingKit.framework */,
+				BCF357D5176CEE0200458AFF /* ReactiveCocoa */,
 				BCA734E216DAC53F00CD4C74 /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -215,8 +250,12 @@
 			isa = PBXGroup;
 			children = (
 				BCA734E316DAC53F00CD4C74 /* AppKit.framework */,
+				BC63AB911756FBE300016B9E /* Carbon.framework */,
+				BCA734E016DAC53F00CD4C74 /* Cocoa.framework */,
 				BCA734E416DAC53F00CD4C74 /* CoreData.framework */,
 				BCA734E516DAC53F00CD4C74 /* Foundation.framework */,
+				BCA7353916E14EF000CD4C74 /* QuartzCore.framework */,
+				BCA734FE16DAC54000CD4C74 /* SenTestingKit.framework */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
@@ -333,6 +372,25 @@
 			name = Polling;
 			sourceTree = "<group>";
 		};
+		BCF357D5176CEE0200458AFF /* ReactiveCocoa */ = {
+			isa = PBXGroup;
+			children = (
+				BCF357D6176CEE9E00458AFF /* ReactiveCocoa.xcodeproj */,
+			);
+			name = ReactiveCocoa;
+			sourceTree = "<group>";
+		};
+		BCF357D7176CEE9E00458AFF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BCF357E0176CEE9F00458AFF /* ReactiveCocoa.framework */,
+				BCF357E2176CEE9F00458AFF /* libReactiveCocoa-iOS.a */,
+				BCF357E4176CEE9F00458AFF /* ReactiveCocoaTests.octest */,
+				BCF357E6176CEE9F00458AFF /* ReactiveCocoaTests-iOS.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -347,6 +405,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				BCF357E8176CEEEB00458AFF /* PBXTargetDependency */,
 				BC63AB9C175701DD00016B9E /* PBXTargetDependency */,
 			);
 			name = Switch;
@@ -380,7 +439,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = NN;
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Scott Perry";
 			};
 			buildConfigurationList = BCA734D816DAC53F00CD4C74 /* Build configuration list for PBXProject "Switch" */;
@@ -398,6 +457,10 @@
 					ProductGroup = BC63AB95175701C200016B9E /* Products */;
 					ProjectRef = BC63AB94175701C200016B9E /* Haxcessibility.xcodeproj */;
 				},
+				{
+					ProductGroup = BCF357D7176CEE9E00458AFF /* Products */;
+					ProjectRef = BCF357D6176CEE9E00458AFF /* ReactiveCocoa.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -413,6 +476,34 @@
 			fileType = wrapper.framework;
 			path = Haxcessibility.framework;
 			remoteRef = BC63AB98175701C200016B9E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		BCF357E0176CEE9F00458AFF /* ReactiveCocoa.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ReactiveCocoa.framework;
+			remoteRef = BCF357DF176CEE9F00458AFF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		BCF357E2176CEE9F00458AFF /* libReactiveCocoa-iOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libReactiveCocoa-iOS.a";
+			remoteRef = BCF357E1176CEE9F00458AFF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		BCF357E4176CEE9F00458AFF /* ReactiveCocoaTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ReactiveCocoaTests.octest;
+			remoteRef = BCF357E3176CEE9F00458AFF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		BCF357E6176CEE9F00458AFF /* ReactiveCocoaTests-iOS.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "ReactiveCocoaTests-iOS.octest";
+			remoteRef = BCF357E5176CEE9F00458AFF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -500,6 +591,11 @@
 			target = BCA734DC16DAC53F00CD4C74 /* Switch */;
 			targetProxy = BCA7350116DAC54000CD4C74 /* PBXContainerItemProxy */;
 		};
+		BCF357E8176CEEEB00458AFF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ReactiveCocoa;
+			targetProxy = BCF357E7176CEEEB00458AFF /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -542,7 +638,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -575,7 +670,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
