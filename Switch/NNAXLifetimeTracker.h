@@ -1,5 +1,5 @@
 //
-//  NNHAXWindowCache.h
+//  NNAXLifetimeTracker.h
 //  Switch
 //
 //  Created by Scott Perry on 06/04/13.
@@ -15,14 +15,17 @@
 #import <Foundation/Foundation.h>
 
 
-@class HAXWindow;
+extern NSString *kNNAXLifetimeEndedNotification;
 
 
-@interface NNHAXWindowCache : NSObject
+@class HAXElement;
 
-+ (instancetype)sharedCache;
 
-- (HAXWindow *)cachedWindowWithID:(CGWindowID)windowID;
-- (void)cacheWindow:(HAXWindow *)window withID:(CGWindowID)windowID __attribute__((nonnull(1)));
+@interface NNAXLifetimeTracker : NSObject
+
++ (NNAXLifetimeTracker *)sharedTracker;
+- (instancetype)init __attribute__((unavailable("Use the singleton accessor!")));
+
+- (void)trackLifetimeOfHAXElement:(HAXElement *)element;
 
 @end

@@ -25,7 +25,6 @@ static NSTimeInterval refreshInterval = 0.1;
 
 @property (atomic, strong, readonly) dispatch_queue_t lock;
 @property (nonatomic, weak) id<NNWindowListWorkerDelegate> delegate;
-@property (nonatomic, retain) NSMutableDictionary *windowDict;
 
 @end
 
@@ -56,27 +55,18 @@ static NSTimeInterval refreshInterval = 0.1;
     CFArrayRef cgInfo = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements,  kCGNullWindowID);
     NSArray *info = CFBridgingRelease(cgInfo);
     
-    NSMutableDictionary *newWindowDict = [NSMutableDictionary dictionaryWithCapacity:[info count]];
     NSMutableArray *windows = [NSMutableArray arrayWithCapacity:[info count]];
     
     for (unsigned i = 0; i < [info count]; i++) {
-        NSNumber *windowID = [[(NSArray *)info objectAtIndex:i] objectForKey:(NSString *)kCGWindowNumber];
-        NNWindow *window = [self.windowDict objectForKey:windowID];
-        
-        // Not a window we already know about? Try building a new one.
-        if (!window) {
-            window = [NNWindow windowWithDescription:[info objectAtIndex:i]];
-        }
-        
+        NNWindow *window = [NNWindow windowWithDescription:[info objectAtIndex:i]];
+
         // Window found or info valid for creating a new window.
         if (window) {
+            Check(![windows containsObject:window]);
             [windows addObject:window];
-            [newWindowDict setObject:window forKey:windowID];
         }
     }
     
-    self.windowDict = newWindowDict;
-
     // Schedule delegate update and next iteration of worker loop.
     __weak __typeof__(self) weakSelf = self;
 

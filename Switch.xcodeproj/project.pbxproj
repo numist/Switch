@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BC3B3B6F175E505D002AD452 /* NNHAXWindowCache.m in Sources */ = {isa = PBXBuildFile; fileRef = BC3B3B6E175E505C002AD452 /* NNHAXWindowCache.m */; };
+		BC3B3B6F175E505D002AD452 /* NNAXLifetimeTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = BC3B3B6E175E505C002AD452 /* NNAXLifetimeTracker.m */; };
 		BC63AB8F1755907D00016B9E /* NNHUDCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */; };
 		BC63AB921756FBE400016B9E /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB911756FBE300016B9E /* Carbon.framework */; };
 		BC63AB9A175701D900016B9E /* Haxcessibility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
@@ -35,6 +35,8 @@
 		BCA7354316E1621400CD4C74 /* constants.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354216E1621400CD4C74 /* constants.m */; };
 		BCA7354916E1F14D00CD4C74 /* NNSelectionBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354816E1F14D00CD4C74 /* NNSelectionBoxView.m */; };
 		BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */; };
+		BCE6987C1773B71C009CFD12 /* NNApplicationCache.m in Sources */ = {isa = PBXBuildFile; fileRef = BCE6987B1773B71C009CFD12 /* NNApplicationCache.m */; };
+		BCE6987F1773B8B1009CFD12 /* NNWindowCache.m in Sources */ = {isa = PBXBuildFile; fileRef = BCE6987E1773B8B1009CFD12 /* NNWindowCache.m */; };
 		BCF357E9176CEEF200458AFF /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCF357E0176CEE9F00458AFF /* ReactiveCocoa.framework */; };
 /* End PBXBuildFile section */
 
@@ -98,8 +100,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		BC3B3B6D175E505C002AD452 /* NNHAXWindowCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHAXWindowCache.h; sourceTree = "<group>"; };
-		BC3B3B6E175E505C002AD452 /* NNHAXWindowCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHAXWindowCache.m; sourceTree = "<group>"; };
+		BC3B3B6D175E505C002AD452 /* NNWindowCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNWindowCache.h; sourceTree = "<group>"; };
+		BC3B3B6E175E505C002AD452 /* NNAXLifetimeTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNAXLifetimeTracker.m; sourceTree = "<group>"; };
 		BC63AB8D1755907D00016B9E /* NNHUDCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHUDCollectionView.h; sourceTree = "<group>"; };
 		BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDCollectionView.m; sourceTree = "<group>"; };
 		BC63AB911756FBE300016B9E /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
@@ -153,6 +155,10 @@
 		BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = imageComparators.h; sourceTree = "<group>"; };
 		BCA7354B16E2ED5000CD4C74 /* NNHUDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHUDView.h; sourceTree = "<group>"; };
 		BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDView.m; sourceTree = "<group>"; };
+		BCE6987A1773B71C009CFD12 /* NNApplicationCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNApplicationCache.h; sourceTree = "<group>"; };
+		BCE6987B1773B71C009CFD12 /* NNApplicationCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNApplicationCache.m; sourceTree = "<group>"; };
+		BCE6987D1773B8B1009CFD12 /* NNAXLifetimeTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNAXLifetimeTracker.h; sourceTree = "<group>"; };
+		BCE6987E1773B8B1009CFD12 /* NNWindowCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNWindowCache.m; sourceTree = "<group>"; };
 		BCF357D6176CEE9E00458AFF /* ReactiveCocoa.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactiveCocoa.xcodeproj; path = Frameworks/ReactiveCocoa/ReactiveCocoaFramework/ReactiveCocoa.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -308,8 +314,6 @@
 		BCA7351416DAC54C00CD4C74 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				BC3B3B6D175E505C002AD452 /* NNHAXWindowCache.h */,
-				BC3B3B6E175E505C002AD452 /* NNHAXWindowCache.m */,
 				BCA7352316DAC93C00CD4C74 /* NNApplication.h */,
 				BC63ABA71759AB4900016B9E /* NNApplication+Private.h */,
 				BCA7352416DAC93C00CD4C74 /* NNApplication.m */,
@@ -343,9 +347,12 @@
 		BCA7353016DB2BDC00CD4C74 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				BCE698801773B93A009CFD12 /* Caching */,
 				BCA7358E16E585B800CD4C74 /* Concurrency */,
 				BCA7358F16E585D400CD4C74 /* Polling */,
 				BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */,
+				BCE6987D1773B8B1009CFD12 /* NNAXLifetimeTracker.h */,
+				BC3B3B6E175E505C002AD452 /* NNAXLifetimeTracker.m */,
 				BCA7353116DB2C0100CD4C74 /* NNHotKeyManager.h */,
 				BCA7353216DB2C0100CD4C74 /* NNHotKeyManager.m */,
 			);
@@ -370,6 +377,17 @@
 				BCA7351A16DAC5E200CD4C74 /* NNWindowListWorker.m */,
 			);
 			name = Polling;
+			sourceTree = "<group>";
+		};
+		BCE698801773B93A009CFD12 /* Caching */ = {
+			isa = PBXGroup;
+			children = (
+				BCE6987A1773B71C009CFD12 /* NNApplicationCache.h */,
+				BCE6987B1773B71C009CFD12 /* NNApplicationCache.m */,
+				BC3B3B6D175E505C002AD452 /* NNWindowCache.h */,
+				BCE6987E1773B8B1009CFD12 /* NNWindowCache.m */,
+			);
+			name = Caching;
 			sourceTree = "<group>";
 		};
 		BCF357D5176CEE0200458AFF /* ReactiveCocoa */ = {
@@ -550,7 +568,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BCE6987F1773B8B1009CFD12 /* NNWindowCache.m in Sources */,
 				BCA734ED16DAC53F00CD4C74 /* main.m in Sources */,
+				BCE6987C1773B71C009CFD12 /* NNApplicationCache.m in Sources */,
 				BCA734F416DAC53F00CD4C74 /* NNAppDelegate.m in Sources */,
 				BCA7351716DAC59000CD4C74 /* NNWindowStore.m in Sources */,
 				BCA7351B16DAC5E200CD4C74 /* NNWindowListWorker.m in Sources */,
@@ -566,7 +586,7 @@
 				BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */,
 				BC63AB8F1755907D00016B9E /* NNHUDCollectionView.m in Sources */,
 				BC63ABA517598C4100016B9E /* debugger.c in Sources */,
-				BC3B3B6F175E505D002AD452 /* NNHAXWindowCache.m in Sources */,
+				BC3B3B6F175E505D002AD452 /* NNAXLifetimeTracker.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

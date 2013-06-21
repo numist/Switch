@@ -17,7 +17,8 @@
 #import <Haxcessibility/Haxcessibility.h>
 
 #import "despatch.h"
-#import "NNHAXWindowCache.h"
+#import "NNAXLifetimeTracker.h"
+#import "NNApplicationCache.h"
 #import "NNWindow+Private.h"
 
 
@@ -28,7 +29,7 @@
 @property (nonatomic, readonly, assign) ProcessSerialNumber psn;
 
 @property (nonatomic, strong) dispatch_queue_t haxLock;
-@property (atomic, strong) HAXApplication *haxApp;
+@property (nonatomic, strong, readonly) HAXApplication *haxApp;
 
 @end
 
@@ -37,7 +38,19 @@
 
 + (instancetype)applicationWithPID:(pid_t)pid;
 {
-    return [[self alloc] initWithPID:pid];
+    @synchronized(self) {
+        NNApplication *result = [[NNApplicationCache sharedCache] cachedApplicationWithPID:pid];
+        
+        if (!result) {
+            result = [[self alloc] initWithPID:pid];
+            
+            if (result) {
+                [[NNApplicationCache sharedCache] cacheApplication:result withPID:pid];
+            }
+        }
+        
+        return result;
+    }
 }
 
 - (instancetype)initWithPID:(pid_t)pid;
@@ -55,21 +68,42 @@
     }
     
     _app = [NSRunningApplication runningApplicationWithProcessIdentifier:pid];
-
-    // This could take a while…
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        HAXApplication *app = [HAXApplication applicationWithPID:pid];
-        dispatch_async(self.haxLock, ^{
-            self.haxApp = app;
-        });
-    });
     
+    // Load the HAXWindow ASAP, but without blocking.
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        (void)self.haxApp;
+    });
+
     return self;
+}
+
+- (instancetype)copyWithZone:(NSZone *)zone;
+{
+    Check(!zone);
+    return self;
+}
+
+- (NSUInteger)hash;
+{
+    return self.pid;
+}
+
+- (BOOL)isEqual:(id)object;
+{
+    Check(object);
+    return ([object isKindOfClass:[self class]] && [self hash] == [object hash]);
 }
 
 - (NSString *)description;
 {
     return [NSString stringWithFormat:@"%d (%@)", self.pid, self.name];
+}
+
+- (void)dealloc;
+{
+    if (_haxApp) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:kNNAXLifetimeEndedNotification object:_haxApp];
+    }
 }
 
 #pragma mark Properties
@@ -97,6 +131,49 @@
     });
     
     return _icon;
+}
+
+#pragma mark Notifications
+
+- (void)axLifetimeEndedNotification:(NSNotification *)note;
+{
+    __weak __typeof__(self) weakSelf;
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        __strong __typeof__(self) self = weakSelf;
+        if (!self) { return; }
+        
+        @synchronized(self) {
+            BailUnless(note.object == _haxApp, );
+            
+            Log(@"Invalidated HAXWindow for %@", self);
+            
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:note.name object:note.object];
+            _haxApp = nil;
+            
+            (void)self.haxApp;
+        }
+    });
+}
+
+#pragma mark Dynamic accessors
+
+@synthesize haxApp = _haxApp;
+
+- (HAXApplication *)haxApp;
+{
+    @synchronized(self) {
+        if (!_haxApp) {
+            _haxApp = [HAXApplication applicationWithPID:self.pid];
+        }
+        if (_haxApp) {
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(axLifetimeEndedNotification:) name:kNNAXLifetimeEndedNotification object:_haxApp];
+            [[NNAXLifetimeTracker sharedTracker] trackLifetimeOfHAXElement:_haxApp];
+        } else {
+            [[NNApplicationCache sharedCache] removeApplicationWithPID:self.pid];
+        }
+        
+        return _haxApp;
+    }
 }
 
 #pragma mark NNApplication
@@ -142,10 +219,6 @@
 
     Check(result);
     
-    if (result) {
-        [[NNHAXWindowCache sharedCache] cacheWindow:result withID:window.windowID];
-    }
-
     return result;
 }
 

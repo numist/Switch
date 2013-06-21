@@ -17,7 +17,8 @@
 #import <Haxcessibility/Haxcessibility.h>
 
 #import "NNApplication+Private.h"
-#import "NNHAXWindowCache.h"
+#import "NNAXLifetimeTracker.h"
+#import "NNWindowCache.h"
 
 
 @interface NNWindow ()
@@ -33,7 +34,20 @@
 
 + (instancetype)windowWithDescription:(NSDictionary *)description;
 {
-    return [[self alloc] initWithDescription:description];
+    @synchronized(self) {
+        CGWindowID windowID = (CGWindowID)[[description objectForKey:(__bridge NSString *)kCGWindowNumber] unsignedLongValue];
+        NNWindow *result = [[NNWindowCache sharedCache] cachedWindowWithID:windowID];
+        
+        if (!result) {
+            result = [[self alloc] initWithDescription:description];
+            
+            if (result) {
+                [[NNWindowCache sharedCache] cacheWindow:result withID:windowID];
+            }
+        }
+
+        return result;
+    }
 }
 
 - (instancetype)initWithDescription:(NSDictionary *)description;
@@ -83,6 +97,13 @@
     return [NSString stringWithFormat:@"%u (%@)", self.windowID, self.name];
 }
 
+- (void)dealloc;
+{
+    if (_haxWindow) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:kNNAXLifetimeEndedNotification object:_haxWindow];
+    }
+}
+
 #pragma mark NNWindow
 
 /* Broken:
@@ -124,21 +145,47 @@
     return YES;
 }
 
+#pragma mark Notifications
+
+- (void)axLifetimeEndedNotification:(NSNotification *)note;
+{
+    __weak __typeof__(self) weakSelf;
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        __strong __typeof__(self) self = weakSelf;
+        if (!self) { return; }
+        
+        @synchronized(self) {
+            BailUnless(note.object == _haxWindow, );
+            
+            Log(@"Invalidated HAXWindow for %@", self);
+            
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:note.name object:note.object];
+            _haxWindow = nil;
+            
+            (void)self.haxWindow;
+        }
+    });
+}
+
 #pragma mark Dynamic accessors
 
-@dynamic haxWindow;
+@synthesize haxWindow = _haxWindow;
+
 - (HAXWindow *)haxWindow;
 {
-    HAXWindow *haxWindow;
-    
     @synchronized(self) {
-        // TODO(numist): Should refetch haxWindow when it's invalidated, not on the next request. It's really expensive (in terms of time) to fetch!
-        if (!(haxWindow = [[NNHAXWindowCache sharedCache] cachedWindowWithID:self.windowID])) {
-            haxWindow = [self.application haxWindowForWindow:self];
+        if (!_haxWindow) {
+            _haxWindow = [self.application haxWindowForWindow:self];
         }
+        if (_haxWindow) {
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(axLifetimeEndedNotification:) name:kNNAXLifetimeEndedNotification object:_haxWindow];
+            [[NNAXLifetimeTracker sharedTracker] trackLifetimeOfHAXElement:_haxWindow];
+        } else {
+            [[NNWindowCache sharedCache] removeWindowWithID:self.windowID];
+        }
+
+        return _haxWindow;
     }
-    
-    return haxWindow;
 }
 
 @dynamic cgBounds;
@@ -184,7 +231,10 @@
 
 - (BOOL)close;
 {
-    return [self.haxWindow close];
+    BOOL result = [self.haxWindow close];
+    Check(result);
+    // TODO(numist): this fails with -25202 (invalid element) if you try to close more than one Sublime Text window.
+    return result;
 }
 
 #pragma mark Private
