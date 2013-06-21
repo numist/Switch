@@ -94,7 +94,7 @@
 
 - (NSString *)description;
 {
-    return [NSString stringWithFormat:@"%u (%@)", self.windowID, self.name];
+    return [NSString stringWithFormat:@"%p <%u (%@)>", self, self.windowID, self.name];
 }
 
 - (void)dealloc;
@@ -149,19 +149,13 @@
 
 - (void)axLifetimeEndedNotification:(NSNotification *)note;
 {
-    __weak __typeof__(self) weakSelf;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        __strong __typeof__(self) self = weakSelf;
-        if (!self) { return; }
-        
         @synchronized(self) {
             BailUnless(note.object == _haxWindow, );
             
-            Log(@"Invalidated HAXWindow for %@", self);
-            
             [[NSNotificationCenter defaultCenter] removeObserver:self name:note.name object:note.object];
             _haxWindow = nil;
-            
+
             (void)self.haxWindow;
         }
     });
@@ -176,11 +170,13 @@
     @synchronized(self) {
         if (!_haxWindow) {
             _haxWindow = [self.application haxWindowForWindow:self];
+            
+            if (_haxWindow) {
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(axLifetimeEndedNotification:) name:kNNAXLifetimeEndedNotification object:_haxWindow];
+                [[NNAXLifetimeTracker sharedTracker] trackLifetimeOfHAXElement:_haxWindow];
+            }
         }
-        if (_haxWindow) {
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(axLifetimeEndedNotification:) name:kNNAXLifetimeEndedNotification object:_haxWindow];
-            [[NNAXLifetimeTracker sharedTracker] trackLifetimeOfHAXElement:_haxWindow];
-        } else {
+        if (!_haxWindow && [[NNWindowCache sharedCache] cachedWindowWithID:self.windowID]) {
             [[NNWindowCache sharedCache] removeWindowWithID:self.windowID];
         }
 

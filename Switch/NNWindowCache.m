@@ -30,6 +30,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _sharedCache = [self new];
+        NSAssert(_sharedCache, @"Wait what how");
     });
     
     return _sharedCache;
@@ -47,25 +48,31 @@
 
 - (NNWindow *)cachedWindowWithID:(CGWindowID)windowID;
 {
-    return [self.cache objectForKey:@(windowID)];
+    @synchronized(self) {
+        return [self.cache objectForKey:@(windowID)];
+    }
 }
 
 - (void)cacheWindow:(NNWindow *)window withID:(CGWindowID)windowID __attribute__((nonnull(1)));
 {
-    if ([self cachedWindowWithID:windowID]) {
-        Log(@"Already have a window for id %u!", windowID);
+    @synchronized(self) {
+        if ([self cachedWindowWithID:windowID]) {
+            Log(@"Already have a window for id %u!", windowID);
+        }
+        
+        [self.cache setObject:window forKey:@(windowID)];
     }
-    
-    [self.cache setObject:window forKey:@(windowID)];
 }
 
 - (void)removeWindowWithID:(CGWindowID)windowID;
 {
-    if (![self cachedWindowWithID:windowID]) {
-        Log(@"Don't have a window for id %u!", windowID);
+    @synchronized(self) {
+        if (![self cachedWindowWithID:windowID]) {
+            Log(@"Don't have a window for id %u!", windowID);
+        }
+        
+        [self.cache removeObjectForKey:@(windowID)];
     }
-    
-    [self.cache removeObjectForKey:@(windowID)];
 }
 
 @end

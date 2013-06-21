@@ -96,7 +96,7 @@
 
 - (NSString *)description;
 {
-    return [NSString stringWithFormat:@"%d (%@)", self.pid, self.name];
+    return [NSString stringWithFormat:@"%p <%d (%@)>", self, self.pid, self.name];
 }
 
 - (void)dealloc;
@@ -137,19 +137,13 @@
 
 - (void)axLifetimeEndedNotification:(NSNotification *)note;
 {
-    __weak __typeof__(self) weakSelf;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        __strong __typeof__(self) self = weakSelf;
-        if (!self) { return; }
-        
         @synchronized(self) {
             BailUnless(note.object == _haxApp, );
             
-            Log(@"Invalidated HAXWindow for %@", self);
-            
             [[NSNotificationCenter defaultCenter] removeObserver:self name:note.name object:note.object];
             _haxApp = nil;
-            
+
             (void)self.haxApp;
         }
     });
@@ -164,11 +158,13 @@
     @synchronized(self) {
         if (!_haxApp) {
             _haxApp = [HAXApplication applicationWithPID:self.pid];
+            
+            if (_haxApp) {
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(axLifetimeEndedNotification:) name:kNNAXLifetimeEndedNotification object:_haxApp];
+                [[NNAXLifetimeTracker sharedTracker] trackLifetimeOfHAXElement:_haxApp];
+            }
         }
-        if (_haxApp) {
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(axLifetimeEndedNotification:) name:kNNAXLifetimeEndedNotification object:_haxApp];
-            [[NNAXLifetimeTracker sharedTracker] trackLifetimeOfHAXElement:_haxApp];
-        } else {
+        if (!_haxApp && [[NNApplicationCache sharedCache] cachedApplicationWithPID:self.pid]) {
             [[NNApplicationCache sharedCache] removeApplicationWithPID:self.pid];
         }
         
@@ -217,8 +213,6 @@
         }
     });
 
-    Check(result);
-    
     return result;
 }
 

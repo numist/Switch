@@ -30,6 +30,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _sharedCache = [self new];
+        NSAssert(_sharedCache, @"Wait what how");
     });
     
     return _sharedCache;
@@ -47,29 +48,31 @@
 
 - (NNApplication *)cachedApplicationWithPID:(pid_t)pid;
 {
-    return [self.cache objectForKey:@(pid)];
+    @synchronized(self) {
+        return [self.cache objectForKey:@(pid)];
+    }
 }
 
 - (void)cacheApplication:(NNApplication *)application withPID:(pid_t)pid;
 {
-    if ([self cachedApplicationWithPID:pid]) {
-        Log(@"Already have a application for pid %u!", pid);
+    @synchronized(self) {
+        if ([self cachedApplicationWithPID:pid]) {
+            Log(@"Already have a application for pid %u!", pid);
+        }
+        
+        [self.cache setObject:application forKey:@(pid)];
     }
-    
-    Log(@"Added %@ to application cache", application);
-
-    [self.cache setObject:application forKey:@(pid)];
 }
 
 - (void)removeApplicationWithPID:(pid_t)pid;
 {
-    if (![self cachedApplicationWithPID:pid]) {
-        Log(@"Don't have a window for id %u!", pid);
+    @synchronized(self) {
+        if (![self cachedApplicationWithPID:pid]) {
+            Log(@"Don't have a window for id %u!", pid);
+        }
+        
+        [self.cache removeObjectForKey:@(pid)];
     }
-    
-    Log(@"Removed %@ from application cache", [self cachedApplicationWithPID:pid]);
-
-    [self.cache removeObjectForKey:@(pid)];
 }
 
 @end
