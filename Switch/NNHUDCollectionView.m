@@ -196,6 +196,72 @@
     }
 }
 
+#pragma mark - NSResponder
+
+- (BOOL)acceptsFirstResponder;
+{
+    return YES;
+}
+
+- (void)mouseMoved:(NSEvent *)theEvent;
+{
+    NSPoint location = theEvent.locationInWindow;
+    
+    unsigned i;
+    for (i = 0; i < self.numberOfCells; ++i) {
+        NSRect frame = [self convertRect:[self computeFrameForCellAtIndex:i] toView:nil];
+
+        if (NSPointInRect(location, frame)) {
+            break;
+        }
+    }
+    
+    if (i < self.numberOfCells && self.selectedIndex != i) {
+        id<NNHUDCollectionViewDelegate> delegate = self.delegate;
+        
+        self.selectedIndex = i;
+        
+        if ([delegate respondsToSelector:@selector(HUDView:willSelectCellAtIndex:)]) {
+            [delegate HUDView:self willSelectCellAtIndex:i];
+        }
+        
+        [self selectCellAtIndex:self.selectedIndex];
+        
+        if ([delegate respondsToSelector:@selector(HUDView:didSelectCellAtIndex:)]) {
+            [delegate HUDView:self didSelectCellAtIndex:self.selectedIndex];
+        }
+    }
+    
+    [super mouseMoved:theEvent];
+}
+
+- (void)mouseUp:(NSEvent *)theEvent;
+{
+    NSPoint location = theEvent.locationInWindow;
+    
+    unsigned i;
+    for (i = 0; i < self.numberOfCells; ++i) {
+        NSRect frame = [self convertRect:[self computeFrameForCellAtIndex:i] toView:nil];
+        
+        if (NSPointInRect(location, frame)) {
+            break;
+        }
+    }
+    
+    if (i < self.numberOfCells) {
+        id<NNHUDCollectionViewDelegate> delegate = self.delegate;
+        
+        Check(self.selectedIndex == i);
+        self.selectedIndex = i;
+        
+        if ([delegate respondsToSelector:@selector(HUDView:activateCellAtIndex:)]) {
+            [delegate HUDView:self activateCellAtIndex:i];
+        }
+    } else {
+        [super mouseUp:theEvent];
+    }
+}
+
 #pragma mark - Internal
 
 - (void)setSize:(NSSize)size;

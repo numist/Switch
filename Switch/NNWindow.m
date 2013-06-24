@@ -229,7 +229,7 @@
 
 - (CGImageRef)copyCGWindowImage;
 {
-    CGImageRef result = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, self.windowID, 0);
+    CGImageRef result = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, self.windowID, kCGWindowImageBoundsIgnoreFraming);
     
     BailUnless(result, NULL);
     

@@ -28,7 +28,7 @@
 static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 
 
-@interface NNAppDelegate () <NNWindowStoreDelegate, NNHUDCollectionViewDataSource, NNHotKeyManagerDelegate>
+@interface NNAppDelegate () <NNWindowStoreDelegate, NNHUDCollectionViewDataSource, NNHUDCollectionViewDelegate, NNHotKeyManagerDelegate>
 
 #pragma mark State
 @property (nonatomic, assign) BOOL active;
@@ -80,6 +80,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
             }
             
             if ([shouldDisplayInterface boolValue]) {
+                [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
                 [self.appWindow orderFront:self];
                 [self.store startUpdatingWindowContents];
             } else {
@@ -143,6 +144,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
             switcherWindow.opaque = NO;
             switcherWindow.backgroundColor = [NSColor clearColor];
             switcherWindow.level = NSPopUpMenuWindowLevel;
+            switcherWindow.acceptsMouseMovedEvents = YES;
         }
         self.appWindow = switcherWindow;
         
@@ -151,6 +153,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
             collectionView.maxWidth = [NSScreen mainScreen].frame.size.width - (kNNScreenToWindowInset * 2.0);
             collectionView.maxCellSize = kNNMaxWindowThumbnailSize;
             collectionView.dataSource = self;
+            collectionView.delegate = self;
             if (self.selectedIndex < NSNotFound) {
                 [collectionView selectCellAtIndex:self.selectedIndex];
             }
@@ -208,6 +211,22 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
     result.applicationIcon = window.application.icon;
     result.windowThumbnail = window.image;
     return result;
+}
+
+#pragma mark NNHUDCollectionViewDelegate
+
+- (void)HUDView:(NNHUDCollectionView *)view willSelectCellAtIndex:(NSUInteger)index;
+{
+    self.selectedIndex = index;
+}
+
+- (void)HUDView:(NNHUDCollectionView *)view activateCellAtIndex:(NSUInteger)index;
+{
+    if (index != self.selectedIndex) {
+        self.selectedIndex = index;
+    }
+    // TODO(numist): lol
+    [self hotKeyManagerDismissed:nil];
 }
 
 #pragma mark NNWindowStoreDelegate
@@ -285,10 +304,12 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 
 - (void)hotKeyManagerDismissed:(NNHotKeyManager *)manager;
 {
-    self.pendingSwitch = YES;
+    if (self.active) {
+        self.pendingSwitch = YES;
 
-    if (self.windowListLoaded) {
-        [self raise];
+        if (self.windowListLoaded) {
+            [self raise];
+        }
     }
 }
 

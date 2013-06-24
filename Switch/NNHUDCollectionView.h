@@ -61,5 +61,6 @@
 @optional
 - (void)HUDView:(NNHUDCollectionView *)view willSelectCellAtIndex:(NSUInteger)index;
 - (void)HUDView:(NNHUDCollectionView *)view didSelectCellAtIndex:(NSUInteger)index;
+- (void)HUDView:(NNHUDCollectionView *)view activateCellAtIndex:(NSUInteger)index;
 
 @end
