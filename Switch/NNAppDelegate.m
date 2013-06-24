@@ -107,17 +107,9 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
             self.pendingSwitch = NO;
             self.windowListLoaded = NO;
             self.selectedIndex = 0;
+            [self.collectionView selectCellAtIndex:self.selectedIndex];
         }
     }];
-}
-
-#pragma mark - Dynamic properties
-
-- (void)setSelectedIndex:(NSUInteger)selectedIndex;
-{
-    Check(selectedIndex < NSNotFound);
-    [self.collectionView selectCellAtIndex:selectedIndex];
-    _selectedIndex = selectedIndex;
 }
 
 #pragma mark Internal
@@ -256,6 +248,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
             // Update the selected index so it doesn't go out of bounds (default value is zero).
             if (index == self.selectedIndex && index >= [self.windows count]) {
                 self.selectedIndex = [self.windows count] ? [self.windows count] - 1 : 0;
+                [self.collectionView selectCellAtIndex:self.selectedIndex];
             }
             self.needsReset = YES;
             break;
@@ -280,6 +273,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
         if (!self.windowListLoaded) {
             if ([self.windows count] > 1 && [((NNWindow *)[self.windows objectAtIndex:0]).application isFrontMostApplication]) {
                 self.selectedIndex = (self.selectedIndex + 1) % [self.windows count];
+                [self.collectionView selectCellAtIndex:self.selectedIndex];
             }
         }
 
@@ -321,8 +315,10 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 
     if (self.selectedIndex >= NSNotFound) {
         self.selectedIndex = 0;
+        [self.collectionView selectCellAtIndex:self.selectedIndex];
     } else if (!self.incrementing || self.selectedIndex != [self.windows count] - 1) {
         self.selectedIndex = (self.selectedIndex + 1) % [self.windows count];
+        [self.collectionView selectCellAtIndex:self.selectedIndex];
     }
     
     self.incrementing = YES;
@@ -341,8 +337,10 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
     
     if (self.selectedIndex >= NSNotFound) {
         self.selectedIndex = [self.windows count] - 1;
+        [self.collectionView selectCellAtIndex:self.selectedIndex];
     } else if (!self.decrementing || self.selectedIndex != 0) {
         self.selectedIndex = self.selectedIndex == 0 ? [self.windows count] - 1 : self.selectedIndex - 1;
+        [self.collectionView selectCellAtIndex:self.selectedIndex];
     }
     
     self.decrementing = YES;
