@@ -157,17 +157,14 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
             [self.collectionView selectCellAtIndex:self.selectedIndex];
         }
     }];
-}
-
-- (void)dismiss;
-{
-    if (self.active) {
-        self.pendingSwitch = YES;
+    
+    [[[RACSignal combineLatest:@[RACAbleWithStart(self, pendingSwitch), RACAbleWithStart(self, windowListLoaded)]] distinctUntilChanged] subscribeNext:^(id x) {
+        RACTupleUnpack(NSNumber *pendingSwitch, NSNumber *windowListLoaded) = x;
         
-        if (self.windowListLoaded) {
+        if ([pendingSwitch boolValue] && [windowListLoaded boolValue]) {
             [self raise];
         }
-    }
+    }];
 }
 
 - (void)raise;
@@ -231,11 +228,13 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 
 - (void)HUDView:(NNHUDCollectionView *)view activateCellAtIndex:(NSUInteger)index;
 {
+    Check(self.active);
+
     if (index != self.selectedIndex) {
         self.selectedIndex = index;
     }
     
-    [self dismiss];
+    self.pendingSwitch = YES;
 }
 
 #pragma mark NNWindowStoreDelegate
@@ -280,14 +279,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 
 - (void)storeDidChangeContent:(NNWindowStore *)store;
 {
-    if (!self.windowListLoaded) {
-        self.windowListLoaded = YES;
-    }
-    
-    if (self.pendingSwitch) {
-        // TODO(numist): raise the right thing.
-        return;
-    }
+    self.windowListLoaded = YES;
     
     if ([self.windows count]) {
         // TODO(numist): what is this really doing now?
@@ -311,7 +303,9 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 
 - (void)hotKeyManagerDismissed:(NNHotKeyManager *)manager;
 {
-    [self dismiss];
+    Check(self.active);
+    
+    self.pendingSwitch = YES;
 }
 
 - (void)hotKeyManagerBeginIncrementingSelection:(NNHotKeyManager *)manager;
