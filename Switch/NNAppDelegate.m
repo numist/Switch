@@ -37,6 +37,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 @property (nonatomic, strong) NSTimer *displayTimer;
 @property (nonatomic, assign) BOOL pendingSwitch;
 @property (nonatomic, assign) NSUInteger selectedIndex;
+@property (nonatomic, assign) BOOL adjustedIndex;
 
 #pragma mark UI
 @property (nonatomic, strong) NSWindow *appWindow;
@@ -67,49 +68,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
     self.keyManager.delegate = self;
     
     [self createWindow];
-    
-    // Interface is only visible when Switch is active, the window list has loaded, and the display timer has timed out.
-    [[RACSignal combineLatest:@[RACAbleWithStart(self, active), RACAbleWithStart(self, windowListLoaded), RACAbleWithStart(self, displayTimer)]
-                       reduce:^(NSNumber *active, NSNumber *windowListLoaded, NSTimer *displayTimer) {
-                           return @([active boolValue] && [windowListLoaded boolValue] && !displayTimer);
-                       }]
-        subscribeNext:^(NSNumber *shouldDisplayInterface) {
-            // Dedup changes.
-            if ([shouldDisplayInterface boolValue] == self.displayingInterface) {
-                return;
-            }
-            
-            if ([shouldDisplayInterface boolValue]) {
-                [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
-                [self.appWindow orderFront:self];
-                [self.store startUpdatingWindowContents];
-            } else {
-                [self.appWindow orderOut:self];
-            }
-            self.displayingInterface = [shouldDisplayInterface boolValue];
-        }];
-    
-    // Clean up all that crazy state when the activation state changes.
-    [RACAble(self.active) subscribeNext:^(NSNumber *active) {
-        if ([active boolValue]) {
-            Check(![self.windows count]);
-            Check(!self.displayTimer);
-
-            [self.store startUpdatingWindowList];
-            self.displayTimer = [NSTimer scheduledTimerWithTimeInterval:kNNWindowDisplayDelay target:self selector:@selector(displayTimerFired:) userInfo:nil repeats:NO];
-        } else {
-            Check(!self.pendingSwitch);
-            
-            [self.store stopUpdatingWindowList];
-            [self.store stopUpdatingWindowContents];
-            [self.displayTimer invalidate];
-            self.displayTimer = nil;
-            self.pendingSwitch = NO;
-            self.windowListLoaded = NO;
-            self.selectedIndex = 0;
-            [self.collectionView selectCellAtIndex:self.selectedIndex];
-        }
-    }];
+    [self setUpReactions];
 }
 
 #pragma mark Internal
@@ -153,6 +112,66 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
         self.collectionView = collectionView;
         [self.appWindow.contentView addSubview:self.collectionView];
     });
+}
+
+- (void)setUpReactions;
+{
+    // Interface is only visible when Switch is active, the window list has loaded, and the display timer has timed out.
+    [[RACSignal combineLatest:@[RACAbleWithStart(self, active), RACAbleWithStart(self, windowListLoaded), RACAbleWithStart(self, displayTimer)] reduce:^(NSNumber *active, NSNumber *windowListLoaded, NSTimer *displayTimer) {
+        return @([active boolValue] && [windowListLoaded boolValue] && !displayTimer);
+    }] subscribeNext:^(NSNumber *shouldDisplayInterface) {
+        // Dedup changes.
+        if ([shouldDisplayInterface boolValue] == self.displayingInterface) {
+            return;
+        }
+        
+        if ([shouldDisplayInterface boolValue]) {
+            [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
+            [self.appWindow orderFront:self];
+            [self.store startUpdatingWindowContents];
+        } else {
+            [self.appWindow orderOut:self];
+        }
+        self.displayingInterface = [shouldDisplayInterface boolValue];
+    }];
+    
+    // Adjust the selected index by 1 if the first window's application is already frontmost.
+    [[RACSignal combineLatest:@[RACAbleWithStart(self, windowListLoaded), RACAbleWithStart(self, displayTimer)]] subscribeNext:^(id x) {
+        RACTupleUnpack(NSNumber *windowListLoadedObj, NSTimer *displayTimer) = x;
+        BOOL windowListLoaded = [windowListLoadedObj boolValue];
+        
+        if (self.active && !self.adjustedIndex && (windowListLoaded || !displayTimer)) {
+            NSLog(@"GO GO GO");
+            if ([self.windows count] > 1 && [((NNWindow *)[self.windows objectAtIndex:0]).application isFrontMostApplication]) {
+                self.selectedIndex = (self.selectedIndex + 1) % [self.windows count];
+                [self.collectionView selectCellAtIndex:self.selectedIndex];
+            }
+            self.adjustedIndex = YES;
+        }
+    }];
+    
+    // Clean up all that crazy state when the activation state changes.
+    [RACAble(self.active) subscribeNext:^(NSNumber *active) {
+        if ([active boolValue]) {
+            Check(![self.windows count]);
+            Check(!self.displayTimer);
+            
+            [self.store startUpdatingWindowList];
+            self.displayTimer = [NSTimer scheduledTimerWithTimeInterval:kNNWindowDisplayDelay target:self selector:@selector(displayTimerFired:) userInfo:nil repeats:NO];
+        } else {
+            Check(!self.pendingSwitch);
+            
+            [self.store stopUpdatingWindowList];
+            [self.store stopUpdatingWindowContents];
+            [self.displayTimer invalidate];
+            self.displayTimer = nil;
+            self.pendingSwitch = NO;
+            self.windowListLoaded = NO;
+            self.selectedIndex = 0;
+            self.adjustedIndex = NO;
+            [self.collectionView selectCellAtIndex:self.selectedIndex];
+        }
+    }];
 }
 
 - (void)dismiss;
@@ -276,23 +295,19 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 
 - (void)storeDidChangeContent:(NNWindowStore *)store;
 {
+    if (!self.windowListLoaded) {
+        self.windowListLoaded = YES;
+    }
+    
     if (self.pendingSwitch) {
         // TODO(numist): raise the right thing.
         return;
     }
     
-    // TODO(numist): due to timing issues, this should probably happen as late as possible--at the earlier of willDisplayInterface or willSwitch. During fast repeated invocations, this code is racing the system UI server bringing the correct application to the front.
     if ([self.windows count]) {
-        if (!self.windowListLoaded) {
-            if ([self.windows count] > 1 && [((NNWindow *)[self.windows objectAtIndex:0]).application isFrontMostApplication]) {
-                self.selectedIndex = (self.selectedIndex + 1) % [self.windows count];
-                [self.collectionView selectCellAtIndex:self.selectedIndex];
-            }
-        }
-
+        // TODO(numist): what is this really doing now?
         [self.collectionView selectCellAtIndex:self.selectedIndex];
     }
-    self.windowListLoaded = YES;
     
     if (self.needsReset) {
         [self.collectionView reloadData];
