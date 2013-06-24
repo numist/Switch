@@ -80,38 +80,35 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 
 - (void)createWindow;
 {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSRect windowRect;
-        {
-            NSScreen *mainScreen = [NSScreen mainScreen];
-            windowRect = mainScreen.frame;
+    NSRect windowRect;
+    {
+        NSScreen *mainScreen = [NSScreen mainScreen];
+        windowRect = mainScreen.frame;
+    }
+    
+    NSWindow *switcherWindow = [[NSWindow alloc] initWithContentRect:windowRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
+    {
+        switcherWindow.movableByWindowBackground = NO;
+        switcherWindow.hasShadow = NO;
+        switcherWindow.opaque = NO;
+        switcherWindow.backgroundColor = [NSColor clearColor];
+        switcherWindow.level = NSPopUpMenuWindowLevel;
+        switcherWindow.acceptsMouseMovedEvents = YES;
+    }
+    self.appWindow = switcherWindow;
+    
+    NNHUDCollectionView *collectionView = [[NNHUDCollectionView alloc] initWithFrame:NSMakeRect(self.appWindow.frame.size.width / 2.0, self.appWindow.frame.size.height / 2.0, 0.0, 0.0)];
+    {
+        collectionView.maxWidth = [NSScreen mainScreen].frame.size.width - (kNNScreenToWindowInset * 2.0);
+        collectionView.maxCellSize = kNNMaxWindowThumbnailSize;
+        collectionView.dataSource = self;
+        collectionView.delegate = self;
+        if (self.selectedIndex < NSNotFound) {
+            [collectionView selectCellAtIndex:self.selectedIndex];
         }
-        
-        NSWindow *switcherWindow = [[NSWindow alloc] initWithContentRect:windowRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
-        {
-            switcherWindow.movableByWindowBackground = NO;
-            switcherWindow.hasShadow = NO;
-            switcherWindow.opaque = NO;
-            switcherWindow.backgroundColor = [NSColor clearColor];
-            switcherWindow.level = NSPopUpMenuWindowLevel;
-            switcherWindow.acceptsMouseMovedEvents = YES;
-        }
-        self.appWindow = switcherWindow;
-        
-        NNHUDCollectionView *collectionView = [[NNHUDCollectionView alloc] initWithFrame:NSMakeRect(self.appWindow.frame.size.width / 2.0, self.appWindow.frame.size.height / 2.0, 0.0, 0.0)];
-        {
-            collectionView.maxWidth = [NSScreen mainScreen].frame.size.width - (kNNScreenToWindowInset * 2.0);
-            collectionView.maxCellSize = kNNMaxWindowThumbnailSize;
-            collectionView.dataSource = self;
-            collectionView.delegate = self;
-            if (self.selectedIndex < NSNotFound) {
-                [collectionView selectCellAtIndex:self.selectedIndex];
-            }
-        }
-        self.collectionView = collectionView;
-        [self.appWindow.contentView addSubview:self.collectionView];
-    });
+    }
+    self.collectionView = collectionView;
+    [self.appWindow.contentView addSubview:self.collectionView];
 }
 
 - (void)setUpReactions;
