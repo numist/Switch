@@ -338,7 +338,16 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
     
     __block BOOL success;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        success = [[self selectedWindow] close];
+        NNWindow *selectedWindow = [self selectedWindow];
+        success = [selectedWindow close];
+        
+        // TODO(numist): this is potentially racy with window updates. Lock on the main thread for non-external code?
+        if (success && self.selectedIndex == 0) {
+            NNWindow *nextWindow = (self.selectedIndex + 1) < [self.windows count] ?[self.windows objectAtIndex:(self.selectedIndex + 1)] : nil;
+            if (![nextWindow.application isEqual:selectedWindow]) {
+                [nextWindow raise];
+            }
+        }
         
         dispatch_async(dispatch_get_main_queue(), ^{
             if (!success) {
