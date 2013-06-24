@@ -130,12 +130,13 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
     
     // Adjust the selected index by 1 if the first window's application is already frontmost, but do this as late as possible.
     [[[RACSignal
-        combineLatest:@[RACAbleWithStart(self, pendingSwitch), RACAbleWithStart(self, displayTimer)]]
+        combineLatest:@[RACAbleWithStart(self, pendingSwitch), RACAbleWithStart(self, displayTimer)]
+        reduce:^(NSNumber *pendingSwitch, NSTimer *displayTimer){
+            return @([pendingSwitch boolValue] != !displayTimer);
+        }]
         distinctUntilChanged]
-        subscribeNext:^(id x) {
-            RACTupleUnpack(NSNumber *pendingSwitch, NSTimer *displayTimer) = x;
-            
-            if (self.active && ([pendingSwitch boolValue] != !displayTimer)) {
+        subscribeNext:^(NSNumber *adjustIndex) {
+            if (self.active && [adjustIndex boolValue]) {
                 if ([self.windows count] > 1 && [((NNWindow *)[self.windows objectAtIndex:0]).application isFrontMostApplication]) {
                     self.selectedIndex = (self.selectedIndex + 1) % [self.windows count];
                     [self.collectionView selectCellAtIndex:self.selectedIndex];
