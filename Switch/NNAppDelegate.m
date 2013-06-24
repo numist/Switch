@@ -155,15 +155,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
     });
 }
 
-- (void)displayTimerFired:(NSTimer *)timer;
-{
-    if (![timer isEqual:self.displayTimer]) {
-        return;
-    }
-
-    self.displayTimer = nil;
-}
-
 - (void)raise;
 {
     self.pendingSwitch = NO;
@@ -187,6 +178,17 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
             }
         });
     });
+}
+
+#pragma mark - Notifications/Timers
+
+- (void)displayTimerFired:(NSTimer *)timer;
+{
+    if (![timer isEqual:self.displayTimer]) {
+        return;
+    }
+    
+    self.displayTimer = nil;
 }
 
 #pragma mark - NNHUDCollectionViewDataSource
