@@ -99,17 +99,20 @@
 #pragma mark NNWindow
 
 /* Broken:
- * Doesn't see GitHub
  * Doesn't see the entirety of TweetBot (like the New Tweets ribbon because some of the elements are technically both separate windows and desktop elements as reported by CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements,  kCGNullWindowID);)
  */
 - (BOOL)isValidWindow;
 {
-    // Real windows have names. Can't care about the others
-    if (!self.name || [self.name length] == 0) {
+    if ([[self.windowDescription objectForKey:(__bridge NSString *)kCGWindowSharingState] longValue] == kCGWindowSharingNone) {
         return NO;
     }
     
-    // Catches WindowServer and maybe other daemons.
+    // Windows that are menubar-size or smaller are probably invalid.
+    if (self.cgBounds.size.width <= 24.0 || self.cgBounds.size.height <= 24.0) {
+        return NO;
+    }
+    
+    // Catches WindowServer and potentially other daemons.
     if (!self.application.name || [self.application.name length] == 0) {
         return NO;
     }
@@ -182,10 +185,13 @@
     return result;
 }
 
-@dynamic name;
+@synthesize name = _name;
 - (NSString *)name;
 {
-    return [self.windowDescription objectForKey:(__bridge NSString *)kCGWindowName];
+    if (!_name) {
+        _name = [self.windowDescription objectForKey:(__bridge NSString *)kCGWindowName];
+    }
+    return _name;
 }
 
 - (CGWindowID)windowID;
@@ -223,7 +229,7 @@
 
 - (CGImageRef)copyCGWindowImage;
 {
-    CGImageRef result = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, self.windowID, kCGWindowImageBoundsIgnoreFraming);
+    CGImageRef result = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, self.windowID, 0);
     
     BailUnless(result, NULL);
     
