@@ -35,6 +35,7 @@
     }
     
     [self setWantsLayer:YES];
+    self.layerContentsRedrawPolicy = NSViewLayerContentsRedrawOnSetNeedsDisplay;
     
     return self;
 }
@@ -106,6 +107,7 @@
         CALayer *result = [CALayer layer];
         result.magnificationFilter = kCAFilterTrilinear;
         result.minificationFilter = kCAFilterTrilinear;
+        result.contentsGravity = kCAGravityResizeAspect;
         return result;
     };
     
