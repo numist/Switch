@@ -128,14 +128,14 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
             }
         }];
     
-    // Adjust the selected index by 1 if the first window's application is already frontmost.
+    // Adjust the selected index by 1 if the first window's application is already frontmost, but do this as late as possible.
     [[[RACSignal
-        combineLatest:@[RACAbleWithStart(self, windowListLoaded), RACAbleWithStart(self, displayTimer)]]
+        combineLatest:@[RACAbleWithStart(self, pendingSwitch), RACAbleWithStart(self, displayTimer)]]
         distinctUntilChanged]
         subscribeNext:^(id x) {
-            RACTupleUnpack(NSNumber *windowListLoaded, NSTimer *displayTimer) = x;
+            RACTupleUnpack(NSNumber *pendingSwitch, NSTimer *displayTimer) = x;
             
-            if (self.active && ([windowListLoaded boolValue] != !displayTimer)) {
+            if (self.active && ([pendingSwitch boolValue] != !displayTimer)) {
                 if ([self.windows count] > 1 && [((NNWindow *)[self.windows objectAtIndex:0]).application isFrontMostApplication]) {
                     self.selectedIndex = (self.selectedIndex + 1) % [self.windows count];
                     [self.collectionView selectCellAtIndex:self.selectedIndex];
