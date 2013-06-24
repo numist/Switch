@@ -155,6 +155,17 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
     });
 }
 
+- (void)dismiss;
+{
+    if (self.active) {
+        self.pendingSwitch = YES;
+        
+        if (self.windowListLoaded) {
+            [self raise];
+        }
+    }
+}
+
 - (void)raise;
 {
     self.pendingSwitch = NO;
@@ -219,8 +230,8 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
     if (index != self.selectedIndex) {
         self.selectedIndex = index;
     }
-    // TODO(numist): lol
-    [self hotKeyManagerDismissed:nil];
+    
+    [self dismiss];
 }
 
 #pragma mark NNWindowStoreDelegate
@@ -300,13 +311,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 
 - (void)hotKeyManagerDismissed:(NNHotKeyManager *)manager;
 {
-    if (self.active) {
-        self.pendingSwitch = YES;
-
-        if (self.windowListLoaded) {
-            [self raise];
-        }
-    }
+    [self dismiss];
 }
 
 - (void)hotKeyManagerBeginIncrementingSelection:(NNHotKeyManager *)manager;
