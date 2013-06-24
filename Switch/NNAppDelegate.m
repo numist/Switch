@@ -172,35 +172,32 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
         distinctUntilChanged]
         subscribeNext:^(id x) {
             RACTupleUnpack(NSNumber *pendingSwitch, NSNumber *windowListLoaded) = x;
+            
             if ([pendingSwitch boolValue] && [windowListLoaded boolValue]) {
-                [self raise];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.pendingSwitch = NO;
+                    
+                    __block BOOL raiseSuccessful = YES;
+                    NNWindow *selectedWindow = [self selectedWindow];
+                    
+                    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+                        if (selectedWindow) {
+                            raiseSuccessful = [selectedWindow raise];
+                        } else {
+                            Check(self.selectedIndex == 0);
+                            Log(@"No windows to raise! (Selection index: %lu)", self.selectedIndex);
+                        }
+                        
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            if (raiseSuccessful) {
+                                Check(self.active);
+                                self.active = NO;
+                            }
+                        });
+                    });
+                });
             }
         }];
-}
-
-- (void)raise;
-{
-    self.pendingSwitch = NO;
-    
-    __block BOOL raiseSuccessful = YES;
-    NNWindow *selectedWindow = [self selectedWindow];
-
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        if (selectedWindow) {
-            raiseSuccessful = [selectedWindow raise];
-            Check(raiseSuccessful);
-        } else {
-            Check(self.selectedIndex == 0);
-            Log(@"No windows to raise! (Selection index: %lu)", self.selectedIndex);
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (raiseSuccessful) {
-                Check(self.active);
-                self.active = NO;
-            }
-        });
-    });
 }
 
 #pragma mark - Notifications/Timers
