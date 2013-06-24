@@ -112,8 +112,8 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 - (void)setUpReactions;
 {
     // Interface is only visible when Switch is active, the window list has loaded, and the display timer has timed out.
-    [[[RACSignal combineLatest:@[RACAbleWithStart(self, active), RACAbleWithStart(self, windowListLoaded), RACAbleWithStart(self, displayTimer)] reduce:^(NSNumber *active, NSNumber *windowListLoaded, NSTimer *displayTimer) {
-        return @([active boolValue] && [windowListLoaded boolValue] && !displayTimer);
+    [[[RACSignal combineLatest:@[RACAbleWithStart(self, windowListLoaded), RACAbleWithStart(self, displayTimer)] reduce:^(NSNumber *windowListLoaded, NSTimer *displayTimer) {
+        return @(self.active && [windowListLoaded boolValue] && !displayTimer);
     }] distinctUntilChanged] subscribeNext:^(NSNumber *shouldDisplayInterface) {
         if ([shouldDisplayInterface boolValue]) {
             [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
