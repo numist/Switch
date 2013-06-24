@@ -17,11 +17,10 @@
 #import <Haxcessibility/Haxcessibility.h>
 
 #import "NNApplication+Private.h"
-#import "NNAXLifetimeTracker.h"
 #import "NNWindowCache.h"
 
 
-@interface NNWindow ()
+@interface NNWindow () <HAXElementDelegate>
 
 @property (atomic, strong) NSImage *image;
 @property (nonatomic, strong, readonly) NSDictionary *windowDescription;
@@ -97,13 +96,6 @@
     return [NSString stringWithFormat:@"%p <%u (%@)>", self, self.windowID, self.name];
 }
 
-- (void)dealloc;
-{
-    if (_haxWindow) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:kNNAXLifetimeEndedNotification object:_haxWindow];
-    }
-}
-
 #pragma mark NNWindow
 
 /* Broken:
@@ -145,20 +137,18 @@
     return YES;
 }
 
-#pragma mark Notifications
+#pragma mark HAXElementDelegate
 
-- (void)axLifetimeEndedNotification:(NSNotification *)note;
+- (void)elementWasDestroyed:(HAXElement *)element;
 {
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        @synchronized(self) {
-            BailUnless(note.object == _haxWindow, );
-            
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:note.name object:note.object];
+    @synchronized(self) {
+        BailUnless(element == _haxWindow, );
+        
+        @autoreleasepool {
             _haxWindow = nil;
-
             (void)self.haxWindow;
         }
-    });
+    }
 }
 
 #pragma mark Dynamic accessors
@@ -172,8 +162,7 @@
             _haxWindow = [self.application haxWindowForWindow:self];
             
             if (_haxWindow) {
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(axLifetimeEndedNotification:) name:kNNAXLifetimeEndedNotification object:_haxWindow];
-                [[NNAXLifetimeTracker sharedTracker] trackLifetimeOfHAXElement:_haxWindow];
+                _haxWindow.delegate = self;
             }
         }
         if (!_haxWindow && [[NNWindowCache sharedCache] cachedWindowWithID:self.windowID]) {
@@ -227,10 +216,7 @@
 
 - (BOOL)close;
 {
-    BOOL result = [self.haxWindow close];
-    Check(result);
-    // TODO(numist): this fails with -25202 (invalid element) if you try to close more than one Sublime Text window.
-    return result;
+    return [self.haxWindow close];
 }
 
 #pragma mark Private

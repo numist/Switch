@@ -17,12 +17,11 @@
 #import <Haxcessibility/Haxcessibility.h>
 
 #import "despatch.h"
-#import "NNAXLifetimeTracker.h"
 #import "NNApplicationCache.h"
 #import "NNWindow+Private.h"
 
 
-@interface NNApplication ()
+@interface NNApplication () <HAXElementDelegate>
 
 @property (nonatomic, readonly, assign) pid_t pid;
 @property (atomic, retain) NSRunningApplication *app;
@@ -99,13 +98,6 @@
     return [NSString stringWithFormat:@"%p <%d (%@)>", self, self.pid, self.name];
 }
 
-- (void)dealloc;
-{
-    if (_haxApp) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:kNNAXLifetimeEndedNotification object:_haxApp];
-    }
-}
-
 #pragma mark Properties
 
 @synthesize name = _name;
@@ -133,20 +125,18 @@
     return _icon;
 }
 
-#pragma mark Notifications
+#pragma mark HAXElementDelegate
 
-- (void)axLifetimeEndedNotification:(NSNotification *)note;
+- (void)elementWasDestroyed:(HAXElement *)element;
 {
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        @synchronized(self) {
-            BailUnless(note.object == _haxApp, );
-            
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:note.name object:note.object];
+    @synchronized(self) {
+        BailUnless(element == _haxApp, );
+        
+        @autoreleasepool {
             _haxApp = nil;
-
             (void)self.haxApp;
         }
-    });
+    }
 }
 
 #pragma mark Dynamic accessors
@@ -160,8 +150,7 @@
             _haxApp = [HAXApplication applicationWithPID:self.pid];
             
             if (_haxApp) {
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(axLifetimeEndedNotification:) name:kNNAXLifetimeEndedNotification object:_haxApp];
-                [[NNAXLifetimeTracker sharedTracker] trackLifetimeOfHAXElement:_haxApp];
+                _haxApp.delegate = self;
             }
         }
         if (!_haxApp && [[NNApplicationCache sharedCache] cachedApplicationWithPID:self.pid]) {
