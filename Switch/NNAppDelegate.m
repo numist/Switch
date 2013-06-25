@@ -119,6 +119,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
         subscribeNext:^(NSNumber *shouldDisplayInterface) {
             if ([shouldDisplayInterface boolValue]) {
                 [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
+                [self.appWindow setFrame:[self.appWindow frameRectForContentRect:[NSScreen mainScreen].frame] display:YES];
                 [self.appWindow orderFront:self];
                 [self.store startUpdatingWindowContents];
             } else {
