@@ -27,6 +27,8 @@
 @property (nonatomic, assign) CGFloat maxCellSize;
 @property (nonatomic, assign) CGFloat maxWidth;
 
+@property (nonatomic, readonly) NSUInteger selectedIndex;
+
 - (NSUInteger)numberOfCells;
 
 - (NSView *)cellForIndex:(NSUInteger)index;

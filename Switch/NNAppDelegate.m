@@ -35,7 +35,8 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 @property (nonatomic, assign) BOOL windowListLoaded;
 @property (nonatomic, strong) NSTimer *displayTimer;
 @property (nonatomic, assign) BOOL pendingSwitch;
-@property (nonatomic, assign) NSUInteger selectedIndex;
+@property (nonatomic, assign) NSInteger selectedIndex;
+@property (nonatomic, assign) BOOL adjustedIndex;
 
 #pragma mark UI
 @property (nonatomic, strong) NSWindow *appWindow;
@@ -101,9 +102,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
         collectionView.maxCellSize = kNNMaxWindowThumbnailSize;
         collectionView.dataSource = self;
         collectionView.delegate = self;
-        if (self.selectedIndex < NSNotFound) {
-            [collectionView selectCellAtIndex:self.selectedIndex];
-        }
     }
     self.collectionView = collectionView;
     [self.appWindow.contentView addSubview:self.collectionView];
@@ -128,19 +126,19 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
             }
         }];
     
-    // Adjust the selected index by 1 if the first window's application is already frontmost, but do this as late as possible.
+    // Adjust the selected index by 1 if the first window's application is not already frontmost, but do this as late as possible.
     [[[RACSignal
         combineLatest:@[RACAbleWithStart(self, pendingSwitch), RACAbleWithStart(self, displayTimer)]
         reduce:^(NSNumber *pendingSwitch, NSTimer *displayTimer){
-            return @([pendingSwitch boolValue] != !displayTimer);
+            return @([pendingSwitch boolValue] == YES || displayTimer == nil);
         }]
         distinctUntilChanged]
         subscribeNext:^(NSNumber *adjustIndex) {
-            if (self.active && [adjustIndex boolValue]) {
-                if ([self.windows count] > 1 && [((NNWindow *)[self.windows objectAtIndex:0]).application isFrontMostApplication]) {
-                    self.selectedIndex = (self.selectedIndex + 1) % [self.windows count];
-                    [self.collectionView selectCellAtIndex:self.selectedIndex];
+            if (!self.adjustedIndex && [adjustIndex boolValue]) {
+                if (self.selectedIndex == 1 && [self.windows count] > 1 && ![((NNWindow *)[self.windows objectAtIndex:0]).application isFrontMostApplication]) {
+                    self.selectedIndex = 0;
                 }
+                self.adjustedIndex = YES;
             }
         }];
     
@@ -151,9 +149,13 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
             if ([active boolValue]) {
                 Check(![self.windows count]);
                 Check(!self.displayTimer);
+
+                self.displayTimer = [NSTimer scheduledTimerWithTimeInterval:kNNWindowDisplayDelay target:self selector:@selector(displayTimerFired:) userInfo:nil repeats:NO];
+                self.adjustedIndex = NO;
+                self.windowListLoaded = NO;
+                self.selectedIndex = 0;
                 
                 [self.store startUpdatingWindowList];
-                self.displayTimer = [NSTimer scheduledTimerWithTimeInterval:kNNWindowDisplayDelay target:self selector:@selector(displayTimerFired:) userInfo:nil repeats:NO];
             } else {
                 Check(!self.pendingSwitch);
                 
@@ -162,8 +164,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
                 [self.displayTimer invalidate];
                 self.displayTimer = nil;
                 self.pendingSwitch = NO;
-                self.windowListLoaded = NO;
-                self.selectedIndex = 0;
                 [self.collectionView selectCellAtIndex:self.selectedIndex];
             }
         }];
@@ -197,6 +197,19 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
                         });
                     });
                 });
+            }
+        }];
+    
+    [[RACAbleWithStart(self, selectedIndex)
+        distinctUntilChanged]
+        subscribeNext:^(id x) {
+            NSUInteger index = [x unsignedIntegerValue];
+            if (index == self.collectionView.selectedIndex) { return; }
+            
+            if (index < [self.windows count]) {
+                [self.collectionView selectCellAtIndex:index];
+            } else {
+                [self.collectionView deselectCell];
             }
         }];
 }
@@ -237,7 +250,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 
 - (void)HUDView:(NNHUDCollectionView *)view activateCellAtIndex:(NSUInteger)index;
 {
-    Check(self.active);
+    BailUnless(self.active,);
 
     if (index != self.selectedIndex) {
         self.selectedIndex = index;
@@ -290,7 +303,10 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 {
     self.windowListLoaded = YES;
     
-    if ([self.windows count] && self.selectedIndex < [self.windows count]) {
+    if ([self.windows count]) {
+        if (self.selectedIndex >= [self.windows count]) {
+            self.selectedIndex = [self.windows count] - 1;
+        }
         [self.collectionView selectCellAtIndex:self.selectedIndex];
     } else {
         [self.collectionView deselectCell];
@@ -313,24 +329,30 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 
 - (void)hotKeyManagerDismissed:(NNHotKeyManager *)manager;
 {
-    Check(self.active);
-    
-    self.pendingSwitch = YES;
+    if (self.active) {
+        self.pendingSwitch = YES;
+    }
 }
 
 - (void)hotKeyManagerBeginIncrementingSelection:(NNHotKeyManager *)manager;
 {
-    if (![self.windows count]) {
-        return;
+    NSUInteger newIndex = self.selectedIndex;
+    
+    if (newIndex >= NSNotFound) {
+        newIndex = 0;
+    } else if (!self.incrementing || self.selectedIndex <= [self.windows count] - 1) {
+        newIndex += 1;
     }
-
-    if (self.selectedIndex >= NSNotFound) {
-        self.selectedIndex = 0;
-        [self.collectionView selectCellAtIndex:self.selectedIndex];
-    } else if (!self.incrementing || self.selectedIndex != [self.windows count] - 1) {
-        self.selectedIndex = (self.selectedIndex + 1) % [self.windows count];
-        [self.collectionView selectCellAtIndex:self.selectedIndex];
+    
+    if (self.windowListLoaded) {
+        if (!self.incrementing) {
+            newIndex %= [self.windows count];
+        } else if (newIndex >= [self.windows count]) {
+            newIndex = [self.windows count] - 1;
+        }
     }
+    
+    self.selectedIndex = newIndex;
     
     self.incrementing = YES;
 }
@@ -342,17 +364,23 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 
 - (void)hotKeyManagerBeginDecrementingSelection:(NNHotKeyManager *)manager;
 {
-    if (![self.windows count]) {
-        return;
+    NSInteger newIndex = self.selectedIndex;
+    
+    if (newIndex >= NSNotFound) {
+        newIndex = [self.windows count] - 1;
+    } else if (!self.decrementing || newIndex != 0) {
+        newIndex -= 1;
     }
     
-    if (self.selectedIndex >= NSNotFound) {
-        self.selectedIndex = [self.windows count] - 1;
-        [self.collectionView selectCellAtIndex:self.selectedIndex];
-    } else if (!self.decrementing || self.selectedIndex != 0) {
-        self.selectedIndex = self.selectedIndex == 0 ? [self.windows count] - 1 : self.selectedIndex - 1;
-        [self.collectionView selectCellAtIndex:self.selectedIndex];
+    if (self.windowListLoaded) {
+        if (!self.decrementing) {
+            while (newIndex < 0) { newIndex += [self.windows count]; }
+        } else if (newIndex < 0) {
+            newIndex = 0;
+        }
     }
+    
+    self.selectedIndex = newIndex;
     
     self.decrementing = YES;
 }
