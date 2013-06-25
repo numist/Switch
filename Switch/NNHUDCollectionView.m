@@ -259,6 +259,12 @@
     }
 }
 
+- (void)mouseDown:(NSEvent *)theEvent;
+{
+    // Do not pass this event up the responder chain.
+    return;
+}
+
 #pragma mark - Internal
 
 - (void)setSize:(NSSize)size;
