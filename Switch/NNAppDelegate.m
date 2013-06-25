@@ -25,7 +25,7 @@
 #import "NNWindowThumbnailView.h"
 
 
-static NSTimeInterval kNNWindowDisplayDelay = 0.25;
+static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
 
 @interface NNAppDelegate () <NNWindowStoreDelegate, NNHUDCollectionViewDataSource, NNHUDCollectionViewDelegate, NNHotKeyManagerDelegate>
