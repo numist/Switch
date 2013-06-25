@@ -290,9 +290,10 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 {
     self.windowListLoaded = YES;
     
-    if ([self.windows count]) {
-        // TODO(numist): what is this really doing now?
+    if ([self.windows count] && self.selectedIndex < [self.windows count]) {
         [self.collectionView selectCellAtIndex:self.selectedIndex];
+    } else {
+        [self.collectionView deselectCell];
     }
     
     if (self.needsReset) {

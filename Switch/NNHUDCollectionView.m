@@ -97,13 +97,10 @@
 {
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
     
-//    NSParameterAssert(index < self.numberOfCells);
     self.selectedIndex = index;
 
-    NNSelectionBoxView *selectionBox;
-    
     if (!self.selectionBox) {
-        selectionBox = [[NNSelectionBoxView alloc] initWithFrame:NSZeroRect];
+        NNSelectionBoxView *selectionBox = [[NNSelectionBoxView alloc] initWithFrame:NSZeroRect];
         [self addSubview:selectionBox positioned:NSWindowBelow relativeTo:nil];
         self.selectionBox = selectionBox;
     }
