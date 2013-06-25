@@ -349,6 +349,8 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 
 - (void)hotKeyManagerBeginIncrementingSelection:(NNHotKeyManager *)manager;
 {
+    BailUnless(self.active,);
+
     NSUInteger newIndex = self.selectedIndex;
     
     if (newIndex >= NSNotFound) {
@@ -377,6 +379,8 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 
 - (void)hotKeyManagerBeginDecrementingSelection:(NNHotKeyManager *)manager;
 {
+    BailUnless(self.active,);
+
     NSInteger newIndex = self.selectedIndex;
     
     if (newIndex >= NSNotFound) {
@@ -406,6 +410,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 - (void)hotKeyManagerClosedWindow:(NNHotKeyManager *)manager;
 {
     // TODO(numist): grey out thumbnail for selectedWindow
+    BailUnless(self.active,);
     
     __block BOOL success;
     NNWindow *selectedWindow = [self selectedWindow];
