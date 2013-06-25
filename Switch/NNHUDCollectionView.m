@@ -126,6 +126,7 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
     }
     
     self.selectionBox.frame = nnItemRect((self.frame.size.height - kNNWindowToThumbInset * 2.0), self.selectedIndex);
+    [self.selectionBox setNeedsDisplay:YES];
 }
 
 - (void)deselectCell;
@@ -151,25 +152,38 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
     [self.updates removeLastObject];
 
     for (NNHUDCollectionViewUpdate *update in updates) {
-        // process update
-        NSLog(@"Process update type %u", update.type);
-        
+        NSView *cell = update.index < [self.cells count] ? [self.cells objectAtIndex:update.index] : nil;
         switch (update.type) {
             case NNHUDCollectionViewUpdateDelete:
+                [self.cells removeObjectAtIndex:update.index];
+                [cell removeFromSuperview];
                 self.numberOfCells--;
                 break;
                 
             case NNHUDCollectionViewUpdateInsert:
+                cell = [self.dataSource HUDView:self viewForCellAtIndex:update.index];
+                [self.cells insertObject:cell atIndex:update.index];
+                [self addSubview:cell];
                 self.numberOfCells++;
                 break;
                 
-            case NNHUDCollectionViewUpdateMove:
+            case NNHUDCollectionViewUpdateMove: {
+                NSView *cell = [self.cells objectAtIndex:update.index];
+                [self.cells removeObjectAtIndex:update.index];
+                [self.cells insertObject:cell atIndex:update.newIndex];
                 break;
+            }
+        }
+        
+        [self setSize:[self computeCollectionViewSize]];
+        self.selectionBox.frame = nnItemRect((self.frame.size.height - kNNWindowToThumbInset * 2.0), self.selectedIndex);
+        for (NSUInteger i = 0; i < [self.cells count]; i++) {
+            ((NSView *)[self.cells objectAtIndex:i]).frame = [self computeFrameForCellAtIndex:i];
         }
     }
     
     if ([updates count]) {
-        [self reloadData];
+        [self setNeedsDisplay:YES];
     }
 }
 
