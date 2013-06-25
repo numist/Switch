@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BC43A605177A14000082F981 /* NNClickableView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC43A604177A14000082F981 /* NNClickableView.m */; };
 		BC63AB8F1755907D00016B9E /* NNHUDCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */; };
 		BC63AB921756FBE400016B9E /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB911756FBE300016B9E /* Carbon.framework */; };
 		BC63AB9A175701D900016B9E /* Haxcessibility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
@@ -100,6 +101,8 @@
 
 /* Begin PBXFileReference section */
 		BC3B3B6D175E505C002AD452 /* NNWindowCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNWindowCache.h; sourceTree = "<group>"; };
+		BC43A603177A14000082F981 /* NNClickableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNClickableView.h; sourceTree = "<group>"; };
+		BC43A604177A14000082F981 /* NNClickableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNClickableView.m; sourceTree = "<group>"; };
 		BC63AB8D1755907D00016B9E /* NNHUDCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHUDCollectionView.h; sourceTree = "<group>"; };
 		BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDCollectionView.m; sourceTree = "<group>"; };
 		BC63AB911756FBE300016B9E /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
@@ -327,6 +330,8 @@
 			isa = PBXGroup;
 			children = (
 				BCA734F516DAC53F00CD4C74 /* MainMenu.xib */,
+				BC43A603177A14000082F981 /* NNClickableView.h */,
+				BC43A604177A14000082F981 /* NNClickableView.m */,
 				BCA7354B16E2ED5000CD4C74 /* NNHUDView.h */,
 				BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */,
 				BC63AB8D1755907D00016B9E /* NNHUDCollectionView.h */,
@@ -569,6 +574,7 @@
 				BCA734F416DAC53F00CD4C74 /* NNAppDelegate.m in Sources */,
 				BCA7351716DAC59000CD4C74 /* NNWindowStore.m in Sources */,
 				BCA7351B16DAC5E200CD4C74 /* NNWindowListWorker.m in Sources */,
+				BC43A605177A14000082F981 /* NNClickableView.m in Sources */,
 				BCA7351E16DAC61F00CD4C74 /* NNWindow.m in Sources */,
 				BCA7352216DAC6A900CD4C74 /* NNWindowWorker.m in Sources */,
 				BCA7352516DAC93C00CD4C74 /* NNApplication.m in Sources */,

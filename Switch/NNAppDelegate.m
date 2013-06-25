@@ -18,6 +18,7 @@
 
 #import "constants.h"
 #import "NNApplication.h"
+#import "NNClickableView.h"
 #import "NNHotKeyManager.h"
 #import "NNHUDCollectionView.h"
 #import "NNWindow+Private.h"
@@ -92,6 +93,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
         switcherWindow.backgroundColor = [NSColor clearColor];
         switcherWindow.level = NSPopUpMenuWindowLevel;
         switcherWindow.acceptsMouseMovedEvents = YES;
+        switcherWindow.contentView = [[NNClickableView alloc] initWithFrame:NSZeroRect target:self];
     }
     self.appWindow = switcherWindow;
     
@@ -239,7 +241,16 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     self.displayTimer = nil;
 }
 
-#pragma mark - NNHUDCollectionViewDataSource
+#pragma mark - Delegate/Actions
+
+- (void)view:(NSView *)view detectedEvent:(NSEvent *)event;
+{
+    [((NNWindow *)[self.windows objectAtIndex:0]).application raise];
+    
+    self.active = NO;
+}
+
+#pragma mark NNHUDCollectionViewDataSource
 
 - (NSUInteger)HUDViewNumberOfCells:(NNHUDCollectionView *)view;
 {
