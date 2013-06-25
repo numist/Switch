@@ -284,6 +284,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
     switch (type) {
         case NNWindowStoreChangeInsert:
             [self.windows insertObject:window atIndex:newIndex];
+            [self cellForWindow:window].alphaValue = 1.0;
             self.needsReset = YES;
             break;
             
@@ -409,17 +410,19 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 
 - (void)hotKeyManagerClosedWindow:(NNHotKeyManager *)manager;
 {
-    // TODO(numist): grey out thumbnail for selectedWindow
     BailUnless(self.active,);
     
     __block BOOL success;
     NNWindow *selectedWindow = [self selectedWindow];
+    NNWindowThumbnailView *thumb = [self cellForWindow:selectedWindow];
     NNWindow *nextWindow = nil;
+    
     // If the first and second window belong to different applications, and the first application has another visible window, closing the first window will activate the first application's next window, changing the window order. This is fixed by tracking the next window (if it belongs to a different application) and raising it. This only matters when closing the frontmost window.
     if (self.selectedIndex == 0 && (self.selectedIndex + 1) < [self.windows count] && ![nextWindow.application isEqual:selectedWindow]) {
         nextWindow = [self.windows objectAtIndex:(self.selectedIndex + 1)];
     }
-    
+
+    thumb.alphaValue = 0.5;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         if ((success = [selectedWindow close])) {
             [nextWindow raise];
@@ -427,7 +430,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
         
         dispatch_async(dispatch_get_main_queue(), ^{
             if (!success) {
-                // TODO(numist): ungrey out thumbnail for selectedWindow
+                thumb.alphaValue = 1.0;
             }
         });
     });
