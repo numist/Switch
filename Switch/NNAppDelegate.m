@@ -395,16 +395,16 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
     // TODO(numist): grey out thumbnail for selectedWindow
     
     __block BOOL success;
+    NNWindow *selectedWindow = [self selectedWindow];
+    NNWindow *nextWindow = nil;
+    // If the first and second window belong to different applications, and the first application has another visible window, closing the first window will activate the first application's next window, changing the window order. This is fixed by tracking the next window (if it belongs to a different application) and raising it. This only matters when closing the frontmost window.
+    if (self.selectedIndex == 0 && (self.selectedIndex + 1) < [self.windows count] && ![nextWindow.application isEqual:selectedWindow]) {
+        nextWindow = [self.windows objectAtIndex:(self.selectedIndex + 1)];
+    }
+    
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NNWindow *selectedWindow = [self selectedWindow];
-        success = [selectedWindow close];
-        
-        // TODO(numist): this is potentially racy with window updates. Lock on the main thread for non-external code?
-        if (success && self.selectedIndex == 0) {
-            NNWindow *nextWindow = (self.selectedIndex + 1) < [self.windows count] ?[self.windows objectAtIndex:(self.selectedIndex + 1)] : nil;
-            if (![nextWindow.application isEqual:selectedWindow]) {
-                [nextWindow raise];
-            }
+        if ((success = [selectedWindow close])) {
+            [nextWindow raise];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
