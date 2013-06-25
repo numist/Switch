@@ -41,7 +41,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 #pragma mark UI
 @property (nonatomic, strong) NSWindow *appWindow;
 @property (nonatomic, strong) NNHUDCollectionView *collectionView;
-@property (nonatomic, assign) BOOL needsReset;
 
 #pragma mark NNWindowStore and state
 @property (nonatomic, strong) NSMutableArray *windows;
@@ -277,7 +276,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
 - (void)storeWillChangeContent:(NNWindowStore *)store;
 {
-    self.needsReset = NO;
+    [self.collectionView beginUpdates];
 }
 
 - (void)store:(NNWindowStore *)store didChangeWindow:(NNWindow *)window atIndex:(NSUInteger)index forChangeType:(NNWindowStoreChangeType)type newIndex:(NSUInteger)newIndex;
@@ -286,13 +285,13 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
         case NNWindowStoreChangeInsert:
             [self.windows insertObject:window atIndex:newIndex];
             [self cellForWindow:window].alphaValue = 1.0;
-            self.needsReset = YES;
+            [self.collectionView insertCellsAtIndexes:@[@(newIndex)] withAnimation:self.windowListLoaded];
             break;
             
         case NNWindowStoreChangeMove:
             [self.windows removeObjectAtIndex:index];
             [self.windows insertObject:window atIndex:newIndex];
-            self.needsReset = YES;
+            [self.collectionView moveCellAtIndex:index toIndex:newIndex];
             break;
             
         case NNWindowStoreChangeDelete:
@@ -303,7 +302,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
                 self.selectedIndex = [self.windows count] ? [self.windows count] - 1 : 0;
                 [self.collectionView selectCellAtIndex:self.selectedIndex];
             }
-            self.needsReset = YES;
+            [self.collectionView deleteCellsAtIndexes:@[@(index)] withAnimation:self.active];
             break;
             
         case NNWindowStoreChangeWindowContent: {
@@ -327,9 +326,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
         [self.collectionView deselectCell];
     }
     
-    if (self.needsReset) {
-        [self.collectionView reloadData];
-    }
+    [self.collectionView endUpdates];
 }
 
 #pragma mark NNHotKeyManagerDelegate

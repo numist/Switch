@@ -18,6 +18,27 @@
 #import "NNSelectionBoxView.h"
 
 
+typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
+    NNHUDCollectionViewUpdateInsert,
+    NNHUDCollectionViewUpdateMove,
+    NNHUDCollectionViewUpdateDelete
+};
+
+@interface NNHUDCollectionViewUpdate : NSObject
+@property (nonatomic, assign, readonly) NNHUDCollectionViewUpdateType type;
+@property (nonatomic, assign, readonly) NSUInteger index;
+@property (nonatomic, assign, readonly) NSUInteger newIndex;
+@property (nonatomic, assign, readonly) BOOL animate;
+@end
+
+@implementation NNHUDCollectionViewUpdate
+- (instancetype)initWithType:(NNHUDCollectionViewUpdateType)type index:(NSUInteger)index animate:(BOOL)animate;
+{ self = [super init]; if (!self) { return nil; } _type = type; _index = index; _animate = animate; return self; }
+- (instancetype)initMoveWithIndex:(NSUInteger)index newIndex:(NSUInteger)newIndex;
+{ self = [self initWithType:NNHUDCollectionViewUpdateMove index:index animate:YES]; _newIndex = newIndex; return self; }
+@end
+
+
 @interface NNHUDCollectionView ()
 
 @property (nonatomic, assign) NSUInteger numberOfCells;
@@ -25,6 +46,8 @@
 
 @property (nonatomic, strong) NNSelectionBoxView *selectionBox;
 @property (nonatomic, assign) NSUInteger selectedIndex;
+
+@property (nonatomic, strong) NSMutableArray *updates;
 
 @end
 
@@ -39,14 +62,10 @@
     }
     
     _cells = [NSMutableArray new];
+    _updates = [NSMutableArray new];
     
     return self;
 }
-
-//- (void)drawRect:(NSRect)dirtyRect
-//{
-//    // Drawing code here.
-//}
 
 #pragma mark - NNHUDCollectionView properties
 
@@ -95,6 +114,7 @@
 
 - (void)selectCellAtIndex:(NSUInteger)index;
 {
+    // TODO(numist): this should probably be coalesced into the current update block if such a thing exists.
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
     
     self.selectedIndex = index;
@@ -110,6 +130,7 @@
 
 - (void)deselectCell;
 {
+    // TODO(numist): this should probably be coalesced into the current update block if such a thing exists.
     [self.selectionBox removeFromSuperview];
     self.selectionBox = nil;
 }
@@ -117,36 +138,53 @@
 - (void)beginUpdates;
 {
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
-    Log(@"Maybe don't call this yet");
     
-    abort();
+    [self.updates addObject:[NSMutableArray new]];
 }
 
 - (void)endUpdates;
 {
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
-    [self reloadData];
+    NSAssert([self.updates count], @"endUpdates called without a corresponding call to beginUpdates");
+    
+    NSArray *updates = [self.updates lastObject];
+    [self.updates removeLastObject];
+
+    for (NNHUDCollectionViewUpdate *update in updates) {
+        // process update
+        NSLog(@"Process update type %u", update.type);
+    }
+    
+    if ([updates count]) {
+        [self reloadData];
+    }
 }
 
 - (void)insertCellsAtIndexes:(NSArray *)indexes withAnimation:(BOOL)animate;
 {
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
     
-    abort();
+    NSMutableArray *updates = [self.updates lastObject];
+    for (NSNumber *index in indexes) {
+        [updates addObject:[[NNHUDCollectionViewUpdate alloc] initWithType:NNHUDCollectionViewUpdateInsert index:[index unsignedIntegerValue] animate:animate]];
+    }
 }
 
 - (void)deleteCellsAtIndexes:(NSArray *)indexes withAnimation:(BOOL)animate;
 {
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
     
-    abort();
+    NSMutableArray *updates = [self.updates lastObject];
+    for (NSNumber *index in indexes) {
+        [updates addObject:[[NNHUDCollectionViewUpdate alloc] initWithType:NNHUDCollectionViewUpdateDelete index:[index unsignedIntegerValue] animate:animate]];
+    }
 }
 
 - (void)moveCellAtIndex:(NSUInteger)index toIndex:(NSUInteger)newIndex;
 {
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
     
-    abort();
+    [[self.updates lastObject] addObject:[[NNHUDCollectionViewUpdate alloc] initMoveWithIndex:index newIndex:newIndex]];
 }
 
 - (void)reloadData;
