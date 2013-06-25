@@ -153,6 +153,19 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
     for (NNHUDCollectionViewUpdate *update in updates) {
         // process update
         NSLog(@"Process update type %u", update.type);
+        
+        switch (update.type) {
+            case NNHUDCollectionViewUpdateDelete:
+                self.numberOfCells--;
+                break;
+                
+            case NNHUDCollectionViewUpdateInsert:
+                self.numberOfCells++;
+                break;
+                
+            case NNHUDCollectionViewUpdateMove:
+                break;
+        }
     }
     
     if ([updates count]) {
