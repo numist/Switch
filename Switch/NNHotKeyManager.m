@@ -94,8 +94,9 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.delegate hotKeyManagerInvoked:self];
         });
-        return NULL;
-    } else if (self.activatedSwitcher) {
+    }
+    
+    if (self.activatedSwitcher) {
         if (!optionKeyIsPressed) {
             self.activatedSwitcher = NO;
             dispatch_async(dispatch_get_main_queue(), ^{
