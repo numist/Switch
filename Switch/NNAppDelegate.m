@@ -214,6 +214,20 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
         }];
 }
 
+- (NNWindowThumbnailView *)cellForWindow:(NNWindow *)window;
+{
+    // Cache collection view cells as associated objects on the window model objects.
+    NNWindowThumbnailView *result = objc_getAssociatedObject(window, (__bridge const void *)[NNWindowThumbnailView class]);
+    if (!result) {
+        result = [[NNWindowThumbnailView alloc] initWithFrame:NSZeroRect];
+        result.applicationIcon = window.application.icon;
+        result.windowThumbnail = window.image;
+        objc_setAssociatedObject(window, (__bridge const void *)[NNWindowThumbnailView class], result, OBJC_ASSOCIATION_RETAIN);
+    }
+    
+    return result;
+}
+
 #pragma mark - Notifications/Timers
 
 - (void)displayTimerFired:(NSTimer *)timer;
@@ -235,10 +249,9 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.25;
 - (NSView *)HUDView:(NNHUDCollectionView *)view viewForCellAtIndex:(NSUInteger)index;
 {
     NNWindow *window = [self.windows objectAtIndex:index];
-    NNWindowThumbnailView *result = [[NNWindowThumbnailView alloc] initWithFrame:NSZeroRect];
-    result.applicationIcon = window.application.icon;
-    result.windowThumbnail = window.image;
-    return result;
+    BailUnless(window, [[NSView alloc] initWithFrame:NSZeroRect]);
+
+    return [self cellForWindow:window];
 }
 
 #pragma mark NNHUDCollectionViewDelegate
