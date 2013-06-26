@@ -48,21 +48,6 @@
         return NO;
     }
     
-    // Catches WindowServer and potentially other daemons.
-    if (!self.application.name || [self.application.name length] == 0) {
-        return NO;
-    }
-    
-    // Last ditch catch-all: No system daemons!
-    static NSSet *disallowedApps;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        disallowedApps = [NSSet setWithArray:@[@"SystemUIServer", @"NotificationCenter", @"Notification Center", @"Dock", @"WindowServer"]];
-    });
-    if ([disallowedApps containsObject:self.application.name]) {
-        return NO;
-    }
-    
     return YES;
 }
 
