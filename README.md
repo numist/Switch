@@ -1,8 +1,10 @@
-Switch, A Window-based Context Switcher
-=======================================
+Switch, Window-Based Context Switching
+======================================
 
-Switch is a window-based (as opposed to application-based) context switcher. By default it is bound to using ⌥⇥ and ⌥⇧⇥ to cycle through the visible windows on the current space. It looks like this:
+Switch is a window-based (as opposed to application-based) context switcher. By default it is bound to using `⌥⇥` and `⌥⇧⇥` to cycle through the visible windows on the current space. It looks like this:
 
 ![Interface Screenshot](http://numist.net/random/switch.png)
 
-This project is functional, but not finished. I'm using it every day, but I could use your help. Contributions in the form of issues, patches, or beers are appreciated (that is a reverse-ordered list).
+This project is functional, but not finished. I'm using it every day, but I could use your help.
+
+Contributions in the form of [beers](mailto:numist@numist.net?cc=pay@square.com&subject=Here%27s%20%245&body=For%20a%20Switch%20beer%21%0A%0A%28If%20you%20don%27t%20have%20Square%20Cash%20yet%2C%20send%20this%20message%20anyway%20and%20I%20can%20invite%20you.%20If%20you%20haven%27t%20heard%20of%20it%2C%20check%20out%20https%3A%2F%2Fsquare.com%2Fcash%2F%20%29), [patches](https://github.com/numist/Switch/pull/new), and [issues](https://github.com/numist/Switch/issues) are appreciated.
