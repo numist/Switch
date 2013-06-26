@@ -11,6 +11,7 @@
 #import "NNApplication.h"
 
 
+// No corresponding implementation, everything in this interface is declared/implemented in the class extension!
 @interface NNWindow (NNPrivateAccessors)
 
 @property (nonatomic, strong, readonly) NSDictionary *windowDescription;
