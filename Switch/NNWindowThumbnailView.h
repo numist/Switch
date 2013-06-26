@@ -23,5 +23,6 @@
 - (instancetype)initWithFrame:(NSRect)frameRect window:(NNWindow *)window;
 
 - (void)setActive:(BOOL)active;
+- (void)setThumbnail:(NSImage *)image;
 
 @end

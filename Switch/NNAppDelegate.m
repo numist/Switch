@@ -319,7 +319,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
             break;
             
         case NNWindowStoreChangeWindowContent: {
-            // Nothing.
+            [self.collectionView[index] setThumbnail:window.image];
             break;
         }
     }
