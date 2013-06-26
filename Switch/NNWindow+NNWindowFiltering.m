@@ -26,12 +26,17 @@
     return [array filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
         NNWindow *window = evaluatedObject;
 
+        // Inexpensive/generic checks first.
+        if (![window isValidWindow]) {
+            return NO;
+        }
+        
         // Issue #2: Tweetbot composites multiple windows to make up its main window.
         if ([window.application.name isEqualToString:@"Tweetbot"] && ![window.name length]) {
             return NO;
         }
         
-        return [window isValidWindow];
+        return YES;
     }]];
 }
 
