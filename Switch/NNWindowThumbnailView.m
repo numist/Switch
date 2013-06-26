@@ -26,6 +26,7 @@
 @interface NNWindowThumbnailView ()
 
 @property (nonatomic, weak, readonly) NNWindow *modelWindow;
+@property (nonatomic, strong, readonly) RACSignal *thumbnailSignal;
 
 @property (nonatomic, strong) NSImage *thumbnail;
 @property (nonatomic, strong) NSImage *icon;
@@ -56,24 +57,24 @@
     _thumbnail = _modelWindow.image;
     _thumbnailLayer.contents = _thumbnail;
     
-    @weakify(self);
-    [[RACAble(self.modelWindow.image)
-        distinctUntilChanged]
-        subscribeNext:^(NSImage *image) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                @strongify(self);
-                
-                self.thumbnailLayer.contents = image;
-                
-                if (!SIZES_EQUAL(self.thumbnail.size, image.size)) {
-                    [self setNeedsLayout:YES];
-                }
-
-                self.thumbnail = image;
-            });
-        }];
+    
+    #warning (numist): double check that this isn't leaking signals.
+    [self rac_liftSelector:@selector(newThumbnail:) withObjects:RACAble(self.modelWindow.image)];
     
     return self;
+}
+
+- (void)newThumbnail:(NSImage *)image;
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.thumbnailLayer.contents = image;
+        
+        if (!SIZES_EQUAL(self.thumbnail.size, image.size)) {
+            [self setNeedsLayout:YES];
+        }
+        
+        self.thumbnail = image;
+    });
 }
 
 - (void)layout;
