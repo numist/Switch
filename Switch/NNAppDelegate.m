@@ -120,6 +120,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
         distinctUntilChanged]
         subscribeNext:^(NSNumber *shouldDisplayInterface) {
             if ([shouldDisplayInterface boolValue]) {
+                // TODO(numist): is there a better way to catch mouse moved events than this? Because ugh.
                 [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
                 [self.appWindow setFrame:[self.appWindow frameRectForContentRect:[NSScreen mainScreen].frame] display:YES];
                 [self.appWindow orderFront:self];
@@ -437,7 +438,10 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     thumb.alphaValue = 0.5;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         if ((success = [selectedWindow close])) {
-            [nextWindow raise];
+            if ([nextWindow raise]) {
+                // TODO(numist): is there a better way to catch mouse moved events than this? Because ugh.
+                [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
+            }
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
