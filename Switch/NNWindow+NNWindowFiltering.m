@@ -27,16 +27,17 @@
         NNWindow *window = evaluatedObject;
         
         // Only match windows at kCGNormalWindowLevel
-        BailUnless([[window.windowDescription objectForKey:(__bridge NSString *)kCGWindowLayer] longValue] == kCGNormalWindowLevel, NO);
-        
-        // Issue #2: Tweetbot composites multiple windows to make up its main window.
-        BailUnless(![window.application.name isEqualToString:@"Tweetbot"] || [window.name length], NO);
-        
-        // It's useful to know if/when/why a window is not accessible by Switch. For now, these windows/applications are not supported.
-        if ([[window.windowDescription objectForKey:(__bridge NSString *)kCGWindowSharingState] longValue] == kCGWindowSharingNone) {
-            DebugBreak();
+        if ([[window.windowDescription objectForKey:(__bridge NSString *)kCGWindowLayer] longValue] != kCGNormalWindowLevel) {
             return NO;
         }
+        
+        // Issue #2: Tweetbot composites multiple windows to make up its main window.
+        if ([window.application.name isEqualToString:@"Tweetbot"] && ![window.name length]) {
+            return NO;
+        }
+        
+        // For now, windows whose contents are not accessible are not supported.
+        BailUnless([[window.windowDescription objectForKey:(__bridge NSString *)kCGWindowSharingState] longValue] != kCGWindowSharingNone, NO);
         
         return YES;
     }]];
