@@ -55,7 +55,7 @@ static NSTimeInterval refreshInterval = 0.1;
     CFArrayRef cgInfo = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements,  kCGNullWindowID);
     NSArray *info = CFBridgingRelease(cgInfo);
     
-    NSMutableArray *windows = [NSMutableArray arrayWithCapacity:[info count]];
+    NSArray *windows = [NSMutableArray arrayWithCapacity:[info count]];
     
     for (unsigned i = 0; i < [info count]; i++) {
         NNWindow *window = [NNWindow windowWithDescription:[info objectAtIndex:i]];
@@ -63,9 +63,11 @@ static NSTimeInterval refreshInterval = 0.1;
         // Window found or info valid for creating a new window.
         if (window) {
             Check(![windows containsObject:window]);
-            [windows addObject:window];
+            [(NSMutableArray *)windows addObject:window];
         }
     }
+    
+    windows = [NNWindow filterValidWindowsFromArray:windows];
     
     // Schedule delegate update and next iteration of worker loop.
     __weak __typeof__(self) weakSelf = self;

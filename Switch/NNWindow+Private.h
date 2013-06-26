@@ -14,6 +14,8 @@
 
 #import "NNWindow.h"
 
+#import "NNWindow+NNWindowFiltering.h"
+
 
 @class HAXWindow;
 

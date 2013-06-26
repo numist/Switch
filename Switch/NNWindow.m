@@ -62,7 +62,7 @@
     _application = [NNApplication applicationWithPID:[[self.windowDescription objectForKey:(NSString *)kCGWindowOwnerPID] intValue]];
 
     
-    if (!_application || ![self isValidWindow]) {
+    if (!_application) {
         return nil;
     }
     
@@ -94,50 +94,6 @@
 - (NSString *)description;
 {
     return [NSString stringWithFormat:@"%p <%u (%@)>", self, self.windowID, self.name];
-}
-
-#pragma mark NNWindow
-
-/* Broken:
- * Doesn't see the entirety of TweetBot (like the New Tweets ribbon because some of the elements are technically both separate windows and desktop elements as reported by CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements,  kCGNullWindowID);)
- */
-- (BOOL)isValidWindow;
-{
-    if ([[self.windowDescription objectForKey:(__bridge NSString *)kCGWindowSharingState] longValue] == kCGWindowSharingNone) {
-        return NO;
-    }
-    
-    // Windows that are menubar-size or smaller are probably invalid.
-    if (self.cgBounds.size.width <= 24.0 || self.cgBounds.size.height <= 24.0) {
-        return NO;
-    }
-    
-    // Catches WindowServer and potentially other daemons.
-    if (!self.application.name || [self.application.name length] == 0) {
-        return NO;
-    }
-    
-    // Don't report own windows. Maybe later if there are ever preferences? For now, KISS
-    if ([self.application isCurrentApplication]) {
-        return NO;
-    }
-    
-    // Last ditch catch-all
-    static NSSet *disallowedApps;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        disallowedApps = [NSSet setWithArray:@[
-                          @"SystemUIServer",
-                          @"NotificationCenter", @"Notification Center",
-                          @"Dock",
-                          @"WindowServer"
-                          ]];
-    });
-    if ([disallowedApps containsObject:self.application.name]) {
-        return NO;
-    }
-    
-    return YES;
 }
 
 #pragma mark HAXElementDelegate
