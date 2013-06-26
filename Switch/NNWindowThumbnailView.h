@@ -15,10 +15,12 @@
 #import <Cocoa/Cocoa.h>
 
 
+@class NNWindow;
+
+
 @interface NNWindowThumbnailView : NSView
 
-@property (nonatomic, strong) NSImage *windowThumbnail;
-@property (nonatomic, strong) NSImage *applicationIcon;
+- (instancetype)initWithFrame:(NSRect)frameRect window:(NNWindow *)window;
 
 - (void)setActive:(BOOL)active;
 

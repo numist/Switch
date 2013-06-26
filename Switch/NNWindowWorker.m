@@ -97,11 +97,10 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
             self.updateInterval = NNPollingIntervalFast;
             self.previousCapture = cgImage;
             
-            NNWindow *update = [window copy];
-            update.image = [[NSImage alloc] initWithCGImage:cgImage size:NSMakeSize(newWidth, newHeight)];
+            window.image = [[NSImage alloc] initWithCGImage:cgImage size:NSMakeSize(newWidth, newHeight)];
             dispatch_async(dispatch_get_main_queue(), ^{
                 __strong __typeof__(self.delegate) delegate = self.delegate;
-                [delegate windowWorker:self didUpdateContentsOfWindow:update];
+                [delegate windowWorker:self didUpdateContentsOfWindow:window];
             });
         }
         

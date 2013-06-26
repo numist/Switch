@@ -225,9 +225,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     // Cache collection view cells as associated objects on the window model objects.
     NNWindowThumbnailView *result = objc_getAssociatedObject(window, (__bridge const void *)[NNWindowThumbnailView class]);
     if (!result) {
-        result = [[NNWindowThumbnailView alloc] initWithFrame:NSZeroRect];
-        result.applicationIcon = window.application.icon;
-        result.windowThumbnail = window.image;
+        result = [[NNWindowThumbnailView alloc] initWithFrame:NSZeroRect window:window];
         objc_setAssociatedObject(window, (__bridge const void *)[NNWindowThumbnailView class], result, OBJC_ASSOCIATION_RETAIN);
     }
     
@@ -321,8 +319,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
             break;
             
         case NNWindowStoreChangeWindowContent: {
-            NNWindowThumbnailView *thumb = (NNWindowThumbnailView *)[self.collectionView cellForIndex:index];
-            [thumb setWindowThumbnail:window.image];
+            // Nothing.
             break;
         }
     }

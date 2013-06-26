@@ -15,11 +15,20 @@
 #import "NNWindowThumbnailView.h"
 
 #import <QuartzCore/QuartzCore.h>
+#import <ReactiveCocoa/EXTScope.h>
+#import <ReactiveCocoa/ReactiveCocoa.h>
 
 #import "constants.h"
+#import "NNApplication.h"
+#import "NNWindow.h"
 
 
 @interface NNWindowThumbnailView ()
+
+@property (nonatomic, weak, readonly) NNWindow *modelWindow;
+
+@property (nonatomic, strong) NSImage *thumbnail;
+@property (nonatomic, strong) NSImage *icon;
 
 @property (nonatomic, strong) CALayer *thumbnailLayer;
 @property (nonatomic, strong) CALayer *iconLayer;
@@ -29,28 +38,51 @@
 
 @implementation NNWindowThumbnailView
 
-- (id)initWithFrame:(NSRect)frame;
+- (id)initWithFrame:(NSRect)frame window:(NNWindow *)window;
 {
     self = [super initWithFrame:frame];
     if (!self) {
         return nil;
     }
     
+    _modelWindow = window;
+    
     [self setWantsLayer:YES];
     self.layerContentsRedrawPolicy = NSViewLayerContentsRedrawOnSetNeedsDisplay;
+    [self createLayers];
+    
+    _icon = _modelWindow.application.icon;
+    _iconLayer.contents = _icon;
+    _thumbnail = _modelWindow.image;
+    _thumbnailLayer.contents = _thumbnail;
+    
+    @weakify(self);
+    [[RACAble(self.modelWindow.image)
+        distinctUntilChanged]
+        subscribeNext:^(NSImage *image) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                @strongify(self);
+                
+                self.thumbnailLayer.contents = image;
+                
+                if (!SIZES_EQUAL(self.thumbnail.size, image.size)) {
+                    [self setNeedsLayout:YES];
+                }
+
+                self.thumbnail = image;
+            });
+        }];
     
     return self;
 }
 
 - (void)layout;
 {
-    [self createLayersIfNeeded];
-    
     NSRect thumbFrame = self.bounds;
     CGFloat thumbSize = thumbFrame.size.width;
 
     {
-        NSSize imageSize = self.windowThumbnail.size;
+        NSSize imageSize = self.thumbnail.size;
         CGFloat scale = thumbSize / MAX(imageSize.width, imageSize.height);
         
         // make the size fit correctly
@@ -66,7 +98,7 @@
     
     {
         // imageSize is a lie, but it does give the correct aspect ratio. It's always been a square anecdotally, but you can't be too careful!
-        NSSize imageSize = self.applicationIcon.size;
+        NSSize imageSize = self.icon.size;
         
         CGFloat iconSize = thumbSize * kNNMaxApplicationIconSize / kNNMaxWindowThumbnailSize;
         CGFloat scale = iconSize / MAX(imageSize.width, imageSize.height);
@@ -75,7 +107,7 @@
         imageSize.width = MIN(round(imageSize.width * scale), iconSize);
         imageSize.height = MIN(round(imageSize.height * scale), iconSize);
         
-        self.applicationIcon.size = imageSize;
+        self.icon.size = imageSize;
         
         self.iconLayer.frame = (NSRect){
             .size = imageSize,
@@ -83,22 +115,6 @@
             .origin.y = thumbFrame.origin.y
         };
     }
-}
-
-- (void)setWindowThumbnail:(NSImage *)windowThumbnail;
-{
-    if (!SIZES_EQUAL(windowThumbnail.size, _windowThumbnail.size)) {
-        [self setNeedsLayout:YES];
-    }
-    
-    _windowThumbnail = windowThumbnail;
-    self.thumbnailLayer.contents = windowThumbnail;
-}
-
-- (void)setApplicationIcon:(NSImage *)applicationIcon;
-{
-    _applicationIcon = applicationIcon;
-    self.iconLayer.contents = applicationIcon;
 }
 
 - (void)setActive:(BOOL)active;
@@ -115,7 +131,7 @@
 
 #pragma mark Internal
 
-- (void)createLayersIfNeeded;
+- (void)createLayers;
 {
     CALayer *(^newLayer)() = ^{
         CALayer *result = [CALayer layer];
@@ -125,23 +141,13 @@
         return result;
     };
     
-    if (!self.thumbnailLayer) {
-        self.thumbnailLayer = newLayer();
-        if (self.windowThumbnail) {
-            self.thumbnailLayer.contents = self.windowThumbnail;
-        }
-        self.iconLayer.zPosition = 1.0;
-        [self.layer addSublayer:self.thumbnailLayer];
-    }
+    self.thumbnailLayer = newLayer();
+    self.thumbnailLayer.zPosition = 1.0;
+    [self.layer addSublayer:self.thumbnailLayer];
     
-    if (!self.iconLayer) {
-        self.iconLayer = newLayer();
-        if (self.applicationIcon) {
-            self.iconLayer.contents = self.applicationIcon;
-        }
-        self.iconLayer.zPosition = 2.0;
-        [self.layer addSublayer:self.iconLayer];
-    }
+    self.iconLayer = newLayer();
+    self.iconLayer.zPosition = 2.0;
+    [self.layer addSublayer:self.iconLayer];
 }
 
 @end
