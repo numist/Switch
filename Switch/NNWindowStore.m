@@ -121,7 +121,7 @@
     
     despatch_lock_assert(dispatch_get_main_queue());
 
-    NSMutableArray *oldArray = [_windows mutableCopy];
+    NSMutableArray *oldArray = [NSMutableArray arrayWithArray:_windows];
     
     BOOL windowsChanged = ![oldArray isEqualToArray:newArray];
     __strong __typeof__(self.delegate) delegate = nil;
