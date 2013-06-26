@@ -23,7 +23,9 @@
 + (NSArray *)filterValidWindowsFromArray:(NSArray *)array;
 {
     array = [array filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-        return [evaluatedObject isValidWindow];
+        NNWindow *window = evaluatedObject;
+
+        return [window isValidWindow];
     }]];
     
     return array;
