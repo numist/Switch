@@ -42,17 +42,17 @@
 
 - (BOOL)isValidWindow;
 {
-    // I wish I'd written myself some documentation when I first wrote this because I don't *really* know what it means.
-    if ([[self.windowDescription objectForKey:(__bridge NSString *)kCGWindowSharingState] longValue] == kCGWindowSharingNone) {
-        NSLog(@"Window %@ isn't shared!", self);
-        return NO;
-    }
-    
     // Only match windows at kCGNormalWindowLevel
     if ([[self.windowDescription objectForKey:(__bridge NSString *)kCGWindowLayer] longValue] != kCGNormalWindowLevel) {
         return NO;
     }
-    
+
+    // It's useful to know if/when/why a window is not accessible by Switch!
+    if ([[self.windowDescription objectForKey:(__bridge NSString *)kCGWindowSharingState] longValue] == kCGWindowSharingNone) {
+        DebugBreak();
+        return NO;
+    }
+
     return YES;
 }
 
