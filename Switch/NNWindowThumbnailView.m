@@ -14,6 +14,8 @@
 
 #import "NNWindowThumbnailView.h"
 
+#import <QuartzCore/QuartzCore.h>
+
 #import "constants.h"
 
 
@@ -97,6 +99,18 @@
 {
     _applicationIcon = applicationIcon;
     self.iconLayer.contents = applicationIcon;
+}
+
+- (void)setActive:(BOOL)active;
+{
+    CGFloat opacity = active ? 1.0 : 0.5;
+    
+    CABasicAnimation *animation = [CABasicAnimation animation];
+    animation.fromValue = @(((CALayer *)self.layer.presentationLayer).opacity);
+    animation.toValue = @(opacity);
+    animation.duration = 0.15;
+    [self.layer addAnimation:animation forKey:@"opacity"];
+    self.layer.opacity = opacity;
 }
 
 #pragma mark Internal

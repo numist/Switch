@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Scott Perry. All rights reserved.
 //
 
-#import "NNWindow+Private.h"
+#import "NNWindow+NNWindowFiltering.h"
 
 #import "NNApplication.h"
 
@@ -25,30 +25,22 @@
 {
     return [array filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
         NNWindow *window = evaluatedObject;
-
+        
+        // Only match windows at kCGNormalWindowLevel
+        if ([[window.windowDescription objectForKey:(__bridge NSString *)kCGWindowLayer] longValue] != kCGNormalWindowLevel) {
+            return NO;
+        }
+        
         // Issue #2: Tweetbot composites multiple windows to make up its main window.
         if ([window.application.name isEqualToString:@"Tweetbot"] && ![window.name length]) {
             return NO;
         }
         
-        return [window isValidWindow];
+        // For now, windows whose contents are not accessible are not supported.
+        BailUnless([[window.windowDescription objectForKey:(__bridge NSString *)kCGWindowSharingState] longValue] != kCGWindowSharingNone, NO);
+        
+        return YES;
     }]];
-}
-
-- (BOOL)isValidWindow;
-{
-    // I wish I'd written myself some documentation when I first wrote this because I don't *really* know what it means.
-    if ([[self.windowDescription objectForKey:(__bridge NSString *)kCGWindowSharingState] longValue] == kCGWindowSharingNone) {
-        NSLog(@"Window %@ isn't shared!", self);
-        return NO;
-    }
-    
-    // Only match windows at kCGNormalWindowLevel
-    if ([[self.windowDescription objectForKey:(__bridge NSString *)kCGWindowLayer] longValue] != kCGNormalWindowLevel) {
-        return NO;
-    }
-    
-    return YES;
 }
 
 @end

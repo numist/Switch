@@ -330,6 +330,13 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
     return;
 }
 
+#pragma mark - Custom-indexed Subscripting
+
+- (id)objectAtIndexedSubscript:(NSUInteger)idx;
+{
+    return [self cellForIndex:idx];
+}
+
 #pragma mark - Internal
 
 - (void)setSize:(NSSize)size;

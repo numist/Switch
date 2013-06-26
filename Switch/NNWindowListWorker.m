@@ -14,7 +14,6 @@
 
 #import "NNWindowListWorker.h"
 
-#import "despatch.h"
 #import "NNWindow+Private.h"
 
 
@@ -23,7 +22,6 @@ static NSTimeInterval refreshInterval = 0.1;
 
 @interface NNWindowListWorker ()
 
-@property (atomic, strong, readonly) dispatch_queue_t lock;
 @property (nonatomic, weak) id<NNWindowListWorkerDelegate> delegate;
 
 @end
@@ -36,10 +34,9 @@ static NSTimeInterval refreshInterval = 0.1;
     self = [super init];
     if (!self) return nil;
     
-    _lock = despatch_lock_create([[NSString stringWithFormat:@"%@ <%p>", [self class], self] UTF8String]);
     _delegate = delegate;
     
-    dispatch_async(_lock, ^{
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [self workerLoop];
     });
 
@@ -50,8 +47,6 @@ static NSTimeInterval refreshInterval = 0.1;
 
 - (oneway void)workerLoop;
 {
-    despatch_lock_assert(self.lock);
-    
     CFArrayRef cgInfo = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements,  kCGNullWindowID);
     NSArray *info = CFBridgingRelease(cgInfo);
     
@@ -83,7 +78,7 @@ static NSTimeInterval refreshInterval = 0.1;
     
     double delayInSeconds = refreshInterval;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, self.lock, ^(void){
+    dispatch_after(popTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void){
         __strong __typeof__(self) self = weakSelf;
         [self workerLoop];
     });

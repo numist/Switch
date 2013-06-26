@@ -118,7 +118,7 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
     __weak __typeof__(self) weakSelf = self;
     double delayInSeconds = MAX(self.updateInterval - [[NSDate date] timeIntervalSinceDate:start], 0.0);
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_global_queue(0, 0), ^(void){
+    dispatch_after(popTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void){
         __strong __typeof__(self) self = weakSelf;
         __strong __typeof__(self.delegate) delegate = self.delegate;
         if (delegate) {

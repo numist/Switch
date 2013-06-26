@@ -21,7 +21,7 @@
 #import "NNClickableView.h"
 #import "NNHotKeyManager.h"
 #import "NNHUDCollectionView.h"
-#import "NNWindow+Private.h"
+#import "NNWindow.h"
 #import "NNWindowStore.h"
 #import "NNWindowThumbnailView.h"
 
@@ -119,6 +119,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
         distinctUntilChanged]
         subscribeNext:^(NSNumber *shouldDisplayInterface) {
             if ([shouldDisplayInterface boolValue]) {
+                // TODO(numist): is there a better way to catch mouse moved events than this? Because ugh.
                 [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
                 [self.appWindow setFrame:[self.appWindow frameRectForContentRect:[NSScreen mainScreen].frame] display:YES];
                 [self.appWindow orderFront:self];
@@ -182,6 +183,8 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
                     
                     __block BOOL raiseSuccessful = YES;
                     NNWindow *selectedWindow = [self selectedWindow];
+                    NNWindowThumbnailView *thumb = [self cellForWindow:selectedWindow];
+                    [thumb setActive:NO];
                     
                     dispatch_async(dispatch_get_global_queue(0, 0), ^{
                         if (selectedWindow) {
@@ -196,6 +199,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
                                 Check(self.active);
                                 self.active = NO;
                             }
+                            [thumb setActive:YES];
                         });
                     });
                 });
@@ -431,16 +435,18 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
         nextWindow = [self.windows objectAtIndex:(self.selectedIndex + 1)];
     }
 
-    thumb.alphaValue = 0.5;
+    [thumb setActive:NO];
+    
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         if ((success = [selectedWindow close])) {
-            [nextWindow raise];
+            if ([nextWindow raise]) {
+                // TODO(numist): is there a better way to catch mouse moved events than this? Because ugh.
+                [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
+            }
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (!success) {
-                thumb.alphaValue = 1.0;
-            }
+            [thumb setActive:YES];
         });
     });
 }
