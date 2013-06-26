@@ -60,11 +60,6 @@
         return NO;
     }
     
-    // Don't report own windows. Maybe later if there are ever preferences? For now, KISS
-    if ([self.application isCurrentApplication]) {
-        return NO;
-    }
-    
     // Last ditch catch-all: No system daemons!
     static NSSet *disallowedApps;
     static dispatch_once_t onceToken;
