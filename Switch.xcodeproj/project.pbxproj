@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BC43A605177A14000082F981 /* NNClickableView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC43A604177A14000082F981 /* NNClickableView.m */; };
+		BC43A626177A5CBC0082F981 /* NNWindow+NNWindowFiltering.m in Sources */ = {isa = PBXBuildFile; fileRef = BC43A625177A5CBC0082F981 /* NNWindow+NNWindowFiltering.m */; };
 		BC63AB8F1755907D00016B9E /* NNHUDCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */; };
 		BC63AB921756FBE400016B9E /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB911756FBE300016B9E /* Carbon.framework */; };
 		BC63AB9A175701D900016B9E /* Haxcessibility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
@@ -103,6 +104,8 @@
 		BC3B3B6D175E505C002AD452 /* NNWindowCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNWindowCache.h; sourceTree = "<group>"; };
 		BC43A603177A14000082F981 /* NNClickableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNClickableView.h; sourceTree = "<group>"; };
 		BC43A604177A14000082F981 /* NNClickableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNClickableView.m; sourceTree = "<group>"; };
+		BC43A624177A5CBC0082F981 /* NNWindow+NNWindowFiltering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NNWindow+NNWindowFiltering.h"; sourceTree = "<group>"; };
+		BC43A625177A5CBC0082F981 /* NNWindow+NNWindowFiltering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NNWindow+NNWindowFiltering.m"; sourceTree = "<group>"; };
 		BC63AB8D1755907D00016B9E /* NNHUDCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHUDCollectionView.h; sourceTree = "<group>"; };
 		BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDCollectionView.m; sourceTree = "<group>"; };
 		BC63AB911756FBE300016B9E /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
@@ -355,6 +358,8 @@
 				BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */,
 				BCA7353116DB2C0100CD4C74 /* NNHotKeyManager.h */,
 				BCA7353216DB2C0100CD4C74 /* NNHotKeyManager.m */,
+				BC43A624177A5CBC0082F981 /* NNWindow+NNWindowFiltering.h */,
+				BC43A625177A5CBC0082F981 /* NNWindow+NNWindowFiltering.m */,
 			);
 			name = Logic;
 			sourceTree = "<group>";
@@ -582,6 +587,7 @@
 				BCA7352F16DB239900CD4C74 /* NNWindowThumbnailView.m in Sources */,
 				BCA7353316DB2C0100CD4C74 /* NNHotKeyManager.m in Sources */,
 				BCA7353816E148EF00CD4C74 /* NNRoundedRectView.m in Sources */,
+				BC43A626177A5CBC0082F981 /* NNWindow+NNWindowFiltering.m in Sources */,
 				BCA7354316E1621400CD4C74 /* constants.m in Sources */,
 				BCA7354916E1F14D00CD4C74 /* NNSelectionBoxView.m in Sources */,
 				BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */,
