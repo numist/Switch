@@ -21,7 +21,7 @@
 #import "NNClickableView.h"
 #import "NNHotKeyManager.h"
 #import "NNHUDCollectionView.h"
-#import "NNWindow+Private.h"
+#import "NNWindow.h"
 #import "NNWindowStore.h"
 #import "NNWindowThumbnailView.h"
 

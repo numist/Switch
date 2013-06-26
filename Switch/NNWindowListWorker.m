@@ -14,7 +14,6 @@
 
 #import "NNWindowListWorker.h"
 
-#import "despatch.h"
 #import "NNWindow+Private.h"
 
 
