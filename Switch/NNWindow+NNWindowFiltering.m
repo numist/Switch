@@ -48,11 +48,6 @@
         return NO;
     }
     
-    // Windows that are menubar-size or smaller are probably invalid.
-    if (self.cgBounds.size.width <= 24.0 || self.cgBounds.size.height <= 24.0) {
-        return NO;
-    }
-    
     // Catches WindowServer and potentially other daemons.
     if (!self.application.name || [self.application.name length] == 0) {
         return NO;
