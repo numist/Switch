@@ -23,7 +23,7 @@
 
 + (NSArray *)filterValidWindowsFromArray:(NSArray *)array;
 {
-    array = [array filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+    return [array filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
         NNWindow *window = evaluatedObject;
 
         // Issue #2: Tweetbot composites multiple windows to make up its main window.
@@ -33,8 +33,6 @@
         
         return [window isValidWindow];
     }]];
-    
-    return array;
 }
 
 - (BOOL)isValidWindow;
