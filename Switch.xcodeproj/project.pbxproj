@@ -22,7 +22,6 @@
 		BCA734FF16DAC54000CD4C74 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCA734FE16DAC54000CD4C74 /* SenTestingKit.framework */; };
 		BCA7350016DAC54000CD4C74 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCA734E016DAC53F00CD4C74 /* Cocoa.framework */; };
 		BCA7350816DAC54000CD4C74 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BCA7350616DAC54000CD4C74 /* InfoPlist.strings */; };
-		BCA7350B16DAC54000CD4C74 /* SwitchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7350A16DAC54000CD4C74 /* SwitchTests.m */; };
 		BCA7351716DAC59000CD4C74 /* NNWindowStore.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7351616DAC59000CD4C74 /* NNWindowStore.m */; };
 		BCA7351B16DAC5E200CD4C74 /* NNWindowListWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7351A16DAC5E200CD4C74 /* NNWindowListWorker.m */; };
 		BCA7351E16DAC61F00CD4C74 /* NNWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7351D16DAC61F00CD4C74 /* NNWindow.m */; };
@@ -130,8 +129,6 @@
 		BCA734FE16DAC54000CD4C74 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		BCA7350516DAC54000CD4C74 /* SwitchTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SwitchTests-Info.plist"; sourceTree = "<group>"; };
 		BCA7350716DAC54000CD4C74 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		BCA7350916DAC54000CD4C74 /* SwitchTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwitchTests.h; sourceTree = "<group>"; };
-		BCA7350A16DAC54000CD4C74 /* SwitchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SwitchTests.m; sourceTree = "<group>"; };
 		BCA7351516DAC59000CD4C74 /* NNWindowStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNWindowStore.h; sourceTree = "<group>"; };
 		BCA7351616DAC59000CD4C74 /* NNWindowStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNWindowStore.m; sourceTree = "<group>"; };
 		BCA7351916DAC5E200CD4C74 /* NNWindowListWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNWindowListWorker.h; sourceTree = "<group>"; };
@@ -298,8 +295,6 @@
 		BCA7350316DAC54000CD4C74 /* SwitchTests */ = {
 			isa = PBXGroup;
 			children = (
-				BCA7350916DAC54000CD4C74 /* SwitchTests.h */,
-				BCA7350A16DAC54000CD4C74 /* SwitchTests.m */,
 				BCA7350416DAC54000CD4C74 /* Supporting Files */,
 			);
 			path = SwitchTests;
@@ -600,7 +595,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BCA7350B16DAC54000CD4C74 /* SwitchTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
