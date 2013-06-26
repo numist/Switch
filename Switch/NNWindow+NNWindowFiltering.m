@@ -31,6 +31,7 @@
 
 - (BOOL)isValidWindow;
 {
+    // I wish I'd written myself some documentation when I first wrote this because I don't *really* know what it means.
     if ([[self.windowDescription objectForKey:(__bridge NSString *)kCGWindowSharingState] longValue] == kCGWindowSharingNone) {
         NSLog(@"Window %@ isn't shared!", self);
         return NO;
