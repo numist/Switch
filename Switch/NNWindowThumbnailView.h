@@ -20,4 +20,6 @@
 @property (nonatomic, strong) NSImage *windowThumbnail;
 @property (nonatomic, strong) NSImage *applicationIcon;
 
+- (void)setActive:(BOOL)active;
+
 @end

@@ -435,7 +435,8 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
         nextWindow = [self.windows objectAtIndex:(self.selectedIndex + 1)];
     }
 
-    thumb.alphaValue = 0.5;
+    [thumb setActive:NO];
+    
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         if ((success = [selectedWindow close])) {
             if ([nextWindow raise]) {
@@ -446,7 +447,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
         
         dispatch_async(dispatch_get_main_queue(), ^{
             if (!success) {
-                thumb.alphaValue = 1.0;
+                [thumb setActive:YES];
             }
         });
     });
