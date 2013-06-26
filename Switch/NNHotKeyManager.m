@@ -50,9 +50,10 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     CGEventMask eventMask = (CGEventMaskBit(kCGEventKeyDown) | CGEventMaskBit(kCGEventKeyUp) | CGEventMaskBit(kCGEventFlagsChanged));
     
     _eventTap = CGEventTapCreate(kCGSessionEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault, eventMask, nnCGEventCallback, (__bridge void *)(self));
-    if (!_eventTap) {
-        return nil;
-    }
+    // TODO(numist): This will fail unless the user is root, need to escalate privileges!
+    BailWithBlockUnless(_eventTap, ^{
+        return (NNHotKeyManager *)nil;
+    });
     
     // Create a run loop source.
     _runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, self.eventTap, 0);
