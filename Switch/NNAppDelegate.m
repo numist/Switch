@@ -184,6 +184,8 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
                     
                     __block BOOL raiseSuccessful = YES;
                     NNWindow *selectedWindow = [self selectedWindow];
+                    NNWindowThumbnailView *thumb = [self cellForWindow:selectedWindow];
+                    [thumb setActive:NO];
                     
                     dispatch_async(dispatch_get_global_queue(0, 0), ^{
                         if (selectedWindow) {
@@ -198,6 +200,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
                                 Check(self.active);
                                 self.active = NO;
                             }
+                            [thumb setActive:YES];
                         });
                     });
                 });
@@ -446,9 +449,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (!success) {
-                [thumb setActive:YES];
-            }
+            [thumb setActive:YES];
         });
     });
 }
