@@ -36,6 +36,11 @@
         return NO;
     }
     
+    // Only match windows at kCGNormalWindowLevel
+    if ([[self.windowDescription objectForKey:(__bridge NSString *)kCGWindowLayer] longValue] != kCGNormalWindowLevel) {
+        return NO;
+    }
+    
     // Windows that are menubar-size or smaller are probably invalid.
     if (self.cgBounds.size.width <= 24.0 || self.cgBounds.size.height <= 24.0) {
         return NO;
