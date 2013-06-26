@@ -22,4 +22,6 @@ To check out the project, its submodules, and open in Xcode:
 
 At this point, `⌘R` should have you up and running!
 
+If you do not have an account with Admin privileges, or have not enabled the Accessibility API, you will find yourself at a relevant breakpoint in the source.
+
 **NOTE:** Switch requires Mac OS X version 10.8 or newer and is developed with Xcode 4.6 and newer. The application does not do any work to check these constraints so incompatibility may be indistinguishable from bugs.
