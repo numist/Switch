@@ -14,6 +14,8 @@
 
 #import "NNWindowListWorker.h"
 
+#import <ReactiveCocoa/EXTScope.h>
+
 #import "NNWindow+Private.h"
 
 
@@ -65,13 +67,13 @@ static NSTimeInterval refreshInterval = 0.1;
     windows = [NNWindow filterValidWindowsFromArray:windows];
     
     // Schedule delegate update and next iteration of worker loop.
-    __weak __typeof__(self) weakSelf = self;
+    @weakify(self);
 
     NSArray *result = [windows copy];
     dispatch_async(dispatch_get_main_queue(), ^{
-        __strong __typeof__(self.delegate) delegate = self.delegate;
-        __strong __typeof__(self) self = weakSelf;
+        @strongify(self);
         if (self) {
+            __strong __typeof__(self.delegate) delegate = self.delegate;
             [delegate listWorker:self didUpdateWindowList:result];
         }
     });
@@ -79,7 +81,7 @@ static NSTimeInterval refreshInterval = 0.1;
     double delayInSeconds = refreshInterval;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void){
-        __strong __typeof__(self) self = weakSelf;
+        @strongify(self);
         [self workerLoop];
     });
 }
