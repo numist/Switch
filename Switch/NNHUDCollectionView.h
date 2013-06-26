@@ -47,6 +47,8 @@
 
 - (void)reloadData;
 
+- (id)objectAtIndexedSubscript:(NSUInteger)idx;
+
 @end
 
 
