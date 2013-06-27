@@ -14,7 +14,7 @@ Getting Started
 
 To check out the project, its submodules, and open in Xcode:
 
-    git clone https://github.com/numist/Switch.git
+    git clone git://github.com/numist/Switch.git
     cd Switch/
     git submodule sync
     git submodule update --init --recursive
