@@ -52,9 +52,16 @@
     self.layerContentsRedrawPolicy = NSViewLayerContentsRedrawOnSetNeedsDisplay;
     [self createLayers];
     
-    _icon = _modelWindow.application.icon;
+    _icon = window.application.icon;
+    {
+        // This is necessary or the CALayer may draw a low resolution representation when a higher resolution is needed, and it's better to be too high-resolution than too low.
+        NSSize imageSize = self.icon.size;
+        CGFloat scale = kNNMaxApplicationIconSize / MAX(imageSize.width, imageSize.height);
+        _icon.size = NSMakeSize(round(imageSize.width * scale), round(imageSize.height * scale));
+    }
+
     _iconLayer.contents = _icon;
-    _thumbnail = _modelWindow.image;
+    _thumbnail = window.image;
     _thumbnailLayer.contents = _thumbnail;
     
     return self;
@@ -88,10 +95,7 @@
         CGFloat scale = iconSize / MAX(imageSize.width, imageSize.height);
         
         // make the size fit correctly
-        imageSize.width = MIN(round(imageSize.width * scale), iconSize);
-        imageSize.height = MIN(round(imageSize.height * scale), iconSize);
-        
-        self.icon.size = imageSize;
+        imageSize = NSMakeSize(MIN(round(imageSize.width * scale), iconSize), MIN(round(imageSize.height * scale), iconSize));
         
         self.iconLayer.frame = (NSRect){
             .size = imageSize,
