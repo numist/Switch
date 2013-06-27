@@ -113,8 +113,13 @@
 - (NSImage *)icon;
 {
     if (!_icon) {
-        NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:[[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:[self.app bundleIdentifier]]];
-        _icon = icon;
+        NSString *path = [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:[self.app bundleIdentifier]];
+        if (path) {
+            _icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
+        } else {
+            Log(@"Application %@ does not have an icon!", self);
+            #warning (numist): use default application icon?
+        }
     }
     
     return _icon;
