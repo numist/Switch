@@ -139,6 +139,7 @@
         result.magnificationFilter = kCAFilterTrilinear;
         result.minificationFilter = kCAFilterTrilinear;
         result.contentsGravity = kCAGravityResizeAspect;
+        result.actions = @{@"contents" : [NSNull null]};
         return result;
     };
     
