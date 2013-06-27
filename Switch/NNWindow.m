@@ -33,6 +33,10 @@
 
 + (instancetype)windowWithDescription:(NSDictionary *)description;
 {
+    if (![self descriptionDescribesInterestingWindow:description]) {
+        return nil;
+    }
+    
     @synchronized(self) {
         CGWindowID windowID = (CGWindowID)[[description objectForKey:(__bridge NSString *)kCGWindowNumber] unsignedLongValue];
         NNWindow *result = [[NNWindowCache sharedCache] cachedWindowWithID:windowID];
@@ -47,6 +51,19 @@
 
         return result;
     }
+}
+
++ (BOOL)descriptionDescribesInterestingWindow:(NSDictionary *)description;
+{
+    // Only match windows at kCGNormalWindowLevel
+    if ([[description objectForKey:(__bridge NSString *)kCGWindowLayer] longValue] != kCGNormalWindowLevel) {
+        return NO;
+    }
+
+    // For now, windows whose contents are not accessible are not supported.
+    BailUnless([[description objectForKey:(__bridge NSString *)kCGWindowSharingState] longValue] != kCGWindowSharingNone, NO);
+    
+    return YES;
 }
 
 - (instancetype)initWithDescription:(NSDictionary *)description;
