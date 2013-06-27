@@ -117,11 +117,6 @@
         _icon = icon;
     }
     
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [NSBundle bundleWithPath:[[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:[self.app bundleIdentifier]]];
-    });
-    
     return _icon;
 }
 
