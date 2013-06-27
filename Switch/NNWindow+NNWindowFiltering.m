@@ -26,8 +26,21 @@
     return [array filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, __attribute__((unused)) NSDictionary *bindings) {
         NNWindow *window = evaluatedObject;
         
-        // Issue #2: Tweetbot composites multiple windows to make up its main window.
-        if ([window.application.name isEqualToString:@"Tweetbot"] && ![window.name length]) {
+        NSString *windowName = window.name;
+        NSString *applicationName = window.application.name;
+        
+        // Issue #10: Powerbox names its sheets, which are not valid (they do not respond to AXRaise)
+        if ([applicationName isEqualToString:@"com.apple.security.pboxd"]) {
+            return NO;
+        }
+        
+        // Issues #2, #8, #9: Most applications name their valid windows and leave the invalid ones blank.
+        if (![windowName length]) {
+            // Except GitHub for Mac, which does not name its main window ಠ_ಠ
+            if ([applicationName isEqualToString:@"GitHub"]) {
+                return YES;
+            }
+            
             return NO;
         }
         
