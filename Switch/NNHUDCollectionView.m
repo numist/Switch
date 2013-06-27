@@ -96,14 +96,6 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
     return [self.cells indexOfObject:cell];
 }
 
-- (NSUInteger)indexForCellAtPoint:(NSPoint)point;
-{
-    NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
-    abort();
-
-    return NSNotFound;
-}
-
 - (NSUInteger)indexForSelectedRow;
 {
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
@@ -267,16 +259,7 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
 
 - (void)mouseMoved:(NSEvent *)theEvent;
 {
-    NSPoint location = theEvent.locationInWindow;
-    
-    unsigned i;
-    for (i = 0; i < self.numberOfCells; ++i) {
-        NSRect frame = [self convertRect:[self computeFrameForCellAtIndex:i] toView:nil];
-
-        if (NSPointInRect(location, frame)) {
-            break;
-        }
-    }
+    NSUInteger i = [self indexForCellAtPoint:theEvent.locationInWindow];
     
     if (i < self.numberOfCells && self.selectedIndex != i) {
         id<NNHUDCollectionViewDelegate> delegate = self.delegate;
@@ -299,17 +282,8 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
 
 - (void)mouseUp:(NSEvent *)theEvent;
 {
-    NSPoint location = theEvent.locationInWindow;
-    
-    unsigned i;
-    for (i = 0; i < self.numberOfCells; ++i) {
-        NSRect frame = [self convertRect:[self computeFrameForCellAtIndex:i] toView:nil];
-        
-        if (NSPointInRect(location, frame)) {
-            break;
-        }
-    }
-    
+    NSUInteger i = [self indexForCellAtPoint:theEvent.locationInWindow];
+
     if (i < self.numberOfCells) {
         id<NNHUDCollectionViewDelegate> delegate = self.delegate;
         
@@ -383,6 +357,20 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
 - (NSRect)computeFrameForCellAtIndex:(NSUInteger)index;
 {
     return nnThumbRect([self computeCellSize], index);
+}
+
+- (NSUInteger)indexForCellAtPoint:(NSPoint)point;
+{
+    unsigned i;
+    for (i = 0; i < self.numberOfCells; ++i) {
+        NSRect frame = [self convertRect:[self computeFrameForCellAtIndex:i] toView:nil];
+        
+        if (NSPointInRect(point, frame)) {
+            break;
+        }
+    }
+    
+    return i < [self.cells count] ? i : NSNotFound;
 }
 
 @end

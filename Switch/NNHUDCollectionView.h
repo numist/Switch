@@ -33,7 +33,6 @@
 
 - (NSView *)cellForIndex:(NSUInteger)index;
 - (NSUInteger)indexForCell:(NSView *)cell;
-- (NSUInteger)indexForCellAtPoint:(NSPoint)point;
 
 - (NSUInteger)indexForSelectedRow;
 - (void)selectCellAtIndex:(NSUInteger)index;
