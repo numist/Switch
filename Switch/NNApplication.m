@@ -118,7 +118,7 @@
             _icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
         } else {
             Log(@"Application %@ does not have an icon!", self);
-            #warning (numist): use default application icon?
+            #warning Use default application icon?
         }
     }
     

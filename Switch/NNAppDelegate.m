@@ -245,6 +245,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
 - (void)applicationWillResignActive:(NSNotification *)notification;
 {
+    #warning This fires when closing a window where the next window in the list belongs to a different application.
     self.active = NO;
 }
 
