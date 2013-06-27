@@ -149,6 +149,7 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
             case NNHUDCollectionViewUpdateDelete:
                 [self.cells removeObjectAtIndex:update.index];
                 [cell removeFromSuperview];
+                cell = nil;
                 self.numberOfCells--;
                 break;
                 
@@ -160,7 +161,7 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
                 break;
                 
             case NNHUDCollectionViewUpdateMove: {
-                NSView *cell = [self.cells objectAtIndex:update.index];
+                cell = [self.cells objectAtIndex:update.index];
                 [self.cells removeObjectAtIndex:update.index];
                 [self.cells insertObject:cell atIndex:update.newIndex];
                 break;
