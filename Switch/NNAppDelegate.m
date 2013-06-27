@@ -14,11 +14,11 @@
 
 #import "NNAppDelegate.h"
 
+#import <ReactiveCocoa/EXTScope.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
 
 #import "constants.h"
 #import "NNApplication.h"
-#import "NNClickableView.h"
 #import "NNHotKeyManager.h"
 #import "NNHUDCollectionView.h"
 #import "NNWindow.h"
@@ -57,21 +57,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
 @implementation NNAppDelegate
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
-{
-    self.windows = [NSMutableArray new];
-    self.store = [[NNWindowStore alloc] initWithDelegate:self];
-    
-    
-    self.keyManager = [NNHotKeyManager new];
-    self.keyManager.delegate = self;
-    
-    [self createWindow];
-    [self setUpReactions];
-}
-
-#pragma mark Internal
-
 - (NNWindow *)selectedWindow;
 {
     return self.selectedIndex < [self.windows count] ? [self.windows objectAtIndex:self.selectedIndex] : nil;
@@ -93,7 +78,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
         switcherWindow.backgroundColor = [NSColor clearColor];
         switcherWindow.level = NSPopUpMenuWindowLevel;
         switcherWindow.acceptsMouseMovedEvents = YES;
-        switcherWindow.contentView = [[NNClickableView alloc] initWithFrame:NSZeroRect target:self];
     }
     self.appWindow = switcherWindow;
     
@@ -195,7 +179,8 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
                         }
                         
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            if (raiseSuccessful) {
+                            // If the raise happens before the display timer has expired, this code path is responsible for deactivation because the application never became active, so the terminating code in applicationWillResignActive: will not get called.
+                            if (raiseSuccessful && self.displayTimer) {
                                 Check(self.active);
                                 self.active = NO;
                             }
@@ -243,12 +228,23 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     self.displayTimer = nil;
 }
 
-#pragma mark - Delegate/Actions
+#pragma mark - NSApplicationDelegate
 
-- (void)view:(NSView *)view detectedEvent:(NSEvent *)event;
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    [((NNWindow *)[self.windows objectAtIndex:0]).application raise];
+    self.windows = [NSMutableArray new];
+    self.store = [[NNWindowStore alloc] initWithDelegate:self];
     
+    
+    self.keyManager = [NNHotKeyManager new];
+    self.keyManager.delegate = self;
+    
+    [self createWindow];
+    [self setUpReactions];
+}
+
+- (void)applicationWillResignActive:(NSNotification *)notification;
+{
     self.active = NO;
 }
 

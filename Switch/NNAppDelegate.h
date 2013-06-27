@@ -17,6 +17,4 @@
 
 @interface NNAppDelegate : NSObject <NSApplicationDelegate>
 
-- (void)view:(NSView *)view detectedEvent:(NSEvent *)event;
-
 @end
