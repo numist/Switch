@@ -105,15 +105,13 @@
 
 - (void)setThumbnail:(NSImage *)image;
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.thumbnailLayer.contents = image;
-        
-        if (!SIZES_EQUAL(self.thumbnail.size, image.size)) {
-            [self setNeedsLayout:YES];
-        }
-        
-        self.thumbnail = image;
-    });
+    self.thumbnailLayer.contents = image;
+    
+    if (!SIZES_EQUAL(self.thumbnail.size, image.size)) {
+        [self setNeedsLayout:YES];
+    }
+    
+	_thumbnail = image;
 }
 
 - (void)setActive:(BOOL)active;
