@@ -38,6 +38,11 @@
 		BCE6987C1773B71C009CFD12 /* NNApplicationCache.m in Sources */ = {isa = PBXBuildFile; fileRef = BCE6987B1773B71C009CFD12 /* NNApplicationCache.m */; };
 		BCE6987F1773B8B1009CFD12 /* NNWindowCache.m in Sources */ = {isa = PBXBuildFile; fileRef = BCE6987E1773B8B1009CFD12 /* NNWindowCache.m */; };
 		BCF357E9176CEEF200458AFF /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCF357E0176CEE9F00458AFF /* ReactiveCocoa.framework */; };
+		BCFF2312177DD454008759C4 /* NNWindowFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFF2311177DD454008759C4 /* NNWindowFilter.m */; };
+		BCFF2315177DD812008759C4 /* NNTweetbotWindowFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFF2314177DD812008759C4 /* NNTweetbotWindowFilter.m */; };
+		BCFF2318177DDF46008759C4 /* NNGitHubWindowFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFF2317177DDF46008759C4 /* NNGitHubWindowFilter.m */; };
+		BCFF231B177DDFE8008759C4 /* NNPowerboxWindowFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFF231A177DDFE8008759C4 /* NNPowerboxWindowFilter.m */; };
+		BCFF231E177DE0FE008759C4 /* NNObviousSheetsWindowFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFF231D177DE0FE008759C4 /* NNObviousSheetsWindowFilter.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -159,6 +164,16 @@
 		BCE6987B1773B71C009CFD12 /* NNApplicationCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNApplicationCache.m; sourceTree = "<group>"; };
 		BCE6987E1773B8B1009CFD12 /* NNWindowCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNWindowCache.m; sourceTree = "<group>"; };
 		BCF357D6176CEE9E00458AFF /* ReactiveCocoa.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactiveCocoa.xcodeproj; path = Frameworks/ReactiveCocoa/ReactiveCocoaFramework/ReactiveCocoa.xcodeproj; sourceTree = "<group>"; };
+		BCFF2310177DD454008759C4 /* NNWindowFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNWindowFilter.h; sourceTree = "<group>"; };
+		BCFF2311177DD454008759C4 /* NNWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNWindowFilter.m; sourceTree = "<group>"; };
+		BCFF2313177DD812008759C4 /* NNTweetbotWindowFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNTweetbotWindowFilter.h; sourceTree = "<group>"; };
+		BCFF2314177DD812008759C4 /* NNTweetbotWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNTweetbotWindowFilter.m; sourceTree = "<group>"; };
+		BCFF2316177DDF46008759C4 /* NNGitHubWindowFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNGitHubWindowFilter.h; sourceTree = "<group>"; };
+		BCFF2317177DDF46008759C4 /* NNGitHubWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNGitHubWindowFilter.m; sourceTree = "<group>"; };
+		BCFF2319177DDFE8008759C4 /* NNPowerboxWindowFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNPowerboxWindowFilter.h; sourceTree = "<group>"; };
+		BCFF231A177DDFE8008759C4 /* NNPowerboxWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNPowerboxWindowFilter.m; sourceTree = "<group>"; };
+		BCFF231C177DE0FE008759C4 /* NNObviousSheetsWindowFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNObviousSheetsWindowFilter.h; sourceTree = "<group>"; };
+		BCFF231D177DE0FE008759C4 /* NNObviousSheetsWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNObviousSheetsWindowFilter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -348,11 +363,10 @@
 				BCE698801773B93A009CFD12 /* Caching */,
 				BCA7358E16E585B800CD4C74 /* Concurrency */,
 				BCA7358F16E585D400CD4C74 /* Polling */,
+				BCFF230F177DD42E008759C4 /* Window Filtering */,
 				BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */,
 				BCA7353116DB2C0100CD4C74 /* NNHotKeyManager.h */,
 				BCA7353216DB2C0100CD4C74 /* NNHotKeyManager.m */,
-				BC43A624177A5CBC0082F981 /* NNWindow+NNWindowFiltering.h */,
-				BC43A625177A5CBC0082F981 /* NNWindow+NNWindowFiltering.m */,
 			);
 			name = Logic;
 			sourceTree = "<group>";
@@ -405,6 +419,25 @@
 				BCF357E6176CEE9F00458AFF /* ReactiveCocoaTests-iOS.octest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		BCFF230F177DD42E008759C4 /* Window Filtering */ = {
+			isa = PBXGroup;
+			children = (
+				BC43A624177A5CBC0082F981 /* NNWindow+NNWindowFiltering.h */,
+				BC43A625177A5CBC0082F981 /* NNWindow+NNWindowFiltering.m */,
+				BCFF2310177DD454008759C4 /* NNWindowFilter.h */,
+				BCFF2311177DD454008759C4 /* NNWindowFilter.m */,
+				BCFF2316177DDF46008759C4 /* NNGitHubWindowFilter.h */,
+				BCFF2317177DDF46008759C4 /* NNGitHubWindowFilter.m */,
+				BCFF231C177DE0FE008759C4 /* NNObviousSheetsWindowFilter.h */,
+				BCFF231D177DE0FE008759C4 /* NNObviousSheetsWindowFilter.m */,
+				BCFF2319177DDFE8008759C4 /* NNPowerboxWindowFilter.h */,
+				BCFF231A177DDFE8008759C4 /* NNPowerboxWindowFilter.m */,
+				BCFF2313177DD812008759C4 /* NNTweetbotWindowFilter.h */,
+				BCFF2314177DD812008759C4 /* NNTweetbotWindowFilter.m */,
+			);
+			name = "Window Filtering";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -574,14 +607,19 @@
 				BCA7351B16DAC5E200CD4C74 /* NNWindowListWorker.m in Sources */,
 				BCA7351E16DAC61F00CD4C74 /* NNWindow.m in Sources */,
 				BCA7352216DAC6A900CD4C74 /* NNWindowWorker.m in Sources */,
+				BCFF2318177DDF46008759C4 /* NNGitHubWindowFilter.m in Sources */,
 				BCA7352516DAC93C00CD4C74 /* NNApplication.m in Sources */,
 				BCA7352B16DB1E9C00CD4C74 /* despatch.m in Sources */,
 				BCA7352F16DB239900CD4C74 /* NNWindowThumbnailView.m in Sources */,
 				BCA7353316DB2C0100CD4C74 /* NNHotKeyManager.m in Sources */,
+				BCFF231E177DE0FE008759C4 /* NNObviousSheetsWindowFilter.m in Sources */,
 				BCA7353816E148EF00CD4C74 /* NNRoundedRectView.m in Sources */,
+				BCFF2315177DD812008759C4 /* NNTweetbotWindowFilter.m in Sources */,
+				BCFF2312177DD454008759C4 /* NNWindowFilter.m in Sources */,
 				BC43A626177A5CBC0082F981 /* NNWindow+NNWindowFiltering.m in Sources */,
 				BCA7354316E1621400CD4C74 /* constants.m in Sources */,
 				BCA7354916E1F14D00CD4C74 /* NNSelectionBoxView.m in Sources */,
+				BCFF231B177DDFE8008759C4 /* NNPowerboxWindowFilter.m in Sources */,
 				BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */,
 				BC63AB8F1755907D00016B9E /* NNHUDCollectionView.m in Sources */,
 				BC63ABA517598C4100016B9E /* debugger.c in Sources */,

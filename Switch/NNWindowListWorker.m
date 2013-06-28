@@ -64,7 +64,7 @@ static NSTimeInterval refreshInterval = 0.1;
         }
     }
     
-    windows = [NNWindow filterValidWindowsFromArray:windows];
+    windows = [NNWindow filterInvalidWindowsFromArray:windows];
     
     // Schedule delegate update and next iteration of worker loop.
     @weakify(self);

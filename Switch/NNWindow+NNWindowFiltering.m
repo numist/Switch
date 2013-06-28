@@ -3,57 +3,45 @@
 //  Switch
 //
 //  Created by Scott Perry on 06/25/13.
-//  Copyright (c) 2013 Scott Perry. All rights reserved.
+//  Copyright © 2013 Scott Perry.
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
 #import "NNWindow+NNWindowFiltering.h"
 
 #import "NNApplication.h"
-
-
-static NSString *kNNApplicationNameTweetbot = @"Tweetbot";
-static NSString *kNNApplicationNamePowerbox = @"com.apple.security.pboxd";
-static NSString *kNNApplicationNameGitHub = @"GitHub";
-
-
-// No corresponding implementation, everything in this interface is declared/implemented in the class extension!
-@interface NNWindow (NNPrivateAccessors)
-
-@property (nonatomic, strong, readonly) NSDictionary *windowDescription;
-
-@end
+#import "NNWindowFilter.h"
 
 
 @implementation NNWindow (NNWindowFiltering)
 
-+ (NSArray *)filterValidWindowsFromArray:(NSArray *)array;
+static NSSet *registeredAppFilters;
+static NSSet *registeredAppNames;
+
++ (NSArray *)filterInvalidWindowsFromArray:(NSArray *)array;
 {
-    array = [self removeObviousSheetsFromArray:array];
-    array = [self removeInvalidTweetbotWindowsFromArray:array];
+    [self setUpApplicationFiltersIfNeeded];
+    
+    // Collection filters:
+    for (NNWindowFilter *filter in registeredAppFilters) {
+        array = [filter filterInvalidWindowsFromArray:array];
+    }
     
     return [array filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, __attribute__((unused)) NSDictionary *bindings) {
         NNWindow *window = evaluatedObject;
         
-        NSString *windowName = window.name;
-        NSString *applicationName = window.application.name;
-        
-        // Tweetbot is handled by removeInvalidTweetbotWindowsFromArray:
-        if ([applicationName isEqualToString:kNNApplicationNameTweetbot]) {
+        // Skip windows handled by an application-specific filter.
+        if ([registeredAppNames containsObject:window.application.name]) {
             return YES;
         }
         
-        // Issue #10: Powerbox names its sheets, which are not valid (they do not respond to AXRaise)
-        if ([applicationName isEqualToString:kNNApplicationNamePowerbox]) {
-            return NO;
-        }
-        
         // Issues #2, #8, #9: Most applications name their valid windows and leave the invalid ones blank.
-        if (![windowName length]) {
-            // Except GitHub for Mac, which does not name its main window.
-            if ([applicationName isEqualToString:kNNApplicationNameGitHub]) {
-                return YES;
-            }
-            
+        if (![window.name length]) {
             return NO;
         }
         
@@ -61,102 +49,36 @@ static NSString *kNNApplicationNameGitHub = @"GitHub";
     }]];
 }
 
-+ (NSArray *)removeObviousSheetsFromArray:(NSArray *)immutableArray;
++ (void)setUpApplicationFiltersIfNeeded;
 {
-    NSMutableArray *array = [immutableArray mutableCopy];
-    
-    for (NSUInteger i = 1; i < [array count]; ++i) {
-        // Avoid potential index out of bounds caused by `i -= 2;` below.
-        if (i == 0) { continue; }
-        NNWindow *prevSibling = array[(i - 1)];
-        NNWindow *sheet = array[i];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSMutableSet *filters;
+        NSMutableSet *names;
+        registeredAppFilters = filters = [NSMutableSet set];
+        registeredAppNames = names = [NSMutableSet set];
         
-        /*
-         * Match obvious non-Powerbox sheets, which are two adjacent windows matched by:
-         * • The fore window has an alpha < 1 (in practice, ~0.85).
-         * • Neither window is named.
-         * • The fore window is short (in practice, a height of 10 points).
-         *     - Title bars tend to be about 24 points tall, so any smaller value should have an acceptable false positive rate.
-         */
-        if (![sheet.name length] && ![prevSibling.name length]) {
-            BOOL isTranslucent = [[prevSibling.windowDescription objectForKey:(__bridge NSString*)kCGWindowAlpha] doubleValue] < 1.0;
-            BOOL isShort = prevSibling.cgBounds.size.height < 16.0;
+        // Get number of registered classes
+        int numClasses = objc_getClassList(NULL, 0);
+        
+        Class *classes = (__unsafe_unretained Class *)alloca(sizeof(Class) * (unsigned)numClasses);
+        (void)objc_getClassList(classes, numClasses);
+        
+        for (int i = 0; i < numClasses; ++i) {
+            Class class = classes[i];
+            // Filter first by prefix:
+            if (strncmp(class_getName(class), "NN", 2)) { continue; }
+            // Then by superclass:
+            if (![NNWindowFilter isEqual:[class superclass]]) { continue; }
             
-            if (isTranslucent && isShort) {
-                [array removeObjectAtIndex:i];
-                [array removeObjectAtIndex:i - 1];
-                i -= 2;
-                continue;
+            NNWindowFilter *filter = [class filter];
+            [filters addObject:filter];
+            // If a filter is application agnostic, it may not return an object for -applicationName
+            if (filter.applicationName) {
+                [names addObject:filter.applicationName];
             }
         }
-    }
-    
-    return array;
-}
-
-+ (NSArray *)removeInvalidTweetbotWindowsFromArray:(NSArray *)immutableArray;
-{
-    // Tweetbot, which *does* name its main window, has spurious decorator windows, but does not name its popup windows ಠ_ಠ
-    NSMutableArray *array = [immutableArray mutableCopy];
-    
-    for (NSUInteger i = 0; i < [array count]; ++i) {
-        NNWindow *window = array[i];
-        
-        if (![window.application.name isEqualToString:kNNApplicationNameTweetbot]) { continue; }
-        
-        /*
-         * Catch the table view section header window. It:
-         * • has no name.
-         * • floats over a window that has a name (in practice, the main window).
-         * • is fully enclosed by the window it decorates.
-         * • has a height of < 33 points (in practice, 30).
-         */
-        if (![window.name length] && window.cgBounds.size.height < 33.0) {
-            NNWindow *mainWindow = [window nextNamedSiblingFromCollection:array];
-            
-            if ([window enclosedByWindow:mainWindow]) {
-                [array removeObjectAtIndex:i--];
-                continue;
-            }
-        }
-        
-        /*
-         * Catch any shadowing windows. They:
-         * • have no name
-         * • shadow a window that has a name (in practice, the main window).
-         * • are positioned (nearly) centered underneath the shadowed window, within (20, 20) points center to center.
-         * • extend beyond the edges of the shadowed window on all sides
-         * • do not exceed the height or width of the shadowed window by more than 100 points (in practice, (90, 85)).
-         *
-         * These rules should be sufficient to reduce the likelihood of false positives to an acceptable level.
-         */
-        if (i > 0 && ![window.name length]) {
-            NNWindow *mainWindow = [window previousNamedSiblingFromCollection:array];
-
-            if (mainWindow) {
-                NNVec2 c2cOffset = [window offsetOfCenterToCenterOfWindow:mainWindow];
-                NNVec2 absC2COffset = (NNVec2){ .x = fabs(c2cOffset.x), .y = fabs(c2cOffset.y) };
-                NSSize sizeDifference = [window sizeDifferenceFromWindow:mainWindow];
-                
-                // Windows have center origins that are within (20, 20) points of each other.
-                BOOL centered = absC2COffset.x < 20.0 && absC2COffset.y < 20.0;
-                
-                // Window fully encloses the window it shadows.
-                BOOL enclosing = [mainWindow enclosedByWindow:window];
-                
-                // Window to the rear has dimensions larger than the window it shadows, not exceeding (100, 100) points.
-                BOOL saneSize = sizeDifference.width < 100.0
-                             && sizeDifference.height < 100.0;
-                
-                if (centered && enclosing && saneSize) {
-                    [array removeObjectAtIndex:i--];
-                    continue;
-                }
-            }
-        }
-    }
-    
-    return array;
+    });
 }
 
 - (NNVec2)offsetOfCenterToCenterOfWindow:(NNWindow *)window;
