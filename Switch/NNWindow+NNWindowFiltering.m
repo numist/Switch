@@ -84,12 +84,12 @@ static NSString *kNNApplicationNameGitHub = @"GitHub";
          * These rules should be sufficient to reduce the likelihood of false positives to an acceptable level.
          */
         if (i > 0 && ![window.name length]) {
-            NNWindow *shadowedWindow = array[i - 1];
-            
-            if ([shadowedWindow.name length] && [shadowedWindow.application.name isEqualToString:kNNApplicationNameTweetbot]) {
-                NNVec2 c2cOffset = [window offsetOfCenterToCenterOfWindow:shadowedWindow];
+            NNWindow *mainWindow = [window previousNamedSiblingFromCollection:array];
+
+            if (mainWindow) {
+                NNVec2 c2cOffset = [window offsetOfCenterToCenterOfWindow:mainWindow];
                 NNVec2 absC2COffset = (NNVec2){ .x = fabs(c2cOffset.x), .y = fabs(c2cOffset.y) };
-                NSSize sizeDifference = [window sizeDifferenceFromWindow:shadowedWindow];
+                NSSize sizeDifference = [window sizeDifferenceFromWindow:mainWindow];
                 
                 // Windows have center origins that are within (20, 20) points of each other.
                 BOOL centered = absC2COffset.x < 20.0 && absC2COffset.y < 20.0;
@@ -133,6 +133,29 @@ static NSString *kNNApplicationNameGitHub = @"GitHub";
         .width = selfBounds.size.width - windowBounds.size.width,
         .height = selfBounds.size.height - windowBounds.size.height
     };
+}
+
+- (NNWindow *)previousNamedSiblingFromCollection:(NSArray *)array;
+{
+    NSUInteger s = [array indexOfObject:self];
+    if (s > [array count]) {
+        Check(s == NSNotFound);
+        return nil;
+    }
+    
+    for (NSInteger i = (NSInteger)s - 1; i >= 0; --i) {
+        NNWindow *result = array[(NSUInteger)i];
+        
+        if (![result.application.name isEqualToString:self.application.name]) {
+            return nil;
+        }
+        
+        if ([result.name length]) {
+            return result;
+        }
+    }
+    
+    return nil;
 }
 
 @end
