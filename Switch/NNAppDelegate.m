@@ -241,6 +241,11 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     
     [self createWindow];
     [self setUpReactions];
+    
+    if (!AXAPIEnabled()) {
+        NSLog(@"AX API is not enabled, oh no!");
+        abort();
+    }
 }
 
 - (void)applicationWillResignActive:(NSNotification *)notification;
