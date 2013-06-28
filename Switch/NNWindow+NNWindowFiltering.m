@@ -11,6 +11,10 @@
 #import "NNApplication.h"
 
 
+static NSString *kNNApplicationNamePowerbox = @"com.apple.security.pboxd";
+static NSString *kNNApplicationNameGitHub = @"GitHub";
+
+
 // No corresponding implementation, everything in this interface is declared/implemented in the class extension!
 @interface NNWindow (NNPrivateAccessors)
 
@@ -30,14 +34,14 @@
         NSString *applicationName = window.application.name;
         
         // Issue #10: Powerbox names its sheets, which are not valid (they do not respond to AXRaise)
-        if ([applicationName isEqualToString:@"com.apple.security.pboxd"]) {
+        if ([applicationName isEqualToString:kNNApplicationNamePowerbox]) {
             return NO;
         }
         
         // Issues #2, #8, #9: Most applications name their valid windows and leave the invalid ones blank.
         if (![windowName length]) {
-            // Except GitHub for Mac, which does not name its main window ಠ_ಠ
-            if ([applicationName isEqualToString:@"GitHub"]) {
+            // Except GitHub for Mac, which does not name its main window.
+            if ([applicationName isEqualToString:kNNApplicationNameGitHub]) {
                 return YES;
             }
             
