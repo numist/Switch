@@ -166,13 +166,9 @@
 		BCF357D6176CEE9E00458AFF /* ReactiveCocoa.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactiveCocoa.xcodeproj; path = Frameworks/ReactiveCocoa/ReactiveCocoaFramework/ReactiveCocoa.xcodeproj; sourceTree = "<group>"; };
 		BCFF2310177DD454008759C4 /* NNWindowFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNWindowFilter.h; sourceTree = "<group>"; };
 		BCFF2311177DD454008759C4 /* NNWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNWindowFilter.m; sourceTree = "<group>"; };
-		BCFF2313177DD812008759C4 /* NNTweetbotWindowFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNTweetbotWindowFilter.h; sourceTree = "<group>"; };
 		BCFF2314177DD812008759C4 /* NNTweetbotWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNTweetbotWindowFilter.m; sourceTree = "<group>"; };
-		BCFF2316177DDF46008759C4 /* NNGitHubWindowFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNGitHubWindowFilter.h; sourceTree = "<group>"; };
 		BCFF2317177DDF46008759C4 /* NNGitHubWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNGitHubWindowFilter.m; sourceTree = "<group>"; };
-		BCFF2319177DDFE8008759C4 /* NNPowerboxWindowFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNPowerboxWindowFilter.h; sourceTree = "<group>"; };
 		BCFF231A177DDFE8008759C4 /* NNPowerboxWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNPowerboxWindowFilter.m; sourceTree = "<group>"; };
-		BCFF231C177DE0FE008759C4 /* NNObviousSheetsWindowFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNObviousSheetsWindowFilter.h; sourceTree = "<group>"; };
 		BCFF231D177DE0FE008759C4 /* NNObviousSheetsWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNObviousSheetsWindowFilter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -428,13 +424,9 @@
 				BC43A625177A5CBC0082F981 /* NNWindow+NNWindowFiltering.m */,
 				BCFF2310177DD454008759C4 /* NNWindowFilter.h */,
 				BCFF2311177DD454008759C4 /* NNWindowFilter.m */,
-				BCFF2316177DDF46008759C4 /* NNGitHubWindowFilter.h */,
 				BCFF2317177DDF46008759C4 /* NNGitHubWindowFilter.m */,
-				BCFF231C177DE0FE008759C4 /* NNObviousSheetsWindowFilter.h */,
 				BCFF231D177DE0FE008759C4 /* NNObviousSheetsWindowFilter.m */,
-				BCFF2319177DDFE8008759C4 /* NNPowerboxWindowFilter.h */,
 				BCFF231A177DDFE8008759C4 /* NNPowerboxWindowFilter.m */,
-				BCFF2313177DD812008759C4 /* NNTweetbotWindowFilter.h */,
 				BCFF2314177DD812008759C4 /* NNTweetbotWindowFilter.m */,
 			);
 			name = "Window Filtering";
