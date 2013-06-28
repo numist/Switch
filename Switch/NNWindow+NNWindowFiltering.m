@@ -73,6 +73,21 @@ static NSString *kNNApplicationNameGitHub = @"GitHub";
         
         if (![window.application.name isEqualToString:kNNApplicationNameTweetbot]) { continue; }
         
+        /* Catch the table view section header window. It:
+         * • has no name.
+         * • floats over a window that has a name (in practice, the main window).
+         * • is fully enclosed by the window it decorates.
+         * • has a height of < 33 points (in practice, 30).
+         */
+        if (![window.name length] && window.cgBounds.size.height < 33.0) {
+            NNWindow *mainWindow = [window nextNamedSiblingFromCollection:array];
+            
+            if ([window enclosedByWindow:mainWindow]) {
+                [array removeObjectAtIndex:i--];
+                continue;
+            }
+        }
+        
         /*
          * Catch any shadowing windows. They:
          * • have no name
@@ -95,8 +110,7 @@ static NSString *kNNApplicationNameGitHub = @"GitHub";
                 BOOL centered = absC2COffset.x < 20.0 && absC2COffset.y < 20.0;
                 
                 // Window fully encloses the window it shadows.
-                BOOL enclosing = sizeDifference.width > absC2COffset.x * 2.0
-                              && sizeDifference.height > absC2COffset.y * 2.0;
+                BOOL enclosing = [mainWindow enclosedByWindow:window];
                 
                 // Window to the rear has dimensions larger than the window it shadows, not exceeding (100, 100) points.
                 BOOL saneSize = sizeDifference.width < 100.0
@@ -133,6 +147,38 @@ static NSString *kNNApplicationNameGitHub = @"GitHub";
         .width = selfBounds.size.width - windowBounds.size.width,
         .height = selfBounds.size.height - windowBounds.size.height
     };
+}
+
+- (BOOL)enclosedByWindow:(NNWindow *)window;
+{
+    NNVec2 c2cOffset = [self offsetOfCenterToCenterOfWindow:window];
+    NNVec2 absC2COffset = (NNVec2){ .x = fabs(c2cOffset.x), .y = fabs(c2cOffset.y) };
+    NSSize sizeDifference = [window sizeDifferenceFromWindow:self];
+
+    return sizeDifference.width > absC2COffset.x * 2.0 && sizeDifference.height > absC2COffset.y * 2.0;
+}
+
+- (NNWindow *)nextNamedSiblingFromCollection:(NSArray *)array;
+{
+    NSUInteger s = [array indexOfObject:self];
+    if (s > [array count]) {
+        Check(s == NSNotFound);
+        return nil;
+    }
+    
+    for (NSUInteger i = s + 1; i < [array count]; ++i) {
+        NNWindow *result = array[i];
+        
+        if (![result.application.name isEqualToString:self.application.name]) {
+            return nil;
+        }
+        
+        if ([result.name length]) {
+            return result;
+        }
+    }
+    
+    return nil;
 }
 
 - (NNWindow *)previousNamedSiblingFromCollection:(NSArray *)array;
