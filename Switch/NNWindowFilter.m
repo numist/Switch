@@ -44,13 +44,22 @@
     self = [super init];
     if (!self) { return nil; }
 
-    Assert([[[self class] superclass] isEqual: [NNWindowFilter class]]);
+    // Enforce shallow inheritance and no initialization of NNWindowFilter objects.
+    BailUnless([[[self class] superclass] isEqual: [NNWindowFilter class]], nil);
     const char *className = class_getName([self class]);
     size_t appNameLength = strlen(className) - strlen(class_getName([[self class] superclass]));
-    char *appName = alloca(appNameLength + 1);
-    appName[appNameLength] = '\0';
-    memcpy(appName, className + 2, appNameLength);
-    _applicationName = [NSString stringWithCString:appName encoding:NSASCIIStringEncoding];
+    
+    // Enforce class names of the form: NN…WindowFilter.
+    BailUnless((signed)strlen(className) - (signed)strlen(class_getName([[self class] superclass])) > 0, nil);
+    BailUnless(!strncmp(className, "NN", 2), nil);
+    BailUnless(!strncmp(className + 2 + appNameLength, "WindowFilter", 13), nil);
+    
+    {// Pull default application name out of class name.
+        char *appName = alloca(appNameLength + 1);
+        appName[appNameLength] = '\0';
+        memcpy(appName, className + 2, appNameLength);
+        _applicationName = [NSString stringWithCString:appName encoding:NSASCIIStringEncoding];
+    }
     
     return self;
 }
