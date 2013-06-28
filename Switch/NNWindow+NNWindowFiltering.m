@@ -11,6 +11,10 @@
 #import "NNApplication.h"
 
 
+typedef NSPoint NNVec2;
+
+
+static NSString *kNNApplicationNameTweetbot = @"Tweetbot";
 static NSString *kNNApplicationNamePowerbox = @"com.apple.security.pboxd";
 static NSString *kNNApplicationNameGitHub = @"GitHub";
 
@@ -27,11 +31,18 @@ static NSString *kNNApplicationNameGitHub = @"GitHub";
 
 + (NSArray *)filterValidWindowsFromArray:(NSArray *)array;
 {
+    array = [self removeInvalidTweetbotWindowsFromArray:array];
+    
     return [array filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, __attribute__((unused)) NSDictionary *bindings) {
         NNWindow *window = evaluatedObject;
         
         NSString *windowName = window.name;
         NSString *applicationName = window.application.name;
+        
+        // Tweetbot is handled by removeInvalidTweetbotWindowsFromArray:
+        if ([applicationName isEqualToString:kNNApplicationNameTweetbot]) {
+            return YES;
+        }
         
         // Issue #10: Powerbox names its sheets, which are not valid (they do not respond to AXRaise)
         if ([applicationName isEqualToString:kNNApplicationNamePowerbox]) {
@@ -50,6 +61,78 @@ static NSString *kNNApplicationNameGitHub = @"GitHub";
         
         return YES;
     }]];
+}
+
++ (NSArray *)removeInvalidTweetbotWindowsFromArray:(NSArray *)immutableArray;
+{
+    // Tweetbot, which *does* name its main window, has spurious decorator windows, but does not name its popup windows ಠ_ಠ
+    NSMutableArray *array = [immutableArray mutableCopy];
+    
+    for (NSUInteger i = 0; i < [array count]; ++i) {
+        NNWindow *window = array[i];
+        
+        if (![window.application.name isEqualToString:kNNApplicationNameTweetbot]) { continue; }
+        
+        /*
+         * Catch any shadowing windows. They:
+         * • have no name
+         * • shadow a window that has a name (in practice, the main window).
+         * • are positioned (nearly) centered underneath the shadowed window, within (20, 20) points center to center.
+         * • extend beyond the edges of the shadowed window on all sides
+         * • do not exceed the height or width of the shadowed window by more than 100 points (in practice, (90, 85)).
+         *
+         * These rules should be sufficient to reduce the likelihood of false positives to an acceptable level.
+         */
+        if (i > 0 && ![window.name length]) {
+            NNWindow *shadowedWindow = array[i - 1];
+            
+            if ([shadowedWindow.name length] && [shadowedWindow.application.name isEqualToString:kNNApplicationNameTweetbot]) {
+                NNVec2 c2cOffset = [window offsetOfCenterToCenterOfWindow:shadowedWindow];
+                NNVec2 absC2COffset = (NNVec2){ .x = fabs(c2cOffset.x), .y = fabs(c2cOffset.y) };
+                NSSize sizeDifference = [window sizeDifferenceFromWindow:shadowedWindow];
+                
+                // Windows have center origins that are within (20, 20) points of each other.
+                BOOL centered = absC2COffset.x < 20.0 && absC2COffset.y < 20.0;
+                
+                // Window fully encloses the window it shadows.
+                BOOL enclosing = sizeDifference.width > absC2COffset.x * 2.0
+                              && sizeDifference.height > absC2COffset.y * 2.0;
+                
+                // Window to the rear has dimensions larger than the window it shadows, not exceeding (100, 100) points.
+                BOOL saneSize = sizeDifference.width < 100.0
+                             && sizeDifference.height < 100.0;
+                
+                if (centered && enclosing && saneSize) {
+                    [array removeObjectAtIndex:i--];
+                    continue;
+                }
+            }
+        }
+    }
+    
+    return array;
+}
+
+- (NNVec2)offsetOfCenterToCenterOfWindow:(NNWindow *)window;
+{
+    NSRect selfBounds = self.cgBounds;
+    NSRect windowBounds = window.cgBounds;
+    
+    return (NNVec2){
+        .x = ((windowBounds.origin.x + (windowBounds.size.width / 2.0)) - (selfBounds.origin.x + (selfBounds.size.width / 2.0))),
+        .y = ((windowBounds.origin.y + (windowBounds.size.height / 2.0)) - (selfBounds.origin.y + (selfBounds.size.height / 2.0)))
+    };
+}
+
+- (NSSize)sizeDifferenceFromWindow:(NNWindow *)window;
+{
+    NSRect selfBounds = self.cgBounds;
+    NSRect windowBounds = window.cgBounds;
+
+    return (NSSize){
+        .width = selfBounds.size.width - windowBounds.size.width,
+        .height = selfBounds.size.height - windowBounds.size.height
+    };
 }
 
 @end
