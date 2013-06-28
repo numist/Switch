@@ -24,6 +24,7 @@
 #import "NNWindow.h"
 #import "NNWindowStore.h"
 #import "NNWindowThumbnailView.h"
+#import "NNAXDisabledWindowController.h"
 
 
 static NSTimeInterval kNNWindowDisplayDelay = 0.15;
@@ -51,6 +52,9 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 @property (nonatomic, strong) NNHotKeyManager *keyManager;
 @property (nonatomic, assign) BOOL incrementing;
 @property (nonatomic, assign) BOOL decrementing;
+
+#pragma mark AX API window
+@property (nonatomic, strong) NNAXDisabledWindowController *disabledWindowController;
 
 @end
 
@@ -244,7 +248,10 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     
     if (!AXAPIEnabled()) {
         NSLog(@"AX API is not enabled, oh no!");
-        abort();
+
+        NNAXDisabledWindowController *wc = [[NNAXDisabledWindowController alloc] initWithWindowNibName:@"NNAXDisabledWindowController"];
+        self.disabledWindowController = wc;
+        [wc showWindow:self];
     }
 }
 

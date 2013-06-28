@@ -43,6 +43,9 @@
 		BCFF2318177DDF46008759C4 /* NNGitHubWindowFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFF2317177DDF46008759C4 /* NNGitHubWindowFilter.m */; };
 		BCFF231B177DDFE8008759C4 /* NNPowerboxWindowFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFF231A177DDFE8008759C4 /* NNPowerboxWindowFilter.m */; };
 		BCFF231E177DE0FE008759C4 /* NNObviousSheetsWindowFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFF231D177DE0FE008759C4 /* NNObviousSheetsWindowFilter.m */; };
+		BCFF232D177E00FB008759C4 /* NNAXDisabledWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFF232B177E00FB008759C4 /* NNAXDisabledWindowController.m */; };
+		BCFF232E177E00FB008759C4 /* NNAXDisabledWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCFF232C177E00FB008759C4 /* NNAXDisabledWindowController.xib */; };
+		BCFF2331177E0458008759C4 /* UniversalAccessPref.icns in Resources */ = {isa = PBXBuildFile; fileRef = BCFF2330177E0458008759C4 /* UniversalAccessPref.icns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -170,6 +173,10 @@
 		BCFF2317177DDF46008759C4 /* NNGitHubWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNGitHubWindowFilter.m; sourceTree = "<group>"; };
 		BCFF231A177DDFE8008759C4 /* NNPowerboxWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNPowerboxWindowFilter.m; sourceTree = "<group>"; };
 		BCFF231D177DE0FE008759C4 /* NNObviousSheetsWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNObviousSheetsWindowFilter.m; sourceTree = "<group>"; };
+		BCFF232A177E00FB008759C4 /* NNAXDisabledWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNAXDisabledWindowController.h; sourceTree = "<group>"; };
+		BCFF232B177E00FB008759C4 /* NNAXDisabledWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNAXDisabledWindowController.m; sourceTree = "<group>"; };
+		BCFF232C177E00FB008759C4 /* NNAXDisabledWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NNAXDisabledWindowController.xib; sourceTree = "<group>"; };
+		BCFF2330177E0458008759C4 /* UniversalAccessPref.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = UniversalAccessPref.icns; path = Resources/UniversalAccessPref.icns; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -202,6 +209,9 @@
 			children = (
 				BCA734F216DAC53F00CD4C74 /* NNAppDelegate.h */,
 				BCA734F316DAC53F00CD4C74 /* NNAppDelegate.m */,
+				BCFF232A177E00FB008759C4 /* NNAXDisabledWindowController.h */,
+				BCFF232B177E00FB008759C4 /* NNAXDisabledWindowController.m */,
+				BCFF232C177E00FB008759C4 /* NNAXDisabledWindowController.xib */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -291,6 +301,7 @@
 		BCA734E716DAC53F00CD4C74 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				BCFF232F177E0450008759C4 /* Resources */,
 				BCA7354116E1621400CD4C74 /* constants.h */,
 				BCA7354216E1621400CD4C74 /* constants.m */,
 				BCA734EF16DAC53F00CD4C74 /* Credits.rtf */,
@@ -432,6 +443,14 @@
 			name = "Window Filtering";
 			sourceTree = "<group>";
 		};
+		BCFF232F177E0450008759C4 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				BCFF2330177E0458008759C4 /* UniversalAccessPref.icns */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -554,7 +573,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BCFF232E177E00FB008759C4 /* NNAXDisabledWindowController.xib in Resources */,
 				BCA734EB16DAC53F00CD4C74 /* InfoPlist.strings in Resources */,
+				BCFF2331177E0458008759C4 /* UniversalAccessPref.icns in Resources */,
 				BCA734F116DAC53F00CD4C74 /* Credits.rtf in Resources */,
 				BCA734F716DAC53F00CD4C74 /* MainMenu.xib in Resources */,
 			);
@@ -600,6 +621,7 @@
 				BCA7351E16DAC61F00CD4C74 /* NNWindow.m in Sources */,
 				BCA7352216DAC6A900CD4C74 /* NNWindowWorker.m in Sources */,
 				BCFF2318177DDF46008759C4 /* NNGitHubWindowFilter.m in Sources */,
+				BCFF232D177E00FB008759C4 /* NNAXDisabledWindowController.m in Sources */,
 				BCA7352516DAC93C00CD4C74 /* NNApplication.m in Sources */,
 				BCA7352B16DB1E9C00CD4C74 /* despatch.m in Sources */,
 				BCA7352F16DB239900CD4C74 /* NNWindowThumbnailView.m in Sources */,
