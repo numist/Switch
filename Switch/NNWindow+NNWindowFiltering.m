@@ -31,6 +31,7 @@ static NSString *kNNApplicationNameGitHub = @"GitHub";
 
 + (NSArray *)filterValidWindowsFromArray:(NSArray *)array;
 {
+    array = [self removeObviousSheetsFromArray:array];
     array = [self removeInvalidTweetbotWindowsFromArray:array];
     
     return [array filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, __attribute__((unused)) NSDictionary *bindings) {
@@ -61,6 +62,39 @@ static NSString *kNNApplicationNameGitHub = @"GitHub";
         
         return YES;
     }]];
+}
+
++ (NSArray *)removeObviousSheetsFromArray:(NSArray *)immutableArray;
+{
+    NSMutableArray *array = [immutableArray mutableCopy];
+    
+    for (NSUInteger i = 1; i < [array count]; ++i) {
+        // Avoid potential index out of bounds caused by `i -= 2;` below.
+        if (i == 0) { continue; }
+        NNWindow *prevSibling = array[(i - 1)];
+        NNWindow *sheet = array[i];
+        
+        /*
+         * Match obvious non-Powerbox sheets, which are two adjacent windows matched by:
+         * • The fore window has an alpha < 1 (in practice, ~0.85).
+         * • Neither window is named.
+         * • The fore window is short (in practice, a height of 10 points).
+         *     - Title bars tend to be about 24 points tall, so any smaller value should have an acceptable false positive rate.
+         */
+        if (![sheet.name length] && ![prevSibling.name length]) {
+            BOOL isTranslucent = [[prevSibling.windowDescription objectForKey:(__bridge NSString*)kCGWindowAlpha] doubleValue] < 1.0;
+            BOOL isShort = prevSibling.cgBounds.size.height < 16.0;
+            
+            if (isTranslucent && isShort) {
+                [array removeObjectAtIndex:i];
+                [array removeObjectAtIndex:i - 1];
+                i -= 2;
+                continue;
+            }
+        }
+    }
+    
+    return array;
 }
 
 + (NSArray *)removeInvalidTweetbotWindowsFromArray:(NSArray *)immutableArray;
