@@ -11,9 +11,6 @@
 #import "NNApplication.h"
 
 
-typedef NSPoint NNVec2;
-
-
 static NSString *kNNApplicationNameTweetbot = @"Tweetbot";
 static NSString *kNNApplicationNamePowerbox = @"com.apple.security.pboxd";
 static NSString *kNNApplicationNameGitHub = @"GitHub";
@@ -107,7 +104,8 @@ static NSString *kNNApplicationNameGitHub = @"GitHub";
         
         if (![window.application.name isEqualToString:kNNApplicationNameTweetbot]) { continue; }
         
-        /* Catch the table view section header window. It:
+        /*
+         * Catch the table view section header window. It:
          * • has no name.
          * • floats over a window that has a name (in practice, the main window).
          * • is fully enclosed by the window it decorates.
