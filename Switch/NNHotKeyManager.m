@@ -51,9 +51,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     
     _eventTap = CGEventTapCreate(kCGSessionEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault, eventMask, nnCGEventCallback, (__bridge void *)(self));
     // TODO(numist): This will fail unless the user is root, need to escalate privileges!
-    BailWithBlockUnless(_eventTap, ^{
-        return (NNHotKeyManager *)nil;
-    });
+    BailUnless(_eventTap, (NNHotKeyManager *)nil);
     
     // Create a run loop source.
     _runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, self.eventTap, 0);
@@ -69,8 +67,14 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
 
 - (void)dealloc;
 {
-    CFRunLoopRemoveSource(CFRunLoopGetCurrent(), _runLoopSource, kCFRunLoopCommonModes);
-    CFRelease(_eventTap);
+    if (_runLoopSource) {
+        CFRunLoopRemoveSource(CFRunLoopGetCurrent(), _runLoopSource, kCFRunLoopCommonModes);
+        _runLoopSource = NULL;
+    }
+    if (_eventTap) {
+        CFRelease(_eventTap);
+        _eventTap = NULL;
+    }
 }
 
 - (CGEventRef)eventTapProxy:(CGEventTapProxy)proxy didReceiveEvent:(CGEventRef)event ofType:(CGEventType)type;
