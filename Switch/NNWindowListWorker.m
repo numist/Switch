@@ -33,21 +33,18 @@ static NSTimeInterval refreshInterval = 0.1;
 
 - (instancetype)initWithDelegate:(id<NNWindowListWorkerDelegate>)delegate;
 {
-    self = [super init];
+    self = [super initWithQueue:dispatch_get_global_queue(0, 0)];
     if (!self) return nil;
     
     _delegate = delegate;
-    
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [self workerLoop];
-    });
+    self.interval = refreshInterval;
 
     return self;
 }
 
 #pragma mark Internal
 
-- (oneway void)workerLoop;
+- (oneway void)main;
 {
     CFArrayRef cgInfo = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements,  kCGNullWindowID);
     NSArray *info = CFBridgingRelease(cgInfo);
@@ -69,20 +66,12 @@ static NSTimeInterval refreshInterval = 0.1;
     // Schedule delegate update and next iteration of worker loop.
     @weakify(self);
 
-    NSArray *result = [windows copy];
     dispatch_async(dispatch_get_main_queue(), ^{
         @strongify(self);
         if (self) {
             __strong __typeof__(self.delegate) delegate = self.delegate;
-            [delegate listWorker:self didUpdateWindowList:result];
+            [delegate listWorker:self didUpdateWindowList:windows];
         }
-    });
-    
-    double delayInSeconds = refreshInterval;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_global_queue(0, 0), ^(void){
-        @strongify(self);
-        [self workerLoop];
     });
 }
 

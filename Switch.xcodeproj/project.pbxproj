@@ -13,6 +13,9 @@
 		BC63AB9A175701D900016B9E /* Haxcessibility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
 		BC63ABA517598C4100016B9E /* debugger.c in Sources */ = {isa = PBXBuildFile; fileRef = BC63ABA217598C4100016B9E /* debugger.c */; };
 		BC6B6D00178B711E001D691D /* PSPDFMainThreadGuard.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6CFF178B711E001D691D /* PSPDFMainThreadGuard.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		BC6B6D13178DDBDA001D691D /* NNCoreWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6D12178DDBDA001D691D /* NNCoreWindowController.m */; };
+		BC6B6D19178DE586001D691D /* NNPollingObject.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6D18178DE586001D691D /* NNPollingObject.m */; };
+		BC6B6D1C178DE8E5001D691D /* NNAPIEnabledWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6D1B178DE8E5001D691D /* NNAPIEnabledWorker.m */; };
 		BC8D8DA1177BA53100B7A135 /* NNHUDCollectionViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC8D8DA0177BA53100B7A135 /* NNHUDCollectionViewTests.m */; };
 		BCA734E116DAC53F00CD4C74 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCA734E016DAC53F00CD4C74 /* Cocoa.framework */; };
 		BCA734EB16DAC53F00CD4C74 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BCA734E916DAC53F00CD4C74 /* InfoPlist.strings */; };
@@ -120,6 +123,12 @@
 		BC63ABA317598C4100016B9E /* debugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debugger.h; sourceTree = "<group>"; };
 		BC63ABA71759AB4900016B9E /* NNApplication+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NNApplication+Private.h"; sourceTree = "<group>"; };
 		BC6B6CFF178B711E001D691D /* PSPDFMainThreadGuard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSPDFMainThreadGuard.m; sourceTree = "<group>"; };
+		BC6B6D11178DDBDA001D691D /* NNCoreWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNCoreWindowController.h; sourceTree = "<group>"; };
+		BC6B6D12178DDBDA001D691D /* NNCoreWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNCoreWindowController.m; sourceTree = "<group>"; };
+		BC6B6D17178DE586001D691D /* NNPollingObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNPollingObject.h; sourceTree = "<group>"; };
+		BC6B6D18178DE586001D691D /* NNPollingObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNPollingObject.m; sourceTree = "<group>"; };
+		BC6B6D1A178DE8E5001D691D /* NNAPIEnabledWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNAPIEnabledWorker.h; sourceTree = "<group>"; };
+		BC6B6D1B178DE8E5001D691D /* NNAPIEnabledWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNAPIEnabledWorker.m; sourceTree = "<group>"; };
 		BC8D8DA0177BA53100B7A135 /* NNHUDCollectionViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDCollectionViewTests.m; sourceTree = "<group>"; };
 		BCA734DD16DAC53F00CD4C74 /* Switch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Switch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCA734E016DAC53F00CD4C74 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -214,6 +223,8 @@
 				BCFF232A177E00FB008759C4 /* NNAXDisabledWindowController.h */,
 				BCFF232B177E00FB008759C4 /* NNAXDisabledWindowController.m */,
 				BCFF232C177E00FB008759C4 /* NNAXDisabledWindowController.xib */,
+				BC6B6D11178DDBDA001D691D /* NNCoreWindowController.h */,
+				BC6B6D12178DDBDA001D691D /* NNCoreWindowController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -401,6 +412,10 @@
 		BCA7358F16E585D400CD4C74 /* Polling */ = {
 			isa = PBXGroup;
 			children = (
+				BC6B6D1A178DE8E5001D691D /* NNAPIEnabledWorker.h */,
+				BC6B6D1B178DE8E5001D691D /* NNAPIEnabledWorker.m */,
+				BC6B6D17178DE586001D691D /* NNPollingObject.h */,
+				BC6B6D18178DE586001D691D /* NNPollingObject.m */,
 				BCA7352016DAC6A900CD4C74 /* NNWindowWorker.h */,
 				BCA7352116DAC6A900CD4C74 /* NNWindowWorker.m */,
 				BCA7351916DAC5E200CD4C74 /* NNWindowListWorker.h */,
@@ -636,9 +651,11 @@
 				BCA7352516DAC93C00CD4C74 /* NNApplication.m in Sources */,
 				BCA7352B16DB1E9C00CD4C74 /* despatch.m in Sources */,
 				BCA7352F16DB239900CD4C74 /* NNWindowThumbnailView.m in Sources */,
+				BC6B6D13178DDBDA001D691D /* NNCoreWindowController.m in Sources */,
 				BCA7353316DB2C0100CD4C74 /* NNHotKeyManager.m in Sources */,
 				BCFF231E177DE0FE008759C4 /* NNObviousSheetsWindowFilter.m in Sources */,
 				BC6B6D00178B711E001D691D /* PSPDFMainThreadGuard.m in Sources */,
+				BC6B6D1C178DE8E5001D691D /* NNAPIEnabledWorker.m in Sources */,
 				BCA7353816E148EF00CD4C74 /* NNRoundedRectView.m in Sources */,
 				BCFF2315177DD812008759C4 /* NNTweetbotWindowFilter.m in Sources */,
 				BCFF2312177DD454008759C4 /* NNWindowFilter.m in Sources */,
@@ -646,6 +663,7 @@
 				BCA7354316E1621400CD4C74 /* constants.m in Sources */,
 				BCA7354916E1F14D00CD4C74 /* NNSelectionBoxView.m in Sources */,
 				BCFF231B177DDFE8008759C4 /* NNPowerboxWindowFilter.m in Sources */,
+				BC6B6D19178DE586001D691D /* NNPollingObject.m in Sources */,
 				BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */,
 				BC63AB8F1755907D00016B9E /* NNHUDCollectionView.m in Sources */,
 				BC63ABA517598C4100016B9E /* debugger.c in Sources */,

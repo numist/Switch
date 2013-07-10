@@ -1,8 +1,8 @@
 //
-//  NNAXDisabledWindowController.h
+//  NNCoreWindowController.h
 //  Switch
 //
-//  Created by Scott Perry on 06/28/13.
+//  Created by Scott Perry on 07/10/13.
 //  Copyright © 2013 Scott Perry.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -13,6 +13,6 @@
 //
 #import <Cocoa/Cocoa.h>
 
-@interface NNAXDisabledWindowController : NSWindowController
+@interface NNCoreWindowController : NSWindowController
 
 @end

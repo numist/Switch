@@ -30,7 +30,6 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 @property (nonatomic, weak, readonly) NNWindow *window;
 
 @property (nonatomic, strong) __attribute__((NSObject)) CGImageRef previousCapture;
-@property (nonatomic, assign) NSTimeInterval updateInterval;
 
 @end
 
@@ -39,18 +38,14 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 
 - (instancetype)initWithModelObject:(NNWindow *)window delegate:(id<NNWindowWorkerDelegate>)delegate;
 {
-    self = [super init];
+    self = [super initWithQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)];
     BailUnless(self, nil);
     BailUnless(window, nil);
     BailUnless(delegate, nil);
     
     _window = window;
     _delegate = delegate;
-    _updateInterval = NNPollingIntervalFast;
-    
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [self workerLoop];
-    });
+    self.interval = NNPollingIntervalFast;
     
     return self;
 }
@@ -66,11 +61,10 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 
 #pragma mark Internal
 
-- (oneway void)workerLoop;
+- (oneway void)main;
 {
     NNWindow *window = self.window;
 
-    NSDate *start = [NSDate date];
     CGImageRef cgImage = [window copyCGWindowImage];
     
     if (cgImage) {
@@ -94,9 +88,9 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
         }
         
         if (!imageChanged) {
-            self.updateInterval = MIN(NNPollingIntervalSlow, self.updateInterval * 2.0);
+            self.interval = MIN(NNPollingIntervalSlow, self.interval * 2.0);
         } else {
-            self.updateInterval = NNPollingIntervalFast;
+            self.interval = NNPollingIntervalFast;
             self.previousCapture = cgImage;
             
             window.image = [[NSImage alloc] initWithCGImage:cgImage size:NSMakeSize(newWidth, newHeight)];
@@ -109,22 +103,11 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
         CFRelease(cgImage); cgImage = NULL;
     } else if (window.exists) {
         // Didn't get a real image, but the window exists. Try again ASAP.
-        self.updateInterval = NNPollingIntervalFast;
+        self.interval = NNPollingIntervalFast;
     } else {
         // Window does not exist. Stop the worker loop.
         return;
     }
-    
-    // All done, schedule the next update.
-    @weakify(self);
-    double delayInSeconds = MAX(self.updateInterval - [[NSDate date] timeIntervalSinceDate:start], 0.0);
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void){
-        @strongify(self);
-        if (self.delegate) {
-            [self workerLoop];
-        }
-    });
 }
 
 @end
