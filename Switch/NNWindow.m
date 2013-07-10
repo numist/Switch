@@ -117,14 +117,16 @@
 
 - (void)elementWasDestroyed:(HAXElement *)element;
 {
-    @synchronized(self) {
-        BailUnless(element == _haxWindow, );
-        
-        @autoreleasepool {
-            _haxWindow = nil;
-            (void)self.haxWindow;
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        @synchronized(self) {
+            BailUnless(element == _haxWindow, );
+            
+            @autoreleasepool {
+                _haxWindow = nil;
+                (void)self.haxWindow;
+            }
         }
-    }
+    });
 }
 
 #pragma mark Dynamic accessors
