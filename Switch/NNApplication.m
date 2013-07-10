@@ -131,7 +131,7 @@
 {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         @synchronized(self) {
-            BailUnless(element == _haxApp, );
+            if (element != _haxApp) { return; }
             
             @autoreleasepool {
                 _haxApp = nil;
