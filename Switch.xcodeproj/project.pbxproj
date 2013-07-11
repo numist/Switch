@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BC240D6A178E9966003FE2BF /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC240D69178E9966003FE2BF /* Sparkle.framework */; };
 		BC43A626177A5CBC0082F981 /* NNWindow+NNWindowFiltering.m in Sources */ = {isa = PBXBuildFile; fileRef = BC43A625177A5CBC0082F981 /* NNWindow+NNWindowFiltering.m */; };
 		BC63AB8F1755907D00016B9E /* NNHUDCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */; };
 		BC63AB921756FBE400016B9E /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB911756FBE300016B9E /* Carbon.framework */; };
@@ -40,6 +39,10 @@
 		BCA7354316E1621400CD4C74 /* constants.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354216E1621400CD4C74 /* constants.m */; };
 		BCA7354916E1F14D00CD4C74 /* NNSelectionBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354816E1F14D00CD4C74 /* NNSelectionBoxView.m */; };
 		BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */; };
+		BCDDB2BD178EF16A00C22E47 /* ReactiveCocoa.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCF357E0176CEE9F00458AFF /* ReactiveCocoa.framework */; };
+		BCDDB2BE178EF16E00C22E47 /* Haxcessibility.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
+		BCDDB2C2178EF1B200C22E47 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */; };
+		BCDDB2C3178EF29300C22E47 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */; };
 		BCE6987C1773B71C009CFD12 /* NNApplicationCache.m in Sources */ = {isa = PBXBuildFile; fileRef = BCE6987B1773B71C009CFD12 /* NNApplicationCache.m */; };
 		BCE6987F1773B8B1009CFD12 /* NNWindowCache.m in Sources */ = {isa = PBXBuildFile; fileRef = BCE6987E1773B8B1009CFD12 /* NNWindowCache.m */; };
 		BCF357E9176CEEF200458AFF /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCF357E0176CEE9F00458AFF /* ReactiveCocoa.framework */; };
@@ -111,8 +114,22 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		BCDDB2BC178EF15B00C22E47 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				BCDDB2C2178EF1B200C22E47 /* Sparkle.framework in CopyFiles */,
+				BCDDB2BE178EF16E00C22E47 /* Haxcessibility.framework in CopyFiles */,
+				BCDDB2BD178EF16A00C22E47 /* ReactiveCocoa.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		BC240D69178E9966003FE2BF /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		BC3B3B6D175E505C002AD452 /* NNWindowCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNWindowCache.h; sourceTree = "<group>"; };
 		BC43A624177A5CBC0082F981 /* NNWindow+NNWindowFiltering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NNWindow+NNWindowFiltering.h"; sourceTree = "<group>"; };
 		BC43A625177A5CBC0082F981 /* NNWindow+NNWindowFiltering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NNWindow+NNWindowFiltering.m"; sourceTree = "<group>"; };
@@ -174,6 +191,7 @@
 		BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = imageComparators.h; sourceTree = "<group>"; };
 		BCA7354B16E2ED5000CD4C74 /* NNHUDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHUDView.h; sourceTree = "<group>"; };
 		BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDView.m; sourceTree = "<group>"; };
+		BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		BCE6987A1773B71C009CFD12 /* NNApplicationCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNApplicationCache.h; sourceTree = "<group>"; };
 		BCE6987B1773B71C009CFD12 /* NNApplicationCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNApplicationCache.m; sourceTree = "<group>"; };
 		BCE6987E1773B8B1009CFD12 /* NNWindowCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNWindowCache.m; sourceTree = "<group>"; };
@@ -194,12 +212,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BCF357E9176CEEF200458AFF /* ReactiveCocoa.framework in Frameworks */,
-				BC240D6A178E9966003FE2BF /* Sparkle.framework in Frameworks */,
-				BC63AB9A175701D900016B9E /* Haxcessibility.framework in Frameworks */,
 				BC63AB921756FBE400016B9E /* Carbon.framework in Frameworks */,
-				BCA7353A16E14EF000CD4C74 /* QuartzCore.framework in Frameworks */,
 				BCA734E116DAC53F00CD4C74 /* Cocoa.framework in Frameworks */,
+				BC63AB9A175701D900016B9E /* Haxcessibility.framework in Frameworks */,
+				BCA7353A16E14EF000CD4C74 /* QuartzCore.framework in Frameworks */,
+				BCF357E9176CEEF200458AFF /* ReactiveCocoa.framework in Frameworks */,
+				BCDDB2C3178EF29300C22E47 /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,7 +236,7 @@
 		BC240D68178E9955003FE2BF /* Sparkle */ = {
 			isa = PBXGroup;
 			children = (
-				BC240D69178E9966003FE2BF /* Sparkle.framework */,
+				BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */,
 			);
 			name = Sparkle;
 			sourceTree = "<group>";
@@ -486,12 +504,13 @@
 				BCA734D916DAC53F00CD4C74 /* Sources */,
 				BCA734DA16DAC53F00CD4C74 /* Frameworks */,
 				BCA734DB16DAC53F00CD4C74 /* Resources */,
+				BCDDB2BC178EF15B00C22E47 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				BCF357E8176CEEEB00458AFF /* PBXTargetDependency */,
 				BC63AB9C175701DD00016B9E /* PBXTargetDependency */,
+				BCF357E8176CEEEB00458AFF /* PBXTargetDependency */,
 			);
 			name = Switch;
 			productName = Switch;
@@ -746,6 +765,7 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -782,6 +802,7 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -882,6 +903,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Switch.app/Contents/MacOS/Switch";
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -897,6 +919,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Switch.app/Contents/MacOS/Switch";
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
