@@ -11,16 +11,22 @@
 //
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
 #import "NNAXDisabledWindowController.h"
 
 #import <Haxcessibility/Haxcessibility.h>
+#import <QuartzCore/QuartzCore.h>
 
 #import "NNAPIEnabledWorker.h"
+
+
+static NSTimeInterval NNWindoFadeOutInterval = 1.0;
 
 
 @interface NNAXDisabledWindowController ()
 
 @property (nonatomic, strong) NNAPIEnabledWorker *apiWorker;
+@property (nonatomic, assign) BOOL selfEnabled;
 
 @property (nonatomic, weak) IBOutlet NSButton *enabledCheckbox;
 @property (nonatomic, weak) IBOutlet NSTextFieldCell *promptMessage;
@@ -29,17 +35,21 @@
 
 - (IBAction)checkboxClicked:(id)sender;
 - (IBAction)enableButtonClicked:(id)sender;
+- (IBAction)quitButtonClicked:(id)sender;
 
 @end
 
 @implementation NNAXDisabledWindowController
 
+#pragma mark NSObject
+
 - (void)dealloc;
 {
-    if (_apiWorker) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:NNAPIEnabledChangedNotification object:_apiWorker];
-    }
+    // Use the setter to remove the notification observer.
+    self.apiWorker = nil;
 }
+
+#pragma mark NSWindowController
 
 - (void)windowDidLoad
 {
@@ -47,66 +57,139 @@
     
     ((NSView *)self.window.contentView).wantsLayer = YES;
     
-    [self.enableButton setKeyEquivalent:@"\r"];
+    CABasicAnimation *alphaAnimation = [CABasicAnimation animation];
+    alphaAnimation.duration = NNWindoFadeOutInterval;
     
-    self.apiWorker = [NNAPIEnabledWorker new];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(apiStatusChangedNotification:) name:NNAPIEnabledChangedNotification object:self.apiWorker];
-    
-    [self updateWindowContents];
+    self.window.animations = @{
+        @"alphaValue" : alphaAnimation
+    };
 }
 
-- (IBAction)checkboxClicked:(id)sender;
+- (void)showWindow:(id)sender;
+{
+    self.apiWorker = [NNAPIEnabledWorker new];
+    
+    [super showWindow:sender];
+
+    self.window.alphaValue = 1.0f;
+    self.selfEnabled = NO;
+
+    [self updateWindowContents];
+    
+    NSButton *enableButton = self.enableButton;
+    [self.window setDefaultButtonCell:(NSButtonCell *)enableButton];
+    [self.window makeFirstResponder:enableButton];
+}
+
+- (void)close;
+{
+    self.apiWorker = nil;
+    
+    [super close];
+}
+
+#pragma mark - Properties
+
+- (void)setApiWorker:(NNAPIEnabledWorker *)apiWorker;
+{
+    if (_apiWorker == apiWorker) { return; }
+    
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    if (_apiWorker) {
+        [center removeObserver:self name:NNAPIEnabledChangedNotification object:_apiWorker];
+    }
+    if (apiWorker) {
+        [center addObserver:self selector:@selector(apiStatusChangedNotification:) name:NNAPIEnabledChangedNotification object:apiWorker];
+    }
+    _apiWorker = apiWorker;
+}
+
+#pragma mark Actions
+
+- (IBAction)checkboxClicked:(__attribute__((unused)) id)sender;
 {
     [self updateWindowContents];
-
-    NSLog(@"%@", [HAXSystem system].focusedApplication.windows);
 }
 
-- (IBAction)enableButtonClicked:(id)sender;
+- (IBAction)enableButtonClicked:(__attribute__((unused)) id)sender;
 {
     if (!AXAPIEnabled()) {
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            // From https://github.com/mayoff/keyscope
-            NSAppleScript *script = [[NSAppleScript alloc] initWithSource:@"tell app \"System Events\"\nset UI elements enabled to true\nget UI elements enabled\nend"];
+            // Programmatic enabling of support for assistive devices via https://github.com/mayoff/keyscope
+            NSAppleScript *script = [[NSAppleScript alloc] initWithSource:@"tell app \"System Events\"\n\tset UI elements enabled to true\n\tget UI elements enabled\nend"];
             NSDictionary *error;
             NSAppleEventDescriptor *aed = [script executeAndReturnError:&error];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
+                [self.window makeKeyAndOrderFront:self];
+            });
+            
             if (!aed) {
-#warning rephrase/re-not-die
-                NSLog(@"keyscope/sniffer: error enabling universal access: %@", error);
-                exit(1);
-            }
-            if ([aed descriptorType] != 'true') {
-#warning rephrase/re-not-die
-                NSLog(@"keyscope/sniffer: failed to enable universal access");
-                exit(1);
+                Log(@"error enabling support for assistive devices: %@", error);
+            } else if ([aed descriptorType] != 'true') {
+                Log(@"failed to enable support for assistive devices");
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.selfEnabled = YES;
+                    [self updateWindowContents];
+                    [self animateClosed];
+                });
             }
         });
     } else {
-        NSLog(@"Close window");
+        [self close];
     }
+}
+
+- (IBAction)quitButtonClicked:(__attribute__((unused)) id)sender;
+{
+    exit(0);
+}
+
+#pragma mark Notifications
+
+- (void)apiStatusChangedNotification:(__attribute__((unused)) NSNotification *)note;
+{
+    [self updateWindowContents];
+}
+
+#pragma mark Internal
+
+- (void)animateClosed;
+{
+    Check(AXAPIEnabled());
+    
+    [self.window.animator setAlphaValue:0.0f];
+    
+    double delayInSeconds = NNWindoFadeOutInterval;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        // Avoid losing a minor race.
+        if (AXAPIEnabled()) {
+            [self close];
+        } else {
+            [self showWindow:self];
+        }
+    });
 }
 
 - (void)updateWindowContents;
 {
     Boolean enabled = AXAPIEnabled();
-    
     NSButton *checkbox = self.enabledCheckbox;
-    checkbox.state = enabled ? NSOnState : NSOffState;
+    NSButton *enableButton = self.enableButton;
+    NSButton *quitButton = self.quitButton;
     
     if (enabled) {
-        self.enableButton.title = @"Done";
-        [self.quitButton setEnabled:NO];
+        checkbox.state = NSOnState;
+        enableButton.title = self.selfEnabled ? @"Thanks!" : @"Done";
+        [quitButton setEnabled:NO];
     } else {
-        self.enableButton.title = @"Enable";
-        [self.quitButton setEnabled:YES];
+        checkbox.state = NSOffState;
+        enableButton.title = @"Enable";
+        [quitButton setEnabled:YES];
     }
-}
-
-- (void)apiStatusChangedNotification:(NSNotification *)note;
-{
-    NSLog(@"Detected API transition");
-    
-    [self updateWindowContents];
 }
 
 @end
