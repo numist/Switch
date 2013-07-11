@@ -12,7 +12,7 @@
 		BC63AB921756FBE400016B9E /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB911756FBE300016B9E /* Carbon.framework */; };
 		BC63AB9A175701D900016B9E /* Haxcessibility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
 		BC63ABA517598C4100016B9E /* debugger.c in Sources */ = {isa = PBXBuildFile; fileRef = BC63ABA217598C4100016B9E /* debugger.c */; };
-		BC6B6D00178B711E001D691D /* PSPDFMainThreadGuard.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6CFF178B711E001D691D /* PSPDFMainThreadGuard.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		BC6B6D00178B711E001D691D /* NNMainThreadGuard.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6CFF178B711E001D691D /* NNMainThreadGuard.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		BC6B6D13178DDBDA001D691D /* NNCoreWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6D12178DDBDA001D691D /* NNCoreWindowController.m */; };
 		BC6B6D19178DE586001D691D /* NNPollingObject.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6D18178DE586001D691D /* NNPollingObject.m */; };
 		BC6B6D1C178DE8E5001D691D /* NNAPIEnabledWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6D1B178DE8E5001D691D /* NNAPIEnabledWorker.m */; };
@@ -121,7 +121,7 @@
 		BC63ABA217598C4100016B9E /* debugger.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = debugger.c; sourceTree = "<group>"; };
 		BC63ABA317598C4100016B9E /* debugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debugger.h; sourceTree = "<group>"; };
 		BC63ABA71759AB4900016B9E /* NNApplication+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NNApplication+Private.h"; sourceTree = "<group>"; };
-		BC6B6CFF178B711E001D691D /* PSPDFMainThreadGuard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSPDFMainThreadGuard.m; sourceTree = "<group>"; };
+		BC6B6CFF178B711E001D691D /* NNMainThreadGuard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNMainThreadGuard.m; sourceTree = "<group>"; };
 		BC6B6D11178DDBDA001D691D /* NNCoreWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNCoreWindowController.h; sourceTree = "<group>"; };
 		BC6B6D12178DDBDA001D691D /* NNCoreWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNCoreWindowController.m; sourceTree = "<group>"; };
 		BC6B6D17178DE586001D691D /* NNPollingObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNPollingObject.h; sourceTree = "<group>"; };
@@ -256,7 +256,7 @@
 		BC6B6CFB178B7115001D691D /* Debug */ = {
 			isa = PBXGroup;
 			children = (
-				BC6B6CFF178B711E001D691D /* PSPDFMainThreadGuard.m */,
+				BC6B6CFF178B711E001D691D /* NNMainThreadGuard.m */,
 			);
 			name = Debug;
 			sourceTree = "<group>";
@@ -650,7 +650,7 @@
 				BC6B6D13178DDBDA001D691D /* NNCoreWindowController.m in Sources */,
 				BCA7353316DB2C0100CD4C74 /* NNHotKeyManager.m in Sources */,
 				BCFF231E177DE0FE008759C4 /* NNObviousSheetsWindowFilter.m in Sources */,
-				BC6B6D00178B711E001D691D /* PSPDFMainThreadGuard.m in Sources */,
+				BC6B6D00178B711E001D691D /* NNMainThreadGuard.m in Sources */,
 				BC6B6D1C178DE8E5001D691D /* NNAPIEnabledWorker.m in Sources */,
 				BCA7353816E148EF00CD4C74 /* NNRoundedRectView.m in Sources */,
 				BCFF2315177DD812008759C4 /* NNTweetbotWindowFilter.m in Sources */,
