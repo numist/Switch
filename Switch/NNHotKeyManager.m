@@ -18,8 +18,6 @@
 
 #include <ApplicationServices/ApplicationServices.h>
 
-#import "NNAPIEnabledWorker.h"
-
 
 @interface NNHotKeyManager ()
 
@@ -52,21 +50,12 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
         return nil;
     }
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(apiStatusChangedNotification:) name:NNAPIEnabledChangedNotification object:nil];
-    
     return self;
 }
 
 - (void)dealloc;
 {
     [self removeEventTap];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NNAPIEnabledChangedNotification object:nil];
-}
-
-- (void)apiStatusChangedNotification:(__attribute__((unused)) NSNotification *)note;
-{
-    [self removeEventTap];
-    [self insertEventTap];
 }
 
 - (void)removeEventTap;
