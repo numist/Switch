@@ -14,25 +14,14 @@
 
 #import "NNAppDelegate.h"
 
-#import <ReactiveCocoa/EXTScope.h>
-#import <ReactiveCocoa/ReactiveCocoa.h>
-
-#import "constants.h"
-#import "NNApplication.h"
-#import "NNHotKeyManager.h"
-#import "NNHUDCollectionView.h"
-#import "NNWindow.h"
-#import "NNWindowStore.h"
-#import "NNWindowThumbnailView.h"
 #import "NNAXDisabledWindowController.h"
-
-
+#import "NNCoreWindowController.h"
 
 
 @interface NNAppDelegate ()
 
-#pragma mark AX API window
 @property (nonatomic, strong) NNAXDisabledWindowController *disabledWindowController;
+@property (nonatomic, strong) NNCoreWindowController *coreWindowController;
 
 @end
 
@@ -42,23 +31,14 @@
 
 #pragma mark - NSApplicationDelegate
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+- (void)applicationDidFinishLaunching:(__attribute__((unused)) NSNotification *)aNotification
 {
-#warning create NNCoreWindowController here
+    self.disabledWindowController = [[NNAXDisabledWindowController alloc] initWithWindowNibName:@"NNAXDisabledWindowController"];
+    self.coreWindowController = [[NNCoreWindowController alloc] initWithWindow:nil];
     
-    if (!AXAPIEnabled() || YES) {
-        NSLog(@"AX API is not enabled, oh no!");
-
-        NNAXDisabledWindowController *wc = [[NNAXDisabledWindowController alloc] initWithWindowNibName:@"NNAXDisabledWindowController"];
-        self.disabledWindowController = wc;
-        [wc showWindow:self];
+    if (!AXAPIEnabled()) {
+        [self.disabledWindowController showWindow:self];
     }
-}
-
-- (void)applicationWillResignActive:(NSNotification *)notification;
-{
-    #warning This fires when closing a window where the next window in the list belongs to a different application.
-//    self.active = NO;
 }
 
 @end
