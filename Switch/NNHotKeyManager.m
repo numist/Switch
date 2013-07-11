@@ -18,6 +18,8 @@
 
 #include <ApplicationServices/ApplicationServices.h>
 
+#import "NNAPIEnabledWorker.h"
+
 
 @interface NNHotKeyManager ()
 
@@ -46,35 +48,61 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     
     NSAssert([[NSThread currentThread] isMainThread], @"%@ must be instanciated on the main thread", [self class]);
     
-    // Create an event tap. We are interested in key presses.
-    CGEventMask eventMask = (CGEventMaskBit(kCGEventKeyDown) | CGEventMaskBit(kCGEventKeyUp) | CGEventMaskBit(kCGEventFlagsChanged));
+    if (![self insertEventTap]) {
+        return nil;
+    }
     
-    _eventTap = CGEventTapCreate(kCGSessionEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault, eventMask, nnCGEventCallback, (__bridge void *)(self));
-    // TODO(numist): This will fail unless the user is root, need to escalate privileges!
-    BailUnless(_eventTap, (NNHotKeyManager *)nil);
-    
-    // Create a run loop source.
-    _runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, self.eventTap, 0);
-    
-    // Add to the current run loop.
-    CFRunLoopAddSource(CFRunLoopGetCurrent(), _runLoopSource, kCFRunLoopCommonModes);
-    
-    // Enable the event tap.
-    CGEventTapEnable(self.eventTap, true);
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(apiStatusChangedNotification:) name:NNAPIEnabledChangedNotification object:nil];
     
     return self;
 }
 
 - (void)dealloc;
 {
-    if (_runLoopSource) {
-        CFRunLoopRemoveSource(CFRunLoopGetCurrent(), _runLoopSource, kCFRunLoopCommonModes);
-        _runLoopSource = NULL;
+    [self removeEventTap];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NNAPIEnabledChangedNotification object:nil];
+}
+
+- (void)apiStatusChangedNotification:(__attribute__((unused)) NSNotification *)note;
+{
+    [self removeEventTap];
+    [self insertEventTap];
+}
+
+- (void)removeEventTap;
+{
+    if (self.runLoopSource) {
+        CFRunLoopRemoveSource(CFRunLoopGetCurrent(), self.runLoopSource, kCFRunLoopCommonModes);
+        self.runLoopSource = NULL;
     }
-    if (_eventTap) {
-        CFRelease(_eventTap);
-        _eventTap = NULL;
+    if (self.eventTap) {
+        CFRelease(self.eventTap);
+        self.eventTap = NULL;
     }
+}
+
+- (BOOL)insertEventTap;
+{
+    // Create an event tap. We are interested in key presses.
+    CGEventMask eventMask = (CGEventMaskBit(kCGEventKeyDown) | CGEventMaskBit(kCGEventKeyUp) | CGEventMaskBit(kCGEventFlagsChanged));
+    
+    self.eventTap = CGEventTapCreate(kCGSessionEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault, eventMask, nnCGEventCallback, (__bridge void *)(self));
+    BailUnless(self.eventTap, NO);
+    
+    // Create a run loop source.
+    self.runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, self.eventTap, 0);
+    BailWithBlockUnless(self.runLoopSource, ^{
+        [self removeEventTap];
+        return NO;
+    });
+    
+    // Add to the current run loop.
+    CFRunLoopAddSource(CFRunLoopGetCurrent(), self.runLoopSource, kCFRunLoopCommonModes);
+    
+    // Enable the event tap.
+    CGEventTapEnable(self.eventTap, true);
+    
+    return YES;
 }
 
 - (CGEventRef)eventTapProxy:(CGEventTapProxy)proxy didReceiveEvent:(CGEventRef)event ofType:(CGEventType)type;
@@ -83,6 +111,10 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
         // Re-enable the event tap.
         Log(@"Event tap timed out?!");
         CGEventTapEnable(self.eventTap, true);
+    }
+    
+    if (type == kCGEventTapDisabledByUserInput) {
+        NotTested();
     }
     
     // Paranoid sanity check.
@@ -163,24 +195,5 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     // We must return the event to avoid deleting it.
     return event;
 }
-
-
-
-// AXUIElementPerformAction(rbx, @"AXRaise");
-// then determine space, if appropriate (it's not!) and switch to it
-// if !GetCurrentProcess == window's process
-// SetFrontProcessWithOptions(thing, 0x1)
-// BOOM
-
-
-
-
-
-
-
-
-
-
-
 
 @end
