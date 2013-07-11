@@ -19,10 +19,11 @@
 #include <ApplicationServices/ApplicationServices.h>
 
 
-@interface NNHotKeyManager ()
+@interface NNHotKeyManager () {
+    CFMachPortRef eventTap;
+    CFRunLoopSourceRef runLoopSource;
+}
 
-@property (nonatomic, assign) CFMachPortRef eventTap;
-@property (nonatomic, assign) CFRunLoopSourceRef runLoopSource;
 @property (nonatomic, assign) BOOL activatedSwitcher;
 
 - (CGEventRef)eventTapProxy:(CGEventTapProxy)proxy didReceiveEvent:(CGEventRef)event ofType:(CGEventType)type;
@@ -60,13 +61,13 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
 
 - (void)removeEventTap;
 {
-    if (self.runLoopSource) {
-        CFRunLoopRemoveSource(CFRunLoopGetCurrent(), self.runLoopSource, kCFRunLoopCommonModes);
-        self.runLoopSource = NULL;
+    if (self->runLoopSource) {
+        CFRunLoopRemoveSource(CFRunLoopGetCurrent(), self->runLoopSource, kCFRunLoopCommonModes);
+        self->runLoopSource = NULL;
     }
-    if (self.eventTap) {
-        CFRelease(self.eventTap);
-        self.eventTap = NULL;
+    if (self->eventTap) {
+        CFRelease(self->eventTap);
+        self->eventTap = NULL;
     }
 }
 
@@ -75,21 +76,21 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     // Create an event tap. We are interested in key presses.
     CGEventMask eventMask = (CGEventMaskBit(kCGEventKeyDown) | CGEventMaskBit(kCGEventKeyUp) | CGEventMaskBit(kCGEventFlagsChanged));
     
-    self.eventTap = CGEventTapCreate(kCGSessionEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault, eventMask, nnCGEventCallback, (__bridge void *)(self));
-    BailUnless(self.eventTap, NO);
+    self->eventTap = CGEventTapCreate(kCGSessionEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault, eventMask, nnCGEventCallback, (__bridge void *)(self));
+    BailUnless(self->eventTap, NO);
     
     // Create a run loop source.
-    self.runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, self.eventTap, 0);
-    BailWithBlockUnless(self.runLoopSource, ^{
+    self->runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, self->eventTap, 0);
+    BailWithBlockUnless(self->runLoopSource, ^{
         [self removeEventTap];
         return NO;
     });
     
     // Add to the current run loop.
-    CFRunLoopAddSource(CFRunLoopGetCurrent(), self.runLoopSource, kCFRunLoopCommonModes);
+    CFRunLoopAddSource(CFRunLoopGetCurrent(), self->runLoopSource, kCFRunLoopCommonModes);
     
     // Enable the event tap.
-    CGEventTapEnable(self.eventTap, true);
+    CGEventTapEnable(self->eventTap, true);
     
     return YES;
 }
@@ -99,7 +100,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     if (type == kCGEventTapDisabledByTimeout) {
         // Re-enable the event tap.
         Log(@"Event tap timed out?!");
-        CGEventTapEnable(self.eventTap, true);
+        CGEventTapEnable(self->eventTap, true);
     }
     
     if (type == kCGEventTapDisabledByUserInput) {
