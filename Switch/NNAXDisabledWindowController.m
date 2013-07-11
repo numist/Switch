@@ -85,6 +85,7 @@ static NSTimeInterval NNWindoFadeOutInterval = 1.0;
     }
     
     [super showWindow:sender];
+    [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
 
     self.window.alphaValue = 1.0f;
     self.selfEnabled = NO;
