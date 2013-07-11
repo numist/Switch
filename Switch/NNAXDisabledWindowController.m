@@ -20,6 +20,9 @@
 #import "NNAPIEnabledWorker.h"
 
 
+NSString *NNAXAPIDisabledNotification = @"NNAXAPIDisabledNotification";
+
+
 static NSTimeInterval NNWindoFadeOutInterval = 1.0;
 
 
@@ -42,6 +45,16 @@ static NSTimeInterval NNWindoFadeOutInterval = 1.0;
 @implementation NNAXDisabledWindowController
 
 #pragma mark NSObject
+
+- (instancetype)initWithWindowNibName:(NSString *)windowNibName;
+{
+    self = [super initWithWindowNibName:windowNibName];
+    if (!self) { return nil; }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accessibilityAPIDisabled:) name:NNAXAPIDisabledNotification object:nil];
+    
+    return self;
+}
 
 - (void)dealloc;
 {
@@ -67,7 +80,9 @@ static NSTimeInterval NNWindoFadeOutInterval = 1.0;
 
 - (void)showWindow:(id)sender;
 {
-    self.apiWorker = [NNAPIEnabledWorker new];
+    if (!self.apiWorker) {
+        self.apiWorker = [NNAPIEnabledWorker new];
+    }
     
     [super showWindow:sender];
 
@@ -152,6 +167,13 @@ static NSTimeInterval NNWindoFadeOutInterval = 1.0;
 - (void)apiStatusChangedNotification:(__attribute__((unused)) NSNotification *)note;
 {
     [self updateWindowContents];
+}
+
+- (void)accessibilityAPIDisabled:(__attribute__((unused)) NSNotification *)note;
+{
+    if (!self.apiWorker && !AXAPIEnabled()) {
+        [self showWindow:self];
+    }
 }
 
 #pragma mark Internal

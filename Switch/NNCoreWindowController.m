@@ -38,6 +38,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 @property (nonatomic, assign) BOOL pendingSwitch;
 @property (nonatomic, assign) NSInteger selectedIndex;
 @property (nonatomic, assign) BOOL adjustedIndex;
+@property (nonatomic, assign) BOOL interfaceLoaded;
 
 #pragma mark UI
 @property (nonatomic, strong) NNHUDCollectionView *collectionView;
@@ -58,6 +59,9 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
 - (id)initWithWindow:(NSWindow *)window
 {
+    // Don't pretend—this initializer wouldn't know what to do with a window parameter.
+    Check(!window);
+    
     self = [super initWithWindow:window];
     if (!self) { return nil; }
     
@@ -67,11 +71,23 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     self.keyManager = [NNHotKeyManager new];
     self.keyManager.delegate = self;
     
-#warning Window presentation and such should probably be part of the App Delegate?
+    Check(![self isWindowLoaded]);
     (void)self.window;
     [self setUpReactions];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:NSApplicationWillResignActiveNotification object:[NSApplication sharedApplication]];
+    
     return self;
+}
+
+- (void)dealloc;
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSApplicationWillResignActiveNotification object:[NSApplication sharedApplication]];
+}
+
+- (BOOL)isWindowLoaded;
+{
+    return self.interfaceLoaded;
 }
 
 - (void)loadWindow;
@@ -102,6 +118,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     }
     self.collectionView = collectionView;
     [self.window.contentView addSubview:self.collectionView];
+    self.interfaceLoaded = YES;
 }
 
 #pragma  mark NNCoreWindowController Internal
@@ -247,6 +264,11 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     self.displayTimer = nil;
 }
 
+- (void)applicationWillResignActive:(__attribute__((unused)) NSNotification *)notification;
+{
+    self.active = NO;
+}
+
 #pragma mark NNHUDCollectionViewDataSource
 
 - (NSUInteger)HUDViewNumberOfCells:(NNHUDCollectionView *)view;
@@ -340,6 +362,11 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
 - (void)hotKeyManagerInvoked:(NNHotKeyManager *)manager;
 {
+    if (!AXAPIEnabled()) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:NNAXAPIDisabledNotification object:self];
+        return;
+    }
+    
     // If the interface is not being shown, bring it up.
     if (!self.active) {
         self.active = YES;
@@ -355,7 +382,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
 - (void)hotKeyManagerBeginIncrementingSelection:(NNHotKeyManager *)manager;
 {
-    BailUnless(self.active,);
+    if (!self.active) { return; }
     
     NSUInteger newIndex = self.selectedIndex;
     
@@ -385,7 +412,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
 - (void)hotKeyManagerBeginDecrementingSelection:(NNHotKeyManager *)manager;
 {
-    BailUnless(self.active,);
+    if (!self.active) { return; }
     
     NSInteger newIndex = self.selectedIndex;
     
@@ -415,7 +442,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
 - (void)hotKeyManagerClosedWindow:(NNHotKeyManager *)manager;
 {
-    BailUnless(self.active,);
+    if (!self.active) { return; }
     
     __block BOOL success;
     NNWindow *selectedWindow = [self selectedWindow];

@@ -14,6 +14,10 @@
 
 #import <Cocoa/Cocoa.h>
 
+
+extern NSString *NNAXAPIDisabledNotification;
+
+
 @interface NNAXDisabledWindowController : NSWindowController
 
 @end
