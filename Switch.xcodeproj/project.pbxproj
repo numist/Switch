@@ -49,7 +49,6 @@
 		BCFF231E177DE0FE008759C4 /* NNObviousSheetsWindowFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFF231D177DE0FE008759C4 /* NNObviousSheetsWindowFilter.m */; };
 		BCFF232D177E00FB008759C4 /* NNAXDisabledWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFF232B177E00FB008759C4 /* NNAXDisabledWindowController.m */; };
 		BCFF232E177E00FB008759C4 /* NNAXDisabledWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCFF232C177E00FB008759C4 /* NNAXDisabledWindowController.xib */; };
-		BCFF2331177E0458008759C4 /* UniversalAccessPref.icns in Resources */ = {isa = PBXBuildFile; fileRef = BCFF2330177E0458008759C4 /* UniversalAccessPref.icns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -133,7 +132,6 @@
 		BCA734DD16DAC53F00CD4C74 /* Switch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Switch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCA734E016DAC53F00CD4C74 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		BCA734E316DAC53F00CD4C74 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		BCA734E416DAC53F00CD4C74 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		BCA734E516DAC53F00CD4C74 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BCA734E816DAC53F00CD4C74 /* Switch-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Switch-Info.plist"; sourceTree = "<group>"; };
 		BCA734EA16DAC53F00CD4C74 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -299,7 +297,6 @@
 				BCA734E316DAC53F00CD4C74 /* AppKit.framework */,
 				BC63AB911756FBE300016B9E /* Carbon.framework */,
 				BCA734E016DAC53F00CD4C74 /* Cocoa.framework */,
-				BCA734E416DAC53F00CD4C74 /* CoreData.framework */,
 				BCA734E516DAC53F00CD4C74 /* Foundation.framework */,
 				BCA7353916E14EF000CD4C74 /* QuartzCore.framework */,
 				BCA734FE16DAC54000CD4C74 /* SenTestingKit.framework */,
@@ -601,7 +598,6 @@
 			files = (
 				BCFF232E177E00FB008759C4 /* NNAXDisabledWindowController.xib in Resources */,
 				BCA734EB16DAC53F00CD4C74 /* InfoPlist.strings in Resources */,
-				BCFF2331177E0458008759C4 /* UniversalAccessPref.icns in Resources */,
 				BCA734F116DAC53F00CD4C74 /* Credits.rtf in Resources */,
 				BCA734F716DAC53F00CD4C74 /* MainMenu.xib in Resources */,
 			);
