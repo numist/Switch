@@ -16,27 +16,20 @@
 
 #import <ReactiveCocoa/EXTScope.h>
 
+#import "NNPollingObject+Protected.h"
 #import "NNWindow+Private.h"
 
 
 static NSTimeInterval refreshInterval = 0.1;
 
 
-@interface NNWindowListWorker ()
-
-@property (nonatomic, weak) id<NNWindowListWorkerDelegate> delegate;
-
-@end
-
-
 @implementation NNWindowListWorker
 
-- (instancetype)initWithDelegate:(id<NNWindowListWorkerDelegate>)delegate;
+- (instancetype)init;
 {
     self = [super initWithQueue:dispatch_get_global_queue(0, 0)];
     if (!self) return nil;
     
-    _delegate = delegate;
     self.interval = refreshInterval;
 
     return self;
@@ -63,16 +56,7 @@ static NSTimeInterval refreshInterval = 0.1;
     
     windows = [NNWindow filterInvalidWindowsFromArray:windows];
     
-    // Schedule delegate update and next iteration of worker loop.
-    @weakify(self);
-
-    dispatch_async(dispatch_get_main_queue(), ^{
-        @strongify(self);
-        if (self) {
-            __strong __typeof__(self.delegate) delegate = self.delegate;
-            [delegate listWorker:self didUpdateWindowList:windows];
-        }
-    });
+    [self postNotification:@{@"windows" : [NSArray arrayWithArray:windows]}];
 }
 
 @end

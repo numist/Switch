@@ -15,18 +15,8 @@
 #import "NNPollingObject.h"
 
 
-@protocol NNWindowListWorkerDelegate;
-
-
 @interface NNWindowListWorker : NNPollingObject
 
-- (instancetype)initWithDelegate:(id<NNWindowListWorkerDelegate>)delegate;
-
-@end
-
-
-@protocol NNWindowListWorkerDelegate <NSObject>
-
-- (void)listWorker:(NNWindowListWorker *)worker didUpdateWindowList:(NSArray *)windowList;
+- (instancetype)init;
 
 @end
