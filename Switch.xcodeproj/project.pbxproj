@@ -172,6 +172,7 @@
 		BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = imageComparators.h; sourceTree = "<group>"; };
 		BCA7354B16E2ED5000CD4C74 /* NNHUDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHUDView.h; sourceTree = "<group>"; };
 		BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDView.m; sourceTree = "<group>"; };
+		BCDDB2C8179064D600C22E47 /* NNPollingObject+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NNPollingObject+Protected.h"; sourceTree = "<group>"; };
 		BCE6987A1773B71C009CFD12 /* NNApplicationCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNApplicationCache.h; sourceTree = "<group>"; };
 		BCE6987B1773B71C009CFD12 /* NNApplicationCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNApplicationCache.m; sourceTree = "<group>"; };
 		BCE6987E1773B8B1009CFD12 /* NNWindowCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNWindowCache.m; sourceTree = "<group>"; };
@@ -412,6 +413,7 @@
 				BC6B6D1A178DE8E5001D691D /* NNAPIEnabledWorker.h */,
 				BC6B6D1B178DE8E5001D691D /* NNAPIEnabledWorker.m */,
 				BC6B6D17178DE586001D691D /* NNPollingObject.h */,
+				BCDDB2C8179064D600C22E47 /* NNPollingObject+Protected.h */,
 				BC6B6D18178DE586001D691D /* NNPollingObject.m */,
 				BCA7352016DAC6A900CD4C74 /* NNWindowWorker.h */,
 				BCA7352116DAC6A900CD4C74 /* NNWindowWorker.m */,

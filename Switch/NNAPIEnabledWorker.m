@@ -13,8 +13,7 @@
 //
 #import "NNAPIEnabledWorker.h"
 
-
-NSString *NNAPIEnabledChangedNotification = @"NNAPIEnabledChangedNotification";
+#import "NNPollingObject+Protected.h"
 
 
 @interface NNAPIEnabledWorker ()
@@ -42,9 +41,7 @@ NSString *NNAPIEnabledChangedNotification = @"NNAPIEnabledChangedNotification";
     Boolean enabled = AXAPIEnabled();
     if (enabled != self.APIEnabled) {
         self.APIEnabled = enabled;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:NNAPIEnabledChangedNotification object:self userInfo:nil];
-        });
+        [self postNotification:@{ @"AXAPIEnabled" : @(enabled) }];
     }
 }
 

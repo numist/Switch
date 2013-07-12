@@ -16,6 +16,7 @@
 #import <ReactiveCocoa/EXTScope.h>
 
 
+NSString *NNPollCompleteNotification = @"NNPollCompleteNotification";
 static const NSTimeInterval NNPollingIntervalFastest = 1.0 / 60.0;
 
 
@@ -54,6 +55,13 @@ static const NSTimeInterval NNPollingIntervalFastest = 1.0 / 60.0;
     dispatch_after(popTime, self.queue, ^(void){
         @strongify(self);
         [self workerLoop];
+    });
+}
+
+- (void)postNotification:(NSDictionary *)userInfo;
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NNPollCompleteNotification object:self userInfo:userInfo];
     });
 }
 
