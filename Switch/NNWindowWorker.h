@@ -16,18 +16,10 @@
 
 
 @class NNWindow;
-@protocol NNWindowWorkerDelegate;
 
 
 @interface NNWindowWorker : NNPollingObject
 
-- (instancetype)initWithModelObject:(NNWindow *)window delegate:(id<NNWindowWorkerDelegate>)delegate __attribute__((nonnull(1, 2)));
-
-@end
-
-
-@protocol NNWindowWorkerDelegate <NSObject>
-
-- (oneway void)windowWorker:(NNWindowWorker *)worker didUpdateContentsOfWindow:(NNWindow *)window;
+- (instancetype)initWithModelObject:(NNWindow *)window __attribute__((nonnull(1)));
 
 @end

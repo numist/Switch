@@ -17,6 +17,7 @@
 #import <ReactiveCocoa/EXTScope.h>
 
 #import "imageComparators.h"
+#import "NNPollingObject+Protected.h"
 #import "NNWindow+Private.h"
 
 
@@ -26,7 +27,6 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 
 @interface NNWindowWorker ()
 
-@property (atomic, weak, readonly) id<NNWindowWorkerDelegate> delegate;
 @property (nonatomic, weak, readonly) NNWindow *window;
 
 @property (nonatomic, strong) __attribute__((NSObject)) CGImageRef previousCapture;
@@ -36,15 +36,13 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 
 @implementation NNWindowWorker
 
-- (instancetype)initWithModelObject:(NNWindow *)window delegate:(id<NNWindowWorkerDelegate>)delegate;
+- (instancetype)initWithModelObject:(NNWindow *)window;
 {
     self = [super initWithQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)];
     BailUnless(self, nil);
     BailUnless(window, nil);
-    BailUnless(delegate, nil);
     
     _window = window;
-    _delegate = delegate;
     self.interval = NNPollingIntervalFast;
     
     return self;
@@ -94,10 +92,7 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
             self.previousCapture = cgImage;
             
             window.image = [[NSImage alloc] initWithCGImage:cgImage size:NSMakeSize(newWidth, newHeight)];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                __strong __typeof__(self.delegate) delegate = self.delegate;
-                [delegate windowWorker:self didUpdateContentsOfWindow:window];
-            });
+            [self postNotification:@{ @"window" : window }];
         }
         
         CFRelease(cgImage); cgImage = NULL;
@@ -106,6 +101,7 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
         self.interval = NNPollingIntervalFast;
     } else {
         // Window does not exist. Stop the worker loop.
+        self.interval = -1.0;
         return;
     }
 }

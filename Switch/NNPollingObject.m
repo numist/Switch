@@ -49,6 +49,9 @@ static const NSTimeInterval NNPollingIntervalFastest = 1.0 / 60.0;
 
     [self main];
     
+    // TODO(numist): this should emit a log or provide a status bit or something?
+    if (self.interval <= 0.0) { return; }
+    
     @weakify(self);
     double delayInSeconds = MAX(self.interval - [[NSDate date] timeIntervalSinceDate:start], NNPollingIntervalFastest);
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
