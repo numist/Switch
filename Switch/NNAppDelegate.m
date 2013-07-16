@@ -63,6 +63,7 @@
 
 - (void)requestAXAPITrust;
 {
+    // TODO(numist): Remove when it's time to deprecate Mountain Lion.
     static Boolean (*isProcessTrustedWithOptions)(CFDictionaryRef options);
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
