@@ -48,8 +48,6 @@ static NSTimeInterval NNWindoFadeOutInterval = 1.0;
     self = [super initWithWindowNibName:windowNibName];
     if (!self) { return nil; }
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accessibilityAPIDisabled:) name:NNAXAPIDisabledNotification object:nil];
-    
     return self;
 }
 
@@ -165,13 +163,6 @@ static NSTimeInterval NNWindoFadeOutInterval = 1.0;
 - (void)apiStatusChangedNotification:(__attribute__((unused)) NSNotification *)note;
 {
     [self updateWindowContents];
-}
-
-- (void)accessibilityAPIDisabled:(__attribute__((unused)) NSNotification *)note;
-{
-    if (!self.apiWorker && !AXAPIEnabled()) {
-        [self showWindow:self];
-    }
 }
 
 #pragma mark Internal
