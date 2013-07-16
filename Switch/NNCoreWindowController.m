@@ -22,7 +22,6 @@
 #import "NNWindow.h"
 #import "NNWindowStore.h"
 #import "NNWindowThumbnailView.h"
-#import "NNAXDisabledWindowController.h"
 
 
 static NSTimeInterval kNNWindowDisplayDelay = 0.15;

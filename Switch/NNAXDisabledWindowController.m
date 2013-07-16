@@ -20,9 +20,6 @@
 #import "NNAPIEnabledWorker.h"
 
 
-NSString *NNAXAPIDisabledNotification = @"NNAXAPIDisabledNotification";
-
-
 static NSTimeInterval NNWindoFadeOutInterval = 1.0;
 
 
