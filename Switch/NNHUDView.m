@@ -14,8 +14,6 @@
 
 #import "NNHUDView.h"
 
-#import "constants.h"
-
 
 @implementation NNHUDView
 

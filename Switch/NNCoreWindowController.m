@@ -16,7 +16,6 @@
 #import <ReactiveCocoa/EXTScope.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
 
-#import "constants.h"
 #import "NNApplication.h"
 #import "NNHotKeyManager.h"
 #import "NNHUDCollectionView.h"

@@ -14,7 +14,6 @@
 
 #import "NNHUDCollectionView.h"
 
-#import "constants.h"
 #import "NNSelectionBoxView.h"
 
 
