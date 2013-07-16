@@ -126,7 +126,7 @@ static NSTimeInterval NNWindoFadeOutInterval = 1.0;
 
 - (IBAction)enableButtonClicked:(__attribute__((unused)) id)sender;
 {
-    if (!AXAPIEnabled()) {
+    if (![NNAPIEnabledWorker isAPIEnabled]) {
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
             // Programmatic enabling of support for assistive devices via https://github.com/mayoff/keyscope
             NSAppleScript *script = [[NSAppleScript alloc] initWithSource:@"tell app \"System Events\"\n\tset UI elements enabled to true\n\tget UI elements enabled\nend"];
@@ -178,7 +178,7 @@ static NSTimeInterval NNWindoFadeOutInterval = 1.0;
 
 - (void)animateClosed;
 {
-    Check(AXAPIEnabled());
+    Check([NNAPIEnabledWorker isAPIEnabled]);
     
     [self.window.animator setAlphaValue:0.0f];
     
@@ -186,7 +186,7 @@ static NSTimeInterval NNWindoFadeOutInterval = 1.0;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         // Avoid losing a minor race.
-        if (AXAPIEnabled()) {
+        if ([NNAPIEnabledWorker isAPIEnabled]) {
             [self close];
         } else {
             [self showWindow:self];
@@ -196,7 +196,7 @@ static NSTimeInterval NNWindoFadeOutInterval = 1.0;
 
 - (void)updateWindowContents;
 {
-    Boolean enabled = AXAPIEnabled();
+    BOOL enabled = [NNAPIEnabledWorker isAPIEnabled];
     NSButton *checkbox = self.enabledCheckbox;
     NSButton *enableButton = self.enableButton;
     NSButton *quitButton = self.quitButton;

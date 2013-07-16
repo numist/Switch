@@ -16,6 +16,8 @@
 
 @interface NNAPIEnabledWorker : NNPollingObject
 
++ (BOOL)isAPIEnabled;
+
 - (instancetype)init;
 
 @end

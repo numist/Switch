@@ -18,19 +18,25 @@
 
 @interface NNAPIEnabledWorker ()
 
-@property (nonatomic, assign, readwrite) Boolean APIEnabled;
+@property (nonatomic, assign, readwrite) BOOL APIEnabled;
 
 @end
 
 
 @implementation NNAPIEnabledWorker
 
++ (BOOL)isAPIEnabled;
+{
+    // TODO(numist): When it's time to retire Mountain Lion, replace this with return (BOOL)AXIsProcessTrustedWithOptions(NULL);
+    return (BOOL)AXAPIEnabled();
+}
+
 - (instancetype)init;
 {
     self = [super initWithQueue:dispatch_get_global_queue(0, 0)];
     if (!self) { return nil; }
     
-    _APIEnabled = AXAPIEnabled();
+    _APIEnabled = [[self class] isAPIEnabled];
     self.interval = 0.25;
     
     return self;
@@ -38,7 +44,7 @@
 
 - (void)main;
 {
-    Boolean enabled = AXAPIEnabled();
+    BOOL enabled = [[self class] isAPIEnabled];
     if (enabled != self.APIEnabled) {
         self.APIEnabled = enabled;
         [self postNotification:@{ @"AXAPIEnabled" : @(enabled) }];

@@ -14,6 +14,7 @@
 
 #import "NNAppDelegate.h"
 
+#import "NNAPIEnabledWorker.h"
 #import "NNAXDisabledWindowController.h"
 #import "NNCoreWindowController.h"
 
@@ -36,7 +37,7 @@
     self.disabledWindowController = [[NNAXDisabledWindowController alloc] initWithWindowNibName:@"NNAXDisabledWindowController"];
     self.coreWindowController = [[NNCoreWindowController alloc] initWithWindow:nil];
     
-    if (!AXAPIEnabled()) {
+    if (![NNAPIEnabledWorker isAPIEnabled]) {
         [self.disabledWindowController showWindow:self];
     }
 }
