@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"  xmlns:dc="http://purl.org/dc/elements/1.1/">
+   <channel>
+      <title>Switch Updates</title>
+      <link>https://raw.github.com/numist/Switch/develop/appcast.xml</link>
+      <language>en</language>
+
+         <item>
+            <title>Switch 0.0.1β</title>
+            <pubDate>Wed, 09 Jan 2006 19:20:11 +0000</pubDate>
+            <sparkle:releaseNotesLink>http://you.com/app/2.0.html</sparkle:releaseNotesLink>
+            <enclosure url="http://you.com/app/Your Great App 2.0.zip" sparkle:version="0.0.1" sparkle:shortVersionString="0.0.1β" length="1623481" type="application/octet-stream" sparkle:dsaSignature="BAFJW4B6B1K1JyW30nbkBwainOzrN6EQuAh" />
+            <sparkle:minimumSystemVersion>10.8.0</sparkle:minimumSystemVersion>
+         </item>
+
+   </channel>
+</rss>

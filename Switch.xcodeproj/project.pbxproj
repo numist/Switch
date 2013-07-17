@@ -12,8 +12,7 @@
 		BC63AB921756FBE400016B9E /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB911756FBE300016B9E /* Carbon.framework */; };
 		BC63AB9A175701D900016B9E /* Haxcessibility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
 		BC63ABA517598C4100016B9E /* debugger.c in Sources */ = {isa = PBXBuildFile; fileRef = BC63ABA217598C4100016B9E /* debugger.c */; };
-		BC660D4D17964BEF00CE8333 /* Haxcessibility.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
-		BC660D4E17964BFF00CE8333 /* ReactiveCocoa.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCF357E0176CEE9F00458AFF /* ReactiveCocoa.framework */; };
+		BC660D5B1796573200CE8333 /* Sparkle.dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = BC660D5A1796573200CE8333 /* Sparkle.dsa_pub.pem */; };
 		BC6B6D00178B711E001D691D /* NNMainThreadGuard.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6CFF178B711E001D691D /* NNMainThreadGuard.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		BC6B6D13178DDBDA001D691D /* NNCoreWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6D12178DDBDA001D691D /* NNCoreWindowController.m */; };
 		BC6B6D19178DE586001D691D /* NNPollingObject.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6D18178DE586001D691D /* NNPollingObject.m */; };
@@ -142,6 +141,7 @@
 		BC63ABA217598C4100016B9E /* debugger.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = debugger.c; sourceTree = "<group>"; };
 		BC63ABA317598C4100016B9E /* debugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debugger.h; sourceTree = "<group>"; };
 		BC63ABA71759AB4900016B9E /* NNApplication+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NNApplication+Private.h"; sourceTree = "<group>"; };
+		BC660D5A1796573200CE8333 /* Sparkle.dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Sparkle.dsa_pub.pem; sourceTree = "<group>"; };
 		BC6B6CFF178B711E001D691D /* NNMainThreadGuard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNMainThreadGuard.m; sourceTree = "<group>"; };
 		BC6B6D11178DDBDA001D691D /* NNCoreWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNCoreWindowController.h; sourceTree = "<group>"; };
 		BC6B6D12178DDBDA001D691D /* NNCoreWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNCoreWindowController.m; sourceTree = "<group>"; };
@@ -358,6 +358,7 @@
 				BCA734E916DAC53F00CD4C74 /* InfoPlist.strings */,
 				BCA734EC16DAC53F00CD4C74 /* main.m */,
 				BCA734F516DAC53F00CD4C74 /* MainMenu.xib */,
+				BC660D5A1796573200CE8333 /* Sparkle.dsa_pub.pem */,
 				BCA734E816DAC53F00CD4C74 /* Switch-Info.plist */,
 				BCA734EE16DAC53F00CD4C74 /* Switch-Prefix.pch */,
 			);
@@ -621,10 +622,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BCFF232E177E00FB008759C4 /* NNAXDisabledWindowController.xib in Resources */,
-				BCA734EB16DAC53F00CD4C74 /* InfoPlist.strings in Resources */,
 				BCA734F116DAC53F00CD4C74 /* Credits.rtf in Resources */,
+				BCA734EB16DAC53F00CD4C74 /* InfoPlist.strings in Resources */,
 				BCA734F716DAC53F00CD4C74 /* MainMenu.xib in Resources */,
+				BCFF232E177E00FB008759C4 /* NNAXDisabledWindowController.xib in Resources */,
+				BC660D5B1796573200CE8333 /* Sparkle.dsa_pub.pem in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -789,7 +791,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks $(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
 				VALID_ARCHS = x86_64;
 			};
 			name = Debug;
@@ -821,7 +822,6 @@
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
 				VALID_ARCHS = x86_64;
 			};
 			name = Release;
@@ -862,7 +862,6 @@
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				INFOPLIST_FILE = "Switch/Switch-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = NO;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -904,7 +903,6 @@
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				INFOPLIST_FILE = "Switch/Switch-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = NO;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
