@@ -12,6 +12,8 @@
 		BC63AB921756FBE400016B9E /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB911756FBE300016B9E /* Carbon.framework */; };
 		BC63AB9A175701D900016B9E /* Haxcessibility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
 		BC63ABA517598C4100016B9E /* debugger.c in Sources */ = {isa = PBXBuildFile; fileRef = BC63ABA217598C4100016B9E /* debugger.c */; };
+		BC660D4D17964BEF00CE8333 /* Haxcessibility.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
+		BC660D4E17964BFF00CE8333 /* ReactiveCocoa.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCF357E0176CEE9F00458AFF /* ReactiveCocoa.framework */; };
 		BC6B6D00178B711E001D691D /* NNMainThreadGuard.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6CFF178B711E001D691D /* NNMainThreadGuard.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		BC6B6D13178DDBDA001D691D /* NNCoreWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6D12178DDBDA001D691D /* NNCoreWindowController.m */; };
 		BC6B6D19178DE586001D691D /* NNPollingObject.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6D18178DE586001D691D /* NNPollingObject.m */; };
@@ -109,6 +111,20 @@
 			remoteInfo = ReactiveCocoa;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		BC660D4C17964BD700CE8333 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				BC660D4E17964BFF00CE8333 /* ReactiveCocoa.framework in CopyFiles */,
+				BC660D4D17964BEF00CE8333 /* Haxcessibility.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		BC3B3B6D175E505C002AD452 /* NNWindowCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNWindowCache.h; sourceTree = "<group>"; };
@@ -486,6 +502,7 @@
 				BCA734D916DAC53F00CD4C74 /* Sources */,
 				BCA734DA16DAC53F00CD4C74 /* Frameworks */,
 				BCA734DB16DAC53F00CD4C74 /* Resources */,
+				BC660D4C17964BD700CE8333 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -762,8 +779,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_PROFILING_CODE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks $(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
 				VALID_ARCHS = x86_64;
 			};
 			name = Debug;
@@ -790,9 +809,11 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks $(inherited)";
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
 				VALID_ARCHS = x86_64;
 			};
 			name = Release;
@@ -829,6 +850,7 @@
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				INFOPLIST_FILE = "Switch/Switch-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -866,6 +888,7 @@
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				INFOPLIST_FILE = "Switch/Switch-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
