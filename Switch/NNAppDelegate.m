@@ -42,7 +42,6 @@
 
 - (void)applicationDidFinishLaunching:(__attribute__((unused)) NSNotification *)aNotification
 {
-    self.disabledWindowController = [[NNAXDisabledWindowController alloc] initWithWindowNibName:@"NNAXDisabledWindowController"];
     self.coreWindowController = [[NNCoreWindowController alloc] initWithWindow:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accessibilityAPIDisabled:) name:NNAXAPIDisabledNotification object:nil];
@@ -77,6 +76,11 @@
     if (isProcessTrustedWithOptions) {
         isProcessTrustedWithOptions((__bridge CFDictionaryRef)@{ (__bridge NSString *)kAXTrustedCheckOptionPrompt : @YES });
     } else {
+        static dispatch_once_t twiceToken;
+        dispatch_once(&twiceToken, ^{
+            self.disabledWindowController = [[NNAXDisabledWindowController alloc] initWithWindowNibName:@"NNAXDisabledWindowController"];
+        });
+        
         [self.disabledWindowController showWindow:self];
     }
 }
