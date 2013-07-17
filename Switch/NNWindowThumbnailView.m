@@ -18,7 +18,6 @@
 #import <ReactiveCocoa/EXTScope.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
 
-#import "constants.h"
 #import "NNApplication.h"
 #import "NNWindow.h"
 

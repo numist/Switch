@@ -13,24 +13,50 @@
 //
 #import "NNAPIEnabledWorker.h"
 
+#import <dlfcn.h>
+
 #import "NNPollingObject+Protected.h"
 
 
 @interface NNAPIEnabledWorker ()
 
-@property (nonatomic, assign, readwrite) Boolean APIEnabled;
+@property (nonatomic, assign, readwrite) BOOL APIEnabled;
 
 @end
 
 
 @implementation NNAPIEnabledWorker
 
++ (BOOL)isAPIEnabled;
+{
+    // TODO(numist): Remove when it's time to deprecate Mountain Lion.
+    static Boolean (*isProcessTrustedWithOptions)(CFDictionaryRef options);
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        void* handle = dlopen(0,RTLD_NOW|RTLD_GLOBAL);
+        assert(handle);
+        isProcessTrustedWithOptions = dlsym(handle, "AXIsProcessTrustedWithOptions");
+        dlclose(handle);
+        handle = NULL;
+    });
+    
+    Boolean result;
+    
+    if (isProcessTrustedWithOptions) {
+        result = isProcessTrustedWithOptions(NULL);
+    } else {
+        result = AXAPIEnabled();
+    }
+    
+    return (BOOL)result;
+}
+
 - (instancetype)init;
 {
     self = [super initWithQueue:dispatch_get_global_queue(0, 0)];
     if (!self) { return nil; }
     
-    _APIEnabled = AXAPIEnabled();
+    _APIEnabled = [[self class] isAPIEnabled];
     self.interval = 0.25;
     
     return self;
@@ -38,7 +64,7 @@
 
 - (void)main;
 {
-    Boolean enabled = AXAPIEnabled();
+    BOOL enabled = [[self class] isAPIEnabled];
     if (enabled != self.APIEnabled) {
         self.APIEnabled = enabled;
         [self postNotification:@{ @"AXAPIEnabled" : @(enabled) }];

@@ -14,6 +14,9 @@
 
 #import "NNAppDelegate.h"
 
+#import <dlfcn.h>
+
+#import "NNAPIEnabledWorker.h"
 #import "NNAXDisabledWindowController.h"
 #import "NNCoreWindowController.h"
 
@@ -28,15 +31,56 @@
 
 @implementation NNAppDelegate
 
+#pragma mark NSObject
 
-#pragma mark - NSApplicationDelegate
+- (void)dealloc;
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NNAXAPIDisabledNotification object:nil];
+}
+
+#pragma mark NSApplicationDelegate
 
 - (void)applicationDidFinishLaunching:(__attribute__((unused)) NSNotification *)aNotification
 {
-    self.disabledWindowController = [[NNAXDisabledWindowController alloc] initWithWindowNibName:@"NNAXDisabledWindowController"];
     self.coreWindowController = [[NNCoreWindowController alloc] initWithWindow:nil];
     
-    if (!AXAPIEnabled()) {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accessibilityAPIDisabled:) name:NNAXAPIDisabledNotification object:nil];
+
+    if (![NNAPIEnabledWorker isAPIEnabled]) {
+        [self requestAXAPITrust];
+    }
+}
+
+#pragma mark Notifications
+
+- (void)accessibilityAPIDisabled:(__attribute__((unused)) NSNotification *)note;
+{
+    [self requestAXAPITrust];
+}
+
+#pragma mark NNAppDelegate
+
+- (void)requestAXAPITrust;
+{
+    // TODO(numist): Remove when it's time to deprecate Mountain Lion.
+    static Boolean (*isProcessTrustedWithOptions)(CFDictionaryRef options);
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        void* handle = dlopen(0,RTLD_NOW|RTLD_GLOBAL);
+        assert(handle);
+        isProcessTrustedWithOptions = dlsym(handle, "AXIsProcessTrustedWithOptions");
+        dlclose(handle);
+        handle = NULL;
+    });
+    
+    if (isProcessTrustedWithOptions) {
+        isProcessTrustedWithOptions((__bridge CFDictionaryRef)@{ (__bridge NSString *)kAXTrustedCheckOptionPrompt : @YES });
+    } else {
+        static dispatch_once_t twiceToken;
+        dispatch_once(&twiceToken, ^{
+            self.disabledWindowController = [[NNAXDisabledWindowController alloc] initWithWindowNibName:@"NNAXDisabledWindowController"];
+        });
+        
         [self.disabledWindowController showWindow:self];
     }
 }

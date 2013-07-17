@@ -14,8 +14,6 @@
 
 #import "NNSelectionBoxView.h"
 
-#import "constants.h"
-
 
 @implementation NNSelectionBoxView
 
