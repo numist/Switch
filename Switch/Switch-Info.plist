@@ -35,7 +35,7 @@
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>SUFeedURL</key>
-	<string>https://github.com/numist/Switch/blob/develop/appcast.xml</string>
+	<string>https://raw.github.com/numist/Switch/develop/appcast.xml</string>
 	<key>SUEnableAutomaticChecks</key>
 	<true/>
 	<key>SUShowReleaseNotes</key>
