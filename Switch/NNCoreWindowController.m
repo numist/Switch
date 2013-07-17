@@ -16,14 +16,13 @@
 #import <ReactiveCocoa/EXTScope.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
 
-#import "constants.h"
+#import "NNAPIEnabledWorker.h"
 #import "NNApplication.h"
 #import "NNHotKeyManager.h"
 #import "NNHUDCollectionView.h"
 #import "NNWindow.h"
 #import "NNWindowStore.h"
 #import "NNWindowThumbnailView.h"
-#import "NNAXDisabledWindowController.h"
 
 
 static NSTimeInterval kNNWindowDisplayDelay = 0.15;
@@ -362,7 +361,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
 - (void)hotKeyManagerInvoked:(NNHotKeyManager *)manager;
 {
-    if (!AXAPIEnabled()) {
+    if (![NNAPIEnabledWorker isAPIEnabled]) {
         [[NSNotificationCenter defaultCenter] postNotificationName:NNAXAPIDisabledNotification object:self];
         return;
     }

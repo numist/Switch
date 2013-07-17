@@ -34,5 +34,13 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>SUFeedURL</key>
+	<string>https://github.com/numist/Switch/blob/develop/appcast.xml</string>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUShowReleaseNotes</key>
+	<false/>
+	<key>SUPublicDSAKeyFile</key>
+	<string>Sparkle.dsa_pub.pem</string>
 </dict>
 </plist>

@@ -21,7 +21,7 @@
 #import "NNWindowWorker.h"
 
 
-@interface NNWindowStore () <NNWindowListWorkerDelegate, NNWindowWorkerDelegate>
+@interface NNWindowStore ()
 
 @property (nonatomic, weak) id<NNWindowStoreDelegate> delegate;
 
@@ -51,7 +51,14 @@
     _delegate = delegate;
     _windows = [NSArray new];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pollCompleteNotification:) name:NNPollCompleteNotification object:nil];
+    
     return self;
+}
+
+- (void)dealloc;
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NNPollCompleteNotification object:nil];
 }
 
 #pragma mark Actions
@@ -61,7 +68,7 @@
     despatch_lock_assert(dispatch_get_main_queue());
 
     if (!self.listWorker) {
-        self.listWorker = [[NNWindowListWorker alloc] initWithDelegate:self];
+        self.listWorker = [NNWindowListWorker new];
     }
 }
 
@@ -80,7 +87,7 @@
     self.updatingWindowContents = YES;
     self.windowWorkers = [NSMutableDictionary dictionaryWithCapacity:[_windows count]];
     for (NNWindow *window in _windows) {
-        NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window delegate:self];
+        NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window];
         [self.windowWorkers setObject:worker forKey:window];
     }
 }
@@ -93,12 +100,21 @@
     self.windowWorkers = nil;
 }
 
-#pragma mark NNWindowWorkerDelegate
+#pragma mark Notifications
+
+- (void)pollCompleteNotification:(NSNotification *)note;
+{
+    if ([note.object isKindOfClass:[NNWindowListWorker class]]) {
+        [self listWorker:note.object didUpdateWindowList:note.userInfo[@"windows"]];
+    } else if ([note.object isKindOfClass:[NNWindowWorker class]]) {
+        [self windowWorker:note.object didUpdateContentsOfWindow:note.userInfo[@"window"]];
+    }
+}
 
 - (oneway void)windowWorker:(NNWindowWorker *)worker didUpdateContentsOfWindow:(NNWindow *)window;
 {
     despatch_lock_assert(dispatch_get_main_queue());
-
+    
     if ([self.windows containsObject:window]) {
         __strong __typeof__(self.delegate) delegate = self.delegate;
         if ([delegate respondsToSelector:@selector(storeWillChangeContent:)]) {
@@ -112,8 +128,6 @@
         }
     }
 }
-
-#pragma mark NNWindowListWorkerDelegate
 
 - (void)listWorker:(NNWindowListWorker *)worker didUpdateWindowList:(NSArray *)newArray;
 {
@@ -164,8 +178,8 @@
             [oldArray insertObject:window atIndex:[newArray indexOfObject:window]];
             
             if (self.updatingWindowContents) {
-                NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window delegate:self];
-                [self.windowWorkers setObject:worker forKey:window];
+                NNWindowWorker *windowWorker = [[NNWindowWorker alloc] initWithModelObject:window];
+                [self.windowWorkers setObject:windowWorker forKey:window];
             }
         }
     }

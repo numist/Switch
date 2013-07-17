@@ -14,6 +14,10 @@
 
 #import "constants.h"
 
+
+// Notifications
+NSString *NNAXAPIDisabledNotification = @"NNAXAPIDisabledNotification";
+
 // Maxima
 const CGFloat kNNMaxWindowThumbnailSize = 128.0;
 const CGFloat kNNMaxApplicationIconSize = kNNMaxWindowThumbnailSize / 2.0;

@@ -15,6 +15,9 @@
 #import <Foundation/Foundation.h>
 
 
+// Notifications
+extern NSString *NNAXAPIDisabledNotification;
+
 // Points
 extern const CGFloat kNNMaxWindowThumbnailSize;
 extern const CGFloat kNNMaxApplicationIconSize;

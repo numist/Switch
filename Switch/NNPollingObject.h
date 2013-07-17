@@ -13,6 +13,10 @@
 //
 #import <Foundation/Foundation.h>
 
+
+extern NSString *NNPollCompleteNotification;
+
+
 @interface NNPollingObject : NSObject
 
 // I think this is the first time where I've wanted the default (atomic, assign, readwrite) flags for a property!

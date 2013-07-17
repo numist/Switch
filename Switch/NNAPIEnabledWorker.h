@@ -14,10 +14,9 @@
 #import "NNPollingObject.h"
 
 
-extern NSString *NNAPIEnabledChangedNotification;
-
-
 @interface NNAPIEnabledWorker : NNPollingObject
+
++ (BOOL)isAPIEnabled;
 
 - (instancetype)init;
 
