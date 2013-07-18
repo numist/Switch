@@ -22,4 +22,4 @@ To check out the project, its submodules, and open in Xcode:
 
 At this point, `⌘R` should have you up and running!
 
-**NOTE:** Switch requires Mac OS X version 10.8 or newer and Xcode 5. The application does not do any work to check these constraints so incompatibility may be indistinguishable from bugs.
+**NOTE:** Switch requires Mac OS X version 10.8 or newer and Xcode 5. The application does not do any work to check these constraints so incompatibility may be indistinguishable from bugs. For a list of known issues, check out the [bug tag in Issues](https://github.com/numist/Switch/issues?labels=bug&state=open).
