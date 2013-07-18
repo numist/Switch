@@ -6,10 +6,17 @@
       <language>en</language>
 
          <item>
-            <title>Switch 0.0.1β</title>
+            <title>0.0.1 (α)</title>
             <pubDate>Wed, 09 Jan 2006 19:20:11 +0000</pubDate>
-            <sparkle:releaseNotesLink>http://you.com/app/2.0.html</sparkle:releaseNotesLink>
-            <enclosure url="http://you.com/app/Your Great App 2.0.zip" sparkle:version="0.0.1" sparkle:shortVersionString="0.0.1β" length="1623481" type="application/octet-stream" sparkle:dsaSignature="BAFJW4B6B1K1JyW30nbkBwainOzrN6EQuAh" />
+            <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.1</sparkle:releaseNotesLink>
+            <enclosure
+              length="2028382"
+              sparkle:dsaSignature="MC0CFQC3jSGqaCJeUhXgQUZt9zbQupe+lAIUZH7o3EGzkm0IbYJxrhHUIyJMr44="
+              sparkle:shortVersionString="0.0.1 (α)"
+              sparkle:version="0.0.1"
+              type="application/octet-stream"
+              url="https://github.com/numist/Switch/releases/download/0.0.1/Switch.zip"
+            />
             <sparkle:minimumSystemVersion>10.8.0</sparkle:minimumSystemVersion>
          </item>
 
