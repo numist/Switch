@@ -12,6 +12,11 @@ Contributions in the form of [beers](mailto:numist@numist.net?cc=pay@square.com&
 Getting Started
 ---------------
 
+Download the [latest release](https://github.com/numist/Switch/releases), put the application bundle in your `/Applications` or `~/Applications` directory, and run it! It will check for updates automatically so you can stay up to date as the project develops.
+
+Contributing
+------------
+
 To check out the project, its submodules, and open in Xcode:
 
     git clone git://github.com/numist/Switch.git
