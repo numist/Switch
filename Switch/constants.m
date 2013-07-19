@@ -54,10 +54,11 @@ __attribute__((const)) static NSSize nnItemSize(CGFloat thumbSize)
 
 __attribute__((const)) NSRect nnItemRect(CGFloat thumbSize, NSUInteger index)
 {
-    return NSMakeRect(kNNWindowToItemInset + (index * (nnItemSideLength(thumbSize) - kNNItemBorderWidth)),
-                      kNNWindowToItemInset,
-                      nnItemSideLength(thumbSize),
-                      nnItemSideLength(thumbSize));
+    return (NSRect){
+        .origin.x = kNNWindowToItemInset + (index * (nnItemSideLength(thumbSize) - kNNItemBorderWidth)),
+        .origin.y = kNNWindowToItemInset,
+        .size = nnItemSize(thumbSize)
+    };
 }
 
 __attribute__((const)) static NSSize nnThumbSize(CGFloat thumbSize)
@@ -67,10 +68,11 @@ __attribute__((const)) static NSSize nnThumbSize(CGFloat thumbSize)
 
 __attribute__((const)) NSRect nnThumbRect(CGFloat thumbSize, NSUInteger index)
 {
-    return NSMakeRect(kNNWindowToThumbInset + index * (nnItemSideLength(thumbSize) - kNNItemBorderWidth),
-                      kNNWindowToThumbInset,
-                      thumbSize,
-                      thumbSize);
+    return (NSRect){
+        .origin.x = kNNWindowToThumbInset + index * (nnItemSideLength(thumbSize) - kNNItemBorderWidth),
+        .origin.y = kNNWindowToThumbInset,
+        .size = nnThumbSize(thumbSize)
+    };
 }
 
 __attribute__((const)) CGFloat nnTotalPadding(NSUInteger numWindows)
