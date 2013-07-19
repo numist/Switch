@@ -27,6 +27,7 @@
 @property (nonatomic, assign) BOOL activatedSwitcher;
 
 - (CGEventRef)eventTapProxy:(CGEventTapProxy)proxy didReceiveEvent:(CGEventRef)event ofType:(CGEventType)type;
+- (id<NNHotKeyManagerDelegate>)strongifiedDelegate;
 
 @end
 
@@ -119,7 +120,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     if (optionKeyIsPressed && keycode == 48 && type == kCGEventKeyDown && !self.activatedSwitcher) {
         self.activatedSwitcher = YES;
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate hotKeyManagerInvoked:self];
+            [self.strongifiedDelegate hotKeyManagerInvoked:self];
         });
     }
     
@@ -127,7 +128,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
         if (!optionKeyIsPressed) {
             self.activatedSwitcher = NO;
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.delegate hotKeyManagerDismissed:self];
+                [self.strongifiedDelegate hotKeyManagerDismissed:self];
             });
             return NULL;
         }
@@ -137,21 +138,21 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
                 if (!shiftKeyIsPressed) {
                     if (type == kCGEventKeyDown) {
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            [self.delegate hotKeyManagerBeginIncrementingSelection:self];
+                            [self.strongifiedDelegate hotKeyManagerBeginIncrementingSelection:self];
                         });
                     } else {
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            [self.delegate hotKeyManagerEndIncrementingSelection:self];
+                            [self.strongifiedDelegate hotKeyManagerEndIncrementingSelection:self];
                         });
                     }
                 } else {
                     if (type == kCGEventKeyDown) {
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            [self.delegate hotKeyManagerBeginDecrementingSelection:self];
+                            [self.strongifiedDelegate hotKeyManagerBeginDecrementingSelection:self];
                         });
                     } else {
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            [self.delegate hotKeyManagerEndDecrementingSelection:self];
+                            [self.strongifiedDelegate hotKeyManagerEndDecrementingSelection:self];
                         });
                     }
                 }
@@ -161,7 +162,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
             case 13: { // W key
                 if (type == kCGEventKeyDown) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.delegate hotKeyManagerClosedWindow:self];
+                        [self.strongifiedDelegate hotKeyManagerClosedWindow:self];
                     });
                 }
                 break;
@@ -170,7 +171,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
             case 12: { // Q key
                 if (type == kCGEventKeyDown) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.delegate hotKeyManagerClosedApplication:self];
+                        [self.strongifiedDelegate hotKeyManagerClosedApplication:self];
                     });
                 }
                 break;
@@ -184,6 +185,12 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     
     // We must return the event to avoid deleting it.
     return event;
+}
+
+- (id<NNHotKeyManagerDelegate>)strongifiedDelegate;
+{
+    id<NNHotKeyManagerDelegate> delegate = self.delegate;
+    return delegate;
 }
 
 @end
