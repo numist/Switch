@@ -154,8 +154,9 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
                 
             case NNHUDCollectionViewUpdateInsert: {
                 id<NNHUDCollectionViewDataSource> dataSource = self.dataSource;
-                Check(dataSource);
+                BailWithBlockUnless(dataSource, ^{ abort(); });
                 cell = [dataSource HUDView:self viewForCellAtIndex:update.index];
+                BailWithBlockUnless(cell, ^{ abort(); });
                 [self.cells insertObject:cell atIndex:update.index];
                 [self addSubview:cell];
                 self.numberOfCells++;
