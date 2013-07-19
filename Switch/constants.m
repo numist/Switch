@@ -83,3 +83,51 @@ __attribute__((const)) CGFloat nnTotalWidth(CGFloat thumbSize, NSUInteger numWin
     NSRect lastItem = nnItemRect(thumbSize, (numWindows - 1));
     return lastItem.origin.x + lastItem.size.width + kNNWindowToItemInset;
 }
+
+__attribute__((const)) NSString *NNStringFromCGWindowLevel(long level)
+{
+    if (level == kCGBaseWindowLevel) {
+        return @"kCGBaseWindowLevel";
+    } else if (level == kCGMinimumWindowLevel) {
+        return @"kCGMinimumWindowLevel";
+    } else if (level == kCGDesktopWindowLevel) {
+        return @"kCGDesktopWindowLevel";
+    } else if (level == kCGDesktopIconWindowLevel) {
+        return @"kCGDesktopIconWindowLevel";
+    } else if (level == kCGBackstopMenuLevel) {
+        return @"kCGBackstopMenuLevel";
+    } else if (level == kCGNormalWindowLevel) {
+        return @"kCGNormalWindowLevel";
+    } else if (level == kCGFloatingWindowLevel) {
+        return @"kCGFloatingWindowLevel";
+    } else if (level == kCGTornOffMenuWindowLevel) {
+        return @"kCGTornOffMenuWindowLevel";
+    } else if (level == kCGDockWindowLevel) {
+        return @"kCGDockWindowLevel";
+    } else if (level == kCGMainMenuWindowLevel) {
+        return @"kCGMainMenuWindowLevel";
+    } else if (level == kCGStatusWindowLevel) {
+        return @"kCGStatusWindowLevel";
+    } else if (level == kCGModalPanelWindowLevel) {
+        return @"kCGModalPanelWindowLevel";
+    } else if (level == kCGPopUpMenuWindowLevel) {
+        return @"kCGPopUpMenuWindowLevel";
+    } else if (level == kCGDraggingWindowLevel) {
+        return @"kCGDraggingWindowLevel";
+    } else if (level == kCGScreenSaverWindowLevel) {
+        return @"kCGScreenSaverWindowLevel";
+    } else if (level == kCGCursorWindowLevel) {
+        return @"kCGCursorWindowLevel";
+    } else if (level == kCGOverlayWindowLevel) {
+        return @"kCGOverlayWindowLevel";
+    } else if (level == kCGHelpWindowLevel) {
+        return @"kCGHelpWindowLevel";
+    } else if (level == kCGUtilityWindowLevel) {
+        return @"kCGUtilityWindowLevel";
+    } else if (level == kCGAssistiveTechHighWindowLevel) {
+        return @"kCGAssistiveTechHighWindowLevel";
+    } else if (level == kCGMaximumWindowLevel) {
+        return @"kCGMaximumWindowLevel";
+    }
+    return @"kNNUnknownWindowLevel";
+}
