@@ -15,16 +15,8 @@
 #import "NNWindowFilter.h"
 
 #import "NNApplication.h"
-#import "NNWindow.h"
+#import "NNWindow+Private.h"
 #import "NNWindow+NNWindowFiltering.h"
-
-
-// No corresponding implementation, everything in this interface is declared/implemented in the class extension!
-@interface NNWindow (NNPrivateAccessors)
-
-@property (nonatomic, strong, readonly) NSDictionary *windowDescription;
-
-@end
 
 
 @interface NNObviousSheetsWindowFilter : NNWindowFilter
