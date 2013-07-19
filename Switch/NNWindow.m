@@ -23,7 +23,7 @@
 @interface NNWindow () <HAXElementDelegate>
 
 @property (atomic, strong) NSImage *image;
-@property (nonatomic, strong, readonly) NSDictionary *windowDescription;
+@property (atomic, strong) NSDictionary *windowDescription;
 @property (atomic, readonly) HAXWindow *haxWindow;
 
 @end
@@ -48,6 +48,9 @@
                 [[NNWindowCache sharedCache] cacheWindow:result withID:windowID];
             }
         }
+        
+        // #24: update window's info dict in case the frame or title changed
+        result.windowDescription = description;
 
         return result;
     }

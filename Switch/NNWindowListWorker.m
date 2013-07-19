@@ -45,7 +45,7 @@ static NSTimeInterval refreshInterval = 0.1;
     NSArray *windows = [NSMutableArray arrayWithCapacity:[info count]];
     
     for (unsigned i = 0; i < [info count]; i++) {
-        NNWindow *window = [NNWindow windowWithDescription:[info objectAtIndex:i]];
+        NNWindow *window = [NNWindow windowWithDescription:info[i]];
 
         // Window found or info valid for creating a new window.
         if (window) {
