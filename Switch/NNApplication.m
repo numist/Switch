@@ -118,7 +118,8 @@
             _icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
         } else {
             Log(@"Application %@ does not have an icon!", self);
-            #warning Use default application icon?
+            // TODO(numist): Can this even happen?
+            NotTested();
         }
     }
     
@@ -131,10 +132,10 @@
 {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         @synchronized(self) {
-            if (element != _haxApp) { return; }
+            if (element != self->_haxApp) { return; }
             
             @autoreleasepool {
-                _haxApp = nil;
+                self->_haxApp = nil;
                 (void)self.haxApp;
             }
         }

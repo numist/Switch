@@ -122,10 +122,10 @@
 {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         @synchronized(self) {
-            BailUnless(element == _haxWindow, );
+            BailUnless(element == self->_haxWindow, );
             
             @autoreleasepool {
-                _haxWindow = nil;
+                self->_haxWindow = nil;
                 (void)self.haxWindow;
             }
         }
@@ -157,9 +157,9 @@
 @dynamic cgBounds;
 - (NSRect)cgBounds;
 {
-    CGRect result = {0};
+    CGRect result = {{},{}};
     bool success = CGRectMakeWithDictionaryRepresentation((__bridge CFDictionaryRef)[self.windowDescription objectForKey:(NSString *)kCGWindowBounds], &result);
-    BailUnless(success, (NSRect){0});
+    BailUnless(success, ((NSRect){{},{}}));
     return result;
 }
 
