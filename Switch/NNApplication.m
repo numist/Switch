@@ -84,7 +84,7 @@
 
 - (NSUInteger)hash;
 {
-    return self.pid;
+    return (NSUInteger)self.pid;
 }
 
 - (BOOL)isEqual:(id)object;

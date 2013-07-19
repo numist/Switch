@@ -35,7 +35,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 @property (nonatomic, assign) BOOL windowListLoaded;
 @property (nonatomic, strong) NSTimer *displayTimer;
 @property (nonatomic, assign) BOOL pendingSwitch;
-@property (nonatomic, assign) NSInteger selectedIndex;
+@property (nonatomic, assign) NSUInteger selectedIndex;
 @property (nonatomic, assign) BOOL adjustedIndex;
 @property (nonatomic, assign) BOOL interfaceLoaded;
 
@@ -413,10 +413,10 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 {
     if (!self.active) { return; }
     
-    NSInteger newIndex = self.selectedIndex;
+    NSInteger newIndex = (NSInteger)self.selectedIndex;
     
-    if (newIndex >= NSNotFound) {
-        newIndex = [self.windows count] - 1;
+    if (newIndex >= (NSInteger)NSNotFound) {
+        newIndex = (NSInteger)[self.windows count] - 1;
     } else if (!self.decrementing || newIndex != 0) {
         newIndex -= 1;
     }

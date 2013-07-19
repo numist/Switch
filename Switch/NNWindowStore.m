@@ -149,7 +149,7 @@
     
     NSMutableArray *changes = [NSMutableArray new];
     for (int i = (int)[oldArray count] - 1; i >= 0; --i) {
-        NNWindow *window = [oldArray objectAtIndex:i];
+        NNWindow *window = oldArray[(NSUInteger)i];
         
         if (![newArray containsObject:window]) {
             if ([delegate respondsToSelector:@selector(store:didChangeWindow:atIndex:forChangeType:newIndex:)]) {

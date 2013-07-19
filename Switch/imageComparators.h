@@ -45,7 +45,7 @@ static BOOL (^imagesDifferByCGDataProviderComparison)(CGImageRef, CGImageRef) = 
     
     if (!result) {
         // It turns out that striding over the buffers is slower than memcmp. Jesus.
-        result = !!memcmp(CFDataGetBytePtr(aData), CFDataGetBytePtr(bData), CFDataGetLength(aData));
+        result = !!memcmp(CFDataGetBytePtr(aData), CFDataGetBytePtr(bData), (unsigned long)CFDataGetLength(aData));
     }
     
     CFRelease(aData);
