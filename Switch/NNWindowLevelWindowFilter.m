@@ -33,7 +33,7 @@
 
 - (NSArray *)filterInvalidWindowsFromArray:(NSArray *)array;
 {
-    return [array filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, __attribute__((unused)) NSDictionary *bindings) {
+    array = [array filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, __attribute__((unused)) NSDictionary *bindings) {
         NNWindow *window = evaluatedObject;
         
         NSDictionary *description = window.windowDescription;
@@ -57,6 +57,20 @@
         
         return YES;
     }]];
+    
+    // TODO(numist): fix #25 so this hackiness isn't necessary anymore
+    NSMutableArray *list = [NSMutableArray arrayWithArray:array];
+    for (unsigned i = 0, j = 0; i < [list count] && j < [list count]; i++, j++) {
+        // Floating windows precede normal ones so this loop is done when it hits a normal level window
+        if ([[list[i] windowDescription][(__bridge NSString *)kCGWindowLayer] longValue] == kCGNormalWindowLevel) {
+            break;
+        }
+        
+        [list addObject:list[i]];
+        [list removeObjectAtIndex:i];
+        --i;
+    }
+    return list;
 }
 
 @end
