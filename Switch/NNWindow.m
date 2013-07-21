@@ -59,6 +59,9 @@
 + (BOOL)descriptionDescribesInterestingWindow:(NSDictionary *)description;
 {
     // For now, windows whose contents are not accessible are not supported.
+    /* So far this has been tripped by:
+         * Notification Center notifications
+     */
     BailUnless([[description objectForKey:(__bridge NSString *)kCGWindowSharingState] longValue] != kCGWindowSharingNone, NO);
     
     return YES;

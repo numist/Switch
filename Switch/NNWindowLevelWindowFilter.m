@@ -42,15 +42,16 @@
         // Only match windows at kCGNormalWindowLevel
         if (level != kCGNormalWindowLevel) {
             
-            // Except Google Chrome, which has a Hangout plugin that uses floating windows as standard interface windows.
-            if ([window.application.name isEqualToString:@"Google Chrome"]) {
-                // Filter out windows that aren't the expected level of active anchored Hangout windows (inactive Hangout windows are kCGStatusWindowLevel and notifications are kCGModalPanelWindowLevel)
-                if (level != kCGDockWindowLevel) {
-                    return NO;
-                }
-                
-                return YES;
-            }
+            // TODO(numist): Fix for #22 to allow Chrome Hangout floating windows to be visible in the interface.
+//            // Except Google Chrome, which has a Hangout plugin that uses floating windows as standard interface windows.
+//            if ([window.application.name isEqualToString:@"Google Chrome"]) {
+//                // Filter out windows that aren't the expected level of active anchored Hangout windows (inactive Hangout windows are kCGStatusWindowLevel and notifications are kCGModalPanelWindowLevel)
+//                if (level != kCGDockWindowLevel) {
+//                    return NO;
+//                }
+//                
+//                return YES;
+//            }
             
             return NO;
         }
@@ -58,19 +59,20 @@
         return YES;
     }]];
     
-    // TODO(numist): fix #25 so this hackiness isn't necessary anymore
-    NSMutableArray *list = [NSMutableArray arrayWithArray:array];
-    for (unsigned i = 0, j = 0; i < [list count] && j < [list count]; i++, j++) {
-        // Floating windows precede normal ones so this loop is done when it hits a normal level window
-        if ([[list[i] windowDescription][(__bridge NSString *)kCGWindowLayer] longValue] == kCGNormalWindowLevel) {
-            break;
-        }
-        
-        [list addObject:list[i]];
-        [list removeObjectAtIndex:i];
-        --i;
-    }
-    return list;
+    // TODO(numist): This hackiness is made necessary by #22 and is tracked by #25
+//    NSMutableArray *list = [NSMutableArray arrayWithArray:array];
+//    for (unsigned i = 0, j = 0; i < [list count] && j < [list count]; i++, j++) {
+//        // Floating windows precede normal ones so this loop is done when it hits a normal level window
+//        if ([[list[i] windowDescription][(__bridge NSString *)kCGWindowLayer] longValue] == kCGNormalWindowLevel) {
+//            break;
+//        }
+//        
+//        [list addObject:list[i]];
+//        [list removeObjectAtIndex:i];
+//        --i;
+//    }
+//    return list;
+    return array;
 }
 
 @end
