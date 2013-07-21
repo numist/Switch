@@ -151,7 +151,7 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
                 cell = nil;
                 self.numberOfCells--;
                 break;
-                
+            
             case NNHUDCollectionViewUpdateInsert: {
                 id<NNHUDCollectionViewDataSource> dataSource = self.dataSource;
                 BailWithBlockUnless(dataSource, ^{ abort(); });
@@ -162,7 +162,7 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
                 self.numberOfCells++;
                 break;
             }
-                
+            
             case NNHUDCollectionViewUpdateMove: {
                 cell = [self.cells objectAtIndex:update.index];
                 [self.cells removeObjectAtIndex:update.index];
