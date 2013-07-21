@@ -74,7 +74,8 @@
     });
     
     if (isProcessTrustedWithOptions) {
-        isProcessTrustedWithOptions((__bridge CFDictionaryRef)@{ (__bridge NSString *)kAXTrustedCheckOptionPrompt : @YES });
+        // TODO(numist): that string literal should be changed to the appropriate symbol when 10.9 has shipped.
+        isProcessTrustedWithOptions((__bridge CFDictionaryRef)@{ @"AXTrustedCheckOptionPrompt" : @YES });
     } else {
         static dispatch_once_t twiceToken;
         dispatch_once(&twiceToken, ^{
