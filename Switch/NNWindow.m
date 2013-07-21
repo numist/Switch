@@ -58,11 +58,6 @@
 
 + (BOOL)descriptionDescribesInterestingWindow:(NSDictionary *)description;
 {
-    // Only match windows at kCGNormalWindowLevel
-    if ([[description objectForKey:(__bridge NSString *)kCGWindowLayer] longValue] != kCGNormalWindowLevel) {
-        return NO;
-    }
-
     // For now, windows whose contents are not accessible are not supported.
     BailUnless([[description objectForKey:(__bridge NSString *)kCGWindowSharingState] longValue] != kCGWindowSharingNone, NO);
     
