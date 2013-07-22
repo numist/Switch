@@ -8,6 +8,7 @@
 
 #import "NNPollingObject.h"
 
+
 @interface NNPollingObject (Protected)
 
 - (void)postNotification:(NSDictionary *)userInfo;

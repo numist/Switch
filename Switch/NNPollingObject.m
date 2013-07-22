@@ -11,12 +11,12 @@
 //
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
 #import "NNPollingObject.h"
 
 #import <ReactiveCocoa/EXTScope.h>
 
 
-NSString *NNPollCompleteNotification = @"NNPollCompleteNotification";
 static const NSTimeInterval NNPollingIntervalFastest = 1.0 / 60.0;
 
 
@@ -28,6 +28,11 @@ static const NSTimeInterval NNPollingIntervalFastest = 1.0 / 60.0;
 
 
 @implementation NNPollingObject
+
++ (NSString *)notificationName;
+{
+    return [NSString stringWithFormat:@"%@%@", NSStringFromClass(self), @"PollCompleteNotification"];
+}
 
 - (instancetype)initWithQueue:(dispatch_queue_t)queue;
 {
@@ -64,7 +69,7 @@ static const NSTimeInterval NNPollingIntervalFastest = 1.0 / 60.0;
 - (void)postNotification:(NSDictionary *)userInfo;
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:NNPollCompleteNotification object:self userInfo:userInfo];
+        [[NSNotificationCenter defaultCenter] postNotificationName:[[self class] notificationName] object:self userInfo:userInfo];
     });
 }
 

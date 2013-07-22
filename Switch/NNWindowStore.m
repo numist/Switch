@@ -51,14 +51,16 @@
     _delegate = delegate;
     _windows = [NSArray new];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pollCompleteNotification:) name:NNPollCompleteNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pollCompleteNotification:) name:[[NNWindowListWorker class] notificationName] object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pollCompleteNotification:) name:[[NNWindowWorker class] notificationName] object:nil];
     
     return self;
 }
 
 - (void)dealloc;
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NNPollCompleteNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:[[NNWindowListWorker class] notificationName] object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:[[NNWindowWorker class] notificationName] object:nil];
 }
 
 #pragma mark Actions

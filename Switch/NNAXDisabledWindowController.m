@@ -107,10 +107,10 @@ static NSTimeInterval NNWindoFadeOutInterval = 1.0;
     
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     if (_apiWorker) {
-        [center removeObserver:self name:NNPollCompleteNotification object:_apiWorker];
+        [center removeObserver:self name:[[_apiWorker class] notificationName] object:_apiWorker];
     }
     if (apiWorker) {
-        [center addObserver:self selector:@selector(apiStatusChangedNotification:) name:NNPollCompleteNotification object:apiWorker];
+        [center addObserver:self selector:@selector(apiStatusChangedNotification:) name:[[apiWorker class] notificationName] object:apiWorker];
     }
     _apiWorker = apiWorker;
 }
