@@ -98,6 +98,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     }
     
     NSWindow *switcherWindow = [[NSWindow alloc] initWithContentRect:windowRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
+    NSRect displayRect;
     {
         switcherWindow.movableByWindowBackground = NO;
         switcherWindow.hasShadow = NO;
@@ -105,12 +106,15 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
         switcherWindow.backgroundColor = [NSColor clearColor];
         switcherWindow.level = NSPopUpMenuWindowLevel;
         switcherWindow.acceptsMouseMovedEvents = YES;
+        
+        displayRect = [switcherWindow convertRectFromScreen:windowRect];
     }
     self.window = switcherWindow;
     
-    NNHUDCollectionView *collectionView = [[NNHUDCollectionView alloc] initWithFrame:NSMakeRect(self.window.frame.size.width / 2.0, self.window.frame.size.height / 2.0, 0.0, 0.0)];
+    NNHUDCollectionView *collectionView = [[NNHUDCollectionView alloc] initWithFrame:NSMakeRect(displayRect.size.width / 2.0, displayRect.size.height / 2.0, 0.0, 0.0)];
     {
-        collectionView.maxWidth = [NSScreen mainScreen].frame.size.width - (kNNScreenToWindowInset * 2.0);
+        collectionView.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin;
+        collectionView.maxWidth = displayRect.size.width - (kNNScreenToWindowInset * 2.0);
         collectionView.maxCellSize = kNNMaxWindowThumbnailSize;
         collectionView.dataSource = self;
         collectionView.delegate = self;
@@ -140,7 +144,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
          if ([shouldDisplayInterface boolValue]) {
              // TODO(numist): is there a better way to catch mouse moved events than this? Because ugh.
              [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
-             [self.window setFrame:[self.window frameRectForContentRect:[NSScreen mainScreen].frame] display:YES];
+             [self.window setFrame:[NSScreen mainScreen].frame display:YES];
              [self.window orderFront:self];
              [self.store startUpdatingWindowContents];
          } else {
