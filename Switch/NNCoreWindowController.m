@@ -194,7 +194,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
              [self.displayTimer invalidate];
              self.displayTimer = nil;
              self.pendingSwitch = NO;
-             [self.collectionView selectCellAtIndex:self.selectedIndex];
+             [self.collectionView deselectCell];
          }
      }];
     
@@ -213,23 +213,23 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
                  NNWindowThumbnailView *thumb = [self cellForWindow:selectedWindow];
                  [thumb setActive:NO];
                  
-                 dispatch_async(dispatch_get_global_queue(0, 0), ^{
-                     if (selectedWindow) {
+                 if (selectedWindow) {
+                     dispatch_async(dispatch_get_global_queue(0, 0), ^{
                          raiseSuccessful = [selectedWindow raise];
-                     } else {
-                         Check(self.selectedIndex == 0);
-                         Log(@"No windows to raise! (Selection index: %lu)", self.selectedIndex);
-                     }
-                     
-                     dispatch_async(dispatch_get_main_queue(), ^{
-                         // If the raise happens before the display timer has expired, this code path is responsible for deactivation because the application never became active, so the terminating code in applicationWillResignActive: will not get called.
-                         if (raiseSuccessful && self.displayTimer) {
-                             Check(self.active);
-                             self.active = NO;
-                         }
-                         [thumb setActive:YES];
+                         
+                         dispatch_async(dispatch_get_main_queue(), ^{
+                             // If the raise happens before the display timer has expired, this code path is responsible for deactivation because the application never became active, so the terminating code in applicationWillResignActive: will not get called.
+                             if (raiseSuccessful && self.displayTimer) {
+                                 Check(self.active);
+                                 self.active = NO;
+                             }
+                             [thumb setActive:YES];
+                         });
                      });
-                 });
+                 } else {
+                     Log(@"No windows to raise! (Selection index: %lu)", self.selectedIndex);
+                     self.active = NO;
+                 }
              });
          }
      }];
@@ -240,10 +240,12 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
          NSUInteger index = [x unsignedIntegerValue];
          if (index == self.collectionView.selectedIndex) { return; }
          
-         if (index < [self.windows count]) {
-             [self.collectionView selectCellAtIndex:index];
-         } else {
-             [self.collectionView deselectCell];
+         if ([self.windows count]) {
+             if (index < [self.windows count]) {
+                 [self.collectionView selectCellAtIndex:index];
+             } else {
+                 [self.collectionView deselectCell];
+             }
          }
      }];
 }
@@ -365,8 +367,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
             self.selectedIndex = [self.windows count] - 1;
         }
         [self.collectionView selectCellAtIndex:self.selectedIndex];
-    } else {
-        [self.collectionView deselectCell];
     }
     
     [self.collectionView endUpdates];
@@ -410,10 +410,14 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
                 }
                 
                 if (self.windowListLoaded) {
-                    if (!self.incrementing) {
-                        newIndex %= [self.windows count];
-                    } else if (newIndex >= [self.windows count]) {
-                        newIndex = [self.windows count] - 1;
+                    if ([self.windows count]) {
+                        if (!self.incrementing) {
+                            newIndex %= [self.windows count];
+                        } else if (newIndex >= [self.windows count]) {
+                            newIndex = [self.windows count] - 1;
+                        }
+                    } else {
+                        newIndex = 0;
                     }
                 }
                 
@@ -441,9 +445,13 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
                 }
                 
                 if (self.windowListLoaded) {
-                    if (!self.decrementing) {
-                        while (newIndex < 0) { newIndex += [self.windows count]; }
-                    } else if (newIndex < 0) {
+                    if ([self.windows count]) {
+                        if (!self.decrementing) {
+                            while (newIndex < 0) { newIndex += [self.windows count]; }
+                        } else if (newIndex < 0) {
+                            newIndex = 0;
+                        }
+                    } else {
                         newIndex = 0;
                     }
                 }

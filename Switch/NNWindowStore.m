@@ -24,6 +24,7 @@
 @interface NNWindowStore ()
 
 @property (nonatomic, weak) id<NNWindowStoreDelegate> delegate;
+@property (nonatomic, assign) BOOL firstUpdate;
 
 // Serialization
 @property (nonatomic, strong) dispatch_queue_t lock;
@@ -50,6 +51,7 @@
     
     _delegate = delegate;
     _windows = [NSArray new];
+    _firstUpdate = YES;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pollCompleteNotification:) name:[[NNWindowListWorker class] notificationName] object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pollCompleteNotification:) name:[[NNWindowWorker class] notificationName] object:nil];
@@ -68,6 +70,8 @@
 - (void)startUpdatingWindowList;
 {
     despatch_lock_assert(dispatch_get_main_queue());
+
+    self.firstUpdate = YES;
 
     if (!self.listWorker) {
         self.listWorker = [NNWindowListWorker new];
@@ -142,7 +146,7 @@
     BOOL windowsChanged = ![oldArray isEqualToArray:newArray];
     __strong __typeof__(self.delegate) delegate = nil;
     
-    if (windowsChanged) {
+    if (windowsChanged || self.firstUpdate) {
         delegate = self.delegate;
         if ([delegate respondsToSelector:@selector(storeWillChangeContent:)]) {
             [delegate storeWillChangeContent:self];
@@ -201,12 +205,14 @@
     }
     
     
-    if (windowsChanged) {
+    if (windowsChanged || self.firstUpdate) {
         _windows = newArray;
         
         if ([delegate respondsToSelector:@selector(storeDidChangeContent:)]) {
             [delegate storeDidChangeContent:self];
         }
+        
+        self.firstUpdate = NO;
     }
 }
 
