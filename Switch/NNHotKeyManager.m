@@ -18,6 +18,16 @@
 
 #include <ApplicationServices/ApplicationServices.h>
 
+#import "NNHotKey.h"
+
+
+NSString *NNHotKeyManagerNotificationName = @"NNHotKeyManagerNotificationName";
+NSString *NNHotKeyManagerEventTypeKey = @"eventType";
+
+
+static NSSet *kNNKeysUnsettable;
+static NSDictionary *kNNKeysNeedKeyUpEvent;
+
 
 @interface NNHotKeyManager () {
     CFMachPortRef eventTap;
@@ -26,8 +36,9 @@
 
 @property (nonatomic, assign) BOOL activatedSwitcher;
 
+@property (nonatomic, strong, readonly) NSMutableDictionary *keyMap;
+
 - (CGEventRef)eventTapProxy:(CGEventTapProxy)proxy didReceiveEvent:(CGEventRef)event ofType:(CGEventType)type;
-- (id<NNHotKeyManagerDelegate>)strongifiedDelegate;
 
 @end
 
@@ -41,6 +52,30 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
 
 @implementation NNHotKeyManager
 
++ (void)initialize;
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        kNNKeysUnsettable = [NSSet setWithArray:@[ @(NNHotKeyManagerEventTypeIncrement), @(NNHotKeyManagerEventTypeEndIncrement), @(NNHotKeyManagerEventTypeEndDecrement)]];
+        kNNKeysNeedKeyUpEvent = @{
+            @(NNHotKeyManagerEventTypeIncrement) : @(NNHotKeyManagerEventTypeEndIncrement),
+            @(NNHotKeyManagerEventTypeDecrement) : @(NNHotKeyManagerEventTypeEndDecrement)
+        };
+    });
+}
+
++ (NNHotKeyManager *)sharedManager;
+{
+    static NNHotKeyManager *_singleton;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _singleton = [NNHotKeyManager new];
+    });
+    
+    return _singleton;
+}
+
 - (instancetype)init;
 {
     self = [super init];
@@ -52,6 +87,8 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
         return nil;
     }
     
+    _keyMap = [NSMutableDictionary new];
+    
     return self;
 }
 
@@ -59,6 +96,17 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
 {
     [self removeEventTap];
 }
+
+- (void)registerHotKey:(NNHotKey *)hotKey forEvent:(NNHotKeyManagerEventType)eventType;
+{
+    if ([kNNKeysUnsettable containsObject:@(eventType)]) {
+        @throw [NSException exceptionWithName:@"NNHotKeyManagerRegistrationException" reason:@"That keybinding cannot be set, try setting it's parent?" userInfo:@{ NNHotKeyManagerEventTypeKey : @(eventType), @"key" : hotKey }];
+    }
+    
+    [self.keyMap setObject:@(eventType) forKey:hotKey];
+}
+
+#pragma mark Internal
 
 - (void)removeEventTap;
 {
@@ -112,85 +160,77 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     if ((type != kCGEventKeyDown) && (type != kCGEventKeyUp) && (type != kCGEventFlagsChanged))
         return event;
     
-    // The incoming keycode and meta key information.
+    // Parse the incoming keycode and modifier key information.
     CGKeyCode keycode = (CGKeyCode)CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
-    BOOL optionKeyIsPressed = (CGEventGetFlags(event) & kCGEventFlagMaskAlternate) == kCGEventFlagMaskAlternate;
-    BOOL shiftKeyIsPressed = (CGEventGetFlags(event) & kCGEventFlagMaskShift) == kCGEventFlagMaskShift;
     
-    if (optionKeyIsPressed && keycode == 48 && type == kCGEventKeyDown && !self.activatedSwitcher) {
-        self.activatedSwitcher = YES;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.strongifiedDelegate hotKeyManagerInvoked:self];
-        });
+    __typeof__(NNHotKeyManagerModifierKey) modifiers = 0;
+    if ((CGEventGetFlags(event) & kCGEventFlagMaskAlternate) == kCGEventFlagMaskAlternate) {
+        modifiers |= NNHotKeyManagerModifierOption;
+    }
+    if ((CGEventGetFlags(event) & kCGEventFlagMaskShift) == kCGEventFlagMaskShift) {
+        modifiers |= NNHotKeyManagerModifierShift;
+    }
+    if ((CGEventGetFlags(event) & kCGEventFlagMaskControl) == kCGEventFlagMaskControl) {
+        modifiers |= NNHotKeyManagerModifierControl;
+    }
+    if ((CGEventGetFlags(event) & kCGEventFlagMaskCommand) == kCGEventFlagMaskCommand) {
+        modifiers |= NNHotKeyManagerModifierCmd;
+    }
+    
+    NNHotKey *key = [[NNHotKey alloc] initWithKeycode:keycode modifiers:modifiers];
+    
+
+    // Invocation is a special case, enabling all other keys
+    if (!self.activatedSwitcher && type == kCGEventKeyDown) {
+        NSArray *invokeKeys = [self.keyMap allKeysForObject:@(NNHotKeyManagerEventTypeInvoke)];
+        for (NNHotKey *hotKey in invokeKeys) {
+            if (hotKey.code == keycode && hotKey.modifiers == modifiers) {
+                self.activatedSwitcher = YES;
+                [self dispatchEvent:NNHotKeyManagerEventTypeInvoke];
+                
+                break;
+            }
+        }
     }
     
     if (self.activatedSwitcher) {
-        if (!optionKeyIsPressed) {
+        if (!modifiers) {
             self.activatedSwitcher = NO;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.strongifiedDelegate hotKeyManagerDismissed:self];
-            });
+            [self dispatchEvent:NNHotKeyManagerEventTypeDismiss];
             return NULL;
         }
         
-        switch (keycode) {
-            case 48: { // Tab key
-                if (!shiftKeyIsPressed) {
-                    if (type == kCGEventKeyDown) {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [self.strongifiedDelegate hotKeyManagerBeginIncrementingSelection:self];
-                        });
-                    } else {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [self.strongifiedDelegate hotKeyManagerEndIncrementingSelection:self];
-                        });
-                    }
-                } else {
-                    if (type == kCGEventKeyDown) {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [self.strongifiedDelegate hotKeyManagerBeginDecrementingSelection:self];
-                        });
-                    } else {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [self.strongifiedDelegate hotKeyManagerEndDecrementingSelection:self];
-                        });
-                    }
-                }
-                break;
-            }
-            
-            case 13: { // W key
-                if (type == kCGEventKeyDown) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.strongifiedDelegate hotKeyManagerClosedWindow:self];
-                    });
-                }
-                break;
-            }
-                
-            case 12: { // Q key
-                if (type == kCGEventKeyDown) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.strongifiedDelegate hotKeyManagerClosedApplication:self];
-                    });
-                }
-                break;
-            }
-                
-            default:
-                break;
+        NSNumber *boxedKeyDownEventType = self.keyMap[key];
+        // Invoke maps to Increment at this point
+        if ([boxedKeyDownEventType unsignedIntegerValue] == NNHotKeyManagerEventTypeInvoke) {
+            boxedKeyDownEventType = @(NNHotKeyManagerEventTypeIncrement);
         }
-        return NULL;
+
+        // Prefetch keyup event, if applicable.
+        NSNumber *boxedKeyUpEventType = nil;
+        if (type == kCGEventKeyUp) {
+            boxedKeyUpEventType = kNNKeysNeedKeyUpEvent[boxedKeyDownEventType];
+        }
+        
+        if (boxedKeyDownEventType) {
+            if (type == kCGEventKeyDown) {
+                [self dispatchEvent:[boxedKeyDownEventType unsignedIntegerValue]];
+            } else if (boxedKeyUpEventType) {
+                [self dispatchEvent:[boxedKeyUpEventType unsignedIntegerValue]];
+            }
+        }
+        
+        event = NULL;
     }
     
-    // We must return the event to avoid deleting it.
     return event;
 }
 
-- (id<NNHotKeyManagerDelegate>)strongifiedDelegate;
+- (void)dispatchEvent:(NNHotKeyManagerEventType)eventType;
 {
-    id<NNHotKeyManagerDelegate> delegate = self.delegate;
-    return delegate;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NNHotKeyManagerNotificationName object:self userInfo:@{ NNHotKeyManagerEventTypeKey : @(eventType) }];
+    });
 }
 
 @end

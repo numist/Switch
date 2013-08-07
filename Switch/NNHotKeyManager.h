@@ -13,27 +13,39 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <Carbon/Carbon.h>
 
 
+@class NNHotKey;
 @protocol NNHotKeyManagerDelegate;
+
+
+typedef NS_ENUM(NSUInteger, NNHotKeyManagerEventType) {
+    NNHotKeyManagerEventTypeInvoke,
+    NNHotKeyManagerEventTypeDismiss,        // You cannot set this, it is bound to the release of all modifiers after a NNHotKeyManagerEventTypeInvoke
+    NNHotKeyManagerEventTypeIncrement,      // You cannot set this, it is bound to the same key as NNHotKeyManagerEventTypeInvoke (keyDown)
+    NNHotKeyManagerEventTypeEndIncrement,   // You cannot set this, it is bound to the same key as NNHotKeyManagerEventTypeInvoke (keyUp)
+    NNHotKeyManagerEventTypeDecrement,
+    NNHotKeyManagerEventTypeEndDecrement,   // You cannot set this, it is bound to the same key as NNHotKeyManagerEventTypeDecrement (keyUp)
+    NNHotKeyManagerEventTypeCloseWindow,
+};
+
+typedef NS_OPTIONS(char, NNHotKeyManagerModifierKey) {
+    NNHotKeyManagerModifierShift    = 1 << 0,
+    NNHotKeyManagerModifierOption   = 1 << 1,
+    NNHotKeyManagerModifierControl  = 1 << 2,
+    NNHotKeyManagerModifierCmd      = 1 << 3,
+};
+
+
+extern NSString *NNHotKeyManagerNotificationName;
+extern NSString *NNHotKeyManagerEventTypeKey;
 
 
 @interface NNHotKeyManager : NSObject
 
-@property (nonatomic, weak) id<NNHotKeyManagerDelegate> delegate;
++ (NNHotKeyManager *)sharedManager;
 
-@end
-
-
-@protocol NNHotKeyManagerDelegate <NSObject>
-
-- (void)hotKeyManagerInvoked:(NNHotKeyManager *)manager;
-- (void)hotKeyManagerDismissed:(NNHotKeyManager *)manager;
-- (void)hotKeyManagerBeginIncrementingSelection:(NNHotKeyManager *)manager;
-- (void)hotKeyManagerBeginDecrementingSelection:(NNHotKeyManager *)manager;
-- (void)hotKeyManagerEndIncrementingSelection:(NNHotKeyManager *)manager;
-- (void)hotKeyManagerEndDecrementingSelection:(NNHotKeyManager *)manager;
-- (void)hotKeyManagerClosedWindow:(NNHotKeyManager *)manager;
-- (void)hotKeyManagerClosedApplication:(NNHotKeyManager *)manager;
+- (void)registerHotKey:(NNHotKey *)hotKey forEvent:(NNHotKeyManagerEventType)eventType;
 
 @end

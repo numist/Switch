@@ -11,6 +11,7 @@
 //
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
 #import "NNCoreWindowController.h"
 
 #import <ReactiveCocoa/EXTScope.h>
@@ -18,6 +19,7 @@
 
 #import "NNAPIEnabledWorker.h"
 #import "NNApplication.h"
+#import "NNHotKey.h"
 #import "NNHotKeyManager.h"
 #import "NNHUDCollectionView.h"
 #import "NNWindow.h"
@@ -28,7 +30,7 @@
 static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
 
-@interface NNCoreWindowController () <NNWindowStoreDelegate, NNHUDCollectionViewDataSource, NNHUDCollectionViewDelegate, NNHotKeyManagerDelegate>
+@interface NNCoreWindowController () <NNWindowStoreDelegate, NNHUDCollectionViewDataSource, NNHUDCollectionViewDelegate>
 
 #pragma mark State
 @property (nonatomic, assign) BOOL active;
@@ -67,14 +69,17 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     self.windows = [NSMutableArray new];
     self.store = [[NNWindowStore alloc] initWithDelegate:self];
     
-    self.keyManager = [NNHotKeyManager new];
-    self.keyManager.delegate = self;
+    self.keyManager = [NNHotKeyManager sharedManager];
+    [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:48 modifiers:NNHotKeyManagerModifierOption] forEvent:NNHotKeyManagerEventTypeInvoke];
+    [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:48 modifiers:(NNHotKeyManagerModifierOption | NNHotKeyManagerModifierShift)] forEvent:NNHotKeyManagerEventTypeDecrement];
+    [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:13 modifiers:NNHotKeyManagerModifierOption] forEvent:NNHotKeyManagerEventTypeCloseWindow];
     
     Check(![self isWindowLoaded]);
     (void)self.window;
     [self setUpReactions];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:NSApplicationWillResignActiveNotification object:[NSApplication sharedApplication]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hotKeyManagerEventNotification:) name:NNHotKeyManagerNotificationName object:self.keyManager];
     
     return self;
 }
@@ -82,6 +87,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 - (void)dealloc;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSApplicationWillResignActiveNotification object:[NSApplication sharedApplication]];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NNHotKeyManagerNotificationName object:self.keyManager];
 }
 
 - (BOOL)isWindowLoaded;
@@ -363,119 +369,128 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
 #pragma mark NNHotKeyManagerDelegate
 
-- (void)hotKeyManagerInvoked:(NNHotKeyManager *)manager;
+- (void)hotKeyManagerEventNotification:(NSNotification *)notification;
 {
-    if (![NNAPIEnabledWorker isAPIEnabled]) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:NNAXAPIDisabledNotification object:self];
-        return;
-    }
+    NNHotKeyManagerEventType eventType = [notification.userInfo[NNHotKeyManagerEventTypeKey] unsignedIntegerValue];
     
-    // If the interface is not being shown, bring it up.
-    if (!self.active) {
-        self.active = YES;
-    }
-}
-
-- (void)hotKeyManagerDismissed:(NNHotKeyManager *)manager;
-{
-    if (self.active) {
-        self.pendingSwitch = YES;
-    }
-}
-
-- (void)hotKeyManagerBeginIncrementingSelection:(NNHotKeyManager *)manager;
-{
-    if (!self.active) { return; }
-    
-    NSUInteger newIndex = self.selectedIndex;
-    
-    if (newIndex >= NSNotFound) {
-        newIndex = 0;
-    } else if (!self.incrementing || self.selectedIndex <= [self.windows count] - 1) {
-        newIndex += 1;
-    }
-    
-    if (self.windowListLoaded) {
-        if (!self.incrementing) {
-            newIndex %= [self.windows count];
-        } else if (newIndex >= [self.windows count]) {
-            newIndex = [self.windows count] - 1;
-        }
-    }
-    
-    self.selectedIndex = newIndex;
-    
-    self.incrementing = YES;
-}
-
-- (void)hotKeyManagerEndIncrementingSelection:(NNHotKeyManager *)manager;
-{
-    self.incrementing = NO;
-}
-
-- (void)hotKeyManagerBeginDecrementingSelection:(NNHotKeyManager *)manager;
-{
-    if (!self.active) { return; }
-    
-    NSInteger newIndex = (NSInteger)self.selectedIndex;
-    
-    if (newIndex >= (NSInteger)NSNotFound) {
-        newIndex = (NSInteger)[self.windows count] - 1;
-    } else if (!self.decrementing || newIndex != 0) {
-        newIndex -= 1;
-    }
-    
-    if (self.windowListLoaded) {
-        if (!self.decrementing) {
-            while (newIndex < 0) { newIndex += [self.windows count]; }
-        } else if (newIndex < 0) {
-            newIndex = 0;
-        }
-    }
-    
-    self.selectedIndex = newIndex;
-    
-    self.decrementing = YES;
-}
-
-- (void)hotKeyManagerEndDecrementingSelection:(NNHotKeyManager *)manager;
-{
-    self.decrementing = NO;
-}
-
-- (void)hotKeyManagerClosedWindow:(NNHotKeyManager *)manager;
-{
-    if (!self.active) { return; }
-    
-    __block BOOL success;
-    NNWindow *selectedWindow = [self selectedWindow];
-    NNWindowThumbnailView *thumb = [self cellForWindow:selectedWindow];
-    NNWindow *nextWindow = nil;
-    
-    // If the first and second window belong to different applications, and the first application has another visible window, closing the first window will activate the first application's next window, changing the window order. This is fixed by tracking the next window (if it belongs to a different application) and raising it. This only matters when closing the frontmost window.
-    if (self.selectedIndex == 0 && (self.selectedIndex + 1) < [self.windows count] && ![nextWindow.application isEqual:selectedWindow]) {
-        nextWindow = [self.windows objectAtIndex:(self.selectedIndex + 1)];
-    }
-    
-    [thumb setActive:NO];
-    
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        if ((success = [selectedWindow close])) {
-            if ([nextWindow raise]) {
-                // TODO(numist): is there a better way to catch mouse moved events than this? Because ugh.
-                [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
+    switch (eventType) {
+        case NNHotKeyManagerEventTypeInvoke: {
+            if (![NNAPIEnabledWorker isAPIEnabled]) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:NNAXAPIDisabledNotification object:self];
+                return;
             }
+            
+            // If the interface is not being shown, bring it up.
+            if (!self.active) {
+                self.active = YES;
+            }
+            break;
         }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [thumb setActive:YES];
-        });
-    });
-}
 
-- (void)hotKeyManagerClosedApplication:(NNHotKeyManager *)manager;
-{
-    Log(@"Close Application: %@", [self selectedWindow].application);
+        case NNHotKeyManagerEventTypeDismiss: {
+            if (self.active) {
+                self.pendingSwitch = YES;
+            }
+            break;
+        }
+
+        case NNHotKeyManagerEventTypeIncrement: {
+            if (self.active) {
+                NSUInteger newIndex = self.selectedIndex;
+                
+                if (newIndex >= NSNotFound) {
+                    newIndex = 0;
+                } else if (!self.incrementing || self.selectedIndex <= [self.windows count] - 1) {
+                    newIndex += 1;
+                }
+                
+                if (self.windowListLoaded) {
+                    if (!self.incrementing) {
+                        newIndex %= [self.windows count];
+                    } else if (newIndex >= [self.windows count]) {
+                        newIndex = [self.windows count] - 1;
+                    }
+                }
+                
+                self.selectedIndex = newIndex;
+                
+                self.incrementing = YES;
+            }
+
+            break;
+        }
+
+        case NNHotKeyManagerEventTypeEndIncrement: {
+            self.incrementing = NO;
+            break;
+        }
+
+        case NNHotKeyManagerEventTypeDecrement: {
+            if (self.active) {
+                NSInteger newIndex = (NSInteger)self.selectedIndex;
+                
+                if (newIndex >= (NSInteger)NSNotFound) {
+                    newIndex = (NSInteger)[self.windows count] - 1;
+                } else if (!self.decrementing || newIndex != 0) {
+                    newIndex -= 1;
+                }
+                
+                if (self.windowListLoaded) {
+                    if (!self.decrementing) {
+                        while (newIndex < 0) { newIndex += [self.windows count]; }
+                    } else if (newIndex < 0) {
+                        newIndex = 0;
+                    }
+                }
+                
+                self.selectedIndex = newIndex;
+                
+                self.decrementing = YES;
+            }
+
+            break;
+        }
+
+        case NNHotKeyManagerEventTypeEndDecrement: {
+            self.decrementing = NO;
+            break;
+        }
+
+        case NNHotKeyManagerEventTypeCloseWindow: {
+            if (self.active) {
+                __block BOOL success;
+                NNWindow *selectedWindow = [self selectedWindow];
+                NNWindowThumbnailView *thumb = [self cellForWindow:selectedWindow];
+                NNWindow *nextWindow = nil;
+                
+                // If the first and second window belong to different applications, and the first application has another visible window, closing the first window will activate the first application's next window, changing the window order. This is fixed by tracking the next window (if it belongs to a different application) and raising it. This only matters when closing the frontmost window.
+                if (self.selectedIndex == 0 && (self.selectedIndex + 1) < [self.windows count] && ![nextWindow.application isEqual:selectedWindow]) {
+                    nextWindow = [self.windows objectAtIndex:(self.selectedIndex + 1)];
+                }
+                
+                [thumb setActive:NO];
+                
+                dispatch_async(dispatch_get_global_queue(0, 0), ^{
+                    if ((success = [selectedWindow close])) {
+                        if ([nextWindow raise]) {
+                            // TODO(numist): is there a better way to catch mouse moved events than this? Because ugh.
+                            [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
+                        }
+                    }
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [thumb setActive:YES];
+                    });
+                });
+            }
+
+            break;
+        }
+
+        default:
+            NotTested();
+            break;
+    }
 }
 
 @end

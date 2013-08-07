@@ -41,6 +41,7 @@
 		BCA7354316E1621400CD4C74 /* constants.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354216E1621400CD4C74 /* constants.m */; };
 		BCA7354916E1F14D00CD4C74 /* NNSelectionBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354816E1F14D00CD4C74 /* NNSelectionBoxView.m */; };
 		BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */; };
+		BCBF525017B079FA00716200 /* NNHotKey.m in Sources */ = {isa = PBXBuildFile; fileRef = BCBF524D17B079FA00716200 /* NNHotKey.m */; };
 		BCDDB2BD178EF16A00C22E47 /* ReactiveCocoa.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCF357E0176CEE9F00458AFF /* ReactiveCocoa.framework */; };
 		BCDDB2BE178EF16E00C22E47 /* Haxcessibility.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
 		BCDDB2C2178EF1B200C22E47 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */; };
@@ -195,6 +196,8 @@
 		BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = imageComparators.h; sourceTree = "<group>"; };
 		BCA7354B16E2ED5000CD4C74 /* NNHUDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHUDView.h; sourceTree = "<group>"; };
 		BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDView.m; sourceTree = "<group>"; };
+		BCBF524C17B079FA00716200 /* NNHotKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHotKey.h; sourceTree = "<group>"; };
+		BCBF524D17B079FA00716200 /* NNHotKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHotKey.m; sourceTree = "<group>"; };
 		BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		BCDDB2C8179064D600C22E47 /* NNPollingObject+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NNPollingObject+Protected.h"; sourceTree = "<group>"; };
 		BCE6987A1773B71C009CFD12 /* NNApplicationCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNApplicationCache.h; sourceTree = "<group>"; };
@@ -422,11 +425,10 @@
 			children = (
 				BCE698801773B93A009CFD12 /* Caching */,
 				BCA7358E16E585B800CD4C74 /* Concurrency */,
+				BCBF525517B079FF00716200 /* Hotkeys */,
 				BCA7358F16E585D400CD4C74 /* Polling */,
 				BCFF230F177DD42E008759C4 /* Window Filtering */,
 				BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */,
-				BCA7353116DB2C0100CD4C74 /* NNHotKeyManager.h */,
-				BCA7353216DB2C0100CD4C74 /* NNHotKeyManager.m */,
 			);
 			name = Logic;
 			sourceTree = "<group>";
@@ -454,6 +456,17 @@
 				BCA7351A16DAC5E200CD4C74 /* NNWindowListWorker.m */,
 			);
 			name = Polling;
+			sourceTree = "<group>";
+		};
+		BCBF525517B079FF00716200 /* Hotkeys */ = {
+			isa = PBXGroup;
+			children = (
+				BCA7353116DB2C0100CD4C74 /* NNHotKeyManager.h */,
+				BCA7353216DB2C0100CD4C74 /* NNHotKeyManager.m */,
+				BCBF524C17B079FA00716200 /* NNHotKey.h */,
+				BCBF524D17B079FA00716200 /* NNHotKey.m */,
+			);
+			name = Hotkeys;
 			sourceTree = "<group>";
 		};
 		BCE698801773B93A009CFD12 /* Caching */ = {
@@ -687,6 +700,7 @@
 				BCFF2315177DD812008759C4 /* NNTweetbotWindowFilter.m in Sources */,
 				BCFF2312177DD454008759C4 /* NNWindowFilter.m in Sources */,
 				BC43A626177A5CBC0082F981 /* NNWindow+NNWindowFiltering.m in Sources */,
+				BCBF525017B079FA00716200 /* NNHotKey.m in Sources */,
 				BCA7354316E1621400CD4C74 /* constants.m in Sources */,
 				BCA7354916E1F14D00CD4C74 /* NNSelectionBoxView.m in Sources */,
 				BCFF231B177DDFE8008759C4 /* NNPowerboxWindowFilter.m in Sources */,
