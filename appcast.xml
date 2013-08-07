@@ -5,9 +5,24 @@
       <link>https://raw.github.com/numist/Switch/develop/appcast.xml</link>
       <language>en</language>
 
+        <item>
+          <title>0.0.2 (α)</title>
+          <pubDate>Wed, 7 Aug 2013 12:50:36 -0700</pubDate>
+          <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.2</sparkle:releaseNotesLink>
+          <enclosure
+            length="2030535"
+            sparkle:dsaSignature="MC4CFQDroYQ9CK4iTnzcVG5iR2SAEf4B9QIVAMiaOSpL5+WG9QhctIoFX7e+NzAX"
+            sparkle:shortVersionString="0.0.2 (α)"
+            sparkle:version="0.0.2"
+            type="application/octet-stream"
+            url="https://github.com/numist/Switch/releases/download/0.0.2/Switch.zip"
+          />
+          <sparkle:minimumSystemVersion>10.8.0</sparkle:minimumSystemVersion>
+        </item>
+
          <item>
             <title>0.0.1 (α)</title>
-            <pubDate>Wed, 09 Jan 2006 19:20:11 +0000</pubDate>
+            <pubDate>Wed, 17 Jul 2013 23:15:04 -0700</pubDate>
             <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.1</sparkle:releaseNotesLink>
             <enclosure
               length="2028382"
