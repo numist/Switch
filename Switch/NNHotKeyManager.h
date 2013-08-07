@@ -31,7 +31,7 @@ typedef NS_ENUM(NSUInteger, NNHotKeyManagerEventType) {
 };
 
 
-extern NSString *NNHotKeyManagerNotificationName;
+extern NSString *NNHotKeyManagerEventNotificationName;
 extern NSString *NNHotKeyManagerEventTypeKey;
 
 

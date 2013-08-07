@@ -79,7 +79,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     [self setUpReactions];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:NSApplicationWillResignActiveNotification object:[NSApplication sharedApplication]];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hotKeyManagerEventNotification:) name:NNHotKeyManagerNotificationName object:self.keyManager];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hotKeyManagerEventNotification:) name:NNHotKeyManagerEventNotificationName object:self.keyManager];
     
     return self;
 }
@@ -87,10 +87,10 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 - (void)dealloc;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSApplicationWillResignActiveNotification object:[NSApplication sharedApplication]];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NNHotKeyManagerNotificationName object:self.keyManager];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NNHotKeyManagerEventNotificationName object:self.keyManager];
 }
 
-- (BOOL)isWindowLoaded;
+- (BOOL)isWindowLoaded;		
 {
     return self.interfaceLoaded;
 }

@@ -21,7 +21,7 @@
 #import "NNHotKey.h"
 
 
-NSString *NNHotKeyManagerNotificationName = @"NNHotKeyManagerNotificationName";
+NSString *NNHotKeyManagerEventNotificationName = @"NNHotKeyManagerEventNotificationName";
 NSString *NNHotKeyManagerEventTypeKey = @"eventType";
 
 
@@ -228,7 +228,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
 - (void)dispatchEvent:(NNHotKeyManagerEventType)eventType;
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:NNHotKeyManagerNotificationName object:self userInfo:@{ NNHotKeyManagerEventTypeKey : @(eventType) }];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NNHotKeyManagerEventNotificationName object:self userInfo:@{ NNHotKeyManagerEventTypeKey : @(eventType) }];
     });
 }
 
