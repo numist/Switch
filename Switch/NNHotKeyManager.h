@@ -30,13 +30,6 @@ typedef NS_ENUM(NSUInteger, NNHotKeyManagerEventType) {
     NNHotKeyManagerEventTypeCloseWindow,
 };
 
-typedef NS_OPTIONS(char, NNHotKeyManagerModifierKey) {
-    NNHotKeyManagerModifierShift    = 1 << 0,
-    NNHotKeyManagerModifierOption   = 1 << 1,
-    NNHotKeyManagerModifierControl  = 1 << 2,
-    NNHotKeyManagerModifierCmd      = 1 << 3,
-};
-
 
 extern NSString *NNHotKeyManagerNotificationName;
 extern NSString *NNHotKeyManagerEventTypeKey;

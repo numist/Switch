@@ -163,23 +163,22 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     // Parse the incoming keycode and modifier key information.
     CGKeyCode keycode = (CGKeyCode)CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
     
-    __typeof__(NNHotKeyManagerModifierKey) modifiers = 0;
+    __typeof__(NNHotKeyModifierKey) modifiers = 0;
     if ((CGEventGetFlags(event) & kCGEventFlagMaskAlternate) == kCGEventFlagMaskAlternate) {
-        modifiers |= NNHotKeyManagerModifierOption;
+        modifiers |= NNHotKeyModifierOption;
     }
     if ((CGEventGetFlags(event) & kCGEventFlagMaskShift) == kCGEventFlagMaskShift) {
-        modifiers |= NNHotKeyManagerModifierShift;
+        modifiers |= NNHotKeyModifierShift;
     }
     if ((CGEventGetFlags(event) & kCGEventFlagMaskControl) == kCGEventFlagMaskControl) {
-        modifiers |= NNHotKeyManagerModifierControl;
+        modifiers |= NNHotKeyModifierControl;
     }
     if ((CGEventGetFlags(event) & kCGEventFlagMaskCommand) == kCGEventFlagMaskCommand) {
-        modifiers |= NNHotKeyManagerModifierCmd;
+        modifiers |= NNHotKeyModifierCmd;
     }
     
     NNHotKey *key = [[NNHotKey alloc] initWithKeycode:keycode modifiers:modifiers];
     
-
     // Invocation is a special case, enabling all other keys
     if (!self.activatedSwitcher && type == kCGEventKeyDown) {
         NSArray *invokeKeys = [self.keyMap allKeysForObject:@(NNHotKeyManagerEventTypeInvoke)];

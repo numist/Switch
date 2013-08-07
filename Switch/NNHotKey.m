@@ -37,10 +37,31 @@
     return self;
 }
 
+- (NSString *)modifierDescription;
+{
+    NSString *result = @"";
+    
+    if (self.modifiers & NNHotKeyModifierCmd) {
+        result = [result stringByAppendingString:@"⌘"];
+    }
+    if (self.modifiers & NNHotKeyModifierShift) {
+        result = [result stringByAppendingString:@"⇧"];
+    }
+    if (self.modifiers & NNHotKeyModifierOption) {
+        result = [result stringByAppendingString:@"⌥"];
+    }
+    if (self.modifiers & NNHotKeyModifierControl) {
+        result = [result stringByAppendingString:@"⌃"];
+    }
+    
+    return result;
+}
+
 - (NSString *)description;
 {
-    return [NSString stringWithFormat:@"%u + %u", self.code, self.modifiers];
-//    return [NSString stringWithFormat:@"%@%@", NNStringForModifierKeys(self.modifiers), NNStringForKeycode(self.code)];
+    return [NSString stringWithFormat:@"%@%u",
+            [self modifierDescription],
+            self.code];
 }
 
 @end

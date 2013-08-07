@@ -70,9 +70,9 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     self.store = [[NNWindowStore alloc] initWithDelegate:self];
     
     self.keyManager = [NNHotKeyManager sharedManager];
-    [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:48 modifiers:NNHotKeyManagerModifierOption] forEvent:NNHotKeyManagerEventTypeInvoke];
-    [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:48 modifiers:(NNHotKeyManagerModifierOption | NNHotKeyManagerModifierShift)] forEvent:NNHotKeyManagerEventTypeDecrement];
-    [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:13 modifiers:NNHotKeyManagerModifierOption] forEvent:NNHotKeyManagerEventTypeCloseWindow];
+    [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:48 modifiers:NNHotKeyModifierOption] forEvent:NNHotKeyManagerEventTypeInvoke];
+    [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:48 modifiers:(NNHotKeyModifierOption | NNHotKeyModifierShift)] forEvent:NNHotKeyManagerEventTypeDecrement];
+    [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:13 modifiers:NNHotKeyModifierOption] forEvent:NNHotKeyManagerEventTypeCloseWindow];
     
     Check(![self isWindowLoaded]);
     (void)self.window;
