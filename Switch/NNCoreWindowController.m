@@ -256,7 +256,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     
     // Cache collection view cells as associated objects on the window model objects.
     NNWindowThumbnailView *result = objc_getAssociatedObject(window, (__bridge const void *)[NNWindowThumbnailView class]);
-    if (!result) {    
+    if (!result) {
         result = [[NNWindowThumbnailView alloc] initWithFrame:NSZeroRect window:window];
         if (!Check(result)) {
             return nil;
