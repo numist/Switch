@@ -461,10 +461,10 @@
 		BCBF525517B079FF00716200 /* Hotkeys */ = {
 			isa = PBXGroup;
 			children = (
-				BCA7353116DB2C0100CD4C74 /* NNHotKeyManager.h */,
-				BCA7353216DB2C0100CD4C74 /* NNHotKeyManager.m */,
 				BCBF524C17B079FA00716200 /* NNHotKey.h */,
 				BCBF524D17B079FA00716200 /* NNHotKey.m */,
+				BCA7353116DB2C0100CD4C74 /* NNHotKeyManager.h */,
+				BCA7353216DB2C0100CD4C74 /* NNHotKeyManager.m */,
 			);
 			name = Hotkeys;
 			sourceTree = "<group>";
