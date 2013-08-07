@@ -90,7 +90,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NNHotKeyManagerEventNotificationName object:self.keyManager];
 }
 
-- (BOOL)isWindowLoaded;		
+- (BOOL)isWindowLoaded;
 {
     return self.interfaceLoaded;
 }
