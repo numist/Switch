@@ -60,9 +60,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
 - (id)initWithWindow:(NSWindow *)window
 {
-    // Don't pretend—this initializer wouldn't know what to do with a window parameter.
     Check(!window);
-    
     self = [super initWithWindow:window];
     if (!self) { return nil; }
     
@@ -260,6 +258,9 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     NNWindowThumbnailView *result = objc_getAssociatedObject(window, (__bridge const void *)[NNWindowThumbnailView class]);
     if (!result) {    
         result = [[NNWindowThumbnailView alloc] initWithFrame:NSZeroRect window:window];
+        if (!Check(result)) {
+            return nil;
+        }
         objc_setAssociatedObject(window, (__bridge const void *)[NNWindowThumbnailView class], result, OBJC_ASSOCIATION_RETAIN);
     }
     
