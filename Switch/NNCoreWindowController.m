@@ -20,7 +20,7 @@
 #import "NNAPIEnabledWorker.h"
 #import "NNApplication.h"
 #import "NNHotKey.h"
-#import "NNHotKeyManager.h"
+#import "NNEventManager.h"
 #import "NNHUDCollectionView.h"
 #import "NNWindow.h"
 #import "NNWindowStore.h"
@@ -48,8 +48,8 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 @property (nonatomic, strong) NSMutableArray *windows;
 @property (nonatomic, strong) NNWindowStore *store;
 
-#pragma mark NNHotKeyManager and state
-@property (nonatomic, strong) NNHotKeyManager *keyManager;
+#pragma mark NNEventManager and state
+@property (nonatomic, strong) NNEventManager *keyManager;
 @property (nonatomic, assign) BOOL incrementing;
 @property (nonatomic, assign) BOOL decrementing;
 
@@ -67,17 +67,17 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     self.windows = [NSMutableArray new];
     self.store = [[NNWindowStore alloc] initWithDelegate:self];
     
-    self.keyManager = [NNHotKeyManager sharedManager];
-    [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:kVK_Tab modifiers:NNHotKeyModifierOption] forEvent:NNHotKeyManagerEventTypeInvoke];
-    [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:kVK_Tab modifiers:(NNHotKeyModifierOption | NNHotKeyModifierShift)] forEvent:NNHotKeyManagerEventTypeDecrement];
-    [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:kVK_ANSI_W modifiers:NNHotKeyModifierOption] forEvent:NNHotKeyManagerEventTypeCloseWindow];
+    self.keyManager = [NNEventManager sharedManager];
+    [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:kVK_Tab modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeInvoke];
+    [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:kVK_Tab modifiers:(NNHotKeyModifierOption | NNHotKeyModifierShift)] forEvent:NNEventManagerEventTypeDecrement];
+    [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:kVK_ANSI_W modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeCloseWindow];
     
     Check(![self isWindowLoaded]);
     (void)self.window;
     [self setUpReactions];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:NSApplicationWillResignActiveNotification object:[NSApplication sharedApplication]];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hotKeyManagerEventNotification:) name:NNHotKeyManagerEventNotificationName object:self.keyManager];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hotKeyManagerEventNotification:) name:NNEventManagerKeyNotificationName object:self.keyManager];
     
     return self;
 }
@@ -85,7 +85,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 - (void)dealloc;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSApplicationWillResignActiveNotification object:[NSApplication sharedApplication]];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NNHotKeyManagerEventNotificationName object:self.keyManager];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NNEventManagerKeyNotificationName object:self.keyManager];
 }
 
 - (BOOL)isWindowLoaded;
@@ -372,14 +372,14 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     [self.collectionView endUpdates];
 }
 
-#pragma mark NNHotKeyManagerDelegate
+#pragma mark NNEventManagerDelegate
 
 - (void)hotKeyManagerEventNotification:(NSNotification *)notification;
 {
-    NNHotKeyManagerEventType eventType = [notification.userInfo[NNHotKeyManagerEventTypeKey] unsignedIntegerValue];
+    NNEventManagerEventType eventType = [notification.userInfo[NNEventManagerEventTypeKey] unsignedIntegerValue];
     
     switch (eventType) {
-        case NNHotKeyManagerEventTypeInvoke: {
+        case NNEventManagerEventTypeInvoke: {
             if (![NNAPIEnabledWorker isAPIEnabled]) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:NNAXAPIDisabledNotification object:self];
                 return;
@@ -392,14 +392,14 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
             break;
         }
 
-        case NNHotKeyManagerEventTypeDismiss: {
+        case NNEventManagerEventTypeDismiss: {
             if (self.active) {
                 self.pendingSwitch = YES;
             }
             break;
         }
 
-        case NNHotKeyManagerEventTypeIncrement: {
+        case NNEventManagerEventTypeIncrement: {
             if (self.active) {
                 NSUInteger newIndex = self.selectedIndex;
                 
@@ -429,12 +429,12 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
             break;
         }
 
-        case NNHotKeyManagerEventTypeEndIncrement: {
+        case NNEventManagerEventTypeEndIncrement: {
             self.incrementing = NO;
             break;
         }
 
-        case NNHotKeyManagerEventTypeDecrement: {
+        case NNEventManagerEventTypeDecrement: {
             if (self.active) {
                 NSInteger newIndex = (NSInteger)self.selectedIndex;
                 
@@ -464,12 +464,12 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
             break;
         }
 
-        case NNHotKeyManagerEventTypeEndDecrement: {
+        case NNEventManagerEventTypeEndDecrement: {
             self.decrementing = NO;
             break;
         }
 
-        case NNHotKeyManagerEventTypeCloseWindow: {
+        case NNEventManagerEventTypeCloseWindow: {
             if (self.active) {
                 __block BOOL success;
                 NNWindow *selectedWindow = [self selectedWindow];

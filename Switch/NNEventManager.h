@@ -1,5 +1,5 @@
 //
-//  NNHotKeyManager.h
+//  NNEventManager.h
 //  Switch
 //
 //  Created by Scott Perry on 02/21/13.
@@ -17,28 +17,28 @@
 
 
 @class NNHotKey;
-@protocol NNHotKeyManagerDelegate;
+@protocol NNEventManagerDelegate;
 
 
-typedef NS_ENUM(NSUInteger, NNHotKeyManagerEventType) {
-    NNHotKeyManagerEventTypeInvoke,
-    NNHotKeyManagerEventTypeDismiss,        // You cannot set this, it is bound to the release of all modifiers after a NNHotKeyManagerEventTypeInvoke
-    NNHotKeyManagerEventTypeIncrement,      // You cannot set this, it is bound to the same key as NNHotKeyManagerEventTypeInvoke (keyDown)
-    NNHotKeyManagerEventTypeEndIncrement,   // You cannot set this, it is bound to the same key as NNHotKeyManagerEventTypeInvoke (keyUp)
-    NNHotKeyManagerEventTypeDecrement,
-    NNHotKeyManagerEventTypeEndDecrement,   // You cannot set this, it is bound to the same key as NNHotKeyManagerEventTypeDecrement (keyUp)
-    NNHotKeyManagerEventTypeCloseWindow,
+typedef NS_ENUM(NSUInteger, NNEventManagerEventType) {
+    NNEventManagerEventTypeInvoke,
+    NNEventManagerEventTypeDismiss,        // You cannot set this, it is bound to the release of all modifiers after a NNEventManagerEventTypeInvoke
+    NNEventManagerEventTypeIncrement,      // You cannot set this, it is bound to the same key as NNEventManagerEventTypeInvoke (keyDown)
+    NNEventManagerEventTypeEndIncrement,   // You cannot set this, it is bound to the same key as NNEventManagerEventTypeInvoke (keyUp)
+    NNEventManagerEventTypeDecrement,
+    NNEventManagerEventTypeEndDecrement,   // You cannot set this, it is bound to the same key as NNEventManagerEventTypeDecrement (keyUp)
+    NNEventManagerEventTypeCloseWindow,
 };
 
 
-extern NSString *NNHotKeyManagerEventNotificationName;
-extern NSString *NNHotKeyManagerEventTypeKey;
+extern NSString *NNEventManagerKeyNotificationName;
+extern NSString *NNEventManagerEventTypeKey;
 
 
-@interface NNHotKeyManager : NSObject
+@interface NNEventManager : NSObject
 
-+ (NNHotKeyManager *)sharedManager;
++ (NNEventManager *)sharedManager;
 
-- (void)registerHotKey:(NNHotKey *)hotKey forEvent:(NNHotKeyManagerEventType)eventType;
+- (void)registerHotKey:(NNHotKey *)hotKey forEvent:(NNEventManagerEventType)eventType;
 
 @end

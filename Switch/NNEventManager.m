@@ -1,5 +1,5 @@
 //
-//  NNHotKeyManager.m
+//  NNEventManager.m
 //  Switch
 //
 //  Created by Scott Perry on 02/21/13.
@@ -14,22 +14,22 @@
 // From alterkeys.c : http://osxbook.com
 //
 
-#import "NNHotKeyManager.h"
+#import "NNEventManager.h"
 
 #include <ApplicationServices/ApplicationServices.h>
 
 #import "NNHotKey.h"
 
 
-NSString *NNHotKeyManagerEventNotificationName = @"NNHotKeyManagerEventNotificationName";
-NSString *NNHotKeyManagerEventTypeKey = @"eventType";
+NSString *NNEventManagerKeyNotificationName = @"NNEventManagerEventNotificationName";
+NSString *NNEventManagerEventTypeKey = @"eventType";
 
 
 static NSSet *kNNKeysUnsettable;
 static NSDictionary *kNNKeysNeedKeyUpEvent;
 
 
-@interface NNHotKeyManager () {
+@interface NNEventManager () {
     CFMachPortRef eventTap;
     CFRunLoopSourceRef runLoopSource;
 }
@@ -46,31 +46,31 @@ static NSDictionary *kNNKeysNeedKeyUpEvent;
 static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
                                     CGEventRef event, void *refcon)
 {
-    return [(__bridge NNHotKeyManager *)refcon eventTapProxy:proxy didReceiveEvent:event ofType:type];
+    return [(__bridge NNEventManager *)refcon eventTapProxy:proxy didReceiveEvent:event ofType:type];
 }
 
 
-@implementation NNHotKeyManager
+@implementation NNEventManager
 
 + (void)initialize;
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        kNNKeysUnsettable = [NSSet setWithArray:@[ @(NNHotKeyManagerEventTypeIncrement), @(NNHotKeyManagerEventTypeEndIncrement), @(NNHotKeyManagerEventTypeEndDecrement)]];
+        kNNKeysUnsettable = [NSSet setWithArray:@[ @(NNEventManagerEventTypeIncrement), @(NNEventManagerEventTypeEndIncrement), @(NNEventManagerEventTypeEndDecrement)]];
         kNNKeysNeedKeyUpEvent = @{
-            @(NNHotKeyManagerEventTypeIncrement) : @(NNHotKeyManagerEventTypeEndIncrement),
-            @(NNHotKeyManagerEventTypeDecrement) : @(NNHotKeyManagerEventTypeEndDecrement)
+            @(NNEventManagerEventTypeIncrement) : @(NNEventManagerEventTypeEndIncrement),
+            @(NNEventManagerEventTypeDecrement) : @(NNEventManagerEventTypeEndDecrement)
         };
     });
 }
 
-+ (NNHotKeyManager *)sharedManager;
++ (NNEventManager *)sharedManager;
 {
-    static NNHotKeyManager *_singleton;
+    static NNEventManager *_singleton;
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _singleton = [NNHotKeyManager new];
+        _singleton = [NNEventManager new];
     });
     
     return _singleton;
@@ -97,10 +97,10 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     [self removeEventTap];
 }
 
-- (void)registerHotKey:(NNHotKey *)hotKey forEvent:(NNHotKeyManagerEventType)eventType;
+- (void)registerHotKey:(NNHotKey *)hotKey forEvent:(NNEventManagerEventType)eventType;
 {
     if ([kNNKeysUnsettable containsObject:@(eventType)]) {
-        @throw [NSException exceptionWithName:@"NNHotKeyManagerRegistrationException" reason:@"That keybinding cannot be set, try setting it's parent?" userInfo:@{ NNHotKeyManagerEventTypeKey : @(eventType), @"key" : hotKey }];
+        @throw [NSException exceptionWithName:@"NNEventManagerRegistrationException" reason:@"That keybinding cannot be set, try setting it's parent?" userInfo:@{ NNEventManagerEventTypeKey : @(eventType), @"key" : hotKey }];
     }
     
     [self.keyMap setObject:@(eventType) forKey:hotKey];
@@ -181,11 +181,11 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     
     // Invocation is a special case, enabling all other keys
     if (!self.activatedSwitcher && type == kCGEventKeyDown) {
-        NSArray *invokeKeys = [self.keyMap allKeysForObject:@(NNHotKeyManagerEventTypeInvoke)];
+        NSArray *invokeKeys = [self.keyMap allKeysForObject:@(NNEventManagerEventTypeInvoke)];
         for (NNHotKey *hotKey in invokeKeys) {
             if (hotKey.code == keycode && hotKey.modifiers == modifiers) {
                 self.activatedSwitcher = YES;
-                [self dispatchEvent:NNHotKeyManagerEventTypeInvoke];
+                [self dispatchEvent:NNEventManagerEventTypeInvoke];
                 
                 break;
             }
@@ -195,14 +195,14 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     if (self.activatedSwitcher) {
         if (!modifiers) {
             self.activatedSwitcher = NO;
-            [self dispatchEvent:NNHotKeyManagerEventTypeDismiss];
+            [self dispatchEvent:NNEventManagerEventTypeDismiss];
             return NULL;
         }
         
         NSNumber *boxedKeyDownEventType = self.keyMap[key];
         // Invoke maps to Increment at this point
-        if ([boxedKeyDownEventType unsignedIntegerValue] == NNHotKeyManagerEventTypeInvoke) {
-            boxedKeyDownEventType = @(NNHotKeyManagerEventTypeIncrement);
+        if ([boxedKeyDownEventType unsignedIntegerValue] == NNEventManagerEventTypeInvoke) {
+            boxedKeyDownEventType = @(NNEventManagerEventTypeIncrement);
         }
 
         // Prefetch keyup event, if applicable.
@@ -225,10 +225,10 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     return event;
 }
 
-- (void)dispatchEvent:(NNHotKeyManagerEventType)eventType;
+- (void)dispatchEvent:(NNEventManagerEventType)eventType;
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:NNHotKeyManagerEventNotificationName object:self userInfo:@{ NNHotKeyManagerEventTypeKey : @(eventType) }];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NNEventManagerKeyNotificationName object:self userInfo:@{ NNEventManagerEventTypeKey : @(eventType) }];
     });
 }
 
