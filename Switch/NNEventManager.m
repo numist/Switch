@@ -24,6 +24,7 @@
 NSString *NNEventManagerMouseNotificationName = @"NNEventManagerMouseNotificationName";
 NSString *NNEventManagerKeyNotificationName = @"NNEventManagerEventNotificationName";
 NSString *NNEventManagerEventTypeKey = @"eventType";
+NSString *NNEventManagerEventMouseLocationKey = @"mouseLocation";
 
 
 static NSSet *kNNKeysUnsettable;
@@ -124,7 +125,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
 - (BOOL)insertEventTap;
 {
     // Create an event tap. We are interested in key presses.
-    CGEventMask eventMask = (CGEventMaskBit(kCGEventKeyDown) | CGEventMaskBit(kCGEventKeyUp) | CGEventMaskBit(kCGEventFlagsChanged) | CGEventMaskBit(kCGEventMouseMoved) | CGEventMaskBit(kCGEventLeftMouseDown));
+    CGEventMask eventMask = (CGEventMaskBit(kCGEventKeyDown) | CGEventMaskBit(kCGEventKeyUp) | CGEventMaskBit(kCGEventFlagsChanged) | CGEventMaskBit(kCGEventMouseMoved));
     
     self->eventTap = CGEventTapCreate(kCGSessionEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault, eventMask, nnCGEventCallback, (__bridge void *)(self));
     BailUnless(self->eventTap, NO);
@@ -157,11 +158,11 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
         NotTested();
     }
     
-    if (self.activatedSwitcher && (type == kCGEventMouseMoved || type == kCGEventLeftMouseDown)) {
+    if (self.activatedSwitcher && type == kCGEventMouseMoved) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [[NSNotificationCenter defaultCenter] postNotificationName:NNEventManagerMouseNotificationName object:self userInfo:@{
-                NNEventManagerEventTypeKey : @(type == kCGEventLeftMouseDown ? NNEventManagerMouseEventTypeLeftButtonDown : NNEventManagerMouseEventTypeMove),
-                @"mouseLocation" : [NSValue valueWithPoint:[NSEvent mouseLocation]]
+                NNEventManagerEventTypeKey : @(NNEventManagerMouseEventTypeMove),
+                NNEventManagerEventMouseLocationKey : [NSValue valueWithPoint:[NSEvent mouseLocation]]
             }];
         });
         return event;

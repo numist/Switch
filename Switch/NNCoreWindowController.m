@@ -76,7 +76,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     (void)self.window;
     [self setUpReactions];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:NSApplicationWillResignActiveNotification object:[NSApplication sharedApplication]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hotKeyManagerEventNotification:) name:NNEventManagerKeyNotificationName object:self.keyManager];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hotKeyManagerMouseNotification:) name:NNEventManagerMouseNotificationName object:self.keyManager];
     
@@ -85,7 +84,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
 - (void)dealloc;
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSApplicationWillResignActiveNotification object:[NSApplication sharedApplication]];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NNEventManagerKeyNotificationName object:self.keyManager];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NNEventManagerMouseNotificationName object:self.keyManager];
 }
@@ -149,7 +147,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
      subscribeNext:^(NSNumber *shouldDisplayInterface) {
          if ([shouldDisplayInterface boolValue]) {
              // TODO(numist): is there a better way to catch mouse moved events than this? Because ugh.
-             [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
              [self.window setFrame:[NSScreen mainScreen].frame display:YES];
              [self.window orderFront:self];
              [self.store startUpdatingWindowContents];
@@ -220,8 +217,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
                          raiseSuccessful = [selectedWindow raise];
                          
                          dispatch_async(dispatch_get_main_queue(), ^{
-                             // If the raise happens before the display timer has expired, this code path is responsible for deactivation because the application never became active, so the terminating code in applicationWillResignActive: will not get called.
-                             if (raiseSuccessful && self.displayTimer) {
+                             if (raiseSuccessful) {
                                  Check(self.active);
                                  self.active = NO;
                              }
@@ -369,11 +365,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     self.displayTimer = nil;
 }
 
-- (void)applicationWillResignActive:(__attribute__((unused)) NSNotification *)notification;
-{
-    self.active = NO;
-}
-
 - (void)hotKeyManagerEventNotification:(NSNotification *)notification;
 {
     NNEventManagerEventType eventType = [notification.userInfo[NNEventManagerEventTypeKey] unsignedIntegerValue];
@@ -509,7 +500,11 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 - (void)hotKeyManagerMouseNotification:(NSNotification *)notification;
 {
     if (self.active) {
-        NSLog(@"Mouse moved: %@", notification);
+        NSPoint windowLocation = [self.window convertScreenToBase:[notification.userInfo[@"mouseLocation"] pointValue]];
+        if(NSPointInRect([self.collectionView convertPoint:windowLocation fromView:nil], [self.collectionView bounds])) {
+            NSEvent *event = [NSEvent mouseEventWithType:NSMouseMoved location:windowLocation modifierFlags:NSAlternateKeyMask timestamp:(NSTimeInterval)0 windowNumber:self.window.windowNumber context:(NSGraphicsContext *)nil eventNumber:0 clickCount:0 pressure:1.0];
+            [self.collectionView mouseMoved:event];
+        }
     }
 }
 

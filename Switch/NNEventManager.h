@@ -32,13 +32,13 @@ typedef NS_ENUM(NSUInteger, NNEventManagerEventType) {
 
 typedef NS_ENUM(NSUInteger, NNEventManagerMouseEventType) {
     NNEventManagerMouseEventTypeMove,
-    NNEventManagerMouseEventTypeLeftButtonDown,
 };
 
 
 extern NSString *NNEventManagerMouseNotificationName;
 extern NSString *NNEventManagerKeyNotificationName;
 extern NSString *NNEventManagerEventTypeKey;
+extern NSString *NNEventManagerEventMouseLocationKey;
 
 
 @interface NNEventManager : NSObject
