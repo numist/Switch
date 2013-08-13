@@ -21,6 +21,7 @@
 #import "NNHotKey.h"
 
 
+NSString *NNEventManagerMouseNotificationName = @"NNEventManagerMouseNotificationName";
 NSString *NNEventManagerKeyNotificationName = @"NNEventManagerEventNotificationName";
 NSString *NNEventManagerEventTypeKey = @"eventType";
 
@@ -123,7 +124,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
 - (BOOL)insertEventTap;
 {
     // Create an event tap. We are interested in key presses.
-    CGEventMask eventMask = (CGEventMaskBit(kCGEventKeyDown) | CGEventMaskBit(kCGEventKeyUp) | CGEventMaskBit(kCGEventFlagsChanged));
+    CGEventMask eventMask = (CGEventMaskBit(kCGEventKeyDown) | CGEventMaskBit(kCGEventKeyUp) | CGEventMaskBit(kCGEventFlagsChanged) | CGEventMaskBit(kCGEventMouseMoved) | CGEventMaskBit(kCGEventLeftMouseDown));
     
     self->eventTap = CGEventTapCreate(kCGSessionEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault, eventMask, nnCGEventCallback, (__bridge void *)(self));
     BailUnless(self->eventTap, NO);
@@ -156,9 +157,20 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
         NotTested();
     }
     
-    // Paranoid sanity check.
-    if ((type != kCGEventKeyDown) && (type != kCGEventKeyUp) && (type != kCGEventFlagsChanged))
+    if (self.activatedSwitcher && (type == kCGEventMouseMoved || type == kCGEventLeftMouseDown)) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:NNEventManagerMouseNotificationName object:self userInfo:@{
+                NNEventManagerEventTypeKey : @(type == kCGEventLeftMouseDown ? NNEventManagerMouseEventTypeLeftButtonDown : NNEventManagerMouseEventTypeMove),
+                @"mouseLocation" : [NSValue valueWithPoint:[NSEvent mouseLocation]]
+            }];
+        });
         return event;
+    }
+    
+    // Paranoid sanity check.
+    if ((type != kCGEventKeyDown) && (type != kCGEventKeyUp) && (type != kCGEventFlagsChanged)) {
+        return event;
+    }
     
     // Parse the incoming keycode and modifier key information.
     CGKeyCode keycode = (CGKeyCode)CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);

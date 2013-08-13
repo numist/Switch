@@ -78,6 +78,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:NSApplicationWillResignActiveNotification object:[NSApplication sharedApplication]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hotKeyManagerEventNotification:) name:NNEventManagerKeyNotificationName object:self.keyManager];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hotKeyManagerMouseNotification:) name:NNEventManagerMouseNotificationName object:self.keyManager];
     
     return self;
 }
@@ -269,22 +270,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     return result;
 }
 
-#pragma mark - Notifications/Timers
-
-- (void)displayTimerFired:(NSTimer *)timer;
-{
-    if (![timer isEqual:self.displayTimer]) {
-        return;
-    }
-    
-    self.displayTimer = nil;
-}
-
-- (void)applicationWillResignActive:(__attribute__((unused)) NSNotification *)notification;
-{
-    self.active = NO;
-}
-
 #pragma mark NNHUDCollectionViewDataSource
 
 - (NSUInteger)HUDViewNumberOfCells:(NNHUDCollectionView *)view;
@@ -372,7 +357,21 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     [self.collectionView endUpdates];
 }
 
-#pragma mark NNEventManagerDelegate
+#pragma mark - Notifications/Timers
+
+- (void)displayTimerFired:(NSTimer *)timer;
+{
+    if (![timer isEqual:self.displayTimer]) {
+        return;
+    }
+    
+    self.displayTimer = nil;
+}
+
+- (void)applicationWillResignActive:(__attribute__((unused)) NSNotification *)notification;
+{
+    self.active = NO;
+}
 
 - (void)hotKeyManagerEventNotification:(NSNotification *)notification;
 {
@@ -503,6 +502,13 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
         default:
             NotTested();
             break;
+    }
+}
+
+- (void)hotKeyManagerMouseNotification:(NSNotification *)notification;
+{
+    if (self.active) {
+        NSLog(@"Mouse moved: %@", notification);
     }
 }
 
