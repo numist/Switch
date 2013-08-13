@@ -87,6 +87,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSApplicationWillResignActiveNotification object:[NSApplication sharedApplication]];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NNEventManagerKeyNotificationName object:self.keyManager];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NNEventManagerMouseNotificationName object:self.keyManager];
 }
 
 - (BOOL)isWindowLoaded;
