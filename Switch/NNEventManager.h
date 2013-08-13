@@ -28,6 +28,7 @@ typedef NS_ENUM(NSUInteger, NNEventManagerEventType) {
     NNEventManagerEventTypeDecrement,
     NNEventManagerEventTypeEndDecrement,   // You cannot set this, it is bound to the same key as NNEventManagerEventTypeDecrement (keyUp)
     NNEventManagerEventTypeCloseWindow,
+    NNEventManagerEventTypeCancel,
 };
 
 typedef NS_ENUM(NSUInteger, NNEventManagerMouseEventType) {

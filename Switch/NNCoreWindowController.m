@@ -71,6 +71,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:kVK_Tab modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeInvoke];
     [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:kVK_Tab modifiers:(NNHotKeyModifierOption | NNHotKeyModifierShift)] forEvent:NNEventManagerEventTypeDecrement];
     [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:kVK_ANSI_W modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeCloseWindow];
+    [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:kVK_Escape modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeCancel];
     
     Check(![self isWindowLoaded]);
     (void)self.window;
@@ -488,6 +489,13 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
                 });
             }
 
+            break;
+        }
+            
+        case NNEventManagerEventTypeCancel: {
+            if (Check(self.active)) {
+                self.active = NO;
+            }
             break;
         }
 
