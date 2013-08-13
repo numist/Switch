@@ -150,7 +150,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
              // TODO(numist): is there a better way to catch mouse moved events than this? Because ugh.
              [self.window setFrame:[NSScreen mainScreen].frame display:YES];
              [self.window orderFront:self];
-             [self.store startUpdatingWindowContents];
          } else {
              [self.window orderOut:self];
          }
@@ -343,7 +342,10 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
 - (void)storeDidChangeContent:(NNWindowStore *)store;
 {
-    self.windowListLoaded = YES;
+    if (!self.windowListLoaded) {
+        [self.store startUpdatingWindowContents];
+        self.windowListLoaded = YES;
+    }
     
     if ([self.windows count]) {
         if (self.selectedIndex >= [self.windows count]) {
