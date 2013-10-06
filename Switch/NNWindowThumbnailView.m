@@ -51,6 +51,9 @@
     self.layerContentsRedrawPolicy = NSViewLayerContentsRedrawOnSetNeedsDisplay;
     [self createLayers];
     
+    // Disable implicit animation on frame changes.
+    ((id<NSAnimatablePropertyContainer>)self.animator).animations = @{@"frame" : [NSNull null]};
+    
     _icon = window.application.icon;
     {
         // This is necessary or the CALayer may draw a low resolution representation when a higher resolution is needed, and it's better to be too high-resolution than too low.
