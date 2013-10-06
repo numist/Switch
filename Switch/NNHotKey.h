@@ -22,6 +22,6 @@ typedef NS_OPTIONS(char, NNHotKeyModifierKey) {
 @property (nonatomic, readonly) unsigned code;
 @property (nonatomic, readonly) unsigned modifiers;
 
-- (instancetype)initWithKeycode:(unsigned)code modifiers:(unsigned)modifiers;
++ (NNHotKey *)hotKeyWithKeycode:(unsigned)code modifiers:(unsigned)modifiers;
 
 @end

@@ -190,7 +190,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
         modifiers |= NNHotKeyModifierCmd;
     }
     
-    NNHotKey *key = [[NNHotKey alloc] initWithKeycode:keycode modifiers:modifiers];
+    NNHotKey *key = [NNHotKey hotKeyWithKeycode:keycode modifiers:modifiers];
     
     // Invocation is a special case, enabling all other keys
     if (!self.activatedSwitcher && type == kCGEventKeyDown) {

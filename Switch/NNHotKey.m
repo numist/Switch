@@ -11,6 +11,11 @@
 
 @implementation NNHotKey
 
++ (NNHotKey *)hotKeyWithKeycode:(unsigned)code modifiers:(unsigned)modifiers;
+{
+    return [[NNHotKey alloc] initWithKeycode:code modifiers:modifiers];
+}
+
 - (instancetype)initWithKeycode:(unsigned int)code modifiers:(unsigned int)modifiers;
 {
     self = [super init];

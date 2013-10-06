@@ -68,10 +68,10 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     self.store = [[NNWindowStore alloc] initWithDelegate:self];
     
     self.keyManager = [NNEventManager sharedManager];
-    [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:kVK_Tab modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeInvoke];
-    [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:kVK_Tab modifiers:(NNHotKeyModifierOption | NNHotKeyModifierShift)] forEvent:NNEventManagerEventTypeDecrement];
-    [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:kVK_ANSI_W modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeCloseWindow];
-    [self.keyManager registerHotKey:[[NNHotKey alloc] initWithKeycode:kVK_Escape modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeCancel];
+    [self.keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_Tab modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeInvoke];
+    [self.keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_Tab modifiers:(NNHotKeyModifierOption | NNHotKeyModifierShift)] forEvent:NNEventManagerEventTypeDecrement];
+    [self.keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_ANSI_W modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeCloseWindow];
+    [self.keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_Escape modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeCancel];
     
     Check(![self isWindowLoaded]);
     (void)self.window;
