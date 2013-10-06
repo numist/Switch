@@ -14,7 +14,6 @@
 
 #import "NNWindowStore.h"
 
-#import "despatch.h"
 #import "NNApplication+Private.h"
 #import "NNWindow+Private.h"
 #import "NNWindowListWorker.h"
@@ -47,8 +46,6 @@
     self = [super init];
     if (!self) return nil;
     
-    despatch_lock_promote(dispatch_get_main_queue());
-    
     _delegate = delegate;
     _windows = [NSArray new];
     _firstUpdate = YES;
@@ -69,7 +66,7 @@
 
 - (void)startUpdatingWindowList;
 {
-    despatch_lock_assert(dispatch_get_main_queue());
+    NNAssertMainQueue();
 
     self.firstUpdate = YES;
 
@@ -80,7 +77,7 @@
 
 - (void)stopUpdatingWindowList;
 {
-    despatch_lock_assert(dispatch_get_main_queue());
+    NNAssertMainQueue();
 
     self.listWorker = nil;
     [self listWorker:nil didUpdateWindowList:@[]];
@@ -88,7 +85,7 @@
 
 - (void)startUpdatingWindowContents;
 {
-    despatch_lock_assert(dispatch_get_main_queue());
+    NNAssertMainQueue();
 
     self.updatingWindowContents = YES;
     self.windowWorkers = [NSMutableDictionary dictionaryWithCapacity:[_windows count]];
@@ -100,7 +97,7 @@
 
 - (void)stopUpdatingWindowContents;
 {
-    despatch_lock_assert(dispatch_get_main_queue());
+    NNAssertMainQueue();
     
     self.updatingWindowContents = NO;
     self.windowWorkers = nil;
@@ -119,7 +116,7 @@
 
 - (oneway void)windowWorker:(NNWindowWorker *)worker didUpdateContentsOfWindow:(NNWindow *)window;
 {
-    despatch_lock_assert(dispatch_get_main_queue());
+    NNAssertMainQueue();
     
     if ([self.windows containsObject:window]) {
         __strong __typeof__(self.delegate) delegate = self.delegate;
@@ -139,7 +136,7 @@
 {
     if (worker != self.listWorker) { return; }
     
-    despatch_lock_assert(dispatch_get_main_queue());
+    NNAssertMainQueue();
 
     NSMutableArray *oldArray = [NSMutableArray arrayWithArray:_windows];
     

@@ -16,7 +16,6 @@
 
 #import <Haxcessibility/Haxcessibility.h>
 
-#import "despatch.h"
 #import "NNApplicationCache.h"
 #import "NNWindow+Private.h"
 
@@ -59,7 +58,7 @@
     
     _pid = pid;
     
-    _haxLock = despatch_lock_create([[NSString stringWithFormat:@"%@ <%p>", [self class], self] UTF8String]);
+    _haxLock = dispatch_queue_create([[NSString stringWithFormat:@"%@ <%p>", [self class], self] UTF8String], DISPATCH_QUEUE_SERIAL);
 
     OSStatus status = GetProcessForPID(self.pid, &_psn);
     if (status) {
