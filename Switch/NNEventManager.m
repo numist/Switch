@@ -207,7 +207,6 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     
     if (self.activatedSwitcher) {
         if (!modifiers) {
-            self.activatedSwitcher = NO;
             [self dispatchEvent:NNEventManagerEventTypeDismiss];
             return NULL;
         }
@@ -240,6 +239,10 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
 
 - (void)dispatchEvent:(NNEventManagerEventType)eventType;
 {
+    if (eventType == NNEventManagerEventTypeCancel || eventType == NNEventManagerEventTypeDismiss) {
+        self.activatedSwitcher = NO;
+    }
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:NNEventManagerKeyNotificationName object:self userInfo:@{ NNEventManagerEventTypeKey : @(eventType) }];
     });
