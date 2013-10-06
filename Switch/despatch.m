@@ -17,11 +17,25 @@
 #include <assert.h>
 
 
-static uint64_t despatch_lock_marker = 0xffc32e78ccb0b485;
+static  intptr_t despatch_lock_marker;
 
 
-inline static BOOL despatch_queue_is_lock(dispatch_queue_t queue);
+__attribute__((constructor))
+static void despatch_init()
+{
+    arc4random_buf(&despatch_lock_marker, sizeof(despatch_lock_marker));
+}
 
+__attribute__((pure))
+static inline const void *despatch_tag_for_queue(dispatch_queue_t queue)
+{
+    return (const void *)((intptr_t)(__bridge void *)queue ^ despatch_lock_marker);
+}
+
+static inline BOOL despatch_queue_is_lock(dispatch_queue_t queue)
+{
+    return !!dispatch_queue_get_specific(queue, despatch_tag_for_queue(queue));
+}
 
 dispatch_queue_t despatch_lock_create(const char *label)
 {
@@ -33,14 +47,8 @@ dispatch_queue_t despatch_lock_create(const char *label)
 void despatch_lock_promote(dispatch_queue_t queue)
 {
     if (!despatch_queue_is_lock(queue)) {
-        dispatch_queue_set_specific(queue, (__bridge const void *)(queue), (__bridge void *)(queue), NULL);
-        dispatch_queue_set_specific(queue, &despatch_lock_marker, &despatch_lock_marker, NULL);
+        dispatch_queue_set_specific(queue, despatch_tag_for_queue(queue), (__bridge void *)(queue), NULL);
     }
-}
-
-inline static BOOL despatch_queue_is_lock(dispatch_queue_t queue)
-{
-    return !!dispatch_queue_get_specific(queue, (__bridge const void *)(queue)) && !!dispatch_queue_get_specific(queue, &despatch_lock_marker);
 }
 
 void despatch_lock_assert(dispatch_queue_t lock)
@@ -56,10 +64,5 @@ void despatch_lock_assert_not(dispatch_queue_t lock)
 BOOL despatch_lock_is_held(dispatch_queue_t lock)
 {
     assert(despatch_queue_is_lock(lock));
-    return !!dispatch_get_specific((__bridge const void *)(lock));
-}
-
-BOOL despatch_any_locks_held()
-{
-    return !!dispatch_get_specific(&despatch_lock_marker);
+    return !!dispatch_get_specific(despatch_tag_for_queue(lock));
 }
