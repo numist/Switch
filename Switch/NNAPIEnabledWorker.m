@@ -53,8 +53,7 @@
 
 - (instancetype)init;
 {
-    self = [super initWithQueue:dispatch_get_global_queue(0, 0)];
-    if (!self) { return nil; }
+    if (!(self = [super initWithQueue:dispatch_get_global_queue(0, 0)])) { return nil; }
     
     _APIEnabled = [[self class] isAPIEnabled];
     self.interval = 0.25;

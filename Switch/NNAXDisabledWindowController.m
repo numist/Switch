@@ -45,8 +45,7 @@ static NSTimeInterval NNWindoFadeOutInterval = 1.0;
 
 - (instancetype)initWithWindowNibName:(NSString *)windowNibName;
 {
-    self = [super initWithWindowNibName:windowNibName];
-    if (!self) { return nil; }
+    if (!(self = [super initWithWindowNibName:windowNibName])) { return nil; }
     
     return self;
 }

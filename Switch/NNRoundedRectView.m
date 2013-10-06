@@ -19,8 +19,7 @@
 
 - (instancetype)initWithFrame:(NSRect)frameRect;
 {
-    self = [super initWithFrame:frameRect];
-    if (!self) { return nil; }
+    if (!(self = [super initWithFrame:frameRect])) { return nil; }
     
     [self setWantsLayer:YES];
     

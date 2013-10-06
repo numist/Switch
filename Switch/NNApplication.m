@@ -53,8 +53,7 @@
 
 - (instancetype)initWithPID:(pid_t)pid;
 {
-    self = [super init];
-    if (!self) return nil;
+    if (!(self = [super init])) { return nil; }
     
     _pid = pid;
     

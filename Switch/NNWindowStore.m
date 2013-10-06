@@ -43,8 +43,7 @@
 
 - (instancetype)initWithDelegate:(id<NNWindowStoreDelegate>)delegate;
 {
-    self = [super init];
-    if (!self) return nil;
+    if (!(self = [super init])) { return nil; }
     
     _delegate = delegate;
     _windows = [NSArray new];

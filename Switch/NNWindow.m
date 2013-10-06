@@ -69,8 +69,7 @@
 
 - (instancetype)initWithDescription:(NSDictionary *)description;
 {
-    self = [super init];
-    if (!self) return nil;
+    if (!(self = [super init])) { return nil; }
     
     if (!description) {
         return nil;

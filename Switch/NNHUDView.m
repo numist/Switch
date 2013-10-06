@@ -19,12 +19,11 @@
 
 - (id)initWithFrame:(NSRect)frame
 {
-    self = [super initWithFrame:frame];
-    if (self) {
-        self.border = 0.0;
-        self.radius = kNNWindowRoundRectRadius;
-        self.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
-    }
+    if (!(self = [super initWithFrame:frame])) { return nil; }
+
+    self.border = 0.0;
+    self.radius = kNNWindowRoundRectRadius;
+    self.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     
     return self;
 }

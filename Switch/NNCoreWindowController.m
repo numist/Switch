@@ -61,8 +61,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 - (id)initWithWindow:(NSWindow *)window
 {
     Check(!window);
-    self = [super initWithWindow:window];
-    if (!self) { return nil; }
+    if (!(self = [super initWithWindow:window])) { return nil; }
     
     self.windows = [NSMutableArray new];
     self.store = [[NNWindowStore alloc] initWithDelegate:self];

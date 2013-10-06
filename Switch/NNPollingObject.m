@@ -36,8 +36,7 @@ static const NSTimeInterval NNPollingIntervalFastest = 1.0 / 60.0;
 
 - (instancetype)initWithQueue:(dispatch_queue_t)queue;
 {
-    self = [super init];
-    if (!self) return nil;
+    if (!(self = [super init])) { return nil; }
     
     _queue = queue;
     

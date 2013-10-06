@@ -38,9 +38,8 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 
 - (instancetype)initWithModelObject:(NNWindow *)window;
 {
-    self = [super initWithQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)];
-    BailUnless(self, nil);
     BailUnless(window, nil);
+    if (!(self = [super initWithQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)])) { return nil; }
     
     _window = window;
     self.interval = NNPollingIntervalFast;

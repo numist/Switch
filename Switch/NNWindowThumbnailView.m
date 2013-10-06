@@ -40,10 +40,7 @@
 
 - (id)initWithFrame:(NSRect)frame window:(NNWindow *)window;
 {
-    self = [super initWithFrame:frame];
-    if (!self) {
-        return nil;
-    }
+    if (!(self = [super initWithFrame:frame])) { return nil; }
     
     _modelWindow = window;
     

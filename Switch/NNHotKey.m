@@ -18,8 +18,7 @@
 
 - (instancetype)initWithKeycode:(unsigned int)code modifiers:(unsigned int)modifiers;
 {
-    self = [super init];
-    if (!self) return nil;
+    if (!(self = [super init])) { return nil; }
     
     _modifiers = modifiers;
     _code = code;

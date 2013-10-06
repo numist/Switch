@@ -41,8 +41,7 @@
 
 - (instancetype)init;
 {
-    self = [super init];
-    if (!self) { return nil; }
+    if (!(self = [super init])) { return nil; }
 
     // Enforce shallow inheritance and no initialization of NNWindowFilter objects.
     BailUnless([[[self class] superclass] isEqual: [NNWindowFilter class]], nil);

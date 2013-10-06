@@ -80,8 +80,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
 
 - (instancetype)init;
 {
-    self = [super init];
-    if (!self) return nil;
+    if (!(self = [super init])) { return nil; }
     
     NSAssert([[NSThread currentThread] isMainThread], @"%@ must be instanciated on the main thread", [self class]);
     
