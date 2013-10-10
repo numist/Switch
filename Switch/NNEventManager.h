@@ -17,7 +17,6 @@
 
 
 @class NNHotKey;
-@protocol NNEventManagerDelegate;
 
 
 typedef NS_ENUM(NSUInteger, NNEventManagerEventType) {
