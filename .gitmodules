@@ -7,3 +7,6 @@
 [submodule "Frameworks/ReactiveCocoa"]
 	path = Frameworks/ReactiveCocoa
 	url = git://github.com/ReactiveCocoa/ReactiveCocoa.git
+[submodule "Frameworks/NNKit"]
+	path = Frameworks/NNKit
+	url = git://github.com/numist/NNKit.git

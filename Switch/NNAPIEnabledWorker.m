@@ -14,8 +14,7 @@
 #import "NNAPIEnabledWorker.h"
 
 #import <dlfcn.h>
-
-#import "NNPollingObject+Protected.h"
+#import <NNKit/NNPollingObject+Protected.h>
 
 
 @interface NNAPIEnabledWorker ()

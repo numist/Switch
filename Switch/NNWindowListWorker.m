@@ -14,9 +14,9 @@
 
 #import "NNWindowListWorker.h"
 
+#import <NNKit/NNPollingObject+Protected.h>
 #import <ReactiveCocoa/EXTScope.h>
 
-#import "NNPollingObject+Protected.h"
 #import "NNWindow+Private.h"
 
 
