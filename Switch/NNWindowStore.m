@@ -22,7 +22,7 @@
 
 @interface NNWindowStore ()
 
-@property (nonatomic, weak) id<NNWindowStoreDelegate> delegate;
+@property (nonatomic, strong) id<NNWindowStoreDelegate> delegate;
 @property (nonatomic, assign) BOOL firstUpdate;
 
 // Serialization
@@ -45,7 +45,7 @@
 {
     if (!(self = [super init])) { return nil; }
     
-    _delegate = delegate;
+    _delegate = (id<NNWindowStoreDelegate>)[NNDelegateProxy proxyWithDelegate:delegate protocol:@protocol(NNWindowStoreDelegate)];
     _windows = [NSArray new];
     _firstUpdate = YES;
     
@@ -115,19 +115,12 @@
 
 - (oneway void)windowWorker:(NNWindowWorker *)worker didUpdateContentsOfWindow:(NNWindow *)window;
 {
-    NNAssertMainQueue();
     
     if ([self.windows containsObject:window]) {
-        __strong __typeof__(self.delegate) delegate = self.delegate;
-        if ([delegate respondsToSelector:@selector(storeWillChangeContent:)]) {
-            [delegate storeWillChangeContent:self];
-        }
-        if ([delegate respondsToSelector:@selector(store:didChangeWindow:atIndex:forChangeType:newIndex:)]) {
-            [delegate store:self didChangeWindow:window atIndex:[self.windows indexOfObject:window] forChangeType:NNWindowStoreChangeWindowContent newIndex:[self.windows indexOfObject:window]];
-        }
-        if ([delegate respondsToSelector:@selector(storeDidChangeContent:)]) {
-            [delegate storeDidChangeContent:self];
-        }
+        id<NNWindowStoreDelegate> delegate = self.delegate;
+        [delegate storeWillChangeContent:self];
+        [delegate store:self didChangeWindow:window atIndex:[self.windows indexOfObject:window] forChangeType:NNWindowStoreChangeWindowContent newIndex:[self.windows indexOfObject:window]];
+        [delegate storeDidChangeContent:self];
     }
 }
 
@@ -135,18 +128,13 @@
 {
     if (worker != self.listWorker) { return; }
     
-    NNAssertMainQueue();
-
     NSMutableArray *oldArray = [NSMutableArray arrayWithArray:_windows];
     
     BOOL windowsChanged = ![oldArray isEqualToArray:newArray];
-    __strong __typeof__(self.delegate) delegate = nil;
+    __strong __typeof__(self.delegate) delegate = self.delegate;
     
     if (windowsChanged || self.firstUpdate) {
-        delegate = self.delegate;
-        if ([delegate respondsToSelector:@selector(storeWillChangeContent:)]) {
-            [delegate storeWillChangeContent:self];
-        }
+        [delegate storeWillChangeContent:self];
     }
     
     NSMutableArray *changes = [NSMutableArray new];
@@ -154,9 +142,7 @@
         NNWindow *window = oldArray[(NSUInteger)i];
         
         if (![newArray containsObject:window]) {
-            if ([delegate respondsToSelector:@selector(store:didChangeWindow:atIndex:forChangeType:newIndex:)]) {
-                [delegate store:self didChangeWindow:window atIndex:[oldArray indexOfObject:window] forChangeType:NNWindowStoreChangeDelete newIndex:NSNotFound];
-            }
+            [delegate store:self didChangeWindow:window atIndex:[oldArray indexOfObject:window] forChangeType:NNWindowStoreChangeDelete newIndex:NSNotFound];
             
             [changes addObject:window];
             
@@ -169,12 +155,9 @@
     [oldArray removeObjectsInArray:changes];
     [changes removeAllObjects];
 
-    
     for (NNWindow *window in newArray) {
         if (![oldArray containsObject:window]) {
-            if ([delegate respondsToSelector:@selector(store:didChangeWindow:atIndex:forChangeType:newIndex:)]) {
-                [delegate store:self didChangeWindow:window atIndex:NSNotFound forChangeType:NNWindowStoreChangeInsert newIndex:[newArray indexOfObject:window]];
-            }
+            [delegate store:self didChangeWindow:window atIndex:NSNotFound forChangeType:NNWindowStoreChangeInsert newIndex:[newArray indexOfObject:window]];
             
             // Match old array with new.
             [oldArray insertObject:window atIndex:[newArray indexOfObject:window]];
@@ -186,27 +169,22 @@
         }
     }
     
-    
     for (NNWindow *window in newArray) {
         NSUInteger oldIndex = [oldArray indexOfObject:window];
         NSUInteger newIndex = [newArray indexOfObject:window];
 
         if (oldIndex != newIndex) {
-            if ([delegate respondsToSelector:@selector(store:didChangeWindow:atIndex:forChangeType:newIndex:)]) {
-                [delegate store:self didChangeWindow:window atIndex:oldIndex forChangeType:NNWindowStoreChangeMove newIndex:newIndex];
-            }
+            [delegate store:self didChangeWindow:window atIndex:oldIndex forChangeType:NNWindowStoreChangeMove newIndex:newIndex];
+
             [oldArray removeObjectAtIndex:oldIndex];
             [oldArray insertObject:window atIndex:[newArray indexOfObject:window]];
         }
     }
     
-    
     if (windowsChanged || self.firstUpdate) {
         _windows = newArray;
         
-        if ([delegate respondsToSelector:@selector(storeDidChangeContent:)]) {
-            [delegate storeDidChangeContent:self];
-        }
+        [delegate storeDidChangeContent:self];
         
         self.firstUpdate = NO;
     }
