@@ -10,7 +10,8 @@
 
 @interface NNPreferencesWindowController : NSWindowController
 
-@property (weak) IBOutlet NSTextFieldCell *currentVersionCell;
+@property (nonatomic, weak) IBOutlet NSTextFieldCell *currentVersionCell;
+@property (nonatomic, weak) IBOutlet NSButton *autoLaunchEnabledBox;
 
 - (IBAction)autoLaunchChanged:(NSButton *)sender;
 - (IBAction)autoUpdatesChanged:(NSButton *)sender;

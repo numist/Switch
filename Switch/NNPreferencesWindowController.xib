@@ -7,6 +7,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NNPreferencesWindowController">
             <connections>
+                <outlet property="autoLaunchEnabledBox" destination="4f9-4k-zig" id="zHj-wc-ceW"/>
                 <outlet property="currentVersionCell" destination="oqm-d1-nra" id="PHp-3X-GRj"/>
                 <outlet property="window" destination="1" id="3"/>
             </connections>
