@@ -36,8 +36,8 @@ static BOOL (^imagesDifferByCGDataProviderComparison)(CGImageRef, CGImageRef) = 
     CGDataProviderRef aDataProvider = CGImageGetDataProvider(a);
     CGDataProviderRef bDataProvider = CGImageGetDataProvider(b);
     
-    CFDataRef aData = CGDataProviderCopyData(aDataProvider);
-    CFDataRef bData = CGDataProviderCopyData(bDataProvider);
+    CFDataRef aData = NNCFAutorelease(CGDataProviderCopyData(aDataProvider));
+    CFDataRef bData = NNCFAutorelease(CGDataProviderCopyData(bDataProvider));
     
     if (CFDataGetLength(aData) != CFDataGetLength(bData)) {
         result = YES;
@@ -47,9 +47,6 @@ static BOOL (^imagesDifferByCGDataProviderComparison)(CGImageRef, CGImageRef) = 
         // It turns out that striding over the buffers is slower than memcmp. Jesus.
         result = !!memcmp(CFDataGetBytePtr(aData), CFDataGetBytePtr(bData), (unsigned long)CFDataGetLength(aData));
     }
-    
-    CFRelease(aData);
-    CFRelease(bData);
     
     return result;
 };

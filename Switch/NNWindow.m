@@ -202,14 +202,13 @@
 
 #pragma mark Private
 
-- (CGImageRef)copyCGWindowImage;
+- (CGImageRef)cgWindowImage;
 {
-    CGImageRef result = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, self.windowID, kCGWindowImageBoundsIgnoreFraming);
+    CGImageRef result = NNCFAutorelease(CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, self.windowID, kCGWindowImageBoundsIgnoreFraming));
     
     BailUnless(result, NULL);
     
     if (CGImageGetHeight(result) < 1.0 || CGImageGetWidth(result) < 1.0) {
-        CFRelease(result);
         return NULL;
     }
     

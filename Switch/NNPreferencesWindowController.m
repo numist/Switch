@@ -16,18 +16,6 @@
 @end
 
 
-static void * NNCFAutorelease(CFTypeRef ref) {
-    _Pragma("clang diagnostic push");
-    if (ref) {
-        _Pragma("clang diagnostic ignored \"-Warc-performSelector-leaks\"");
-        [(__bridge id)ref performSelector:NSSelectorFromString(@"autorelease")];
-    }
-    _Pragma("clang diagnostic ignored \"-Wincompatible-pointer-types-discards-qualifiers\"")
-    return ref;
-    _Pragma("clang diagnostic pop");
-}
-
-
 @implementation NNPreferencesWindowController
 
 #pragma mark NSWindowController

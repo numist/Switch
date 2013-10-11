@@ -8,6 +8,7 @@
 #   import <NNKit/NNKit.h>
 #   import "debugger.h"
 #   import "constants.h"
+#   import "helpers.h"
 
 #   define NNAssertMainQueue() NSAssert([[NSThread currentThread] isMainThread], @"Current path of execution must be run on the main thread");
 

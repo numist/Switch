@@ -62,7 +62,7 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 {
     NNWindow *window = self.window;
 
-    CGImageRef cgImage = [window copyCGWindowImage];
+    CGImageRef cgImage = [window cgWindowImage];
     
     if (cgImage) {
         BOOL imageChanged = NO;
@@ -93,8 +93,6 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
             window.image = [[NSImage alloc] initWithCGImage:cgImage size:NSMakeSize(newWidth, newHeight)];
             [self postNotification:@{ @"window" : window }];
         }
-        
-        CFRelease(cgImage); cgImage = NULL;
     } else if (window.exists) {
         // Didn't get a real image, but the window exists. Try again ASAP.
         self.interval = NNPollingIntervalFast;

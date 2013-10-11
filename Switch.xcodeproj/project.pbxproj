@@ -44,6 +44,7 @@
 		BCCA7A631807894A00CE36E5 /* NNPreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7A611807894A00CE36E5 /* NNPreferencesWindowController.m */; };
 		BCCA7A641807894A00CE36E5 /* NNPreferencesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCCA7A621807894A00CE36E5 /* NNPreferencesWindowController.xib */; };
 		BCCA7AB21807CD2B00CE36E5 /* NNKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCCA7A5618076ADB00CE36E5 /* NNKit.framework */; };
+		BCCA7AD0180896D100CE36E5 /* helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7ACF180896D100CE36E5 /* helpers.m */; };
 		BCDDB2BD178EF16A00C22E47 /* ReactiveCocoa.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCF357E0176CEE9F00458AFF /* ReactiveCocoa.framework */; };
 		BCDDB2BE178EF16E00C22E47 /* Haxcessibility.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
 		BCDDB2C2178EF1B200C22E47 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */; };
@@ -116,6 +117,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = BCD1D52817D9471A00A3EBD4;
 			remoteInfo = "NNKit Mac";
+		};
+		BCCA7ADA180896D100CE36E5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BCF357D6176CEE9E00458AFF /* ReactiveCocoa.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1860F412177C91B500C7B3C9;
+			remoteInfo = "ReactiveCocoa-iOS-UIKitTestHost";
+		};
+		BCCA7ADC180896D100CE36E5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BCF357D6176CEE9E00458AFF /* ReactiveCocoa.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1860F430177C91B500C7B3C9;
+			remoteInfo = "ReactiveCocoa-iOS-UIKitTestHostTests";
+		};
+		BCCA7ADE180896D100CE36E5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BCF357D6176CEE9E00458AFF /* ReactiveCocoa.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D05AD39417F2D56F0080895B;
+			remoteInfo = "ReactiveCocoa-Mac";
 		};
 		BCF357DF176CEE9F00458AFF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -236,6 +258,8 @@
 		BCCA7A601807894A00CE36E5 /* NNPreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNPreferencesWindowController.h; sourceTree = "<group>"; };
 		BCCA7A611807894A00CE36E5 /* NNPreferencesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNPreferencesWindowController.m; sourceTree = "<group>"; };
 		BCCA7A621807894A00CE36E5 /* NNPreferencesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NNPreferencesWindowController.xib; sourceTree = "<group>"; };
+		BCCA7ACE180896D100CE36E5 /* helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helpers.h; sourceTree = "<group>"; };
+		BCCA7ACF180896D100CE36E5 /* helpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = helpers.m; sourceTree = "<group>"; };
 		BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		BCE6987A1773B71C009CFD12 /* NNApplicationCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNApplicationCache.h; sourceTree = "<group>"; };
 		BCE6987B1773B71C009CFD12 /* NNApplicationCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNApplicationCache.m; sourceTree = "<group>"; };
@@ -470,6 +494,8 @@
 				BCA7358F16E585D400CD4C74 /* Polling */,
 				BCFF230F177DD42E008759C4 /* Window Filtering */,
 				BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */,
+				BCCA7ACE180896D100CE36E5 /* helpers.h */,
+				BCCA7ACF180896D100CE36E5 /* helpers.m */,
 			);
 			name = Logic;
 			sourceTree = "<group>";
@@ -543,6 +569,9 @@
 				BCF357E2176CEE9F00458AFF /* libReactiveCocoa-iOS.a */,
 				BCF357E4176CEE9F00458AFF /* ReactiveCocoaTests.octest */,
 				BCF357E6176CEE9F00458AFF /* ReactiveCocoaTests-iOS.octest */,
+				BCCA7ADB180896D100CE36E5 /* ReactiveCocoa-iOS-UIKitTestHost.app */,
+				BCCA7ADD180896D100CE36E5 /* ReactiveCocoa-iOS-UIKitTestHostTests.octest */,
+				BCCA7ADF180896D100CE36E5 /* libReactiveCocoa-Mac.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -684,6 +713,27 @@
 			remoteRef = BCCA7A5B18076ADB00CE36E5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		BCCA7ADB180896D100CE36E5 /* ReactiveCocoa-iOS-UIKitTestHost.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "ReactiveCocoa-iOS-UIKitTestHost.app";
+			remoteRef = BCCA7ADA180896D100CE36E5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		BCCA7ADD180896D100CE36E5 /* ReactiveCocoa-iOS-UIKitTestHostTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "ReactiveCocoa-iOS-UIKitTestHostTests.octest";
+			remoteRef = BCCA7ADC180896D100CE36E5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		BCCA7ADF180896D100CE36E5 /* libReactiveCocoa-Mac.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libReactiveCocoa-Mac.a";
+			remoteRef = BCCA7ADE180896D100CE36E5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		BCF357E0176CEE9F00458AFF /* ReactiveCocoa.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -769,6 +819,7 @@
 				BCA7352216DAC6A900CD4C74 /* NNWindowWorker.m in Sources */,
 				BCFF2318177DDF46008759C4 /* NNGitHubWindowFilter.m in Sources */,
 				BCFF232D177E00FB008759C4 /* NNAXDisabledWindowController.m in Sources */,
+				BCCA7AD0180896D100CE36E5 /* helpers.m in Sources */,
 				BCA7352516DAC93C00CD4C74 /* NNApplication.m in Sources */,
 				BCA7352F16DB239900CD4C74 /* NNWindowThumbnailView.m in Sources */,
 				BC6B6D13178DDBDA001D691D /* NNCoreWindowController.m in Sources */,

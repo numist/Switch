@@ -29,6 +29,6 @@
 @property (atomic, strong) NSDictionary *windowDescription;
 
 - (void)setImage:(NSImage *)image;
-- (CGImageRef)copyCGWindowImage;
+- (CGImageRef)cgWindowImage;
 
 @end
