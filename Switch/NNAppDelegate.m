@@ -19,12 +19,14 @@
 #import "NNAPIEnabledWorker.h"
 #import "NNAXDisabledWindowController.h"
 #import "NNCoreWindowController.h"
+#import "NNPreferencesWindowController.h"
 
 
 @interface NNAppDelegate ()
 
 @property (nonatomic, strong) NNAXDisabledWindowController *disabledWindowController;
 @property (nonatomic, strong) NNCoreWindowController *coreWindowController;
+@property (nonatomic, strong) NNPreferencesWindowController *preferencesWindowController;
 
 @end
 
@@ -49,6 +51,15 @@
     if (![NNAPIEnabledWorker isAPIEnabled]) {
         [self requestAXAPITrust];
     }
+    
+    self.preferencesWindowController = [[NNPreferencesWindowController alloc] initWithWindowNibName:@"NNPreferencesWindowController"];
+    [self.preferencesWindowController showWindow:self];
+}
+
+#pragma mark IB
+
+- (IBAction)showPreferences:(NSMenuItem *)sender {
+        DebugBreak();
 }
 
 #pragma mark Notifications
