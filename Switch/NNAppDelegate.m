@@ -37,12 +37,13 @@
 
 - (void)dealloc;
 {
+    #pragma message "Add a check in case applicationDidFinishLaunching was never called"
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NNAXAPIDisabledNotification object:nil];
 }
 
 #pragma mark NSApplicationDelegate
 
-- (void)applicationDidFinishLaunching:(__attribute__((unused)) NSNotification *)aNotification
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     self.coreWindowController = [[NNCoreWindowController alloc] initWithWindow:nil];
     
@@ -56,7 +57,7 @@
     [self.preferencesWindowController showWindow:self];
 }
 
-#pragma mark IB
+#pragma mark IBActions
 
 - (IBAction)showPreferences:(NSMenuItem *)sender {
         DebugBreak();
@@ -64,7 +65,7 @@
 
 #pragma mark Notifications
 
-- (void)accessibilityAPIDisabled:(__attribute__((unused)) NSNotification *)note;
+- (void)accessibilityAPIDisabled:(NSNotification *)note;
 {
     [self requestAXAPITrust];
 }
@@ -73,7 +74,7 @@
 
 - (void)requestAXAPITrust;
 {
-    // TODO(numist): Remove when it's time to deprecate Mountain Lion.
+    #pragma message "Remove when it's time to deprecate Mountain Lion."
     static Boolean (*isProcessTrustedWithOptions)(CFDictionaryRef options);
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -85,7 +86,7 @@
     });
     
     if (isProcessTrustedWithOptions) {
-        // TODO(numist): that string literal should be changed to the appropriate symbol when 10.9 has shipped.
+        #pragma message "That string literal should be changed to the appropriate symbol when 10.9 has shipped."
         isProcessTrustedWithOptions((__bridge CFDictionaryRef)@{ @"AXTrustedCheckOptionPrompt" : @YES });
     } else {
         static dispatch_once_t twiceToken;

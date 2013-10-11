@@ -116,12 +116,12 @@ static NSTimeInterval NNWindoFadeOutInterval = 1.0;
 
 #pragma mark Actions
 
-- (IBAction)checkboxClicked:(__attribute__((unused)) id)sender;
+- (IBAction)checkboxClicked:(id)sender;
 {
     [self updateWindowContents];
 }
 
-- (IBAction)enableButtonClicked:(__attribute__((unused)) id)sender;
+- (IBAction)enableButtonClicked:(id)sender;
 {
     if (![NNAPIEnabledWorker isAPIEnabled]) {
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
@@ -152,14 +152,14 @@ static NSTimeInterval NNWindoFadeOutInterval = 1.0;
     }
 }
 
-- (IBAction)quitButtonClicked:(__attribute__((unused)) id)sender;
+- (IBAction)quitButtonClicked:(id)sender;
 {
     exit(0);
 }
 
 #pragma mark Notifications
 
-- (void)apiStatusChangedNotification:(__attribute__((unused)) NSNotification *)note;
+- (void)apiStatusChangedNotification:(NSNotification *)note;
 {
     [self updateWindowContents];
 }
