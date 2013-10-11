@@ -41,7 +41,7 @@ static NSTimeInterval refreshInterval = 0.1;
     CFArrayRef cgInfo = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements,  kCGNullWindowID);
     NSArray *info = CFBridgingRelease(cgInfo);
     
-    NSArray *windows = [NSMutableArray arrayWithCapacity:[info count]];
+    NSMutableArray *windows = [NSMutableArray arrayWithCapacity:[info count]];
     
     for (unsigned i = 0; i < [info count]; i++) {
         NNWindow *window = [NNWindow windowWithDescription:info[i]];
@@ -49,13 +49,11 @@ static NSTimeInterval refreshInterval = 0.1;
         // Window found or info valid for creating a new window.
         if (window) {
             Check(![windows containsObject:window]);
-            [(NSMutableArray *)windows addObject:window];
+            [windows addObject:window];
         }
     }
-    
-    windows = [NNWindow filterInvalidWindowsFromArray:windows];
-    
-    [self postNotification:@{@"windows" : [NSArray arrayWithArray:windows]}];
+	    
+    [self postNotification:@{@"windows" : [NSArray arrayWithArray:[NNWindow filterInvalidWindowsFromArray:windows]]}];
 }
 
 @end
