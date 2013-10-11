@@ -120,8 +120,11 @@
 
 - (void)showPreferencesWindow;
 {
-    #pragma message "This isn't perfect—the preferences window shows up behind the topmost window if it is active—but it's good enough for now."
     [self.preferencesWindowController showWindow:self];
+    // HACK: There should be a better way to cancel the interface than committing identity fraud.
+    [[NSNotificationCenter defaultCenter] postNotificationName:NNEventManagerKeyNotificationName object:[NNEventManager sharedManager] userInfo:@{NNEventManagerEventTypeKey : @(NNEventManagerEventTypeCancel)}];
+    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+    [self.preferencesWindowController.window makeKeyAndOrderFront:self];
 }
 
 @end
