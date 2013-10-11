@@ -467,26 +467,39 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
                 __block BOOL success;
                 NNWindow *selectedWindow = [self selectedWindow];
                 NNWindowThumbnailView *thumb = [self cellForWindow:selectedWindow];
-                NNWindow *nextWindow = nil;
                 
-                // If the first and second window belong to different applications, and the first application has another visible window, closing the first window will activate the first application's next window, changing the window order. This is fixed by tracking the next window (if it belongs to a different application) and raising it. This only matters when closing the frontmost window.
-                if (self.selectedIndex == 0 && (self.selectedIndex + 1) < [self.windows count] && ![nextWindow.application isEqual:selectedWindow]) {
-                    nextWindow = [self.windows objectAtIndex:(self.selectedIndex + 1)];
+                /* Closing a window will change the window list ordering in unwanted ways if all of the following are true:
+                 *     • The first window is being closed
+                 *     • The first window's application has another window open in the list
+                 *     • The first window and second window belong to different applications
+                 * This can be worked around by first raising the second window.
+                 * This may still result in odd behaviour if firstWindow.close fails, but applications not responding to window close events is incorrect behaviour (performance is a feature!) whereas window list shenanigans are (relatively) expected.
+                 */
+                NNWindow *nextWindow = nil;
+                {
+                    BOOL onlyChild = ([self.windows indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+                        if (idx == self.selectedIndex) { return NO; }
+                        return [((NNWindow *)obj).application isEqual:selectedWindow.application];
+                    }] == NSNotFound);
+                    BOOL differentApplications = [self.windows count] > 1 && [[self.windows[0] application] isEqual:[self.windows[1] application]];
+
+                    if (self.selectedIndex == 0 && !onlyChild && differentApplications) {
+                        nextWindow = [self.windows objectAtIndex:1];
+                    }
                 }
                 
                 [thumb setActive:NO];
                 
                 dispatch_async(dispatch_get_global_queue(0, 0), ^{
-                    if ((success = [selectedWindow close])) {
-                        if ([nextWindow raise]) {
-                            // TODO(numist): is there a better way to catch mouse moved events than this? Because ugh.
-                            [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
-                        }
-                    }
+                    [nextWindow raise];
+                    success = [selectedWindow close];
                     
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [thumb setActive:YES];
-                    });
+                    if (!success) {
+                        // We *should* re-raise selectedWindow, but if it didn't succeed at -close it will also probably fail to -raise.
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [thumb setActive:YES];
+                        });
+                    }
                 });
             }
 
