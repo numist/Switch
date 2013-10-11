@@ -29,6 +29,7 @@
 @property (nonatomic, strong) NNAXDisabledWindowController *disabledWindowController;
 @property (nonatomic, strong) NNCoreWindowController *coreWindowController;
 @property (nonatomic, strong) NNPreferencesWindowController *preferencesWindowController;
+@property (nonatomic, assign) BOOL launched;
 
 @end
 
@@ -39,15 +40,18 @@
 
 - (void)dealloc;
 {
-    #pragma message "Add a check in case applicationDidFinishLaunching was never called"
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NNAXAPIDisabledNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NNEventManagerKeyNotificationName object:[NNEventManager sharedManager]];
+    if (_launched) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NNAXAPIDisabledNotification object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NNEventManagerKeyNotificationName object:[NNEventManager sharedManager]];
+    }
 }
 
 #pragma mark NSApplicationDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
+    self.launched = YES;
+    
     self.coreWindowController = [[NNCoreWindowController alloc] initWithWindow:nil];
     
     [[NNEventManager sharedManager] registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_ANSI_Comma modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeShowPreferences];
