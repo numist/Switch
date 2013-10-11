@@ -1,7 +1,7 @@
 Switch, Window-Based Context Switching
 ======================================
 
-Switch is a window-based (as opposed to application-based) context switcher. By default it is bound to using `⌥⇥` and `⌥⇧⇥` to cycle through the visible windows on the current space, and `⌥W` can be used to close windows while the interface is active. It looks like this:
+Switch is a window-based (as opposed to application-based) context switcher. By default it is bound to using `⌥⇥` and `⌥⇧⇥` to cycle through the visible windows on the current space. When the interface is active, `⌥W` can be used to close windows and `⌥,` used to show a preferences window. The main interface looks like this:
 
 ![Interface Screenshot](http://numist.net/random/switch.png)
 

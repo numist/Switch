@@ -520,7 +520,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
         }
 
         default:
-            NotTested();
             break;
     }
 }

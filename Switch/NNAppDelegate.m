@@ -19,6 +19,8 @@
 #import "NNAPIEnabledWorker.h"
 #import "NNAXDisabledWindowController.h"
 #import "NNCoreWindowController.h"
+#import "NNHotKey.h"
+#import "NNEventManager.h"
 #import "NNPreferencesWindowController.h"
 
 
@@ -39,6 +41,7 @@
 {
     #pragma message "Add a check in case applicationDidFinishLaunching was never called"
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NNAXAPIDisabledNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NNEventManagerKeyNotificationName object:[NNEventManager sharedManager]];
 }
 
 #pragma mark NSApplicationDelegate
@@ -47,20 +50,23 @@
 {
     self.coreWindowController = [[NNCoreWindowController alloc] initWithWindow:nil];
     
+    [[NNEventManager sharedManager] registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_ANSI_Comma modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeShowPreferences];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accessibilityAPIDisabled:) name:NNAXAPIDisabledNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hotKeyManagerEventNotification:) name:NNEventManagerKeyNotificationName object:[NNEventManager sharedManager]];
 
     if (![NNAPIEnabledWorker isAPIEnabled]) {
         [self requestAXAPITrust];
     }
     
     self.preferencesWindowController = [[NNPreferencesWindowController alloc] initWithWindowNibName:@"NNPreferencesWindowController"];
-    [self.preferencesWindowController showWindow:self];
 }
 
 #pragma mark IBActions
 
 - (IBAction)showPreferences:(NSMenuItem *)sender {
-        DebugBreak();
+    NotTested();
+    [self showPreferencesWindow];
 }
 
 #pragma mark Notifications
@@ -70,7 +76,21 @@
     [self requestAXAPITrust];
 }
 
-#pragma mark NNAppDelegate
+- (void)hotKeyManagerEventNotification:(NSNotification *)notification;
+{
+    NNEventManagerEventType eventType = [notification.userInfo[NNEventManagerEventTypeKey] unsignedIntegerValue];
+    
+    switch (eventType) {
+        case NNEventManagerEventTypeShowPreferences:
+            [self showPreferencesWindow];
+            break;
+            
+        default:
+            break;
+    }
+}
+
+#pragma mark Internal
 
 - (void)requestAXAPITrust;
 {
@@ -96,6 +116,12 @@
         
         [self.disabledWindowController showWindow:self];
     }
+}
+
+- (void)showPreferencesWindow;
+{
+    #pragma message "This isn't perfect—the preferences window shows up behind the topmost window if it is active—but it's good enough for now."
+    [self.preferencesWindowController showWindow:self];
 }
 
 @end
