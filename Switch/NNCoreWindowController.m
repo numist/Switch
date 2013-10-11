@@ -139,7 +139,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 {
     // Interface is only visible when Switch is active, the window list has loaded, and the display timer has timed out.
     [[[RACSignal
-       combineLatest:@[RACAbleWithStart(self, windowListLoaded), RACAbleWithStart(self, displayTimer)]
+       combineLatest:@[RACObserve(self, windowListLoaded), RACObserve(self, displayTimer)]
        reduce:^(NSNumber *windowListLoaded, NSTimer *displayTimer) {
            return @(self.active && [windowListLoaded boolValue] && !displayTimer);
        }]
@@ -156,7 +156,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     
     // Adjust the selected index by 1 if the first window's application is not already frontmost, but do this as late as possible.
     [[[RACSignal
-       combineLatest:@[RACAbleWithStart(self, pendingSwitch), RACAbleWithStart(self, displayTimer)]
+       combineLatest:@[RACObserve(self, pendingSwitch), RACObserve(self, displayTimer)]
        reduce:^(NSNumber *pendingSwitch, NSTimer *displayTimer){
            return @([pendingSwitch boolValue] == YES || displayTimer == nil);
        }]
@@ -171,7 +171,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
      }];
     
     // Clean up all that crazy state when the activation state changes.
-    [[RACAble(self.active)
+    [[[RACObserve(self, active) skip:1]
       distinctUntilChanged]
      subscribeNext:^(NSNumber *active) {
          if ([active boolValue]) {
@@ -197,7 +197,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
      }];
     
     [[[RACSignal
-       combineLatest:@[RACAbleWithStart(self, pendingSwitch), RACAbleWithStart(self, windowListLoaded)]]
+       combineLatest:@[RACObserve(self, pendingSwitch), RACObserve(self, windowListLoaded)]]
       distinctUntilChanged]
      subscribeNext:^(id x) {
          RACTupleUnpack(NSNumber *pendingSwitch, NSNumber *windowListLoaded) = x;
@@ -234,7 +234,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
          }
      }];
     
-    [[RACAbleWithStart(self, selectedIndex)
+    [[RACObserve(self, selectedIndex)
       distinctUntilChanged]
      subscribeNext:^(id x) {
          NSUInteger index = [x unsignedIntegerValue];
