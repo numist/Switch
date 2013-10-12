@@ -58,13 +58,27 @@
 
 + (BOOL)descriptionDescribesInterestingWindow:(NSDictionary *)description;
 {
-    // For now, windows whose contents are not accessible are not supported.
-    /* So far this has been tripped by:
-         * Notification Center notifications
-     */
-    BailUnless([[description objectForKey:(__bridge NSString *)kCGWindowSharingState] longValue] != kCGWindowSharingNone, NO);
+    BOOL windowIsShared = [[description objectForKey:(__bridge NSString *)kCGWindowSharingState] longValue] != kCGWindowSharingNone;
+    BOOL windowIsNormalLevel = [[description objectForKey:(__bridge NSString *)kCGWindowLayer] longValue]== kCGNormalWindowLevel;
     
-    return YES;
+#   if DEBUG
+    {
+        NSString *applicationName = [description objectForKey:(__bridge NSString *)kCGWindowOwnerName];
+        static NSArray *knownOffenders = nil;
+        
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            knownOffenders = @[@"Notification Center"];
+        });
+        
+        // It would be interesting to know what other applications' windows have sharing disabled.
+        if (!windowIsShared && ![knownOffenders containsObject:applicationName]) {
+            DebugBreak();
+        }
+    }
+#   endif
+    
+    return windowIsShared && windowIsNormalLevel;
 }
 
 - (instancetype)initWithDescription:(NSDictionary *)description;
