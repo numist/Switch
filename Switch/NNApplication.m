@@ -34,13 +34,13 @@
 
 @implementation NNApplication
 
-+ (instancetype)applicationWithPID:(pid_t)pid;
++ (instancetype)applicationWithPID:(pid_t)pid name:(NSString *)name;
 {
     @synchronized(self) {
         NNApplication *result = [[NNApplicationCache sharedCache] cachedApplicationWithPID:pid];
         
         if (!result) {
-            result = [[self alloc] initWithPID:pid];
+            result = [[self alloc] initWithPID:pid name:name];
             
             if (result) {
                 [[NNApplicationCache sharedCache] cacheApplication:result withPID:pid];
@@ -51,18 +51,16 @@
     }
 }
 
-- (instancetype)initWithPID:(pid_t)pid;
+- (instancetype)initWithPID:(pid_t)pid name:(NSString *)name;
 {
     if (!(self = [super init])) { return nil; }
     
     _pid = pid;
+    _name = name;
     
     _haxLock = dispatch_queue_create([[NSString stringWithFormat:@"%@ <%p>", [self class], self] UTF8String], DISPATCH_QUEUE_SERIAL);
 
-    OSStatus status = GetProcessForPID(self.pid, &_psn);
-    if (status) {
-        return nil;
-    }
+    (void)GetProcessForPID(self.pid, &_psn);
     
     _app = [NSRunningApplication runningApplicationWithProcessIdentifier:pid];
     

@@ -47,6 +47,11 @@
 		BCCA7B2B1809112900CE36E5 /* NNHelperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7B2A1809112900CE36E5 /* NNHelperTests.m */; };
 		BCCE8CEB18091A4F006B0059 /* NSWindow+NNScreenCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCE8CEA18091A4F006B0059 /* NSWindow+NNScreenCapture.m */; };
 		BCCE8CEE18091AFC006B0059 /* NSImage+NNFilesystem.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCE8CED18091AFC006B0059 /* NSImage+NNFilesystem.m */; };
+		BCCE8CF018091F75006B0059 /* NNTweetbotRegressionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCE8CEF18091F75006B0059 /* NNTweetbotRegressionTests.m */; };
+		BCCE8CF31809266A006B0059 /* NNSafariRegressionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCE8CF21809266A006B0059 /* NNSafariRegressionTests.m */; };
+		BCCE8CF51809297B006B0059 /* NNSheetRegressionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCE8CF41809297B006B0059 /* NNSheetRegressionTests.m */; };
+		BCCE8CF718092CDF006B0059 /* NNPowerboxRegressionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCE8CF618092CDF006B0059 /* NNPowerboxRegressionTests.m */; };
+		BCCE8CF918093037006B0059 /* NNGithubRegressionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCE8CF818093037006B0059 /* NNGithubRegressionTests.m */; };
 		BCDDB2BD178EF16A00C22E47 /* ReactiveCocoa.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCF357E0176CEE9F00458AFF /* ReactiveCocoa.framework */; };
 		BCDDB2BE178EF16E00C22E47 /* Haxcessibility.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
 		BCDDB2C2178EF1B200C22E47 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */; };
@@ -260,6 +265,12 @@
 		BCCE8CEA18091A4F006B0059 /* NSWindow+NNScreenCapture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSWindow+NNScreenCapture.m"; sourceTree = "<group>"; };
 		BCCE8CEC18091AFC006B0059 /* NSImage+NNFilesystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSImage+NNFilesystem.h"; sourceTree = "<group>"; };
 		BCCE8CED18091AFC006B0059 /* NSImage+NNFilesystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSImage+NNFilesystem.m"; sourceTree = "<group>"; };
+		BCCE8CEF18091F75006B0059 /* NNTweetbotRegressionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNTweetbotRegressionTests.m; sourceTree = "<group>"; };
+		BCCE8CF118092584006B0059 /* NNWindowFilteringTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NNWindowFilteringTests.h; sourceTree = "<group>"; };
+		BCCE8CF21809266A006B0059 /* NNSafariRegressionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNSafariRegressionTests.m; sourceTree = "<group>"; };
+		BCCE8CF41809297B006B0059 /* NNSheetRegressionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNSheetRegressionTests.m; sourceTree = "<group>"; };
+		BCCE8CF618092CDF006B0059 /* NNPowerboxRegressionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNPowerboxRegressionTests.m; sourceTree = "<group>"; };
+		BCCE8CF818093037006B0059 /* NNGithubRegressionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNGithubRegressionTests.m; sourceTree = "<group>"; };
 		BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		BCE6987A1773B71C009CFD12 /* NNApplicationCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNApplicationCache.h; sourceTree = "<group>"; };
 		BCE6987B1773B71C009CFD12 /* NNApplicationCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNApplicationCache.m; sourceTree = "<group>"; };
@@ -437,8 +448,13 @@
 		BCA7350316DAC54000CD4C74 /* SwitchTests */ = {
 			isa = PBXGroup;
 			children = (
+				BCCE8CF818093037006B0059 /* NNGithubRegressionTests.m */,
 				BCCA7B2A1809112900CE36E5 /* NNHelperTests.m */,
 				BC8D8DA0177BA53100B7A135 /* NNHUDCollectionViewTests.m */,
+				BCCE8CF618092CDF006B0059 /* NNPowerboxRegressionTests.m */,
+				BCCE8CF21809266A006B0059 /* NNSafariRegressionTests.m */,
+				BCCE8CF41809297B006B0059 /* NNSheetRegressionTests.m */,
+				BCCE8CEF18091F75006B0059 /* NNTweetbotRegressionTests.m */,
 				BCA7350416DAC54000CD4C74 /* Supporting Files */,
 			);
 			path = SwitchTests;
@@ -447,6 +463,7 @@
 		BCA7350416DAC54000CD4C74 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				BCCE8CF118092584006B0059 /* NNWindowFilteringTests.h */,
 				BCA7350516DAC54000CD4C74 /* SwitchTests-Info.plist */,
 				BCA7350616DAC54000CD4C74 /* InfoPlist.strings */,
 				BCCE8CE918091A4F006B0059 /* NSWindow+NNScreenCapture.h */,
@@ -851,7 +868,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BCCE8CF918093037006B0059 /* NNGithubRegressionTests.m in Sources */,
+				BCCE8CF31809266A006B0059 /* NNSafariRegressionTests.m in Sources */,
+				BCCE8CF018091F75006B0059 /* NNTweetbotRegressionTests.m in Sources */,
 				BCCE8CEB18091A4F006B0059 /* NSWindow+NNScreenCapture.m in Sources */,
+				BCCE8CF51809297B006B0059 /* NNSheetRegressionTests.m in Sources */,
+				BCCE8CF718092CDF006B0059 /* NNPowerboxRegressionTests.m in Sources */,
 				BCCE8CEE18091AFC006B0059 /* NSImage+NNFilesystem.m in Sources */,
 				BC8D8DA1177BA53100B7A135 /* NNHUDCollectionViewTests.m in Sources */,
 				BCCA7B2B1809112900CE36E5 /* NNHelperTests.m in Sources */,
