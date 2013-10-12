@@ -193,7 +193,7 @@
     dispatch_sync(self.haxLock, ^{
         NSArray *haxWindows = [self.haxApp windows];
         for (HAXWindow *haxWindow in haxWindows) {
-            if (RECTS_EQUAL(windowRect, haxWindow.frame)) {
+            if (NNNSRectsEqual(windowRect, haxWindow.frame)) {
                 if (result) {
                     result = [windowName isEqualToString:haxWindow.title] ? haxWindow : result;
                 } else {

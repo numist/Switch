@@ -9,21 +9,4 @@
 #   import "debugger.h"
 #   import "constants.h"
 #   import "helpers.h"
-
-#   define NNAssertMainQueue() NSAssert([[NSThread currentThread] isMainThread], @"Current path of execution must be run on the main thread");
-
-#   define SIZES_EQUAL(a, b) ({ \
-        NSSize sizeA = (a); \
-        NSSize sizeB = (b); \
-        sizeA.width == sizeB.width && \
-        sizeA.height == sizeB.height; \
-})
-
-#   define RECTS_EQUAL(a, b) ({ \
-        NSRect rectA = (a); \
-        NSRect rectB = (b); \
-        rectA.origin.x == rectB.origin.x && \
-        rectA.origin.y == rectB.origin.y && \
-        SIZES_EQUAL(rectA.size, rectB.size); \
-    })
 #endif

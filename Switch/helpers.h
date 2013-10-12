@@ -8,6 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-#define NNCFAutorelease(ref) _NNCFAutorelease(CFBridgingRelease((ref)))
 
+#define NNAssertMainQueue() NSAssert([[NSThread currentThread] isMainThread], @"Current path of execution must be run on the main thread");
+
+BOOL NNNSRectsEqual(NSRect a, NSRect b);
+BOOL NNNSSizesEqual(NSSize a, NSSize b);
+
+#define NNCFAutorelease(ref) _NNCFAutorelease(CFBridgingRelease((ref)))
 void * _NNCFAutorelease(id obj);

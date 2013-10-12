@@ -110,7 +110,7 @@
 {
     self.thumbnailLayer.contents = image;
     
-    if (!SIZES_EQUAL(self.thumbnail.size, image.size)) {
+    if (!NNNSSizesEqual(self.thumbnail.size, image.size)) {
         [self setNeedsLayout:YES];
     }
     
