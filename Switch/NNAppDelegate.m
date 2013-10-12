@@ -54,6 +54,7 @@
     
     self.coreWindowController = [[NNCoreWindowController alloc] initWithWindow:nil];
     
+    #pragma message "Ultimately there should be one source of truth for setting (and changing!) hotkeys."
     [[NNEventManager sharedManager] registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_ANSI_Comma modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeShowPreferences];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accessibilityAPIDisabled:) name:NNAXAPIDisabledNotification object:nil];
