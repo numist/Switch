@@ -45,6 +45,7 @@
 		BCCA7A641807894A00CE36E5 /* NNPreferencesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCCA7A621807894A00CE36E5 /* NNPreferencesWindowController.xib */; };
 		BCCA7AB21807CD2B00CE36E5 /* NNKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCCA7A5618076ADB00CE36E5 /* NNKit.framework */; };
 		BCCA7AD0180896D100CE36E5 /* helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7ACF180896D100CE36E5 /* helpers.m */; };
+		BCCA7B181809008900CE36E5 /* NSNotificationCenter+RACSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7B171809008900CE36E5 /* NSNotificationCenter+RACSupport.m */; };
 		BCDDB2BD178EF16A00C22E47 /* ReactiveCocoa.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCF357E0176CEE9F00458AFF /* ReactiveCocoa.framework */; };
 		BCDDB2BE178EF16E00C22E47 /* Haxcessibility.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
 		BCDDB2C2178EF1B200C22E47 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */; };
@@ -131,13 +132,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 1860F430177C91B500C7B3C9;
 			remoteInfo = "ReactiveCocoa-iOS-UIKitTestHostTests";
-		};
-		BCCA7ADE180896D100CE36E5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BCF357D6176CEE9E00458AFF /* ReactiveCocoa.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D05AD39417F2D56F0080895B;
-			remoteInfo = "ReactiveCocoa-Mac";
 		};
 		BCF357DF176CEE9F00458AFF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -260,6 +254,8 @@
 		BCCA7A621807894A00CE36E5 /* NNPreferencesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NNPreferencesWindowController.xib; sourceTree = "<group>"; };
 		BCCA7ACE180896D100CE36E5 /* helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helpers.h; sourceTree = "<group>"; };
 		BCCA7ACF180896D100CE36E5 /* helpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = helpers.m; sourceTree = "<group>"; };
+		BCCA7B161809008900CE36E5 /* NSNotificationCenter+RACSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSNotificationCenter+RACSupport.h"; path = "Frameworks/ReactiveCocoa/RACExtensions/NSNotificationCenter+RACSupport.h"; sourceTree = SOURCE_ROOT; };
+		BCCA7B171809008900CE36E5 /* NSNotificationCenter+RACSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSNotificationCenter+RACSupport.m"; path = "Frameworks/ReactiveCocoa/RACExtensions/NSNotificationCenter+RACSupport.m"; sourceTree = SOURCE_ROOT; };
 		BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		BCE6987A1773B71C009CFD12 /* NNApplicationCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNApplicationCache.h; sourceTree = "<group>"; };
 		BCE6987B1773B71C009CFD12 /* NNApplicationCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNApplicationCache.m; sourceTree = "<group>"; };
@@ -492,6 +488,7 @@
 				BCE698801773B93A009CFD12 /* Caching */,
 				BCBF525517B079FF00716200 /* Hotkeys */,
 				BCA7358F16E585D400CD4C74 /* Polling */,
+				BCCA7B0D1809006400CE36E5 /* ReactiveCocoa Extras */,
 				BCFF230F177DD42E008759C4 /* Window Filtering */,
 				BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */,
 				BCCA7ACE180896D100CE36E5 /* helpers.h */,
@@ -543,6 +540,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		BCCA7B0D1809006400CE36E5 /* ReactiveCocoa Extras */ = {
+			isa = PBXGroup;
+			children = (
+				BCCA7B161809008900CE36E5 /* NSNotificationCenter+RACSupport.h */,
+				BCCA7B171809008900CE36E5 /* NSNotificationCenter+RACSupport.m */,
+			);
+			name = "ReactiveCocoa Extras";
+			sourceTree = "<group>";
+		};
 		BCE698801773B93A009CFD12 /* Caching */ = {
 			isa = PBXGroup;
 			children = (
@@ -571,7 +577,6 @@
 				BCF357E6176CEE9F00458AFF /* ReactiveCocoaTests-iOS.octest */,
 				BCCA7ADB180896D100CE36E5 /* ReactiveCocoa-iOS-UIKitTestHost.app */,
 				BCCA7ADD180896D100CE36E5 /* ReactiveCocoa-iOS-UIKitTestHostTests.octest */,
-				BCCA7ADF180896D100CE36E5 /* libReactiveCocoa-Mac.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -727,13 +732,6 @@
 			remoteRef = BCCA7ADC180896D100CE36E5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		BCCA7ADF180896D100CE36E5 /* libReactiveCocoa-Mac.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libReactiveCocoa-Mac.a";
-			remoteRef = BCCA7ADE180896D100CE36E5 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		BCF357E0176CEE9F00458AFF /* ReactiveCocoa.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -818,6 +816,7 @@
 				BCA7351E16DAC61F00CD4C74 /* NNWindow.m in Sources */,
 				BCA7352216DAC6A900CD4C74 /* NNWindowWorker.m in Sources */,
 				BCFF2318177DDF46008759C4 /* NNGitHubWindowFilter.m in Sources */,
+				BCCA7B181809008900CE36E5 /* NSNotificationCenter+RACSupport.m in Sources */,
 				BCFF232D177E00FB008759C4 /* NNAXDisabledWindowController.m in Sources */,
 				BCCA7AD0180896D100CE36E5 /* helpers.m in Sources */,
 				BCA7352516DAC93C00CD4C74 /* NNApplication.m in Sources */,

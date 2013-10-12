@@ -27,6 +27,10 @@
 #import "NNWindowThumbnailView.h"
 
 
+NSString const *NNCoreWindowControllerActivityNotification = @"NNCoreWindowControllerActivityNotification";
+NSString const *NNCoreWindowControllerActiveKey = @"NNCoreWindowControllerActiveKey";
+
+
 static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
 
@@ -194,6 +198,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
              self.pendingSwitch = NO;
              [self.collectionView deselectCell];
          }
+         [[NSNotificationCenter defaultCenter] postNotificationName:(NSString *)NNCoreWindowControllerActivityNotification object:self userInfo:@{NNCoreWindowControllerActiveKey : active}];
      }];
     
     [[[RACSignal

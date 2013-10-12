@@ -13,6 +13,11 @@
 //
 #import <Cocoa/Cocoa.h>
 
+
+extern NSString const *NNCoreWindowControllerActivityNotification;
+extern NSString const *NNCoreWindowControllerActiveKey;
+
+
 @interface NNCoreWindowController : NSWindowController
 
 @end

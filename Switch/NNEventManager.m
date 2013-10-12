@@ -17,8 +17,11 @@
 #import "NNEventManager.h"
 
 #include <ApplicationServices/ApplicationServices.h>
+#import <ReactiveCocoa/ReactiveCocoa.h>
 
 #import "NNHotKey.h"
+#import "NNCoreWindowController.h"
+#import "NSNotificationCenter+RACSupport.h"
 
 
 NSString *NNEventManagerMouseNotificationName = @"NNEventManagerMouseNotificationName";
@@ -90,6 +93,12 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     
     _keyMap = [NSMutableDictionary new];
     
+    RAC(self, activatedSwitcher) = [[NSNotificationCenter.defaultCenter
+        rac_addObserverForName:(NSString *)NNCoreWindowControllerActivityNotification object:nil]
+        map:^(NSNotification *notification) {
+            return notification.userInfo[NNCoreWindowControllerActiveKey];
+        }];
+    
     return self;
 }
 
@@ -147,6 +156,8 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
 
 - (CGEventRef)eventTapProxy:(CGEventTapProxy)proxy didReceiveEvent:(CGEventRef)event ofType:(CGEventType)type;
 {
+    BOOL switcherActive = self.activatedSwitcher;
+    
     if (type == kCGEventTapDisabledByTimeout) {
         // Re-enable the event tap.
         Log(@"Event tap timed out?!");
@@ -157,7 +168,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
         NotTested();
     }
     
-    if (self.activatedSwitcher && type == kCGEventMouseMoved) {
+    if (switcherActive && type == kCGEventMouseMoved) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [[NSNotificationCenter defaultCenter] postNotificationName:NNEventManagerMouseNotificationName object:self userInfo:@{
                 NNEventManagerEventTypeKey : @(NNEventManagerMouseEventTypeMove),
@@ -192,19 +203,18 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     NNHotKey *key = [NNHotKey hotKeyWithKeycode:keycode modifiers:modifiers];
     
     // Invocation is a special case, enabling all other keys
-    if (!self.activatedSwitcher && type == kCGEventKeyDown) {
+    if (!switcherActive && type == kCGEventKeyDown) {
         NSArray *invokeKeys = [self.keyMap allKeysForObject:@(NNEventManagerEventTypeInvoke)];
         for (NNHotKey *hotKey in invokeKeys) {
             if (hotKey.code == keycode && hotKey.modifiers == modifiers) {
-                self.activatedSwitcher = YES;
+                switcherActive = YES;
                 [self dispatchEvent:NNEventManagerEventTypeInvoke];
-                
                 break;
             }
         }
     }
     
-    if (self.activatedSwitcher) {
+    if (switcherActive) {
         if (!modifiers) {
             [self dispatchEvent:NNEventManagerEventTypeDismiss];
             return NULL;
@@ -238,10 +248,6 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
 
 - (void)dispatchEvent:(NNEventManagerEventType)eventType;
 {
-    if (eventType == NNEventManagerEventTypeCancel || eventType == NNEventManagerEventTypeDismiss) {
-        self.activatedSwitcher = NO;
-    }
-    
     dispatch_async(dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:NNEventManagerKeyNotificationName object:self userInfo:@{ NNEventManagerEventTypeKey : @(eventType) }];
     });
