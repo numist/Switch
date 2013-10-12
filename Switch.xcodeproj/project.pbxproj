@@ -23,7 +23,6 @@
 		BCA734F116DAC53F00CD4C74 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BCA734EF16DAC53F00CD4C74 /* Credits.rtf */; };
 		BCA734F416DAC53F00CD4C74 /* NNAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA734F316DAC53F00CD4C74 /* NNAppDelegate.m */; };
 		BCA734F716DAC53F00CD4C74 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCA734F516DAC53F00CD4C74 /* MainMenu.xib */; };
-		BCA734FF16DAC54000CD4C74 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCA734FE16DAC54000CD4C74 /* SenTestingKit.framework */; };
 		BCA7350016DAC54000CD4C74 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCA734E016DAC53F00CD4C74 /* Cocoa.framework */; };
 		BCA7350816DAC54000CD4C74 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BCA7350616DAC54000CD4C74 /* InfoPlist.strings */; };
 		BCA7351716DAC59000CD4C74 /* NNWindowStore.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7351616DAC59000CD4C74 /* NNWindowStore.m */; };
@@ -46,6 +45,8 @@
 		BCCA7AD0180896D100CE36E5 /* helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7ACF180896D100CE36E5 /* helpers.m */; };
 		BCCA7B181809008900CE36E5 /* NSNotificationCenter+RACSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7B171809008900CE36E5 /* NSNotificationCenter+RACSupport.m */; };
 		BCCA7B2B1809112900CE36E5 /* NNHelperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7B2A1809112900CE36E5 /* NNHelperTests.m */; };
+		BCCE8CEB18091A4F006B0059 /* NSWindow+NNScreenCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCE8CEA18091A4F006B0059 /* NSWindow+NNScreenCapture.m */; };
+		BCCE8CEE18091AFC006B0059 /* NSImage+NNFilesystem.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCE8CED18091AFC006B0059 /* NSImage+NNFilesystem.m */; };
 		BCDDB2BD178EF16A00C22E47 /* ReactiveCocoa.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCF357E0176CEE9F00458AFF /* ReactiveCocoa.framework */; };
 		BCDDB2BE178EF16E00C22E47 /* Haxcessibility.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
 		BCDDB2C2178EF1B200C22E47 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */; };
@@ -216,8 +217,7 @@
 		BCA734F216DAC53F00CD4C74 /* NNAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NNAppDelegate.h; sourceTree = "<group>"; };
 		BCA734F316DAC53F00CD4C74 /* NNAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NNAppDelegate.m; sourceTree = "<group>"; };
 		BCA734F616DAC53F00CD4C74 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		BCA734FD16DAC54000CD4C74 /* SwitchTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwitchTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		BCA734FE16DAC54000CD4C74 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		BCA734FD16DAC54000CD4C74 /* SwitchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwitchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCA7350516DAC54000CD4C74 /* SwitchTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SwitchTests-Info.plist"; sourceTree = "<group>"; };
 		BCA7350716DAC54000CD4C74 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		BCA7351516DAC59000CD4C74 /* NNWindowStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNWindowStore.h; sourceTree = "<group>"; };
@@ -256,6 +256,10 @@
 		BCCA7B161809008900CE36E5 /* NSNotificationCenter+RACSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSNotificationCenter+RACSupport.h"; path = "Frameworks/ReactiveCocoa/RACExtensions/NSNotificationCenter+RACSupport.h"; sourceTree = SOURCE_ROOT; };
 		BCCA7B171809008900CE36E5 /* NSNotificationCenter+RACSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSNotificationCenter+RACSupport.m"; path = "Frameworks/ReactiveCocoa/RACExtensions/NSNotificationCenter+RACSupport.m"; sourceTree = SOURCE_ROOT; };
 		BCCA7B2A1809112900CE36E5 /* NNHelperTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHelperTests.m; sourceTree = "<group>"; };
+		BCCE8CE918091A4F006B0059 /* NSWindow+NNScreenCapture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSWindow+NNScreenCapture.h"; sourceTree = "<group>"; };
+		BCCE8CEA18091A4F006B0059 /* NSWindow+NNScreenCapture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSWindow+NNScreenCapture.m"; sourceTree = "<group>"; };
+		BCCE8CEC18091AFC006B0059 /* NSImage+NNFilesystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSImage+NNFilesystem.h"; sourceTree = "<group>"; };
+		BCCE8CED18091AFC006B0059 /* NSImage+NNFilesystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSImage+NNFilesystem.m"; sourceTree = "<group>"; };
 		BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		BCE6987A1773B71C009CFD12 /* NNApplicationCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNApplicationCache.h; sourceTree = "<group>"; };
 		BCE6987B1773B71C009CFD12 /* NNApplicationCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNApplicationCache.m; sourceTree = "<group>"; };
@@ -291,7 +295,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BCA734FF16DAC54000CD4C74 /* SenTestingKit.framework in Frameworks */,
 				BCA7350016DAC54000CD4C74 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -372,7 +375,7 @@
 			isa = PBXGroup;
 			children = (
 				BCA734DD16DAC53F00CD4C74 /* Switch.app */,
-				BCA734FD16DAC54000CD4C74 /* SwitchTests.octest */,
+				BCA734FD16DAC54000CD4C74 /* SwitchTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -398,7 +401,6 @@
 				BCA734E016DAC53F00CD4C74 /* Cocoa.framework */,
 				BCA734E516DAC53F00CD4C74 /* Foundation.framework */,
 				BCA7353916E14EF000CD4C74 /* QuartzCore.framework */,
-				BCA734FE16DAC54000CD4C74 /* SenTestingKit.framework */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
@@ -435,9 +437,9 @@
 		BCA7350316DAC54000CD4C74 /* SwitchTests */ = {
 			isa = PBXGroup;
 			children = (
+				BCCA7B2A1809112900CE36E5 /* NNHelperTests.m */,
 				BC8D8DA0177BA53100B7A135 /* NNHUDCollectionViewTests.m */,
 				BCA7350416DAC54000CD4C74 /* Supporting Files */,
-				BCCA7B2A1809112900CE36E5 /* NNHelperTests.m */,
 			);
 			path = SwitchTests;
 			sourceTree = "<group>";
@@ -447,6 +449,10 @@
 			children = (
 				BCA7350516DAC54000CD4C74 /* SwitchTests-Info.plist */,
 				BCA7350616DAC54000CD4C74 /* InfoPlist.strings */,
+				BCCE8CE918091A4F006B0059 /* NSWindow+NNScreenCapture.h */,
+				BCCE8CEA18091A4F006B0059 /* NSWindow+NNScreenCapture.m */,
+				BCCE8CEC18091AFC006B0059 /* NSImage+NNFilesystem.h */,
+				BCCE8CED18091AFC006B0059 /* NSImage+NNFilesystem.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -637,8 +643,8 @@
 			);
 			name = SwitchTests;
 			productName = SwitchTests;
-			productReference = BCA734FD16DAC54000CD4C74 /* SwitchTests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productReference = BCA734FD16DAC54000CD4C74 /* SwitchTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -845,6 +851,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BCCE8CEB18091A4F006B0059 /* NSWindow+NNScreenCapture.m in Sources */,
+				BCCE8CEE18091AFC006B0059 /* NSImage+NNFilesystem.m in Sources */,
 				BC8D8DA1177BA53100B7A135 /* NNHUDCollectionViewTests.m in Sources */,
 				BCCA7B2B1809112900CE36E5 /* NNHelperTests.m in Sources */,
 			);
@@ -918,7 +926,7 @@
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_MODULES = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -955,7 +963,7 @@
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_MODULES = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -1069,7 +1077,6 @@
 				INFOPLIST_FILE = "SwitchTests/SwitchTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -1085,7 +1092,6 @@
 				INFOPLIST_FILE = "SwitchTests/SwitchTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};

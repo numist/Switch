@@ -33,7 +33,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "BCA734FC16DAC54000CD4C74"
-               BuildableName = "SwitchTests.octest"
+               BuildableName = "SwitchTests.xctest"
                BlueprintName = "SwitchTests"
                ReferencedContainer = "container:Switch.xcodeproj">
             </BuildableReference>

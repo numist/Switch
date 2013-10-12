@@ -1,5 +1,5 @@
 //
-//  NNHelperTests.m
+//  NSImage+NNFilesystem.m
 //  Switch
 //
 //  Created by Scott Perry on 10/11/13.
@@ -12,35 +12,13 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import <XCTest/XCTest.h>
+#import "NSImage+NNFilesystem.h"
 
-#import "helpers.h"
+@implementation NSImage (NNFilesystem)
 
-@interface NNHelperTests : XCTestCase
-
-@end
-
-@implementation NNHelperTests
-
-- (void)setUp
+- (BOOL)writeTIFFToFile:(NSString *)path;
 {
-    [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
-}
-
-- (void)tearDown
-{
-    // Put teardown code here. This method is called after the invocation of each test method in the class. 
-    [super tearDown];
-}
-
-- (void)testBasicOrderedSetFiltering
-{
-    NSOrderedSet *unfiltered = [NSOrderedSet orderedSetWithArray:@[@"Sanguinary", @"Inspirational", @"Susurrus"]];
-    NSOrderedSet *filtered = NNFilterOrderedSet(unfiltered, ^BOOL(id item) {
-        return [item hasPrefix:@"S"];
-    });
-	XCTAssertEqualObjects(filtered, ([NSOrderedSet orderedSetWithArray:@[@"Sanguinary", @"Susurrus"]]), @"Filtering ordered sets is broken");
+    return [[self TIFFRepresentation] writeToFile:path atomically:NO];
 }
 
 @end

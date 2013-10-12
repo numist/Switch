@@ -12,40 +12,22 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "NNHUDCollectionView.h"
+#import "NSWindow+NNScreenCapture.h"
 
-@interface NNHUDCollectionViewTests : SenTestCase
+@interface NNHUDCollectionViewTests : XCTestCase
 
 @end
 
 @implementation NNHUDCollectionViewTests
 
-- (NSImage *)imageForWindow:(NSWindow *)window;
-{
-    CGWindowID windowID = (CGWindowID)window.windowNumber;
-    
-    CGImageRef cgShot = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, windowID, kCGWindowImageDefault);
-    
-    NSImage *nsShot = [[NSImage alloc] initWithCGImage:cgShot size:NSZeroSize];
-    
-    CFRelease(cgShot);
-    cgShot = NULL;
-    
-    return nsShot;
-}
-
-- (void)writeImage:(NSImage *)image toFile:(NSString *)filename;
-{
-    [[image TIFFRepresentation] writeToFile:filename atomically:NO];
-}
-
 - (BOOL)compareWindow:(NSWindow *)window toReference:(NSString *)filename;
 {
 
     NSData *reference = [NSData dataWithContentsOfFile:[NSString stringWithFormat:@"SwitchTests/References/%@", filename]];
-    NSData *comparator = [[self imageForWindow:window] TIFFRepresentation];
+    NSData *comparator = [[window nnImage] TIFFRepresentation];
     return [reference isEqualToData:comparator];
 }
 
@@ -80,9 +62,9 @@
     [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
     [window orderFront:self];
     
-//    [self writeImage:[self imageForWindow:window] toFile:@"SwitchTests/References/image.tiff"];
+//    [[window nnImage] writeTIFFToFile:@"SwitchTests/References/image.tiff"];
     
-    STAssertTrue([self compareWindow:window toReference:@"image.tiff"], @"");
+    XCTAssertTrue([self compareWindow:window toReference:@"image.tiff"], @"");
 }
 
 @end
