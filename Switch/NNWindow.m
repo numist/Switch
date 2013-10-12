@@ -152,10 +152,7 @@
     @synchronized(self) {
         if (!_haxWindow) {
             _haxWindow = [self.application haxWindowForWindow:self];
-            
-            if (_haxWindow) {
-                _haxWindow.delegate = self;
-            }
+            _haxWindow.delegate = self;
         }
         if (!_haxWindow && [[NNWindowCache sharedCache] cachedWindowWithID:self.windowID]) {
             [[NNWindowCache sharedCache] removeWindowWithID:self.windowID];

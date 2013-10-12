@@ -149,10 +149,7 @@
     @synchronized(self) {
         if (!_haxApp) {
             _haxApp = [HAXApplication applicationWithPID:self.pid];
-            
-            if (_haxApp) {
-                _haxApp.delegate = self;
-            }
+            _haxApp.delegate = self;
         }
         if (!_haxApp && [[NNApplicationCache sharedCache] cachedApplicationWithPID:self.pid]) {
             [[NNApplicationCache sharedCache] removeApplicationWithPID:self.pid];
