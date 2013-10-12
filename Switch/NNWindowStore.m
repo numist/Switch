@@ -30,7 +30,7 @@
 
 // Window list updates
 @property (nonatomic, strong) NNWindowListWorker *listWorker;
-@property (nonatomic, strong) NSArray *windows;
+@property (nonatomic, strong) NSOrderedSet *windows;
 
 // Window content updates
 @property (nonatomic, assign) BOOL updatingWindowContents;
@@ -46,7 +46,7 @@
     if (!(self = [super init])) { return nil; }
     
     _delegate = (id<NNWindowStoreDelegate>)[NNDelegateProxy proxyWithDelegate:delegate protocol:@protocol(NNWindowStoreDelegate)];
-    _windows = [NSArray new];
+    _windows = [NSOrderedSet new];
     _firstUpdate = YES;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pollCompleteNotification:) name:[[NNWindowListWorker class] notificationName] object:nil];
@@ -79,7 +79,7 @@
     NNAssertMainQueue();
 
     self.listWorker = nil;
-    [self listWorker:nil didUpdateWindowList:@[]];
+    [self listWorker:nil didUpdateWindowList:[NSOrderedSet new]];
 }
 
 - (void)startUpdatingWindowContents;
@@ -124,13 +124,13 @@
     }
 }
 
-- (void)listWorker:(NNWindowListWorker *)worker didUpdateWindowList:(NSArray *)newArray;
+- (void)listWorker:(NNWindowListWorker *)worker didUpdateWindowList:(NSOrderedSet *)newWindows;
 {
     if (worker != self.listWorker) { return; }
     
-    NSMutableArray *oldArray = [NSMutableArray arrayWithArray:_windows];
+    NSMutableArray *oldWindows = [NSMutableOrderedSet orderedSetWithOrderedSet:self.windows];
     
-    BOOL windowsChanged = ![oldArray isEqualToArray:newArray];
+    BOOL windowsChanged = ![oldWindows isEqual:newWindows];
     __strong __typeof__(self.delegate) delegate = self.delegate;
     
     if (windowsChanged || self.firstUpdate) {
@@ -138,11 +138,11 @@
     }
     
     NSMutableArray *changes = [NSMutableArray new];
-    for (int i = (int)[oldArray count] - 1; i >= 0; --i) {
-        NNWindow *window = oldArray[(NSUInteger)i];
+    for (int i = (int)[oldWindows count] - 1; i >= 0; --i) {
+        NNWindow *window = oldWindows[(NSUInteger)i];
         
-        if (![newArray containsObject:window]) {
-            [delegate store:self didChangeWindow:window atIndex:[oldArray indexOfObject:window] forChangeType:NNWindowStoreChangeDelete newIndex:NSNotFound];
+        if (![newWindows containsObject:window]) {
+            [delegate store:self didChangeWindow:window atIndex:[oldWindows indexOfObject:window] forChangeType:NNWindowStoreChangeDelete newIndex:NSNotFound];
             
             [changes addObject:window];
             
@@ -152,15 +152,15 @@
         }
     }
     // Match old array with new.
-    [oldArray removeObjectsInArray:changes];
+    [oldWindows removeObjectsInArray:changes];
     [changes removeAllObjects];
 
-    for (NNWindow *window in newArray) {
-        if (![oldArray containsObject:window]) {
-            [delegate store:self didChangeWindow:window atIndex:NSNotFound forChangeType:NNWindowStoreChangeInsert newIndex:[newArray indexOfObject:window]];
+    for (NNWindow *window in newWindows) {
+        if (![oldWindows containsObject:window]) {
+            [delegate store:self didChangeWindow:window atIndex:NSNotFound forChangeType:NNWindowStoreChangeInsert newIndex:[newWindows indexOfObject:window]];
             
             // Match old array with new.
-            [oldArray insertObject:window atIndex:[newArray indexOfObject:window]];
+            [oldWindows insertObject:window atIndex:[newWindows indexOfObject:window]];
             
             if (self.updatingWindowContents) {
                 NNWindowWorker *windowWorker = [[NNWindowWorker alloc] initWithModelObject:window];
@@ -169,20 +169,20 @@
         }
     }
     
-    for (NNWindow *window in newArray) {
-        NSUInteger oldIndex = [oldArray indexOfObject:window];
-        NSUInteger newIndex = [newArray indexOfObject:window];
+    for (NNWindow *window in newWindows) {
+        NSUInteger oldIndex = [oldWindows indexOfObject:window];
+        NSUInteger newIndex = [newWindows indexOfObject:window];
 
         if (oldIndex != newIndex) {
             [delegate store:self didChangeWindow:window atIndex:oldIndex forChangeType:NNWindowStoreChangeMove newIndex:newIndex];
 
-            [oldArray removeObjectAtIndex:oldIndex];
-            [oldArray insertObject:window atIndex:[newArray indexOfObject:window]];
+            [oldWindows removeObjectAtIndex:oldIndex];
+            [oldWindows insertObject:window atIndex:[newWindows indexOfObject:window]];
         }
     }
     
     if (windowsChanged || self.firstUpdate) {
-        _windows = newArray;
+        self.windows = newWindows;
         
         [delegate storeDidChangeContent:self];
         

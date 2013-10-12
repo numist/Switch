@@ -49,7 +49,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 @property (nonatomic, strong) NNHUDCollectionView *collectionView;
 
 #pragma mark NNWindowStore and state
-@property (nonatomic, strong) NSMutableArray *windows;
+@property (nonatomic, strong) NSMutableOrderedSet *windows;
 @property (nonatomic, strong) NNWindowStore *store;
 
 #pragma mark NNEventManager and state
@@ -67,7 +67,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     Check(!window);
     if (!(self = [super initWithWindow:window])) { return nil; }
     
-    self.windows = [NSMutableArray new];
+    self.windows = [NSMutableOrderedSet new];
     self.store = [[NNWindowStore alloc] initWithDelegate:self];
     
     self.keyManager = [NNEventManager sharedManager];

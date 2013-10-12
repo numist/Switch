@@ -26,13 +26,13 @@
 
 @implementation NNTweetbotWindowFilter
 
-- (NSArray *)filterInvalidWindowsFromArray:(NSArray *)immutableArray;
+- (NSOrderedSet *)filterInvalidWindowsFromSet:(NSOrderedSet *)windows;
 {
     // Tweetbot, which *does* name its main window, has spurious decorator windows, but does not name its popup windows ಠ_ಠ
-    NSMutableArray *array = [immutableArray mutableCopy];
+    NSMutableOrderedSet *mutableWindows = [windows mutableCopy];
     
-    for (NSUInteger i = 0; i < [array count]; ++i) {
-        NNWindow *window = array[i];
+    for (NSUInteger i = 0; i < [mutableWindows count]; ++i) {
+        NNWindow *window = mutableWindows[i];
         
         if (![window.application.name isEqualToString:self.applicationName]) { continue; }
         
@@ -44,10 +44,10 @@
          * • has a height of < 33 points (in practice, 30).
          */
         if (![window.name length] && window.cgBounds.size.height < 33.0) {
-            NNWindow *mainWindow = [window nextNamedSiblingFromCollection:array];
+            NNWindow *mainWindow = [window nextNamedSiblingFromSet:mutableWindows];
             
             if ([window enclosedByWindow:mainWindow]) {
-                [array removeObjectAtIndex:i--];
+                [mutableWindows removeObjectAtIndex:i--];
                 continue;
             }
         }
@@ -63,7 +63,7 @@
          * These rules should be sufficient to reduce the likelihood of false positives to an acceptable level.
          */
         if (i > 0 && ![window.name length]) {
-            NNWindow *mainWindow = [window previousNamedSiblingFromCollection:array];
+            NNWindow *mainWindow = [window previousNamedSiblingFromSet:mutableWindows];
             
             if (mainWindow) {
                 NNVec2 c2cOffset = [window offsetOfCenterToCenterOfWindow:mainWindow];
@@ -81,14 +81,14 @@
                 && sizeDifference.height < 100.0;
                 
                 if (centered && enclosing && saneSize) {
-                    [array removeObjectAtIndex:i--];
+                    [mutableWindows removeObjectAtIndex:i--];
                     continue;
                 }
             }
         }
     }
     
-    return array;
+    return mutableWindows;
 }
 
 @end

@@ -63,9 +63,9 @@
     return self;
 }
 
-- (NSArray *)filterInvalidWindowsFromArray:(NSArray *)array;
+- (NSOrderedSet *)filterInvalidWindowsFromSet:(NSOrderedSet *)windows;
 {
-    return array;
+    return windows;
 }
 
 @end

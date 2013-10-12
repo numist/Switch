@@ -23,17 +23,17 @@
 static NSSet *registeredAppFilters;
 static NSSet *registeredAppNames;
 
-+ (NSArray *)filterInvalidWindowsFromArray:(NSArray *)array;
++ (NSOrderedSet *)filterInvalidWindowsFromSet:(NSOrderedSet *)windows;
 {
     [self setUpApplicationFiltersIfNeeded];
     
     // Collection filters:
     for (NNWindowFilter *filter in registeredAppFilters) {
-        array = [filter filterInvalidWindowsFromArray:array];
+        windows = [filter filterInvalidWindowsFromSet:windows];
     }
     
-    return [array filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, __attribute__((unused)) NSDictionary *bindings) {
-        NNWindow *window = evaluatedObject;
+    return NNFilterOrderedSet(windows, ^BOOL(id each) {
+        NNWindow *window = each;
         
         // Skip windows handled by an application-specific filter.
         if ([registeredAppNames containsObject:window.application.name]) {
@@ -46,7 +46,7 @@ static NSSet *registeredAppNames;
         }
         
         return YES;
-    }]];
+    });
 }
 
 + (void)setUpApplicationFiltersIfNeeded;
@@ -112,16 +112,16 @@ static NSSet *registeredAppNames;
     return sizeDifference.width > absC2COffset.x * 2.0 && sizeDifference.height > absC2COffset.y * 2.0;
 }
 
-- (NNWindow *)nextNamedSiblingFromCollection:(NSArray *)array;
+- (NNWindow *)nextNamedSiblingFromSet:(NSOrderedSet *)windows;
 {
-    NSUInteger s = [array indexOfObject:self];
-    if (s > [array count]) {
+    NSUInteger s = [windows indexOfObject:self];
+    if (s > [windows count]) {
         Check(s == NSNotFound);
         return nil;
     }
     
-    for (NSUInteger i = s + 1; i < [array count]; ++i) {
-        NNWindow *result = array[i];
+    for (NSUInteger i = s + 1; i < [windows count]; ++i) {
+        NNWindow *result = windows[i];
         
         if (![result.application.name isEqualToString:self.application.name]) {
             return nil;
@@ -135,16 +135,16 @@ static NSSet *registeredAppNames;
     return nil;
 }
 
-- (NNWindow *)previousNamedSiblingFromCollection:(NSArray *)array;
+- (NNWindow *)previousNamedSiblingFromSet:(NSOrderedSet *)windows;
 {
-    NSUInteger s = [array indexOfObject:self];
-    if (s > [array count]) {
+    NSUInteger s = [windows indexOfObject:self];
+    if (s > [windows count]) {
         Check(s == NSNotFound);
         return nil;
     }
     
     for (NSInteger i = (NSInteger)s - 1; i >= 0; --i) {
-        NNWindow *result = array[(NSUInteger)i];
+        NNWindow *result = windows[(NSUInteger)i];
         
         if (![result.application.name isEqualToString:self.application.name]) {
             return nil;

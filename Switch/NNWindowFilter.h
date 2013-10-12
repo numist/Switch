@@ -21,6 +21,6 @@
 
 - (NSString *)applicationName;
 
-- (NSArray *)filterInvalidWindowsFromArray:(NSArray *)array;
+- (NSOrderedSet *)filterInvalidWindowsFromSet:(NSOrderedSet *)windows;
 
 @end

@@ -31,15 +31,15 @@
     return nil;
 }
 
-- (NSArray *)filterInvalidWindowsFromArray:(NSArray *)immutableArray;
+- (NSOrderedSet *)filterInvalidWindowsFromSet:(NSOrderedSet *)windows;
 {
-    NSMutableArray *array = [immutableArray mutableCopy];
+    NSMutableOrderedSet *mutableWindows = [windows mutableCopy];
     
-    for (NSUInteger i = 1; i < [array count]; ++i) {
+    for (NSUInteger i = 1; i < [mutableWindows count]; ++i) {
         // Avoid potential index out of bounds caused by `i -= 2;` below.
         if (i == 0) { continue; }
-        NNWindow *prevSibling = array[(i - 1)];
-        NNWindow *sheet = array[i];
+        NNWindow *prevSibling = mutableWindows[(i - 1)];
+        NNWindow *sheet = mutableWindows[i];
         
         /*
          * Match obvious non-Powerbox sheets, which are two adjacent windows matched by:
@@ -53,15 +53,15 @@
             BOOL isShort = prevSibling.cgBounds.size.height < 16.0;
             
             if (isTranslucent && isShort) {
-                [array removeObjectAtIndex:i];
-                [array removeObjectAtIndex:i - 1];
+                [mutableWindows removeObjectAtIndex:i];
+                [mutableWindows removeObjectAtIndex:i - 1];
                 i -= 2;
                 continue;
             }
         }
     }
     
-    return array;
+    return mutableWindows;
 }
 
 @end

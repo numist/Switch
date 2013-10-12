@@ -29,3 +29,14 @@ void * _NNCFAutorelease(id obj) {
     return (__bridge void *)obj;
     _Pragma("clang diagnostic pop");
 }
+
+NSOrderedSet *NNFilterOrderedSet(NSOrderedSet *set, BOOL(^predicate)(id each))
+{
+    NSMutableOrderedSet *result = [NSMutableOrderedSet new];
+    for (id item in set) {
+        if (predicate(item)) {
+            [result addObject:item];
+        }
+    }
+    return result;
+}

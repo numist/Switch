@@ -41,7 +41,7 @@ static NSTimeInterval refreshInterval = 0.1;
     CFArrayRef cgInfo = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements,  kCGNullWindowID);
     NSArray *info = CFBridgingRelease(cgInfo);
     
-    NSMutableArray *windows = [NSMutableArray arrayWithCapacity:[info count]];
+    NSMutableOrderedSet *windows = [NSMutableOrderedSet orderedSetWithCapacity:[info count]];
     
     for (unsigned i = 0; i < [info count]; i++) {
         NNWindow *window = [NNWindow windowWithDescription:info[i]];
@@ -52,8 +52,8 @@ static NSTimeInterval refreshInterval = 0.1;
             [windows addObject:window];
         }
     }
-	    
-    [self postNotification:@{@"windows" : [NSArray arrayWithArray:[NNWindow filterInvalidWindowsFromArray:windows]]}];
+    
+    [self postNotification:@{@"windows" : [NSOrderedSet orderedSetWithOrderedSet:[NNWindow filterInvalidWindowsFromSet:windows]]}];
 }
 
 @end

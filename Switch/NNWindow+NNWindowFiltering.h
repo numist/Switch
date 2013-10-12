@@ -20,13 +20,12 @@ typedef NSPoint NNVec2;
 
 @interface NNWindow (NNWindowFiltering)
 
-+ (NSArray *)filterInvalidWindowsFromArray:(NSArray *)array;
++ (NSOrderedSet *)filterInvalidWindowsFromSet:(NSOrderedSet *)windows;
 
 - (NNVec2)offsetOfCenterToCenterOfWindow:(NNWindow *)window;
 - (NSSize)sizeDifferenceFromWindow:(NNWindow *)window;
 - (BOOL)enclosedByWindow:(NNWindow *)window;
-- (NNWindow *)previousNamedSiblingFromCollection:(NSArray *)array;
-- (NNWindow *)nextNamedSiblingFromCollection:(NSArray *)array;
-
+- (NNWindow *)previousNamedSiblingFromSet:(NSOrderedSet *)windows;
+- (NNWindow *)nextNamedSiblingFromSet:(NSOrderedSet *)windows;
 
 @end

@@ -34,18 +34,12 @@ static NSString *kNNApplicationNamePowerbox = @"com.apple.security.pboxd";
     return nil;
 }
 
-- (NSArray *)filterInvalidWindowsFromArray:(NSArray *)array;
+- (NSOrderedSet *)filterInvalidWindowsFromSet:(NSOrderedSet *)windows;
 {
-    return [array filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, __attribute__((unused)) NSDictionary *bindings) {
-        NNWindow *window = evaluatedObject;
-        
+    return NNFilterOrderedSet(windows, ^BOOL(id each) {
         // Issue #10: Powerbox names its sheets, which are not valid (they do not respond to AXRaise)
-        if ([window.application.name isEqualToString:kNNApplicationNamePowerbox]) {
-            return NO;
-        }
-        
-        return YES;
-    }]];
+        return ![((NNWindow *)each).application.name isEqualToString:kNNApplicationNamePowerbox];
+    });
 }
 
 @end

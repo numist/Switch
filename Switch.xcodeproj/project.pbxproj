@@ -45,6 +45,7 @@
 		BCCA7AB21807CD2B00CE36E5 /* NNKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCCA7A5618076ADB00CE36E5 /* NNKit.framework */; };
 		BCCA7AD0180896D100CE36E5 /* helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7ACF180896D100CE36E5 /* helpers.m */; };
 		BCCA7B181809008900CE36E5 /* NSNotificationCenter+RACSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7B171809008900CE36E5 /* NSNotificationCenter+RACSupport.m */; };
+		BCCA7B2B1809112900CE36E5 /* NNHelperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7B2A1809112900CE36E5 /* NNHelperTests.m */; };
 		BCDDB2BD178EF16A00C22E47 /* ReactiveCocoa.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCF357E0176CEE9F00458AFF /* ReactiveCocoa.framework */; };
 		BCDDB2BE178EF16E00C22E47 /* Haxcessibility.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
 		BCDDB2C2178EF1B200C22E47 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */; };
@@ -254,6 +255,7 @@
 		BCCA7ACF180896D100CE36E5 /* helpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = helpers.m; sourceTree = "<group>"; };
 		BCCA7B161809008900CE36E5 /* NSNotificationCenter+RACSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSNotificationCenter+RACSupport.h"; path = "Frameworks/ReactiveCocoa/RACExtensions/NSNotificationCenter+RACSupport.h"; sourceTree = SOURCE_ROOT; };
 		BCCA7B171809008900CE36E5 /* NSNotificationCenter+RACSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSNotificationCenter+RACSupport.m"; path = "Frameworks/ReactiveCocoa/RACExtensions/NSNotificationCenter+RACSupport.m"; sourceTree = SOURCE_ROOT; };
+		BCCA7B2A1809112900CE36E5 /* NNHelperTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHelperTests.m; sourceTree = "<group>"; };
 		BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		BCE6987A1773B71C009CFD12 /* NNApplicationCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNApplicationCache.h; sourceTree = "<group>"; };
 		BCE6987B1773B71C009CFD12 /* NNApplicationCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNApplicationCache.m; sourceTree = "<group>"; };
@@ -435,6 +437,7 @@
 			children = (
 				BC8D8DA0177BA53100B7A135 /* NNHUDCollectionViewTests.m */,
 				BCA7350416DAC54000CD4C74 /* Supporting Files */,
+				BCCA7B2A1809112900CE36E5 /* NNHelperTests.m */,
 			);
 			path = SwitchTests;
 			sourceTree = "<group>";
@@ -843,6 +846,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BC8D8DA1177BA53100B7A135 /* NNHUDCollectionViewTests.m in Sources */,
+				BCCA7B2B1809112900CE36E5 /* NNHelperTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
