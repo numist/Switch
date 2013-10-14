@@ -50,7 +50,20 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    self.launched = YES;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    #pragma message "Keys (and default values) should be DRYed up a bit more."
+    NSDictionary *userDefaultsValues = @{ @"firstLaunch" : @YES };
+    [defaults registerDefaults:userDefaultsValues];
+
+#   if DEBUG
+    {
+        BOOL resetDefaults = NO;
+        
+        if (resetDefaults) {
+            [defaults removeObjectForKey:@"firstLaunch"];
+        }
+    }
+#   endif
     
     self.coreWindowController = [[NNCoreWindowController alloc] initWithWindow:nil];
     
@@ -65,6 +78,13 @@
     }
     
     self.preferencesWindowController = [[NNPreferencesWindowController alloc] initWithWindowNibName:@"NNPreferencesWindowController"];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"firstLaunch"]) {
+        [self.preferencesWindowController showWindow:self];
+        [defaults setBool:NO forKey:@"firstLaunch"];
+    }
+
+    [defaults synchronize];
+    self.launched = YES;
 }
 
 #pragma mark IBActions
