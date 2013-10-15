@@ -29,6 +29,7 @@
 @property (nonatomic, strong) NNAXDisabledWindowController *disabledWindowController;
 @property (nonatomic, strong) NNCoreWindowController *coreWindowController;
 @property (nonatomic, strong) NNPreferencesWindowController *preferencesWindowController;
+@property (nonatomic, strong) NSStatusItem *menu;
 @property (nonatomic, assign) BOOL launched;
 
 @end
@@ -83,15 +84,19 @@
         [defaults setBool:NO forKey:@"firstLaunch"];
     }
 
+    self.menu = [[NSStatusBar systemStatusBar] statusItemWithLength:NSSquareStatusItemLength];
+    self.menu.image = [[NSBundle mainBundle] imageForResource:@"weave"];
+    self.menu.target = self;
+    self.menu.action = @selector(showPreferences:);
+
     [defaults synchronize];
     self.launched = YES;
 }
 
 #pragma mark IBActions
 
-- (IBAction)showPreferences:(NSMenuItem *)sender {
-    NotTested();
-    [self showPreferencesWindow];
+- (IBAction)showPreferences:(id)sender {
+    [self.preferencesWindowController showWindow:self];
 }
 
 #pragma mark Notifications
@@ -145,7 +150,8 @@
 
 - (void)showPreferencesWindow;
 {
-    [self.preferencesWindowController showWindow:self];
+    [self showPreferences:self];
+    
     // HACK: There should be a better way to cancel the interface than committing identity fraud.
     [[NSNotificationCenter defaultCenter] postNotificationName:NNEventManagerKeyNotificationName object:[NNEventManager sharedManager] userInfo:@{NNEventManagerEventTypeKey : @(NNEventManagerEventTypeCancel)}];
     [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];

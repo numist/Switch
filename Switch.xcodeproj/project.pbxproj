@@ -17,6 +17,7 @@
 		BC6B6D13178DDBDA001D691D /* NNCoreWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6D12178DDBDA001D691D /* NNCoreWindowController.m */; };
 		BC6B6D1C178DE8E5001D691D /* NNAPIEnabledWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6D1B178DE8E5001D691D /* NNAPIEnabledWorker.m */; };
 		BC8D8DA1177BA53100B7A135 /* NNHUDCollectionViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC8D8DA0177BA53100B7A135 /* NNHUDCollectionViewTests.m */; };
+		BC948E2E180CFAA6008ED28A /* weave.png in Resources */ = {isa = PBXBuildFile; fileRef = BC948E2D180CFAA6008ED28A /* weave.png */; };
 		BCA734E116DAC53F00CD4C74 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCA734E016DAC53F00CD4C74 /* Cocoa.framework */; };
 		BCA734EB16DAC53F00CD4C74 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BCA734E916DAC53F00CD4C74 /* InfoPlist.strings */; };
 		BCA734ED16DAC53F00CD4C74 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA734EC16DAC53F00CD4C74 /* main.m */; };
@@ -210,6 +211,7 @@
 		BC6B6D1A178DE8E5001D691D /* NNAPIEnabledWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNAPIEnabledWorker.h; sourceTree = "<group>"; };
 		BC6B6D1B178DE8E5001D691D /* NNAPIEnabledWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNAPIEnabledWorker.m; sourceTree = "<group>"; };
 		BC8D8DA0177BA53100B7A135 /* NNHUDCollectionViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDCollectionViewTests.m; sourceTree = "<group>"; };
+		BC948E2D180CFAA6008ED28A /* weave.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = weave.png; path = Resources/weave.png; sourceTree = "<group>"; };
 		BCA734DD16DAC53F00CD4C74 /* Switch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Switch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCA734E016DAC53F00CD4C74 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		BCA734E316DAC53F00CD4C74 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -372,6 +374,14 @@
 			name = Debug;
 			sourceTree = "<group>";
 		};
+		BC948E24180CFA97008ED28A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				BC948E2D180CFAA6008ED28A /* weave.png */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		BCA734D416DAC53F00CD4C74 = {
 			isa = PBXGroup;
 			children = (
@@ -432,6 +442,7 @@
 		BCA734E716DAC53F00CD4C74 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				BC948E24180CFA97008ED28A /* Resources */,
 				BCA7354116E1621400CD4C74 /* constants.h */,
 				BCA7354216E1621400CD4C74 /* constants.m */,
 				BCA734EF16DAC53F00CD4C74 /* Credits.rtf */,
@@ -794,6 +805,7 @@
 				BCA734EB16DAC53F00CD4C74 /* InfoPlist.strings in Resources */,
 				BCA734F716DAC53F00CD4C74 /* MainMenu.xib in Resources */,
 				BCFF232E177E00FB008759C4 /* NNAXDisabledWindowController.xib in Resources */,
+				BC948E2E180CFAA6008ED28A /* weave.png in Resources */,
 				BCCA7A641807894A00CE36E5 /* NNPreferencesWindowController.xib in Resources */,
 				BC660D5B1796573200CE8333 /* Sparkle.dsa_pub.pem in Resources */,
 			);
