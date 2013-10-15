@@ -97,6 +97,8 @@
 
 - (IBAction)showPreferences:(id)sender {
     [self.preferencesWindowController showWindow:self];
+    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+    [self.preferencesWindowController.window makeKeyAndOrderFront:self];
 }
 
 #pragma mark Notifications
@@ -150,12 +152,10 @@
 
 - (void)showPreferencesWindow;
 {
-    [self showPreferences:self];
-    
     // HACK: There should be a better way to cancel the interface than committing identity fraud.
     [[NSNotificationCenter defaultCenter] postNotificationName:NNEventManagerKeyNotificationName object:[NNEventManager sharedManager] userInfo:@{NNEventManagerEventTypeKey : @(NNEventManagerEventTypeCancel)}];
-    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
-    [self.preferencesWindowController.window makeKeyAndOrderFront:self];
+    
+    [self showPreferences:self];
 }
 
 @end
