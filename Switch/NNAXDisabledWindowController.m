@@ -136,9 +136,9 @@ static NSTimeInterval NNWindoFadeOutInterval = 1.0;
             });
             
             if (!aed) {
-                Log(@"error enabling support for assistive devices: %@", error);
+                NNLog(@"error enabling support for assistive devices: %@", error);
             } else if ([aed descriptorType] != 'true') {
-                Log(@"failed to enable support for assistive devices");
+                NNLog(@"failed to enable support for assistive devices");
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.selfEnabled = YES;

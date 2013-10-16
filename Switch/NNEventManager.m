@@ -160,7 +160,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     
     if (type == kCGEventTapDisabledByTimeout) {
         // Re-enable the event tap.
-        Log(@"Event tap timed out?!");
+        NNLog(@"Event tap timed out?!");
         CGEventTapEnable(self->eventTap, true);
     }
     

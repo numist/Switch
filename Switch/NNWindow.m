@@ -206,7 +206,7 @@
     // Then raise the application (if it's not already topmost)
     [self.application raise];
     
-    Log(@"Raising window %@ took %0.5fs", self, [[NSDate date] timeIntervalSinceDate:start]);
+    NNLog(@"Raising window %@ took %0.5fs", self, [[NSDate date] timeIntervalSinceDate:start]);
 
     return YES;
 }
@@ -217,7 +217,7 @@
 
     BOOL result = [self.haxWindow close];
     
-    Log(@"Closing window %@ took %0.5fs", self, [[NSDate date] timeIntervalSinceDate:start]);
+    NNLog(@"Closing window %@ took %0.5fs", self, [[NSDate date] timeIntervalSinceDate:start]);
     
     return result;
 }

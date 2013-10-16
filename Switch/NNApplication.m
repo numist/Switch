@@ -113,7 +113,7 @@
         if (path) {
             _icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
         } else {
-            Log(@"Application %@ does not have an icon!", self);
+            NNLog(@"Application %@ does not have an icon!", self);
             // TODO(numist): Can this even happen?
             NotTested();
         }

@@ -56,7 +56,7 @@
 {
     @synchronized(self) {
         if ([self cachedWindowWithID:windowID]) {
-            Log(@"Already have a window for id %u!", windowID);
+            NNLog(@"Already have a window for id %u!", windowID);
         }
         
         [self.cache setObject:window forKey:@(windowID)];
@@ -67,7 +67,7 @@
 {
     @synchronized(self) {
         if (![self cachedWindowWithID:windowID]) {
-            Log(@"Don't have a window for id %u!", windowID);
+            NNLog(@"Don't have a window for id %u!", windowID);
         }
         
         [self.cache removeObjectForKey:@(windowID)];

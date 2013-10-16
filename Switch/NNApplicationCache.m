@@ -56,7 +56,7 @@
 {
     @synchronized(self) {
         if ([self cachedApplicationWithPID:pid]) {
-            Log(@"Already have a application for pid %u!", pid);
+            NNLog(@"Already have a application for pid %u!", pid);
         }
         
         [self.cache setObject:application forKey:@(pid)];

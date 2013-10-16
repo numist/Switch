@@ -48,11 +48,6 @@
         [menu addItem:menuItem];
         [debugItems addObject:menuItem];
         
-        menuItem = [[NSMenuItem alloc] initWithTitle:@"Take Snapshot…" action:@selector(snapshot:) keyEquivalent:@""];
-        menuItem.target = self;
-        [menu addItem:menuItem];
-        [debugItems addObject:menuItem];
-        
         menuItem = [[NSMenuItem alloc] initWithTitle:@"Open Log Folder…" action:@selector(openLogFolder:) keyEquivalent:@""];
         menuItem.target = self;
         [menu addItem:menuItem];
@@ -78,23 +73,14 @@
     return self;
 }
 
-- (IBAction)snapshot:(id)sender;
-{
-    
-}
-
 - (IBAction)openLogFolder:(id)sender;
 {
-    
+    [[NSWorkspace sharedWorkspace] openFile:[[NNLoggingService sharedLoggingService] logDirectoryPath]];
 }
 
 - (void)menuNeedsUpdate:(NSMenu *)menu;
 {
     NSUInteger flags = ([NSEvent modifierFlags] & NSDeviceIndependentModifierFlagsMask);
-    
-    // We negate the value below because, if flags == NSAlternateKeyMask is TRUE, that
-    // means the user has the Option key held, and wants to see the secret menu, so we
-    // need shoudHideSecretMenu to be FALSE, so we just negate the value.
     BOOL hideDebugItems = !(flags == NSAlternateKeyMask);
     
     for (NSMenuItem *item in self.debugItems) {
