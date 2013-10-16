@@ -22,6 +22,7 @@
 #import "NNHotKey.h"
 #import "NNEventManager.h"
 #import "NNPreferencesWindowController.h"
+#import "NNStatusBarMenuService.h"
 
 
 @interface NNAppDelegate ()
@@ -29,7 +30,7 @@
 @property (nonatomic, strong) NNAXDisabledWindowController *disabledWindowController;
 @property (nonatomic, strong) NNCoreWindowController *coreWindowController;
 @property (nonatomic, strong) NNPreferencesWindowController *preferencesWindowController;
-@property (nonatomic, strong) NSStatusItem *menu;
+@property (nonatomic, strong) NNStatusBarMenuService *menuService;
 @property (nonatomic, assign) BOOL launched;
 
 @end
@@ -83,11 +84,8 @@
         [self.preferencesWindowController showWindow:self];
         [defaults setBool:NO forKey:@"firstLaunch"];
     }
-
-    self.menu = [[NSStatusBar systemStatusBar] statusItemWithLength:NSSquareStatusItemLength];
-    self.menu.image = [[NSBundle mainBundle] imageForResource:@"weave"];
-    self.menu.target = self;
-    self.menu.action = @selector(showPreferences:);
+    
+    self.menuService = [NNStatusBarMenuService new];
 
     [defaults synchronize];
     self.launched = YES;

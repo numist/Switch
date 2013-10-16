@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BC43A626177A5CBC0082F981 /* NNWindow+NNWindowFiltering.m in Sources */ = {isa = PBXBuildFile; fileRef = BC43A625177A5CBC0082F981 /* NNWindow+NNWindowFiltering.m */; };
+		BC5A9798180E5A6F002ECD56 /* NNStatusBarMenuService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5A9797180E5A6F002ECD56 /* NNStatusBarMenuService.m */; };
 		BC63AB8F1755907D00016B9E /* NNHUDCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */; };
 		BC63AB921756FBE400016B9E /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB911756FBE300016B9E /* Carbon.framework */; };
 		BC63AB9A175701D900016B9E /* Haxcessibility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
@@ -197,6 +198,8 @@
 		BC3B3B6D175E505C002AD452 /* NNWindowCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNWindowCache.h; sourceTree = "<group>"; };
 		BC43A624177A5CBC0082F981 /* NNWindow+NNWindowFiltering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NNWindow+NNWindowFiltering.h"; sourceTree = "<group>"; };
 		BC43A625177A5CBC0082F981 /* NNWindow+NNWindowFiltering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NNWindow+NNWindowFiltering.m"; sourceTree = "<group>"; };
+		BC5A9796180E5A6F002ECD56 /* NNStatusBarMenuService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNStatusBarMenuService.h; sourceTree = "<group>"; };
+		BC5A9797180E5A6F002ECD56 /* NNStatusBarMenuService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNStatusBarMenuService.m; sourceTree = "<group>"; };
 		BC63AB8D1755907D00016B9E /* NNHUDCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHUDCollectionView.h; sourceTree = "<group>"; };
 		BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDCollectionView.m; sourceTree = "<group>"; };
 		BC63AB911756FBE300016B9E /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
@@ -323,9 +326,19 @@
 			name = Sparkle;
 			sourceTree = "<group>";
 		};
+		BC5A978D180E5A66002ECD56 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				BC5A9796180E5A6F002ECD56 /* NNStatusBarMenuService.h */,
+				BC5A9797180E5A6F002ECD56 /* NNStatusBarMenuService.m */,
+			);
+			name = Services;
+			sourceTree = "<group>";
+		};
 		BC63AB901755C6EC00016B9E /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				BC5A978D180E5A66002ECD56 /* Services */,
 				BCA734F216DAC53F00CD4C74 /* NNAppDelegate.h */,
 				BCA734F316DAC53F00CD4C74 /* NNAppDelegate.m */,
 				BCFF232A177E00FB008759C4 /* NNAXDisabledWindowController.h */,
@@ -856,6 +869,7 @@
 				BCCA7AD0180896D100CE36E5 /* helpers.m in Sources */,
 				BCA7352516DAC93C00CD4C74 /* NNApplication.m in Sources */,
 				BCA7352F16DB239900CD4C74 /* NNWindowThumbnailView.m in Sources */,
+				BC5A9798180E5A6F002ECD56 /* NNStatusBarMenuService.m in Sources */,
 				BC6B6D13178DDBDA001D691D /* NNCoreWindowController.m in Sources */,
 				BCA7353316DB2C0100CD4C74 /* NNEventManager.m in Sources */,
 				BCFF231E177DE0FE008759C4 /* NNObviousSheetsWindowFilter.m in Sources */,

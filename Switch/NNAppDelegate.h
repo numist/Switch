@@ -17,4 +17,6 @@
 
 @interface NNAppDelegate : NSObject <NSApplicationDelegate>
 
+- (IBAction)showPreferences:(id)sender;
+
 @end
