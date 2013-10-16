@@ -78,6 +78,80 @@ __attribute__((constructor)) static void initializeLoggingService() {
     }
 }
 
+- (void)takeWindowListSnapshot;
+{
+    NSArray *rawList = ^{
+        CFArrayRef cgInfo = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements,  kCGNullWindowID);
+        return CFBridgingRelease(cgInfo);
+    }();
+    
+    NSOrderedSet *objectList = ^{
+        NSMutableOrderedSet *result = [NSMutableOrderedSet orderedSetWithCapacity:[rawList count]];
+        for (unsigned i = 0; i < [rawList count]; i++) {
+            NNWindow *window = [NNWindow windowWithDescription:rawList[i]];
+            if (window) {
+                [result addObject:window];
+            }
+        }
+        return result;
+    }();
+    
+    NSOrderedSet *filteredList = [NNWindow filterInvalidWindowsFromSet:objectList];
+    
+    NSString *snapshotDir = [[self logDirectoryPath] stringByAppendingPathComponent:[NSString stringWithFormat:@"snapshot-%llu", (uint64_t)[[NSDate date] timeIntervalSince1970]]];
+    BailUnless([self createDirectory:snapshotDir],);
+    
+    // TODO: directory in logDir named snapshot-timestamp
+    NSString *listFile = [snapshotDir stringByAppendingPathComponent:@"windowlist.txt"];
+    
+    NSFileManager *manager = [NSFileManager defaultManager];
+    
+    BailWithBlockUnless([manager createFileAtPath:listFile contents:nil attributes:nil], ^{
+        Log(@"Failed to create file %@", listFile);
+    });
+    NSFileHandle *handle = [NSFileHandle fileHandleForWritingAtPath:listFile];
+    BailWithBlockUnless(handle, ^{
+        Log(@"Failed to open %@ for writing", listFile);
+    });
+    [handle writeData:[@"Raw list:\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [handle writeData:[[rawList debugDescription] dataUsingEncoding:NSUTF8StringEncoding]];
+    [handle writeData:[@"\nObject list:\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [handle writeData:[[objectList debugDescription] dataUsingEncoding:NSUTF8StringEncoding]];
+    [handle writeData:[@"\n\nFiltered list:\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [handle writeData:[[filteredList debugDescription] dataUsingEncoding:NSUTF8StringEncoding]];
+    [handle writeData:[@"\n\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    for (NSDictionary *description in rawList) {
+        CGWindowID windowID = (CGWindowID)[[description objectForKey:(__bridge NSString *)kCGWindowNumber] unsignedLongValue];
+        CGImageRef cgContents = NNCFAutorelease(CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, windowID, kCGWindowImageBoundsIgnoreFraming));
+        
+        if (!cgContents) {
+            [handle writeData:[[NSString stringWithFormat:@"Failed to save window contents for window ID %u: CGWindowListCreateImage returned NULL\n", windowID] dataUsingEncoding:NSUTF8StringEncoding]];
+            continue;
+        }
+        
+        if (CGImageGetHeight(cgContents) < 1.0 || CGImageGetWidth(cgContents) < 1.0) {
+            [handle writeData:[[NSString stringWithFormat:@"Failed to save window contents for window ID %u: image is zero size\n", windowID] dataUsingEncoding:NSUTF8StringEncoding]];
+            continue;
+        }
+        
+        NSImage *contents = [[NSImage alloc] initWithCGImage:cgContents size:(NSSize){.width = CGImageGetWidth(cgContents), .height = CGImageGetHeight(cgContents)}];
+        [contents lockFocus];
+        NSBitmapImageRep *bitmapContents = [[NSBitmapImageRep alloc] initWithFocusedViewRect:(NSRect){.origin = NSZeroPoint, .size = contents.size}];
+        [contents unlockFocus];
+        NSData *pngContents = [bitmapContents representationUsingType:NSPNGFileType properties:nil];
+        if (!pngContents) {
+            [handle writeData:[[NSString stringWithFormat:@"Failed to save window contents for window ID %u: conversion to png failed\n", windowID] dataUsingEncoding:NSUTF8StringEncoding]];
+        }
+        
+        if (![manager createFileAtPath:[snapshotDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%u.png", windowID]] contents:pngContents attributes:nil]) {
+            [handle writeData:[[NSString stringWithFormat:@"Failed to save window contents for window ID %u: file creation failure\n", windowID] dataUsingEncoding:NSUTF8StringEncoding]];
+        }
+    }
+    
+    handle = nil;
+}
+
 #pragma mark Internal
 
 - (NSString *)logFilePath;

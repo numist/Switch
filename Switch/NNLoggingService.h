@@ -14,6 +14,7 @@
 
 - (NSString *)logDirectoryPath;
 - (void)rotateLogIfNecessary;
+- (void)takeWindowListSnapshot;
 
 @end
 

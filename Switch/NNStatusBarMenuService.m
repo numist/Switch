@@ -51,6 +51,11 @@
         [menu addItem:menuItem];
         [debugItems addObject:menuItem];
         
+        menuItem = [[NSMenuItem alloc] initWithTitle:@"Take Snapshot…" action:@selector(snapshot:) keyEquivalent:@""];
+        menuItem.target = self;
+        [menu addItem:menuItem];
+        [debugItems addObject:menuItem];
+        
         menuItem = [[NSMenuItem alloc] initWithTitle:@"Open Log Folder…" action:@selector(openLogFolder:) keyEquivalent:@""];
         menuItem.target = self;
         [menu addItem:menuItem];
@@ -77,6 +82,12 @@
     _statusItem = statusItem;
     
     return self;
+}
+
+- (IBAction)snapshot:(id)sender;
+{
+    [[NNLoggingService sharedLoggingService] takeWindowListSnapshot];
+    [self openLogFolder:self];
 }
 
 - (IBAction)openLogFolder:(id)sender;
