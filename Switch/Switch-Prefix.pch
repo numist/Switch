@@ -4,7 +4,6 @@
 
 #ifdef __OBJC__
 #   import <Cocoa/Cocoa.h>
-#   import <objc/runtime.h>
 #   import <NNKit/NNKit.h>
 #   import "debugger.h"
 #   import "constants.h"
