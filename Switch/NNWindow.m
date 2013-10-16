@@ -15,6 +15,7 @@
 #import "NNWindow+Private.h"
 
 #import <Haxcessibility/Haxcessibility.h>
+#import <Haxcessibility/HAXElement+Protected.h>
 
 #import "NNApplication+Private.h"
 #import "NNWindowCache.h"
@@ -201,13 +202,16 @@
     NSDate *start = [NSDate date];
 
     // First, raise the window
-    if (![self.haxWindow raise] ) { return NO; }
+    NSError *error;
+    if (![self.haxWindow performAction:(__bridge NSString *)kAXRaiseAction error:&error]) {
+        NNLog(@"Raise window %@ failed after %0.5fs: %@", self, [[NSDate date] timeIntervalSinceDate:start], error);
+        return NO;
+    }
     
     // Then raise the application (if it's not already topmost)
     [self.application raise];
     
     NNLog(@"Raising window %@ took %0.5fs", self, [[NSDate date] timeIntervalSinceDate:start]);
-
     return YES;
 }
 
@@ -215,9 +219,16 @@
 {
     NSDate *start = [NSDate date];
 
-    BOOL result = [self.haxWindow close];
+    NSError *error;
+    HAXElement *element = [self.haxWindow elementOfClass:[HAXElement class] forKey:(__bridge NSString *)kAXCloseButtonAttribute error:NULL];
+	BOOL result = [element performAction:(__bridge NSString *)kAXPressAction error:&error];
     
-    NNLog(@"Closing window %@ took %0.5fs", self, [[NSDate date] timeIntervalSinceDate:start]);
+    NSTimeInterval elapsed = [[NSDate date] timeIntervalSinceDate:start];
+    if (result) {
+        NNLog(@"Closing window %@ took %0.5fs", self, elapsed);
+    } else {
+        NNLog(@"Close window %@ failed after %0.5fs: %@", self, elapsed, error);
+    }
     
     return result;
 }

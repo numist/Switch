@@ -101,7 +101,6 @@ __attribute__((constructor)) static void initializeLoggingService() {
     NSString *snapshotDir = [[self logDirectoryPath] stringByAppendingPathComponent:[NSString stringWithFormat:@"snapshot-%llu", (uint64_t)[[NSDate date] timeIntervalSince1970]]];
     BailUnless([self createDirectory:snapshotDir],);
     
-    // TODO: directory in logDir named snapshot-timestamp
     NSString *listFile = [snapshotDir stringByAppendingPathComponent:@"windowlist.txt"];
     
     NSFileManager *manager = [NSFileManager defaultManager];
