@@ -37,6 +37,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 @interface NNCoreWindowController () <NNWindowStoreDelegate, NNHUDCollectionViewDataSource, NNHUDCollectionViewDelegate>
 
 #pragma mark State
+@property (nonatomic, strong) NSDate *invocationTime;
 @property (nonatomic, assign) BOOL active;
 @property (nonatomic, assign) BOOL windowListLoaded;
 @property (nonatomic, strong) NSTimer *displayTimer;
@@ -142,43 +143,51 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 - (void)setUpReactions;
 {
     // Interface is only visible when Switch is active, the window list has loaded, and the display timer has timed out.
-    [[[RACSignal
+    [[[[RACSignal
        combineLatest:@[RACObserve(self, windowListLoaded), RACObserve(self, displayTimer)]
        reduce:^(NSNumber *windowListLoaded, NSTimer *displayTimer) {
            return @(self.active && [windowListLoaded boolValue] && !displayTimer);
        }]
       distinctUntilChanged]
+      skip:1]
      subscribeNext:^(NSNumber *shouldDisplayInterface) {
          if ([shouldDisplayInterface boolValue]) {
-             // TODO(numist): is there a better way to catch mouse moved events than this? Because ugh.
              [self.window setFrame:[NSScreen mainScreen].frame display:YES];
              [self.window orderFront:self];
+             Log(@"Showed interface (%0.5fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
          } else {
+             Log(@"Hiding interface (%0.5fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
              [self.window orderOut:self];
          }
      }];
     
     // Adjust the selected index by 1 if the first window's application is not already frontmost, but do this as late as possible.
-    [[[RACSignal
+    [[[[RACSignal
        combineLatest:@[RACObserve(self, pendingSwitch), RACObserve(self, displayTimer)]
        reduce:^(NSNumber *pendingSwitch, NSTimer *displayTimer){
-           return @([pendingSwitch boolValue] == YES || displayTimer == nil);
+           return @([pendingSwitch boolValue] || displayTimer == nil);
        }]
       distinctUntilChanged]
+      skip:1]
      subscribeNext:^(NSNumber *adjustIndex) {
          if (!self.adjustedIndex && [adjustIndex boolValue]) {
              if (self.selectedIndex == 1 && [self.windows count] > 1 && ![((NNWindow *)[self.windows objectAtIndex:0]).application isFrontMostApplication]) {
+                 Log(@"Adjusted index to select first window (%0.5fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
                  self.selectedIndex = 0;
+             } else {
+                 Log(@"Index does not need adjustment (%0.5fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
              }
              self.adjustedIndex = YES;
          }
      }];
     
     // Clean up all that crazy state when the activation state changes.
-    [[[RACObserve(self, active) skip:1]
+    [[[RACObserve(self, active)
       distinctUntilChanged]
+      skip:1]
      subscribeNext:^(NSNumber *active) {
          if ([active boolValue]) {
+             Log(@"Switch is active (%0.5fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
              Check(![self.windows count]);
              Check(!self.displayTimer);
              
@@ -189,6 +198,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
              
              [self.store startUpdatingWindowList];
          } else {
+             Log(@"Deactivating Switch (%0.5fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
              Check(!self.pendingSwitch);
              
              [self.store stopUpdatingWindowList];
@@ -227,7 +237,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
                              if (raiseSuccessful) {
                                  if (!self.active) {
                                      #pragma message "Logging the flow that gets us into this state is a pain, but worth doing at some point because it happens a lot under fast, repetitive use."
-                                     NSLog(@"Switcher already inactive after successful -raise");
+                                     Log(@"Switcher already inactive after successful -raise");
                                  }
                                  self.active = NO;
                              }
@@ -353,6 +363,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 - (void)storeDidChangeContent:(NNWindowStore *)store;
 {
     if (!self.windowListLoaded) {
+        Log(@"Window list loaded with %lu windows (%0.5fs elapsed)", (unsigned long)self.windows.count, [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
         [self.store startUpdatingWindowContents];
         self.windowListLoaded = YES;
     }
@@ -391,6 +402,8 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
             
             // If the interface is not being shown, bring it up.
             if (!self.active) {
+                self.invocationTime = [NSDate date];
+                Log(@"Invoked (0s elapsed)");
                 self.active = YES;
             }
             break;
@@ -398,6 +411,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
         case NNEventManagerEventTypeDismiss: {
             if (self.active) {
+                Log(@"Dismissed (%0.5fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
                 self.pendingSwitch = YES;
             }
             break;
