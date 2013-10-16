@@ -222,7 +222,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
         
         NSNumber *boxedKeyDownEventType = self.keyMap[key];
         // Invoke maps to Increment at this point
-        if ([boxedKeyDownEventType unsignedIntegerValue] == NNEventManagerEventTypeInvoke) {
+        if (boxedKeyDownEventType && [boxedKeyDownEventType unsignedIntegerValue] == NNEventManagerEventTypeInvoke) {
             boxedKeyDownEventType = @(NNEventManagerEventTypeIncrement);
         }
 
