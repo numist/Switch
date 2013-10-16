@@ -236,8 +236,8 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
                          dispatch_async(dispatch_get_main_queue(), ^{
                              if (raiseSuccessful) {
                                  if (!self.active) {
-                                     #pragma message "Logging the flow that gets us into this state is a pain, but worth doing at some point because it happens a lot under fast, repetitive use."
                                      NNLog(@"Switcher already inactive after successful -raise");
+                                     DebugBreak();
                                  }
                                  self.active = NO;
                              }
