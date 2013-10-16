@@ -62,7 +62,7 @@
 }
 
 - (IBAction)quitPressed:(NSButton *)sender {
-    exit(0);
+    [[NSApplication sharedApplication] terminate:self];
 }
 
 - (IBAction)checkForUpdatesPressed:(NSButton *)sender {
