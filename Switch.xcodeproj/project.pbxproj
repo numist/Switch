@@ -11,6 +11,7 @@
 		BC5A9798180E5A6F002ECD56 /* NNStatusBarMenuService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5A9797180E5A6F002ECD56 /* NNStatusBarMenuService.m */; };
 		BC5A979B180E6949002ECD56 /* NNLoggingService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5A979A180E6949002ECD56 /* NNLoggingService.m */; };
 		BC5A979E180F2683002ECD56 /* NNDashWindowFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5A979D180F2683002ECD56 /* NNDashWindowFilter.m */; };
+		BC5A97A0180F2BBD002ECD56 /* NNDashRegressionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5A979F180F2BBD002ECD56 /* NNDashRegressionTests.m */; };
 		BC63AB8F1755907D00016B9E /* NNHUDCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */; };
 		BC63AB921756FBE400016B9E /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB911756FBE300016B9E /* Carbon.framework */; };
 		BC63AB9A175701D900016B9E /* Haxcessibility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
@@ -205,6 +206,7 @@
 		BC5A9799180E6949002ECD56 /* NNLoggingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNLoggingService.h; sourceTree = "<group>"; };
 		BC5A979A180E6949002ECD56 /* NNLoggingService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNLoggingService.m; sourceTree = "<group>"; };
 		BC5A979D180F2683002ECD56 /* NNDashWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNDashWindowFilter.m; sourceTree = "<group>"; };
+		BC5A979F180F2BBD002ECD56 /* NNDashRegressionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNDashRegressionTests.m; sourceTree = "<group>"; };
 		BC63AB8D1755907D00016B9E /* NNHUDCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHUDCollectionView.h; sourceTree = "<group>"; };
 		BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDCollectionView.m; sourceTree = "<group>"; };
 		BC63AB911756FBE300016B9E /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
@@ -479,6 +481,7 @@
 		BCA7350316DAC54000CD4C74 /* SwitchTests */ = {
 			isa = PBXGroup;
 			children = (
+				BC5A979F180F2BBD002ECD56 /* NNDashRegressionTests.m */,
 				BCCE8CF818093037006B0059 /* NNGithubRegressionTests.m */,
 				BCCA7B2A1809112900CE36E5 /* NNHelperTests.m */,
 				BC8D8DA0177BA53100B7A135 /* NNHUDCollectionViewTests.m */,
@@ -912,6 +915,7 @@
 				BCCE8CF718092CDF006B0059 /* NNPowerboxRegressionTests.m in Sources */,
 				BCCE8CEE18091AFC006B0059 /* NSImage+NNFilesystem.m in Sources */,
 				BC8D8DA1177BA53100B7A135 /* NNHUDCollectionViewTests.m in Sources */,
+				BC5A97A0180F2BBD002ECD56 /* NNDashRegressionTests.m in Sources */,
 				BCCA7B2B1809112900CE36E5 /* NNHelperTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
