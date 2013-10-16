@@ -30,3 +30,15 @@ To check out the project, its submodules, and open in Xcode:
 At this point, `⌘R` should have you up and running!
 
 **NOTE:** Building Switch requires Mac OS X version 10.8 or newer and Xcode 5.
+
+Thanks!
+-------
+
+Switch relies on a number of [external frameworks](https://github.com/numist/Switch/tree/develop/Frameworks), thanks to the people responsible for them, you've saved me time and tears. Special thanks to @robrix.
+
+A number of people have influenced Switch's development without being authors (or perhaps even realizing it). Thanks to:
+* [@andymatuschak](https://github.com/andymatuschak)
+* [@Catfish_Man](https://twitter.com/Catfish_Man) and the NSCoders in general
+* [@gwynne](https://github.com/gwynne)
+* [@quicklywilliam](https://github.com/quicklywilliam)
+* [@zadr](https://github.com/zadr)
