@@ -34,7 +34,10 @@
     // and set self.menu.menu to a menu (AND RENAME THAT SHIT WHAT THE EVERLOVING FUCK)
     NSMenuItem * menuItem;
     
+#   pragma clang diagnostic push
+#   pragma clang diagnostic ignored "-Wselector"
     menuItem = [[NSMenuItem alloc] initWithTitle:@"Preferences…" action:@selector(showPreferences:) keyEquivalent:@""];
+#   pragma clang diagnostic pop
     menuItem.target = [NSApplication sharedApplication].delegate;
     [menu addItem:menuItem];
     
@@ -60,7 +63,10 @@
         _debugItems = debugItems;
     }
     
+#   pragma clang diagnostic push
+#   pragma clang diagnostic ignored "-Wselector"
     menuItem = [[NSMenuItem alloc] initWithTitle:@"Quit" action:@selector(terminate:) keyEquivalent:@""];
+#   pragma clang diagnostic pop
     menuItem.target = [NSApplication sharedApplication];
     [menu addItem:menuItem];
     
