@@ -10,6 +10,7 @@
 		BC43A626177A5CBC0082F981 /* NNWindow+NNWindowFiltering.m in Sources */ = {isa = PBXBuildFile; fileRef = BC43A625177A5CBC0082F981 /* NNWindow+NNWindowFiltering.m */; };
 		BC5A9798180E5A6F002ECD56 /* NNStatusBarMenuService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5A9797180E5A6F002ECD56 /* NNStatusBarMenuService.m */; };
 		BC5A979B180E6949002ECD56 /* NNLoggingService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5A979A180E6949002ECD56 /* NNLoggingService.m */; };
+		BC5A979E180F2683002ECD56 /* NNDashWindowFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5A979D180F2683002ECD56 /* NNDashWindowFilter.m */; };
 		BC63AB8F1755907D00016B9E /* NNHUDCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */; };
 		BC63AB921756FBE400016B9E /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB911756FBE300016B9E /* Carbon.framework */; };
 		BC63AB9A175701D900016B9E /* Haxcessibility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
@@ -203,6 +204,7 @@
 		BC5A9797180E5A6F002ECD56 /* NNStatusBarMenuService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNStatusBarMenuService.m; sourceTree = "<group>"; };
 		BC5A9799180E6949002ECD56 /* NNLoggingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNLoggingService.h; sourceTree = "<group>"; };
 		BC5A979A180E6949002ECD56 /* NNLoggingService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNLoggingService.m; sourceTree = "<group>"; };
+		BC5A979D180F2683002ECD56 /* NNDashWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNDashWindowFilter.m; sourceTree = "<group>"; };
 		BC63AB8D1755907D00016B9E /* NNHUDCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHUDCollectionView.h; sourceTree = "<group>"; };
 		BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDCollectionView.m; sourceTree = "<group>"; };
 		BC63AB911756FBE300016B9E /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
@@ -642,6 +644,7 @@
 				BCFF2310177DD454008759C4 /* NNWindowFilter.h */,
 				BCFF2311177DD454008759C4 /* NNWindowFilter.m */,
 				BCFF2317177DDF46008759C4 /* NNGitHubWindowFilter.m */,
+				BC5A979D180F2683002ECD56 /* NNDashWindowFilter.m */,
 				BCFF231D177DE0FE008759C4 /* NNObviousSheetsWindowFilter.m */,
 				BCFF231A177DDFE8008759C4 /* NNPowerboxWindowFilter.m */,
 				BCFF2314177DD812008759C4 /* NNTweetbotWindowFilter.m */,
@@ -871,6 +874,7 @@
 				BCFF2318177DDF46008759C4 /* NNGitHubWindowFilter.m in Sources */,
 				BCCA7B181809008900CE36E5 /* NSNotificationCenter+RACSupport.m in Sources */,
 				BCFF232D177E00FB008759C4 /* NNAXDisabledWindowController.m in Sources */,
+				BC5A979E180F2683002ECD56 /* NNDashWindowFilter.m in Sources */,
 				BCCA7AD0180896D100CE36E5 /* helpers.m in Sources */,
 				BCA7352516DAC93C00CD4C74 /* NNApplication.m in Sources */,
 				BCA7352F16DB239900CD4C74 /* NNWindowThumbnailView.m in Sources */,
