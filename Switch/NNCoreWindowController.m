@@ -154,9 +154,9 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
          if ([shouldDisplayInterface boolValue]) {
              [self.window setFrame:[NSScreen mainScreen].frame display:YES];
              [self.window orderFront:self];
-             NNLog(@"Showed interface (%0.5fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+             NNLog(@"Showed interface (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
          } else {
-             NNLog(@"Hiding interface (%0.5fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+             NNLog(@"Hiding interface (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
              [self.window orderOut:self];
          }
      }];
@@ -172,10 +172,10 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
      subscribeNext:^(NSNumber *adjustIndex) {
          if (!self.adjustedIndex && [adjustIndex boolValue]) {
              if (self.selectedIndex == 1 && [self.windows count] > 1 && ![((NNWindow *)[self.windows objectAtIndex:0]).application isFrontMostApplication]) {
-                 NNLog(@"Adjusted index to select first window (%0.5fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+                 NNLog(@"Adjusted index to select first window (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
                  self.selectedIndex = 0;
              } else {
-                 NNLog(@"Index does not need adjustment (%0.5fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+                 NNLog(@"Index does not need adjustment (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
              }
              self.adjustedIndex = YES;
          }
@@ -187,7 +187,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
       skip:1]
      subscribeNext:^(NSNumber *active) {
          if ([active boolValue]) {
-             NNLog(@"Switch is active (%0.5fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+             NNLog(@"Switch is active (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
              Check(![self.windows count]);
              Check(!self.displayTimer);
              
@@ -198,7 +198,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
              
              [self.store startUpdatingWindowList];
          } else {
-             NNLog(@"Deactivating Switch (%0.5fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+             NNLog(@"Deactivating Switch (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
              Check(!self.pendingSwitch);
              
              [self.store stopUpdatingWindowList];
@@ -363,8 +363,8 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 - (void)storeDidChangeContent:(NNWindowStore *)store;
 {
     if (!self.windowListLoaded) {
-        NNLog(@"Window list loaded with %lu windows (%0.5fs elapsed)", (unsigned long)self.windows.count, [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
         [self.store startUpdatingWindowContents];
+        NNLog(@"Window list loaded with %lu windows (%.3fs elapsed)", (unsigned long)self.windows.count, [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
         self.windowListLoaded = YES;
     }
     
@@ -385,6 +385,9 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     if (![timer isEqual:self.displayTimer]) {
         return;
     }
+    
+    NSTimeInterval elapsed = [[NSDate date] timeIntervalSinceDate:self.invocationTime];
+    NNLog(@"Display timer fired %.3fs %@ (%.3fs elapsed)", fabs(elapsed - kNNWindowDisplayDelay), (elapsed - kNNWindowDisplayDelay) > 0.0 ? @"late" : @"early", elapsed);
     
     self.displayTimer = nil;
 }
@@ -411,7 +414,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
         case NNEventManagerEventTypeDismiss: {
             if (self.active) {
-                NNLog(@"Dismissed (%0.5fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+                NNLog(@"Dismissed (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
                 self.pendingSwitch = YES;
             }
             break;

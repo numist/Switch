@@ -202,14 +202,14 @@
     // First, raise the window
     NSError *error;
     if (![self.haxWindow performAction:(__bridge NSString *)kAXRaiseAction error:&error]) {
-        NNLog(@"Raise window %@ failed after %0.5fs: %@", self, [[NSDate date] timeIntervalSinceDate:start], error);
+        NNLog(@"Raise window %@ failed after %.3fs: %@", self, [[NSDate date] timeIntervalSinceDate:start], error);
         return NO;
     }
     
     // Then raise the application (if it's not already topmost)
     [self.application raise];
     
-    NNLog(@"Raising window %@ took %0.5fs", self, [[NSDate date] timeIntervalSinceDate:start]);
+    NNLog(@"Raising window %@ took %.3fs", self, [[NSDate date] timeIntervalSinceDate:start]);
     return YES;
 }
 
@@ -223,9 +223,9 @@
     
     NSTimeInterval elapsed = [[NSDate date] timeIntervalSinceDate:start];
     if (result) {
-        NNLog(@"Closing window %@ took %0.5fs", self, elapsed);
+        NNLog(@"Closing window %@ took %.3fs", self, elapsed);
     } else {
-        NNLog(@"Close window %@ failed after %0.5fs: %@", self, elapsed, error);
+        NNLog(@"Close window %@ failed after %.3fs: %@", self, elapsed, error);
     }
     
     return result;
