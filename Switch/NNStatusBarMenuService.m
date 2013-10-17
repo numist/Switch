@@ -33,6 +33,7 @@
     
     NSStatusItem *statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSSquareStatusItemLength];
     statusItem.image = [[NSBundle mainBundle] imageForResource:@"weave"];
+    statusItem.highlightMode = YES;
     statusItem.target = self;
     
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Status Bar Menu"];
