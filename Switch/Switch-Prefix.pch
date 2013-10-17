@@ -2,6 +2,10 @@
 // Prefix header for all source files of the 'Switch' target in the 'Switch' project
 //
 
+#define Log(fmt, ...) do { \
+    NSLog(@"%@:%d %@", [[[NSString alloc] initWithCString:(__FILE__) encoding:NSUTF8StringEncoding] lastPathComponent], __LINE__, [NSString stringWithFormat:(fmt), ##__VA_ARGS__]); \
+} while(0)
+
 #ifdef __OBJC__
 #   import <Cocoa/Cocoa.h>
 #   import <NNKit/NNKit.h>
