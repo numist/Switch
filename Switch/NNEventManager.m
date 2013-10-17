@@ -40,6 +40,7 @@ static NSDictionary *kNNKeysNeedKeyUpEvent;
 }
 
 @property (nonatomic, assign) BOOL activatedSwitcher;
+@property (nonatomic, assign) __typeof__(NNHotKeyModifierKey) modifiers;
 
 @property (nonatomic, strong, readonly) NSMutableDictionary *keyMap;
 
@@ -215,8 +216,9 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     }
     
     if (switcherActive) {
-        if (!modifiers) {
+        if (!modifiers && self.modifiers != modifiers) {
             [self dispatchEvent:NNEventManagerEventTypeDismiss];
+            self.modifiers = modifiers;
             return NULL;
         }
         
@@ -242,6 +244,8 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
         
         event = NULL;
     }
+    
+    self.modifiers = modifiers;
     
     return event;
 }
