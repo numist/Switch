@@ -29,8 +29,6 @@ To check out the project, its submodules, and open in Xcode:
 
 At this point, `⌘R` should have you up and running!
 
-**NOTE:** Building Switch requires Mac OS X version 10.8 or newer and Xcode 5.
-
 Thanks!
 -------
 
