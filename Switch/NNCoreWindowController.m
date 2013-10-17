@@ -31,7 +31,7 @@ NSString const *NNCoreWindowControllerActivityNotification = @"NNCoreWindowContr
 NSString const *NNCoreWindowControllerActiveKey = @"NNCoreWindowControllerActiveKey";
 
 
-static NSTimeInterval kNNWindowDisplayDelay = 0.15;
+static NSTimeInterval kNNWindowDisplayDelay = 0.1;
 
 
 @interface NNCoreWindowController () <NNWindowStoreDelegate, NNHUDCollectionViewDataSource, NNHUDCollectionViewDelegate>
@@ -154,6 +154,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
          if ([shouldDisplayInterface boolValue]) {
              [self.window setFrame:[NSScreen mainScreen].frame display:YES];
              [self.window orderFront:self];
+             [self.store startUpdatingWindowContents];
              NNLog(@"Showed interface (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
          } else {
              NNLog(@"Hiding interface (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
@@ -363,7 +364,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 - (void)storeDidChangeContent:(NNWindowStore *)store;
 {
     if (!self.windowListLoaded) {
-        [self.store startUpdatingWindowContents];
         NNLog(@"Window list loaded with %lu windows (%.3fs elapsed)", (unsigned long)self.windows.count, [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
         self.windowListLoaded = YES;
     }
