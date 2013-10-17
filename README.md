@@ -7,7 +7,7 @@ Switch is a window-based (as opposed to application-based) context switcher. By 
 
 This project is functional, but not finished. I'm using it every day, but I could use your help.
 
-Contributions in the form of [beers](mailto:numist@numist.net?cc=pay@square.com&subject=Here%27s%20%245&body=For%20a%20Switch%20beer%21%0A%0A%28If%20you%20don%27t%20have%20Square%20Cash%20yet%2C%20send%20this%20message%20anyway%20and%20I%20can%20invite%20you.%20If%20you%20haven%27t%20heard%20of%20it%2C%20check%20out%20https%3A%2F%2Fsquare.com%2Fcash%2F%20%29), [patches](https://github.com/numist/Switch/pull/new), and [issues](https://github.com/numist/Switch/issues) are appreciated.
+Contributions in the form of [beers](mailto:numist@numist.net?cc=pay@square.com&subject=Here%27s%20%245&body=For%20a%20Switch%20beer%21%0A%0A%28If%20you%20don%27t%20have%20Square%20Cash%20yet%2C%20send%20this%20message%20anyway%20and%20I%20can%20invite%20you.%20If%20you%20haven%27t%20heard%20of%20it%2C%20check%20out%20https%3A%2F%2Fsquare.com%2Fcash%2F%20%29), [patches](https://github.com/numist/Switch/pull/new), and [issues](https://github.com/numist/Switch/issues) are appreciated. If a window is being improperly shown or omitted from the list, please include a [snapshot](https://github.com/numist/Switch/wiki/About-Snapshots).
 
 Getting Started
 ---------------
