@@ -31,15 +31,6 @@
 
 @implementation NNAppDelegate
 
-#pragma mark NSObject
-
-- (void)dealloc;
-{
-    if (_launched) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:NNEventManagerKeyNotificationName object:[NNEventManager sharedManager]];
-    }
-}
-
 #pragma mark NSApplicationDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
@@ -50,23 +41,20 @@
     [[NNServiceManager sharedManager] registerService:[NNStatusBarMenuService self]];
     [[NNServiceManager sharedManager] registerService:[NNAXAPIService self]];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hotKeyManagerEventNotification:) name:NNEventManagerKeyNotificationName object:[NNEventManager sharedManager]];
-    self.launched = YES;
+    [[[NSNotificationCenter defaultCenter] rac_addObserverForName:NNEventManagerKeyNotificationName object:[NNEventManager sharedManager]]
+        subscribeNext:^(NSNotification *x) {
+            if ([x.userInfo[NNEventManagerEventTypeKey] unsignedIntegerValue] == NNEventManagerEventTypeShowPreferences) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self showPreferencesWindow];
+                });
+            }
+        }];
 }
 
 #pragma mark IBActions
 
 - (IBAction)showPreferences:(id)sender {
     [[NNPreferencesService sharedService] showPreferencesWindow:sender];
-}
-
-#pragma mark Notifications
-
-- (void)hotKeyManagerEventNotification:(NSNotification *)notification;
-{
-    if ([notification.userInfo[NNEventManagerEventTypeKey] unsignedIntegerValue] == NNEventManagerEventTypeShowPreferences) {
-        [self showPreferencesWindow];
-    }
 }
 
 #pragma mark Internal
