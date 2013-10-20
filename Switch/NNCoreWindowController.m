@@ -34,7 +34,7 @@ NSString const *NNCoreWindowControllerActiveKey = @"NNCoreWindowControllerActive
 static NSTimeInterval kNNWindowDisplayDelay = 0.1;
 
 
-@interface NNCoreWindowController () <NNWindowStoreDelegate, NNHUDCollectionViewDataSource, NNHUDCollectionViewDelegate>
+@interface NNCoreWindowController () <NNWindowStoreDelegate, NNHUDCollectionViewDataSource, NNHUDCollectionViewDelegate, NNService>
 
 #pragma mark State
 @property (nonatomic, strong) NSDate *invocationTime;
@@ -81,6 +81,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
     (void)self.window;
     [self setUpReactions];
     
+#   pragma message "RACify this stuff"
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hotKeyManagerEventNotification:) name:NNEventManagerKeyNotificationName object:self.keyManager];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hotKeyManagerMouseNotification:) name:NNEventManagerMouseNotificationName object:self.keyManager];
     
@@ -151,6 +152,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
       distinctUntilChanged]
       skip:1]
      subscribeNext:^(NSNumber *shouldDisplayInterface) {
+#        pragma message "Factor this stuff out"
          if ([shouldDisplayInterface boolValue]) {
              [self.window setFrame:[NSScreen mainScreen].frame display:YES];
              [self.window orderFront:self];
@@ -217,7 +219,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
       distinctUntilChanged]
      subscribeNext:^(id x) {
          RACTupleUnpack(NSNumber *pendingSwitch, NSNumber *windowListLoaded) = x;
-         
+#        pragma message "this could be -reduced"
          if ([pendingSwitch boolValue] && [windowListLoaded boolValue]) {
              dispatch_async(dispatch_get_main_queue(), ^{
                  self.pendingSwitch = NO;
@@ -286,6 +288,28 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
     }
     
     return result;
+}
+
+#pragma mark NNService
+
++ (id)sharedService;
+{
+    static id<NNService> _sharedService = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedService = [[self alloc] initWithWindow:nil];
+    });
+    return _sharedService;
+}
+
+- (NNServiceType)serviceType;
+{
+    return NNServiceTypePersistent;
+}
+
+- (NSSet *)dependencies;
+{
+    return nil;
 }
 
 #pragma mark NNHUDCollectionViewDataSource

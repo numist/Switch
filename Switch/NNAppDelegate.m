@@ -29,7 +29,6 @@
 @interface NNAppDelegate ()
 
 @property (nonatomic, strong) NNAXDisabledWindowController *disabledWindowController;
-@property (nonatomic, strong) NNCoreWindowController *coreWindowController;
 @property (nonatomic, strong) NNPreferencesWindowController *preferencesWindowController;
 @property (nonatomic, strong) NNStatusBarMenuService *menuService;
 @property (nonatomic, assign) BOOL launched;
@@ -70,9 +69,9 @@
     }
 #   endif
     
-    self.coreWindowController = [[NNCoreWindowController alloc] initWithWindow:nil];
-    
-    #pragma message "Ultimately there should be one source of truth for setting (and changing!) hotkeys."
+    [[NNServiceManager sharedManager] registerService:[NNCoreWindowController self]];
+
+#   pragma message "Ultimately there should be one source of truth for setting (and changing!) hotkeys."
     [[NNEventManager sharedManager] registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_ANSI_Comma modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeShowPreferences];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accessibilityAPIDisabled:) name:NNAXAPIDisabledNotification object:nil];

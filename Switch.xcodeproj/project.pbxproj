@@ -336,6 +336,8 @@
 		BC5A978D180E5A66002ECD56 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				BC6B6D11178DDBDA001D691D /* NNCoreWindowController.h */,
+				BC6B6D12178DDBDA001D691D /* NNCoreWindowController.m */,
 				BC5A9799180E6949002ECD56 /* NNLoggingService.h */,
 				BC5A979A180E6949002ECD56 /* NNLoggingService.m */,
 				BC5A9796180E5A6F002ECD56 /* NNStatusBarMenuService.h */,
@@ -356,8 +358,6 @@
 				BCCA7A601807894A00CE36E5 /* NNPreferencesWindowController.h */,
 				BCCA7A611807894A00CE36E5 /* NNPreferencesWindowController.m */,
 				BCCA7A621807894A00CE36E5 /* NNPreferencesWindowController.xib */,
-				BC6B6D11178DDBDA001D691D /* NNCoreWindowController.h */,
-				BC6B6D12178DDBDA001D691D /* NNCoreWindowController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
