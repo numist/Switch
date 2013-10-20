@@ -14,21 +14,16 @@
 
 #import "NNAppDelegate.h"
 
-#import <dlfcn.h>
-
-#import "NNAPIEnabledWorker.h"
-#import "NNAXDisabledWindowController.h"
+#import "NNAXAPIService.h"
 #import "NNCoreWindowController.h"
-#import "NNHotKey.h"
 #import "NNEventManager.h"
 #import "NNLoggingService.h"
 #import "NNPreferencesService.h"
 #import "NNStatusBarMenuService.h"
-
+#import "NSNotificationCenter+RACSupport.h"
 
 @interface NNAppDelegate ()
 
-@property (nonatomic, strong) NNAXDisabledWindowController *disabledWindowController;
 @property (nonatomic, assign) BOOL launched;
 
 @end
@@ -41,7 +36,6 @@
 - (void)dealloc;
 {
     if (_launched) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:NNAXAPIDisabledNotification object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:NNEventManagerKeyNotificationName object:[NNEventManager sharedManager]];
     }
 }
@@ -54,14 +48,9 @@
     [[NNServiceManager sharedManager] registerService:[NNPreferencesService self]];
     [[NNServiceManager sharedManager] registerService:[NNCoreWindowController self]];
     [[NNServiceManager sharedManager] registerService:[NNStatusBarMenuService self]];
+    [[NNServiceManager sharedManager] registerService:[NNAXAPIService self]];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accessibilityAPIDisabled:) name:NNAXAPIDisabledNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hotKeyManagerEventNotification:) name:NNEventManagerKeyNotificationName object:[NNEventManager sharedManager]];
-
-    if (![NNAPIEnabledWorker isAPIEnabled]) {
-        [self requestAXAPITrust];
-    }
-
     self.launched = YES;
 }
 
@@ -73,52 +62,14 @@
 
 #pragma mark Notifications
 
-- (void)accessibilityAPIDisabled:(NSNotification *)note;
-{
-    [self requestAXAPITrust];
-}
-
 - (void)hotKeyManagerEventNotification:(NSNotification *)notification;
 {
-    NNEventManagerEventType eventType = [notification.userInfo[NNEventManagerEventTypeKey] unsignedIntegerValue];
-    
-    switch (eventType) {
-        case NNEventManagerEventTypeShowPreferences:
-            [self showPreferencesWindow];
-            break;
-            
-        default:
-            break;
+    if ([notification.userInfo[NNEventManagerEventTypeKey] unsignedIntegerValue] == NNEventManagerEventTypeShowPreferences) {
+        [self showPreferencesWindow];
     }
 }
 
 #pragma mark Internal
-
-- (void)requestAXAPITrust;
-{
-    #pragma message "Remove when it's time to deprecate Mountain Lion."
-    static Boolean (*isProcessTrustedWithOptions)(CFDictionaryRef options);
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        void* handle = dlopen(0,RTLD_NOW|RTLD_GLOBAL);
-        assert(handle);
-        isProcessTrustedWithOptions = dlsym(handle, "AXIsProcessTrustedWithOptions");
-        dlclose(handle);
-        handle = NULL;
-    });
-    
-    if (isProcessTrustedWithOptions) {
-        #pragma message "That string literal should be changed to the appropriate symbol when 10.9 has shipped."
-        isProcessTrustedWithOptions((__bridge CFDictionaryRef)@{ @"AXTrustedCheckOptionPrompt" : @YES });
-    } else {
-        static dispatch_once_t twiceToken;
-        dispatch_once(&twiceToken, ^{
-            self.disabledWindowController = [[NNAXDisabledWindowController alloc] initWithWindowNibName:@"NNAXDisabledWindowController"];
-        });
-        
-        [self.disabledWindowController showWindow:self];
-    }
-}
 
 - (void)showPreferencesWindow;
 {
