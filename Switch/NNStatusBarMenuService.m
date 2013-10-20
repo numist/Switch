@@ -93,13 +93,13 @@
 
 - (IBAction)snapshot:(id)sender;
 {
-    [[NNLoggingService sharedLoggingService] takeWindowListSnapshot];
+    [[NNLoggingService sharedService] takeWindowListSnapshot];
     [self openLogFolder:self];
 }
 
 - (IBAction)openLogFolder:(id)sender;
 {
-    [[NSWorkspace sharedWorkspace] openFile:[[NNLoggingService sharedLoggingService] logDirectoryPath]];
+    [[NSWorkspace sharedWorkspace] openFile:[[NNLoggingService sharedService] logDirectoryPath]];
 }
 
 - (void)menuNeedsUpdate:(NSMenu *)menu;

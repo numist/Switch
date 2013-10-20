@@ -21,6 +21,7 @@
 #import "NNCoreWindowController.h"
 #import "NNHotKey.h"
 #import "NNEventManager.h"
+#import "NNLoggingService.h"
 #import "NNPreferencesWindowController.h"
 #import "NNStatusBarMenuService.h"
 
@@ -52,6 +53,8 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
+    [[NNServiceManager sharedManager] registerService:[NNLoggingService self]];
+    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     #pragma message "Keys (and default values) should be DRYed up a bit more."
     NSDictionary *userDefaultsValues = @{ @"firstLaunch" : @YES };

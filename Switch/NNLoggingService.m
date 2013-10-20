@@ -17,14 +17,6 @@
 #import "NNWindow+Private.h"
 
 
-static NNLoggingService *sharedLoggingService;
-
-
-__attribute__((constructor)) static void initializeLoggingService() {
-    (void)[NNLoggingService sharedLoggingService];
-}
-
-
 @interface NNLoggingService ()
 
 @property (nonatomic, strong) NSDateComponents *logDate;
@@ -34,19 +26,14 @@ __attribute__((constructor)) static void initializeLoggingService() {
 
 @implementation NNLoggingService
 
-#pragma mark - NNLoggingService
+#pragma mark - NNService
 
-+ (NNLoggingService *)sharedLoggingService;
+- (NNServiceType)serviceType;
 {
-    if (!sharedLoggingService) {
-        @synchronized([NNLoggingService class]) {
-            if (!sharedLoggingService) {
-                sharedLoggingService = [NNLoggingService new];
-            }
-        }
-    }
-    return sharedLoggingService;
+    return NNServiceTypePersistent;
 }
+
+#pragma mark - NNLoggingService
 
 - (NSString *)logDirectoryPath;
 {

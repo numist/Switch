@@ -14,9 +14,8 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NNLoggingService : NSObject
 
-+ (NNLoggingService *)sharedLoggingService;
+@interface NNLoggingService : NNService
 
 - (NSString *)logDirectoryPath;
 - (void)rotateLogIfNecessary;
@@ -25,6 +24,6 @@
 @end
 
 #define NNLog(fmt, ...) do { \
-        [[NNLoggingService sharedLoggingService] rotateLogIfNecessary]; \
+        [[NNLoggingService sharedService] rotateLogIfNecessary]; \
         Log(fmt, ##__VA_ARGS__); \
     } while(0)
