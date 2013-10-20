@@ -30,7 +30,6 @@
 
 @property (nonatomic, strong) NNAXDisabledWindowController *disabledWindowController;
 @property (nonatomic, strong) NNPreferencesWindowController *preferencesWindowController;
-@property (nonatomic, strong) NNStatusBarMenuService *menuService;
 @property (nonatomic, assign) BOOL launched;
 
 @end
@@ -87,7 +86,7 @@
         [defaults setBool:NO forKey:@"firstLaunch"];
     }
     
-    self.menuService = [NNStatusBarMenuService new];
+    [[NNServiceManager sharedManager] registerService:[NNStatusBarMenuService self]];
 
     [defaults synchronize];
     self.launched = YES;

@@ -14,6 +14,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NNStatusBarMenuService : NSObject
+@interface NNStatusBarMenuService : NNService
 
 @end

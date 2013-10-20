@@ -91,6 +91,11 @@
     return self;
 }
 
+- (NNServiceType)serviceType;
+{
+    return NNServiceTypePersistent;
+}
+
 - (IBAction)snapshot:(id)sender;
 {
     [[NNLoggingService sharedService] takeWindowListSnapshot];
