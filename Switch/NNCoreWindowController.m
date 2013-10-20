@@ -71,17 +71,12 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
     self.windows = [NSMutableOrderedSet new];
     self.store = [[NNWindowStore alloc] initWithDelegate:self];
     
-    self.keyManager = [NNEventManager sharedManager];
-    [self.keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_Tab modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeInvoke];
-    [self.keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_Tab modifiers:(NNHotKeyModifierOption | NNHotKeyModifierShift)] forEvent:NNEventManagerEventTypeDecrement];
-    [self.keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_ANSI_W modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeCloseWindow];
-    [self.keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_Escape modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeCancel];
-    
     Check(![self isWindowLoaded]);
     (void)self.window;
     [self setUpReactions];
     
 #   pragma message "RACify this stuff"
+    self.keyManager = [NNEventManager sharedManager];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hotKeyManagerEventNotification:) name:NNEventManagerKeyNotificationName object:self.keyManager];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hotKeyManagerMouseNotification:) name:NNEventManagerMouseNotificationName object:self.keyManager];
     

@@ -22,14 +22,13 @@
 #import "NNHotKey.h"
 #import "NNEventManager.h"
 #import "NNLoggingService.h"
-#import "NNPreferencesWindowController.h"
+#import "NNPreferencesService.h"
 #import "NNStatusBarMenuService.h"
 
 
 @interface NNAppDelegate ()
 
 @property (nonatomic, strong) NNAXDisabledWindowController *disabledWindowController;
-@property (nonatomic, strong) NNPreferencesWindowController *preferencesWindowController;
 @property (nonatomic, assign) BOOL launched;
 
 @end
@@ -52,52 +51,24 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     [[NNServiceManager sharedManager] registerService:[NNLoggingService self]];
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    #pragma message "Keys (and default values) should be DRYed up a bit more."
-    NSDictionary *userDefaultsValues = @{ @"firstLaunch" : @YES };
-    [defaults registerDefaults:userDefaultsValues];
-
-#   if DEBUG
-    {
-        BOOL resetDefaults = NO;
-        
-        if (resetDefaults) {
-            [defaults removeObjectForKey:@"firstLaunch"];
-        }
-    }
-#   endif
-    
+    [[NNServiceManager sharedManager] registerService:[NNPreferencesService self]];
     [[NNServiceManager sharedManager] registerService:[NNCoreWindowController self]];
+    [[NNServiceManager sharedManager] registerService:[NNStatusBarMenuService self]];
 
-#   pragma message "Ultimately there should be one source of truth for setting (and changing!) hotkeys."
-    [[NNEventManager sharedManager] registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_ANSI_Comma modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeShowPreferences];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accessibilityAPIDisabled:) name:NNAXAPIDisabledNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hotKeyManagerEventNotification:) name:NNEventManagerKeyNotificationName object:[NNEventManager sharedManager]];
 
     if (![NNAPIEnabledWorker isAPIEnabled]) {
         [self requestAXAPITrust];
     }
-    
-    self.preferencesWindowController = [[NNPreferencesWindowController alloc] initWithWindowNibName:@"NNPreferencesWindowController"];
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"firstLaunch"]) {
-        [self.preferencesWindowController showWindow:self];
-        [defaults setBool:NO forKey:@"firstLaunch"];
-    }
-    
-    [[NNServiceManager sharedManager] registerService:[NNStatusBarMenuService self]];
 
-    [defaults synchronize];
     self.launched = YES;
 }
 
 #pragma mark IBActions
 
 - (IBAction)showPreferences:(id)sender {
-    [self.preferencesWindowController showWindow:self];
-    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
-    [self.preferencesWindowController.window makeKeyAndOrderFront:self];
+    [[NNPreferencesService sharedService] showPreferencesWindow:sender];
 }
 
 #pragma mark Notifications
