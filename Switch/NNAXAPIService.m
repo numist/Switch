@@ -14,20 +14,7 @@
 
 #import "NNAXAPIService.h"
 
-#import <dlfcn.h>
-
 #import "NNAPIEnabledWorker.h"
-#import "NNAXDisabledWindowController.h"
-
-
-@interface NNAXAPIService ()
-
-@property (nonatomic, strong) NNAXDisabledWindowController *disabledWindowController;
-
-@end
-
-
-static Boolean (*isProcessTrustedWithOptions)(CFDictionaryRef options);
 
 
 @implementation NNAXAPIService
@@ -35,27 +22,6 @@ static Boolean (*isProcessTrustedWithOptions)(CFDictionaryRef options);
 - (NNServiceType)serviceType;
 {
     return NNServiceTypePersistent;
-}
-
-- (instancetype)init;
-{
-    if (!(self = [super init])) { return nil; }
-    
-#   pragma message "Remove when it's time to deprecate Mountain Lion."
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        void* handle = dlopen(0,RTLD_NOW|RTLD_GLOBAL);
-        assert(handle);
-        isProcessTrustedWithOptions = dlsym(handle, "AXIsProcessTrustedWithOptions");
-        dlclose(handle);
-        handle = NULL;
-    });
-    
-    if (!isProcessTrustedWithOptions) {
-        self.disabledWindowController = [[NNAXDisabledWindowController alloc] initWithWindowNibName:@"NNAXDisabledWindowController"];
-    }
-    
-    return self;
 }
 
 - (void)startService;
@@ -74,12 +40,7 @@ static Boolean (*isProcessTrustedWithOptions)(CFDictionaryRef options);
 
 - (void)accessibilityAPIDisabled:(NSNotification *)note;
 {
-    if (isProcessTrustedWithOptions) {
-#   pragma message "That string literal should be changed to the appropriate symbol when 10.9 has shipped."
-        isProcessTrustedWithOptions((__bridge CFDictionaryRef)@{ @"AXTrustedCheckOptionPrompt" : @YES });
-    } else {
-        [self.disabledWindowController showWindow:self];
-    }
+    AXIsProcessTrustedWithOptions((__bridge CFDictionaryRef)@{ (__bridge NSString *)kAXTrustedCheckOptionPrompt : @YES });
 }
 
 @end

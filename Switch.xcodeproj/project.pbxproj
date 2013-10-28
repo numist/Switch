@@ -71,8 +71,6 @@
 		BCFF2318177DDF46008759C4 /* NNGitHubWindowFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFF2317177DDF46008759C4 /* NNGitHubWindowFilter.m */; };
 		BCFF231B177DDFE8008759C4 /* NNPowerboxWindowFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFF231A177DDFE8008759C4 /* NNPowerboxWindowFilter.m */; };
 		BCFF231E177DE0FE008759C4 /* NNObviousSheetsWindowFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFF231D177DE0FE008759C4 /* NNObviousSheetsWindowFilter.m */; };
-		BCFF232D177E00FB008759C4 /* NNAXDisabledWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFF232B177E00FB008759C4 /* NNAXDisabledWindowController.m */; };
-		BCFF232E177E00FB008759C4 /* NNAXDisabledWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCFF232C177E00FB008759C4 /* NNAXDisabledWindowController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -300,9 +298,6 @@
 		BCFF2317177DDF46008759C4 /* NNGitHubWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNGitHubWindowFilter.m; sourceTree = "<group>"; };
 		BCFF231A177DDFE8008759C4 /* NNPowerboxWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNPowerboxWindowFilter.m; sourceTree = "<group>"; };
 		BCFF231D177DE0FE008759C4 /* NNObviousSheetsWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNObviousSheetsWindowFilter.m; sourceTree = "<group>"; };
-		BCFF232A177E00FB008759C4 /* NNAXDisabledWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNAXDisabledWindowController.h; sourceTree = "<group>"; };
-		BCFF232B177E00FB008759C4 /* NNAXDisabledWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNAXDisabledWindowController.m; sourceTree = "<group>"; };
-		BCFF232C177E00FB008759C4 /* NNAXDisabledWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NNAXDisabledWindowController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -362,9 +357,6 @@
 				BC5A978D180E5A66002ECD56 /* Services */,
 				BCA734F216DAC53F00CD4C74 /* NNAppDelegate.h */,
 				BCA734F316DAC53F00CD4C74 /* NNAppDelegate.m */,
-				BCFF232A177E00FB008759C4 /* NNAXDisabledWindowController.h */,
-				BCFF232B177E00FB008759C4 /* NNAXDisabledWindowController.m */,
-				BCFF232C177E00FB008759C4 /* NNAXDisabledWindowController.xib */,
 				BCCA7A601807894A00CE36E5 /* NNPreferencesWindowController.h */,
 				BCCA7A611807894A00CE36E5 /* NNPreferencesWindowController.m */,
 				BCCA7A621807894A00CE36E5 /* NNPreferencesWindowController.xib */,
@@ -838,7 +830,6 @@
 				BCA734F116DAC53F00CD4C74 /* Credits.rtf in Resources */,
 				BCA734EB16DAC53F00CD4C74 /* InfoPlist.strings in Resources */,
 				BCA734F716DAC53F00CD4C74 /* MainMenu.xib in Resources */,
-				BCFF232E177E00FB008759C4 /* NNAXDisabledWindowController.xib in Resources */,
 				BC948E2E180CFAA6008ED28A /* weave.png in Resources */,
 				BCCA7A641807894A00CE36E5 /* NNPreferencesWindowController.xib in Resources */,
 				BC660D5B1796573200CE8333 /* Sparkle.dsa_pub.pem in Resources */,
@@ -886,7 +877,6 @@
 				BCA7352216DAC6A900CD4C74 /* NNWindowWorker.m in Sources */,
 				BCFF2318177DDF46008759C4 /* NNGitHubWindowFilter.m in Sources */,
 				BCCA7B181809008900CE36E5 /* NSNotificationCenter+RACSupport.m in Sources */,
-				BCFF232D177E00FB008759C4 /* NNAXDisabledWindowController.m in Sources */,
 				BC5A979E180F2683002ECD56 /* NNDashWindowFilter.m in Sources */,
 				BC19D3DA181436FB009CEC1F /* NNPreferencesService.m in Sources */,
 				BCCA7AD0180896D100CE36E5 /* helpers.m in Sources */,
@@ -1024,7 +1014,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GENERATE_PROFILING_CODE = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks $(inherited)";
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				SDKROOT = macosx;
 				VALID_ARCHS = x86_64;
 			};
@@ -1054,7 +1044,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks $(inherited)";
 				LLVM_LTO = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				SDKROOT = macosx;
 				VALID_ARCHS = x86_64;
 			};
