@@ -56,8 +56,7 @@ __attribute__((constructor)) static void initializeLoggingService() {
 
 - (void)rotateLogIfNecessary;
 {
-    // Do not redirect output if attached to a console.
-    if (isatty(STDERR_FILENO)) { return; }
+    if (![self dayChanged]) { return; }
     
     NSString *logDir = [self logDirectoryPath];
     BailUnless([self createDirectory:logDir],);
@@ -78,10 +77,9 @@ __attribute__((constructor)) static void initializeLoggingService() {
         }
     }
     
-    // Open new log file if the day has changed.
-    if ([self dayChanged]) {
-        freopen([[self logFilePath] cStringUsingEncoding:NSASCIIStringEncoding], "a+", stderr);
-    }
+    // Do not redirect output if attached to a console.
+    if (isatty(STDERR_FILENO)) { return; }
+    freopen([[self logFilePath] cStringUsingEncoding:NSASCIIStringEncoding], "a+", stderr);
 }
 
 - (void)takeWindowListSnapshot;
@@ -171,8 +169,12 @@ __attribute__((constructor)) static void initializeLoggingService() {
 {
     NSDateComponents *todaysComponents = ^{
         NSDate *today = [NSDate date];
-        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-        gregorian.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
+        static NSCalendar *gregorian;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+            gregorian.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
+        });
         return [gregorian components:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit) fromDate:today];
     }();
     
