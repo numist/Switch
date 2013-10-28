@@ -109,7 +109,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
         switcherWindow.opaque = NO;
         switcherWindow.backgroundColor = [NSColor clearColor];
         switcherWindow.level = NSPopUpMenuWindowLevel;
-        switcherWindow.acceptsMouseMovedEvents = YES;
         
         displayRect = [switcherWindow convertRectFromScreen:windowRect];
     }
