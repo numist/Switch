@@ -14,23 +14,16 @@
 
 #import "NNAppDelegate.h"
 
-#import <dlfcn.h>
-
-#import "NNAPIEnabledWorker.h"
-#import "NNAXDisabledWindowController.h"
+#import "NNAXAPIService.h"
 #import "NNCoreWindowController.h"
-#import "NNHotKey.h"
 #import "NNEventManager.h"
-#import "NNPreferencesWindowController.h"
+#import "NNLoggingService.h"
+#import "NNPreferencesService.h"
 #import "NNStatusBarMenuService.h"
-
+#import "NSNotificationCenter+RACSupport.h"
 
 @interface NNAppDelegate ()
 
-@property (nonatomic, strong) NNAXDisabledWindowController *disabledWindowController;
-@property (nonatomic, strong) NNCoreWindowController *coreWindowController;
-@property (nonatomic, strong) NNPreferencesWindowController *preferencesWindowController;
-@property (nonatomic, strong) NNStatusBarMenuService *menuService;
 @property (nonatomic, assign) BOOL launched;
 
 @end
@@ -38,115 +31,33 @@
 
 @implementation NNAppDelegate
 
-#pragma mark NSObject
-
-- (void)dealloc;
-{
-    if (_launched) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:NNAXAPIDisabledNotification object:nil];
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:NNEventManagerKeyNotificationName object:[NNEventManager sharedManager]];
-    }
-}
-
 #pragma mark NSApplicationDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    #pragma message "Keys (and default values) should be DRYed up a bit more."
-    NSDictionary *userDefaultsValues = @{ @"firstLaunch" : @YES };
-    [defaults registerDefaults:userDefaultsValues];
+    [[NNServiceManager sharedManager] registerService:[NNLoggingService self]];
+    [[NNServiceManager sharedManager] registerService:[NNPreferencesService self]];
+    [[NNServiceManager sharedManager] registerService:[NNCoreWindowController self]];
+    [[NNServiceManager sharedManager] registerService:[NNStatusBarMenuService self]];
+    [[NNServiceManager sharedManager] registerService:[NNAXAPIService self]];
 
-#   if DEBUG
-    {
-        BOOL resetDefaults = NO;
-        
-        if (resetDefaults) {
-            [defaults removeObjectForKey:@"firstLaunch"];
-        }
-    }
-#   endif
-    
-    self.coreWindowController = [[NNCoreWindowController alloc] initWithWindow:nil];
-    
-    #pragma message "Ultimately there should be one source of truth for setting (and changing!) hotkeys."
-    [[NNEventManager sharedManager] registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_ANSI_Comma modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeShowPreferences];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accessibilityAPIDisabled:) name:NNAXAPIDisabledNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hotKeyManagerEventNotification:) name:NNEventManagerKeyNotificationName object:[NNEventManager sharedManager]];
-
-    if (![NNAPIEnabledWorker isAPIEnabled]) {
-        [self requestAXAPITrust];
-    }
-    
-    self.preferencesWindowController = [[NNPreferencesWindowController alloc] initWithWindowNibName:@"NNPreferencesWindowController"];
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"firstLaunch"]) {
-        [self.preferencesWindowController showWindow:self];
-        [defaults setBool:NO forKey:@"firstLaunch"];
-    }
-    
-    self.menuService = [NNStatusBarMenuService new];
-
-    [defaults synchronize];
-    self.launched = YES;
+    [[[NSNotificationCenter defaultCenter] rac_addObserverForName:NNEventManagerKeyNotificationName object:[NNEventManager sharedManager]]
+        subscribeNext:^(NSNotification *x) {
+            if ([x.userInfo[NNEventManagerEventTypeKey] unsignedIntegerValue] == NNEventManagerEventTypeShowPreferences) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self showPreferencesWindow];
+                });
+            }
+        }];
 }
 
 #pragma mark IBActions
 
 - (IBAction)showPreferences:(id)sender {
-    [self.preferencesWindowController showWindow:self];
-    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
-    [self.preferencesWindowController.window makeKeyAndOrderFront:self];
-}
-
-#pragma mark Notifications
-
-- (void)accessibilityAPIDisabled:(NSNotification *)note;
-{
-    [self requestAXAPITrust];
-}
-
-- (void)hotKeyManagerEventNotification:(NSNotification *)notification;
-{
-    NNEventManagerEventType eventType = [notification.userInfo[NNEventManagerEventTypeKey] unsignedIntegerValue];
-    
-    switch (eventType) {
-        case NNEventManagerEventTypeShowPreferences:
-            [self showPreferencesWindow];
-            break;
-            
-        default:
-            break;
-    }
+    [[NNPreferencesService sharedService] showPreferencesWindow:sender];
 }
 
 #pragma mark Internal
-
-- (void)requestAXAPITrust;
-{
-    #pragma message "Remove when it's time to deprecate Mountain Lion."
-    static Boolean (*isProcessTrustedWithOptions)(CFDictionaryRef options);
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        void* handle = dlopen(0,RTLD_NOW|RTLD_GLOBAL);
-        assert(handle);
-        isProcessTrustedWithOptions = dlsym(handle, "AXIsProcessTrustedWithOptions");
-        dlclose(handle);
-        handle = NULL;
-    });
-    
-    if (isProcessTrustedWithOptions) {
-        #pragma message "That string literal should be changed to the appropriate symbol when 10.9 has shipped."
-        isProcessTrustedWithOptions((__bridge CFDictionaryRef)@{ @"AXTrustedCheckOptionPrompt" : @YES });
-    } else {
-        static dispatch_once_t twiceToken;
-        dispatch_once(&twiceToken, ^{
-            self.disabledWindowController = [[NNAXDisabledWindowController alloc] initWithWindowNibName:@"NNAXDisabledWindowController"];
-        });
-        
-        [self.disabledWindowController showWindow:self];
-    }
-}
 
 - (void)showPreferencesWindow;
 {

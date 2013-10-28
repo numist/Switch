@@ -34,7 +34,7 @@ NSString const *NNCoreWindowControllerActiveKey = @"NNCoreWindowControllerActive
 static NSTimeInterval kNNWindowDisplayDelay = 0.1;
 
 
-@interface NNCoreWindowController () <NNWindowStoreDelegate, NNHUDCollectionViewDataSource, NNHUDCollectionViewDelegate>
+@interface NNCoreWindowController () <NNWindowStoreDelegate, NNHUDCollectionViewDataSource, NNHUDCollectionViewDelegate, NNService>
 
 #pragma mark State
 @property (nonatomic, strong) NSDate *invocationTime;
@@ -71,16 +71,11 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
     self.windows = [NSMutableOrderedSet new];
     self.store = [[NNWindowStore alloc] initWithDelegate:self];
     
-    self.keyManager = [NNEventManager sharedManager];
-    [self.keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_Tab modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeInvoke];
-    [self.keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_Tab modifiers:(NNHotKeyModifierOption | NNHotKeyModifierShift)] forEvent:NNEventManagerEventTypeDecrement];
-    [self.keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_ANSI_W modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeCloseWindow];
-    [self.keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_Escape modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeCancel];
-    
     Check(![self isWindowLoaded]);
     (void)self.window;
     [self setUpReactions];
     
+    self.keyManager = [NNEventManager sharedManager];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hotKeyManagerEventNotification:) name:NNEventManagerKeyNotificationName object:self.keyManager];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hotKeyManagerMouseNotification:) name:NNEventManagerMouseNotificationName object:self.keyManager];
     
@@ -114,7 +109,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
         switcherWindow.opaque = NO;
         switcherWindow.backgroundColor = [NSColor clearColor];
         switcherWindow.level = NSPopUpMenuWindowLevel;
-        switcherWindow.acceptsMouseMovedEvents = YES;
         
         displayRect = [switcherWindow convertRectFromScreen:windowRect];
     }
@@ -142,131 +136,132 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
 
 - (void)setUpReactions;
 {
+#   pragma message "factor the contents of these out into methods where appropriate"
     // Interface is only visible when Switch is active, the window list has loaded, and the display timer has timed out.
     [[[[RACSignal
-       combineLatest:@[RACObserve(self, windowListLoaded), RACObserve(self, displayTimer)]
-       reduce:^(NSNumber *windowListLoaded, NSTimer *displayTimer) {
-           return @(self.active && [windowListLoaded boolValue] && !displayTimer);
-       }]
-      distinctUntilChanged]
-      skip:1]
-     subscribeNext:^(NSNumber *shouldDisplayInterface) {
-         if ([shouldDisplayInterface boolValue]) {
-             [self.window setFrame:[NSScreen mainScreen].frame display:YES];
-             [self.window orderFront:self];
-             [self.store startUpdatingWindowContents];
-             NNLog(@"Showed interface (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
-         } else {
-             NNLog(@"Hiding interface (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
-             [self.window orderOut:self];
-         }
-     }];
+        combineLatest:@[RACObserve(self, windowListLoaded), RACObserve(self, displayTimer)]
+        reduce:^(NSNumber *windowListLoaded, NSTimer *displayTimer) {
+            return @(self.active && [windowListLoaded boolValue] && !displayTimer);
+        }]
+        distinctUntilChanged]
+        skip:1]
+        subscribeNext:^(NSNumber *shouldDisplayInterface) {
+            if ([shouldDisplayInterface boolValue]) {
+                [self.window setFrame:[NSScreen mainScreen].frame display:YES];
+                [self.window orderFront:self];
+                [self.store startUpdatingWindowContents];
+                NNLog(@"Showed interface (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+            } else {
+                NNLog(@"Hiding interface (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+                [self.window orderOut:self];
+            }
+        }];
     
     // Adjust the selected index by 1 if the first window's application is not already frontmost, but do this as late as possible.
     [[[[RACSignal
-       combineLatest:@[RACObserve(self, pendingSwitch), RACObserve(self, displayTimer)]
-       reduce:^(NSNumber *pendingSwitch, NSTimer *displayTimer){
-           return @([pendingSwitch boolValue] || displayTimer == nil);
-       }]
-      distinctUntilChanged]
-      skip:1]
-     subscribeNext:^(NSNumber *adjustIndex) {
-         if (!self.adjustedIndex && [adjustIndex boolValue]) {
-             if (self.selectedIndex == 1 && [self.windows count] > 1 && ![((NNWindow *)[self.windows objectAtIndex:0]).application isFrontMostApplication]) {
-                 NNLog(@"Adjusted index to select first window (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
-                 self.selectedIndex = 0;
-             } else {
-                 NNLog(@"Index does not need adjustment (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
-             }
-             self.adjustedIndex = YES;
-         }
-     }];
+        combineLatest:@[RACObserve(self, pendingSwitch), RACObserve(self, displayTimer)]
+        reduce:^(NSNumber *pendingSwitch, NSTimer *displayTimer){
+            return @([pendingSwitch boolValue] || displayTimer == nil);
+        }]
+        distinctUntilChanged]
+        skip:1]
+        subscribeNext:^(NSNumber *adjustIndex) {
+            if (!self.adjustedIndex && [adjustIndex boolValue]) {
+                if (self.selectedIndex == 1 && [self.windows count] > 1 && ![((NNWindow *)[self.windows objectAtIndex:0]).application isFrontMostApplication]) {
+                    NNLog(@"Adjusted index to select first window (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+                    self.selectedIndex = 0;
+                } else {
+                    NNLog(@"Index does not need adjustment (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+                }
+                self.adjustedIndex = YES;
+            }
+        }];
     
     // Clean up all that crazy state when the activation state changes.
     [[[RACObserve(self, active)
-      distinctUntilChanged]
-      skip:1]
-     subscribeNext:^(NSNumber *active) {
-         if ([active boolValue]) {
-             NNLog(@"Switch is active (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
-             Check(![self.windows count]);
-             Check(!self.displayTimer);
+        distinctUntilChanged]
+        skip:1]
+        subscribeNext:^(NSNumber *active) {
+            if ([active boolValue]) {
+                NNLog(@"Switch is active (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+                Check(![self.windows count]);
+                Check(!self.displayTimer);
              
-             self.displayTimer = [NSTimer scheduledTimerWithTimeInterval:kNNWindowDisplayDelay target:self selector:@selector(displayTimerFired:) userInfo:nil repeats:NO];
-             self.adjustedIndex = NO;
-             self.windowListLoaded = NO;
-             self.selectedIndex = 0;
+                self.displayTimer = [NSTimer scheduledTimerWithTimeInterval:kNNWindowDisplayDelay target:self selector:@selector(displayTimerFired:) userInfo:nil repeats:NO];
+                self.adjustedIndex = NO;
+                self.windowListLoaded = NO;
+                self.selectedIndex = 0;
              
-             [self.store startUpdatingWindowList];
+                [self.store startUpdatingWindowList];
          } else {
-             NNLog(@"Deactivating Switch (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
-             Check(!self.pendingSwitch);
+                NNLog(@"Deactivating Switch (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+                Check(!self.pendingSwitch);
              
-             [self.store stopUpdatingWindowList];
-             [self.store stopUpdatingWindowContents];
-             [self.displayTimer invalidate];
-             self.displayTimer = nil;
-             self.pendingSwitch = NO;
-             [self.collectionView deselectCell];
-         }
-         [[NSNotificationCenter defaultCenter] postNotificationName:(NSString *)NNCoreWindowControllerActivityNotification object:self userInfo:@{NNCoreWindowControllerActiveKey : active}];
-     }];
+                [self.store stopUpdatingWindowList];
+                [self.store stopUpdatingWindowContents];
+                [self.displayTimer invalidate];
+                self.displayTimer = nil;
+                self.pendingSwitch = NO;
+                [self.collectionView deselectCell];
+            }
+            [[NSNotificationCenter defaultCenter] postNotificationName:(NSString *)NNCoreWindowControllerActivityNotification object:self userInfo:@{NNCoreWindowControllerActiveKey : active}];
+        }];
     
     [[[RACSignal
-       combineLatest:@[RACObserve(self, pendingSwitch), RACObserve(self, windowListLoaded)]]
-      distinctUntilChanged]
-     subscribeNext:^(id x) {
-         RACTupleUnpack(NSNumber *pendingSwitch, NSNumber *windowListLoaded) = x;
-         
-         if ([pendingSwitch boolValue] && [windowListLoaded boolValue]) {
-             dispatch_async(dispatch_get_main_queue(), ^{
-                 self.pendingSwitch = NO;
+        combineLatest:@[RACObserve(self, pendingSwitch), RACObserve(self, windowListLoaded)] reduce:^(NSNumber *pendingSwitch, NSNumber *windowListLoaded){
+            return @([pendingSwitch boolValue] && [windowListLoaded boolValue]);
+        }]
+        distinctUntilChanged]
+        subscribeNext:^(id x) {
+            if ([x boolValue]) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.pendingSwitch = NO;
                  
-                 __block BOOL raiseSuccessful = YES;
-                 NNWindow *selectedWindow = [self selectedWindow];
-                 NNWindowThumbnailView *thumb = [self cellForWindow:selectedWindow];
-                 [thumb setActive:NO];
+                    __block BOOL raiseSuccessful = YES;
+                    NNWindow *selectedWindow = [self selectedWindow];
+                    NNWindowThumbnailView *thumb = [self cellForWindow:selectedWindow];
+                    [thumb setActive:NO];
                  
-                 if (selectedWindow) {
-                     // If sending events to Switch itself, we have to use the main thread!
-                     dispatch_queue_t actionQueue = [selectedWindow.application isCurrentApplication] ? dispatch_get_main_queue() : dispatch_get_global_queue(0, 0);
+                    if (selectedWindow) {
+                        // If sending events to Switch itself, we have to use the main thread!
+                        dispatch_queue_t actionQueue = [selectedWindow.application isCurrentApplication] ? dispatch_get_main_queue() : dispatch_get_global_queue(0, 0);
 
-                     dispatch_async(actionQueue, ^{
-                         raiseSuccessful = [selectedWindow raise];
+                        dispatch_async(actionQueue, ^{
+                            raiseSuccessful = [selectedWindow raise];
                          
-                         dispatch_async(dispatch_get_main_queue(), ^{
-                             if (raiseSuccessful) {
-                                 if (!self.active) {
-                                     NNLog(@"Switcher already inactive after successful -raise");
-                                     DebugBreak();
-                                 }
-                                 self.active = NO;
-                             }
-                             [thumb setActive:YES];
-                         });
-                     });
-                 } else {
-                     NNLog(@"No windows to raise! (Selection index: %lu)", self.selectedIndex);
-                     self.active = NO;
-                 }
-             });
-         }
-     }];
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                if (raiseSuccessful) {
+                                    if (!self.active) {
+                                        NNLog(@"Switcher already inactive after successful -raise");
+                                        DebugBreak();
+                                    }
+                                    self.active = NO;
+                                }
+                                [thumb setActive:YES];
+                            });
+                        });
+                    } else {
+                        NNLog(@"No windows to raise! (Selection index: %lu)", self.selectedIndex);
+                        self.active = NO;
+                    }
+                });
+            }
+        }];
     
     [[RACObserve(self, selectedIndex)
-      distinctUntilChanged]
-     subscribeNext:^(id x) {
-         NSUInteger index = [x unsignedIntegerValue];
-         if (index == self.collectionView.selectedIndex) { return; }
+        distinctUntilChanged]
+        subscribeNext:^(id x) {
+            NSUInteger index = [x unsignedIntegerValue];
+            if (index == self.collectionView.selectedIndex) { return; }
          
-         if ([self.windows count]) {
-             if (index < [self.windows count]) {
-                 [self.collectionView selectCellAtIndex:index];
-             } else {
-                 [self.collectionView deselectCell];
-             }
-         }
-     }];
+            if ([self.windows count]) {
+                if (index < [self.windows count]) {
+                    [self.collectionView selectCellAtIndex:index];
+                } else {
+                    [self.collectionView deselectCell];
+                }
+            }
+        }];
 }
 
 - (NNWindowThumbnailView *)cellForWindow:(NNWindow *)window;
@@ -286,6 +281,28 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
     }
     
     return result;
+}
+
+#pragma mark NNService
+
++ (id)sharedService;
+{
+    static id<NNService> _sharedService = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedService = [[self alloc] initWithWindow:nil];
+    });
+    return _sharedService;
+}
+
+- (NNServiceType)serviceType;
+{
+    return NNServiceTypePersistent;
+}
+
+- (NSSet *)dependencies;
+{
+    return nil;
 }
 
 #pragma mark NNHUDCollectionViewDataSource

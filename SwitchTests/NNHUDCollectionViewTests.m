@@ -25,7 +25,6 @@
 
 - (BOOL)compareWindow:(NSWindow *)window toReference:(NSString *)filename;
 {
-
     NSData *reference = [NSData dataWithContentsOfFile:[NSString stringWithFormat:@"SwitchTests/References/%@", filename]];
     NSData *comparator = [[window nnImage] TIFFRepresentation];
     return [reference isEqualToData:comparator];

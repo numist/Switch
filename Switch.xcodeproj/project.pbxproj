@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BC19D3DA181436FB009CEC1F /* NNPreferencesService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3D9181436FB009CEC1F /* NNPreferencesService.m */; };
+		BC19D3DD18143AB1009CEC1F /* NNAXAPIService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3DC18143AB1009CEC1F /* NNAXAPIService.m */; };
 		BC43A626177A5CBC0082F981 /* NNWindow+NNWindowFiltering.m in Sources */ = {isa = PBXBuildFile; fileRef = BC43A625177A5CBC0082F981 /* NNWindow+NNWindowFiltering.m */; };
 		BC5A9798180E5A6F002ECD56 /* NNStatusBarMenuService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5A9797180E5A6F002ECD56 /* NNStatusBarMenuService.m */; };
 		BC5A979B180E6949002ECD56 /* NNLoggingService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5A979A180E6949002ECD56 /* NNLoggingService.m */; };
@@ -69,8 +71,6 @@
 		BCFF2318177DDF46008759C4 /* NNGitHubWindowFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFF2317177DDF46008759C4 /* NNGitHubWindowFilter.m */; };
 		BCFF231B177DDFE8008759C4 /* NNPowerboxWindowFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFF231A177DDFE8008759C4 /* NNPowerboxWindowFilter.m */; };
 		BCFF231E177DE0FE008759C4 /* NNObviousSheetsWindowFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFF231D177DE0FE008759C4 /* NNObviousSheetsWindowFilter.m */; };
-		BCFF232D177E00FB008759C4 /* NNAXDisabledWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFF232B177E00FB008759C4 /* NNAXDisabledWindowController.m */; };
-		BCFF232E177E00FB008759C4 /* NNAXDisabledWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCFF232C177E00FB008759C4 /* NNAXDisabledWindowController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -198,6 +198,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		BC19D3D8181436FB009CEC1F /* NNPreferencesService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNPreferencesService.h; sourceTree = "<group>"; };
+		BC19D3D9181436FB009CEC1F /* NNPreferencesService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNPreferencesService.m; sourceTree = "<group>"; };
+		BC19D3DB18143AB1009CEC1F /* NNAXAPIService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNAXAPIService.h; sourceTree = "<group>"; };
+		BC19D3DC18143AB1009CEC1F /* NNAXAPIService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNAXAPIService.m; sourceTree = "<group>"; };
 		BC3B3B6D175E505C002AD452 /* NNWindowCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNWindowCache.h; sourceTree = "<group>"; };
 		BC43A624177A5CBC0082F981 /* NNWindow+NNWindowFiltering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NNWindow+NNWindowFiltering.h"; sourceTree = "<group>"; };
 		BC43A625177A5CBC0082F981 /* NNWindow+NNWindowFiltering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NNWindow+NNWindowFiltering.m"; sourceTree = "<group>"; };
@@ -294,9 +298,6 @@
 		BCFF2317177DDF46008759C4 /* NNGitHubWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNGitHubWindowFilter.m; sourceTree = "<group>"; };
 		BCFF231A177DDFE8008759C4 /* NNPowerboxWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNPowerboxWindowFilter.m; sourceTree = "<group>"; };
 		BCFF231D177DE0FE008759C4 /* NNObviousSheetsWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNObviousSheetsWindowFilter.m; sourceTree = "<group>"; };
-		BCFF232A177E00FB008759C4 /* NNAXDisabledWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNAXDisabledWindowController.h; sourceTree = "<group>"; };
-		BCFF232B177E00FB008759C4 /* NNAXDisabledWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNAXDisabledWindowController.m; sourceTree = "<group>"; };
-		BCFF232C177E00FB008759C4 /* NNAXDisabledWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NNAXDisabledWindowController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -336,8 +337,14 @@
 		BC5A978D180E5A66002ECD56 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				BC19D3DB18143AB1009CEC1F /* NNAXAPIService.h */,
+				BC19D3DC18143AB1009CEC1F /* NNAXAPIService.m */,
+				BC6B6D11178DDBDA001D691D /* NNCoreWindowController.h */,
+				BC6B6D12178DDBDA001D691D /* NNCoreWindowController.m */,
 				BC5A9799180E6949002ECD56 /* NNLoggingService.h */,
 				BC5A979A180E6949002ECD56 /* NNLoggingService.m */,
+				BC19D3D8181436FB009CEC1F /* NNPreferencesService.h */,
+				BC19D3D9181436FB009CEC1F /* NNPreferencesService.m */,
 				BC5A9796180E5A6F002ECD56 /* NNStatusBarMenuService.h */,
 				BC5A9797180E5A6F002ECD56 /* NNStatusBarMenuService.m */,
 			);
@@ -350,14 +357,9 @@
 				BC5A978D180E5A66002ECD56 /* Services */,
 				BCA734F216DAC53F00CD4C74 /* NNAppDelegate.h */,
 				BCA734F316DAC53F00CD4C74 /* NNAppDelegate.m */,
-				BCFF232A177E00FB008759C4 /* NNAXDisabledWindowController.h */,
-				BCFF232B177E00FB008759C4 /* NNAXDisabledWindowController.m */,
-				BCFF232C177E00FB008759C4 /* NNAXDisabledWindowController.xib */,
 				BCCA7A601807894A00CE36E5 /* NNPreferencesWindowController.h */,
 				BCCA7A611807894A00CE36E5 /* NNPreferencesWindowController.m */,
 				BCCA7A621807894A00CE36E5 /* NNPreferencesWindowController.xib */,
-				BC6B6D11178DDBDA001D691D /* NNCoreWindowController.h */,
-				BC6B6D12178DDBDA001D691D /* NNCoreWindowController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -828,7 +830,6 @@
 				BCA734F116DAC53F00CD4C74 /* Credits.rtf in Resources */,
 				BCA734EB16DAC53F00CD4C74 /* InfoPlist.strings in Resources */,
 				BCA734F716DAC53F00CD4C74 /* MainMenu.xib in Resources */,
-				BCFF232E177E00FB008759C4 /* NNAXDisabledWindowController.xib in Resources */,
 				BC948E2E180CFAA6008ED28A /* weave.png in Resources */,
 				BCCA7A641807894A00CE36E5 /* NNPreferencesWindowController.xib in Resources */,
 				BC660D5B1796573200CE8333 /* Sparkle.dsa_pub.pem in Resources */,
@@ -876,8 +877,8 @@
 				BCA7352216DAC6A900CD4C74 /* NNWindowWorker.m in Sources */,
 				BCFF2318177DDF46008759C4 /* NNGitHubWindowFilter.m in Sources */,
 				BCCA7B181809008900CE36E5 /* NSNotificationCenter+RACSupport.m in Sources */,
-				BCFF232D177E00FB008759C4 /* NNAXDisabledWindowController.m in Sources */,
 				BC5A979E180F2683002ECD56 /* NNDashWindowFilter.m in Sources */,
+				BC19D3DA181436FB009CEC1F /* NNPreferencesService.m in Sources */,
 				BCCA7AD0180896D100CE36E5 /* helpers.m in Sources */,
 				BCA7352516DAC93C00CD4C74 /* NNApplication.m in Sources */,
 				BCA7352F16DB239900CD4C74 /* NNWindowThumbnailView.m in Sources */,
@@ -900,6 +901,7 @@
 				BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */,
 				BC63AB8F1755907D00016B9E /* NNHUDCollectionView.m in Sources */,
 				BC63ABA517598C4100016B9E /* debugger.c in Sources */,
+				BC19D3DD18143AB1009CEC1F /* NNAXAPIService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1012,7 +1014,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GENERATE_PROFILING_CODE = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks $(inherited)";
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				SDKROOT = macosx;
 				VALID_ARCHS = x86_64;
 			};
@@ -1042,7 +1044,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks $(inherited)";
 				LLVM_LTO = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				SDKROOT = macosx;
 				VALID_ARCHS = x86_64;
 			};
