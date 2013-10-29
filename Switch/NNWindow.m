@@ -59,25 +59,7 @@
 
 + (BOOL)descriptionDescribesInterestingWindow:(NSDictionary *)description;
 {
-    BOOL windowIsShared = [[description objectForKey:(__bridge NSString *)kCGWindowSharingState] longValue] != kCGWindowSharingNone;
-    BOOL windowIsNormalLevel = [[description objectForKey:(__bridge NSString *)kCGWindowLayer] longValue]== kCGNormalWindowLevel;
-    
-    {
-        NSString *applicationName = [description objectForKey:(__bridge NSString *)kCGWindowOwnerName];
-        static NSSet *knownOffenders = nil;
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            knownOffenders = [NSSet setWithArray:@[@"Notification Center"]];
-        });
-        
-        // It would be interesting to know what other applications' windows have sharing disabled.
-        if (!windowIsShared && ![knownOffenders containsObject:applicationName]) {
-            NNLog(@"Application %@ window %u has unshared window", applicationName, (CGWindowID)[[description objectForKey:(__bridge NSString *)kCGWindowNumber] unsignedLongValue]);
-            DebugBreak();
-        }
-    }
-    
-    return windowIsShared && windowIsNormalLevel;
+    return [[description objectForKey:(__bridge NSString *)kCGWindowLayer] longValue] == kCGNormalWindowLevel;
 }
 
 - (instancetype)initWithDescription:(NSDictionary *)description;
