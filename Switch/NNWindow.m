@@ -101,6 +101,10 @@
         (void)self.haxWindow;
     });
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(haxApplicationWasDestroyed:) name:NNHAXApplicationWasInvalidatedNotification object:_application];
+    
+    NNLog(@"Created window %@ belonging to application %@", self, _application);
+    
     return self;
 }
 
@@ -126,20 +130,31 @@
     return [NSString stringWithFormat:@"%p <%u (%@)>", self, self.windowID, self.name];
 }
 
+- (void)dealloc;
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NNHAXApplicationWasInvalidatedNotification object:self.application];
+}
+
 #pragma mark HAXElementDelegate
 
 - (void)elementWasDestroyed:(HAXElement *)element;
 {
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        @synchronized(self) {
-            BailUnless(element == self->_haxWindow, );
-            
-            @autoreleasepool {
-                self->_haxWindow = nil;
-                (void)self.haxWindow;
-            }
-        }
-    });
+    NNLog(@"HAX element for window %@ was destroyed", self);
+
+    if (element == self->_haxWindow) {
+        [self handleElementDestruction];
+    }
+}
+
+#pragma mark Notifications
+
+- (void)haxApplicationWasDestroyed:(NSNotification *)notification;
+{
+    NNLog(@"HAX element for window %@ destroyed (parent desroyed)", self);
+
+    if (notification.object == self.application && self->_haxWindow) {
+        [self handleElementDestruction];
+    }
 }
 
 #pragma mark Dynamic accessors
@@ -183,6 +198,8 @@
 {
     return (CGWindowID)[[self.windowDescription objectForKey:(__bridge NSString *)kCGWindowNumber] unsignedLongValue];
 }
+
+#pragma mark NNWindow
 
 - (BOOL)exists;
 {
@@ -232,6 +249,19 @@
 }
 
 #pragma mark Private
+
+- (void)handleElementDestruction;
+{
+    @synchronized(self) {
+        self->_haxWindow = nil;
+    }
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        @synchronized(self) {
+            (void)self.haxWindow;
+        }
+    });
+}
 
 - (CGImageRef)cgWindowImage;
 {

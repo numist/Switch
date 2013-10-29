@@ -19,6 +19,9 @@
 @class NNWindow;
 
 
+extern NSString *NNHAXApplicationWasInvalidatedNotification;
+
+
 @interface NNApplication (Private)
 
 + (instancetype)applicationWithPID:(pid_t)pid name:(NSString *)name;

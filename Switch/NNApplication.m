@@ -20,6 +20,9 @@
 #import "NNWindow+Private.h"
 
 
+NSString *NNHAXApplicationWasInvalidatedNotification = @"NNHAXApplicationWasInvalidatedNotification";
+
+
 @interface NNApplication () <HAXElementDelegate>
 
 @property (nonatomic, readonly, assign) pid_t pid;
@@ -123,14 +126,19 @@
 
 - (void)elementWasDestroyed:(HAXElement *)element;
 {
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+    @synchronized(self) {
+        if (element != self->_haxApp) { return; }
+        
+        NNLog(@"HAX element for application %@ was destroyed", self);
+
+        self->_haxApp = nil;
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:NNHAXApplicationWasInvalidatedNotification object:self];
+    
+    // Try to reload the accessibility object for the app when convenient.
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         @synchronized(self) {
-            if (element != self->_haxApp) { return; }
-            
-            @autoreleasepool {
-                self->_haxApp = nil;
-                (void)self.haxApp;
-            }
+            (void)self.haxApp;
         }
     });
 }
@@ -145,6 +153,8 @@
         if (!_haxApp) {
             _haxApp = [HAXApplication applicationWithPID:self.pid];
             _haxApp.delegate = self;
+            
+            NNLog(@"HAX element for application %@ fetched as %@", self, _haxApp);
         }
         if (!_haxApp && [[NNApplicationCache sharedCache] cachedApplicationWithPID:self.pid]) {
             [[NNApplicationCache sharedCache] removeApplicationWithPID:self.pid];
@@ -194,6 +204,8 @@
             }
         }
     });
+    
+    NNLog(@"HAX element for window %@ fetched as %@", window, result);
 
     return result;
 }
