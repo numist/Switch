@@ -207,7 +207,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     if (!switcherActive && type == kCGEventKeyDown) {
         NSArray *invokeKeys = [self.keyMap allKeysForObject:@(NNEventManagerEventTypeInvoke)];
         for (NNHotKey *hotKey in invokeKeys) {
-            if (hotKey.code == keycode && hotKey.modifiers == modifiers) {
+            if (hotKey.code == keycode && (hotKey.modifiers | NNHotKeyModifierShift) == (modifiers | NNHotKeyModifierShift)) {
                 switcherActive = YES;
                 [self dispatchEvent:NNEventManagerEventTypeInvoke];
                 break;
