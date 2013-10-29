@@ -22,12 +22,6 @@
 #import "NNStatusBarMenuService.h"
 #import "NSNotificationCenter+RACSupport.h"
 
-@interface NNAppDelegate ()
-
-@property (nonatomic, assign) BOOL launched;
-
-@end
-
 
 @implementation NNAppDelegate
 
