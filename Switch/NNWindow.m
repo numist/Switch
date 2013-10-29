@@ -206,7 +206,10 @@
     }
     
     // Then raise the application (if it's not already topmost)
-    [self.application raise];
+    if (![self.application raise]) {
+        NNLog(@"Raising application %@ failed.", self.application);
+        return NO;
+    }
     
     NNLog(@"Raising %@ window %@ took %.3fs", self.application.name, self, [[NSDate date] timeIntervalSinceDate:start]);
     return YES;

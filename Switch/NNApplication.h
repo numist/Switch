@@ -27,6 +27,6 @@
 - (BOOL)isCurrentApplication;
 - (BOOL)isFrontMostApplication;
 
-- (void)raise;
+- (BOOL)raise;
 
 @end

@@ -176,11 +176,13 @@ NSString *NNHAXApplicationWasInvalidatedNotification = @"NNHAXApplicationWasInva
     return self.app.active;
 }
 
-- (void)raise;
+- (BOOL)raise;
 {
     if (![self isFrontMostApplication]) {
-        [self.app activateWithOptions:NSApplicationActivateIgnoringOtherApps];
+        return [self.app activateWithOptions:NSApplicationActivateIgnoringOtherApps];
     }
+    
+    return YES;
 }
 
 #pragma mark Private
