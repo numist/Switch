@@ -128,7 +128,7 @@
 {
     if (worker != self.listWorker) { return; }
     
-    NSMutableArray *oldWindows = [NSMutableOrderedSet orderedSetWithOrderedSet:self.windows];
+    NSMutableOrderedSet *oldWindows = [NSMutableOrderedSet orderedSetWithOrderedSet:self.windows];
     
     BOOL windowsChanged = ![oldWindows isEqual:newWindows];
     __strong __typeof__(self.delegate) delegate = self.delegate;

@@ -24,7 +24,6 @@
 
 @property (nonatomic, readonly, assign) pid_t pid;
 @property (atomic, retain) NSRunningApplication *app;
-@property (nonatomic, readonly, assign) ProcessSerialNumber psn;
 
 @property (nonatomic, strong) dispatch_queue_t haxLock;
 @property (nonatomic, strong, readonly) HAXApplication *haxApp;
@@ -60,8 +59,6 @@
     
     _haxLock = dispatch_queue_create([[NSString stringWithFormat:@"%@ <%p>", [self class], self] UTF8String], DISPATCH_QUEUE_SERIAL);
 
-    (void)GetProcessForPID(self.pid, &_psn);
-    
     _app = [NSRunningApplication runningApplicationWithProcessIdentifier:pid];
     
     // Load the HAXWindow ASAP, but without blocking.
@@ -172,7 +169,7 @@
 - (void)raise;
 {
     if (![self isFrontMostApplication]) {
-        SetFrontProcessWithOptions(&_psn, kSetFrontProcessFrontWindowOnly);
+        [self.app activateWithOptions:NSApplicationActivateIgnoringOtherApps];
     }
 }
 

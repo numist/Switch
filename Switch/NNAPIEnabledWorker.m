@@ -44,7 +44,7 @@
     if (isProcessTrustedWithOptions) {
         result = isProcessTrustedWithOptions(NULL);
     } else {
-        result = AXAPIEnabled();
+        result = AXIsProcessTrustedWithOptions(nil);
     }
     
     return (BOOL)result;
