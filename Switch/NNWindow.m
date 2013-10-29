@@ -199,7 +199,7 @@
     NSDate *start = [NSDate date];
 
     // First, raise the window
-    NSError *error;
+    NSError *error = nil;
     if (![self.haxWindow performAction:(__bridge NSString *)kAXRaiseAction error:&error]) {
         NNLog(@"Raising %@ window %@ failed after %.3fs: %@", self.application.name, self, [[NSDate date] timeIntervalSinceDate:start], error);
         return NO;
@@ -216,7 +216,7 @@
 {
     NSDate *start = [NSDate date];
 
-    NSError *error;
+    NSError *error = nil;
     HAXElement *element = [self.haxWindow elementOfClass:[HAXElement class] forKey:(__bridge NSString *)kAXCloseButtonAttribute error:NULL];
 	BOOL result = [element performAction:(__bridge NSString *)kAXPressAction error:&error];
     

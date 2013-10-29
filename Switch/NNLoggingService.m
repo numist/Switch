@@ -55,7 +55,7 @@
         NSDate *creationDate = [[manager attributesOfItemAtPath:[logDir stringByAppendingPathComponent:file] error:nil] fileCreationDate];
 
         if ([[NSDate date] timeIntervalSinceDate:creationDate] > longTime && [[file pathExtension] isEqualToString:@"log"]) {
-            NSError *error;
+            NSError *error = nil;
             NSString *absolutePath = [logDir stringByAppendingPathComponent:file];
 
             if (![manager removeItemAtPath:absolutePath error:&error]) {
