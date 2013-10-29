@@ -14,7 +14,7 @@ Getting Started
 
 Download the [latest release](https://github.com/numist/Switch/releases), put the application bundle in your `/Applications` or `~/Applications` directory, and run it! It will check for updates automatically so you can stay up to date as the project develops.
 
-Switch requires Mac OS X version 10.8 or newer and is still in development. For a list of known issues, check out the [bug tag](https://github.com/numist/Switch/issues?labels=bug&state=open) for general badness and the [quirk tag](https://github.com/numist/Switch/issues?labels=quirk&state=open) for windows being improperly shown or omitted from the interface.
+Switch requires Mac OS X version 10.9 or newer and is still in development. For a list of known issues, check out the [bug tag](https://github.com/numist/Switch/issues?labels=bug&state=open) for general badness and the [quirk tag](https://github.com/numist/Switch/issues?labels=quirk&state=open) for windows being improperly shown or omitted from the interface.
 
 Contributing
 ------------
