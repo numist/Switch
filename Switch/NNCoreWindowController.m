@@ -526,7 +526,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
                         if (idx == self.selectedIndex) { return NO; }
                         return [((NNWindow *)obj).application isEqual:selectedWindow.application];
                     }] == NSNotFound);
-                    BOOL differentApplications = [self.windows count] > 1 && [[self.windows[0] application] isEqual:[self.windows[1] application]];
+                    BOOL differentApplications = [self.windows count] > 1 && ![[self.windows[0] application] isEqual:[self.windows[1] application]];
 
                     if (self.selectedIndex == 0 && !onlyChild && differentApplications) {
                         nextWindow = [self.windows objectAtIndex:1];
