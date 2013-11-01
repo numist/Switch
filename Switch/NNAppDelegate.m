@@ -43,6 +43,8 @@
                 });
             }
         }];
+    
+    NNLog(@"Launched %@ %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:(__bridge id)kCFBundleNameKey], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]);
 }
 
 #pragma mark IBActions
