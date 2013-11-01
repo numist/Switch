@@ -19,6 +19,9 @@
 #import "NNPreferencesWindowController.h"
 
 
+static NSString *kNNFirstLaunchKey = @"firstLaunch";
+
+
 @interface NNPreferencesService ()
 
 @property (nonatomic, strong) NNPreferencesWindowController *preferencesWindowController;
@@ -28,6 +31,8 @@
 
 @implementation NNPreferencesService
 
+#pragma mark - NNService
+
 - (NNServiceType)serviceType;
 {
     return NNServiceTypePersistent;
@@ -36,20 +41,21 @@
 - (void)startService;
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-#pragma message "Keys (and default values) should be DRYed up a bit more."
-    NSDictionary *userDefaultsValues = @{ @"firstLaunch" : @YES };
-    [defaults registerDefaults:userDefaultsValues];
+    [defaults registerDefaults:self._defaultValues];
     
 #   if DEBUG
     {
         BOOL resetDefaults = NO;
         
         if (resetDefaults) {
-            [defaults removeObjectForKey:@"firstLaunch"];
+            for (NSString *key in self._defaultValues.allKeys) {
+                [defaults removeObjectForKey:key];
+            }
         }
     }
 #   endif
     
+    // TODO: When these become customizable, they will become fields in the app's preferences.
     NNEventManager *keyManager = [NNEventManager sharedManager];
     [keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_Tab modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeInvoke];
     [keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_Tab modifiers:(NNHotKeyModifierOption | NNHotKeyModifierShift)] forEvent:NNEventManagerEventTypeDecrement];
@@ -58,19 +64,37 @@
     [keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_ANSI_Comma modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeShowPreferences];
     
     self.preferencesWindowController = [[NNPreferencesWindowController alloc] initWithWindowNibName:@"NNPreferencesWindowController"];
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"firstLaunch"]) {
-        [self.preferencesWindowController showWindow:self];
-        [defaults setBool:NO forKey:@"firstLaunch"];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:kNNFirstLaunchKey]) {
+        [defaults setBool:NO forKey:kNNFirstLaunchKey];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self showPreferencesWindow:self];
+        });
     }
 
     [defaults synchronize];
 }
+
+#pragma mark - NNPreferencesService
 
 - (void)showPreferencesWindow:(id)sender;
 {
     [self.preferencesWindowController showWindow:sender];
     [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
     [self.preferencesWindowController.window makeKeyAndOrderFront:sender];
+}
+
+#pragma mark Private
+
+- (NSDictionary *)_defaultValues;
+{
+    static NSDictionary *_defaultValues = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _defaultValues = @{
+            kNNFirstLaunchKey : @YES,
+        };
+    });
+    return _defaultValues;
 }
 
 @end

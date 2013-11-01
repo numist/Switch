@@ -14,6 +14,7 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface NNPreferencesService : NNService
 
 - (void)showPreferencesWindow:(id)sender;
