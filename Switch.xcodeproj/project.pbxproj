@@ -1045,6 +1045,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks $(inherited)";
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				OTHER_CODE_SIGN_FLAGS = "--deep";
 				SDKROOT = macosx;
 				VALID_ARCHS = x86_64;
 			};
