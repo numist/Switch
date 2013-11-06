@@ -224,7 +224,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
                  
                     if (selectedWindow) {
                         // If sending events to Switch itself, we have to use the main thread!
-                        dispatch_queue_t actionQueue = [selectedWindow.application isCurrentApplication] ? dispatch_get_main_queue() : dispatch_get_global_queue(0, 0);
+                        dispatch_queue_t actionQueue = [selectedWindow.application isCurrentApplication] ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 
                         dispatch_async(actionQueue, ^{
                             raiseSuccessful = [selectedWindow raise];
@@ -534,7 +534,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
                 }
                 
                 // If sending events to Switch itself, we have to use the main thread!
-                dispatch_queue_t actionQueue = [selectedWindow.application isCurrentApplication] ? dispatch_get_main_queue() : dispatch_get_global_queue(0, 0);
+                dispatch_queue_t actionQueue = [selectedWindow.application isCurrentApplication] ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
                 
                 [thumb setActive:NO];
                 

@@ -55,7 +55,7 @@ NSString *NNAXAPIEnabledKey = @"AXAPIEnabled";
 
 - (instancetype)init;
 {
-    if (!(self = [super initWithQueue:dispatch_get_global_queue(0, 0)])) { return nil; }
+    if (!(self = [super initWithQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)])) { return nil; }
     
     _APIEnabled = [[self class] isAPIEnabled];
     self.interval = 0.25;
