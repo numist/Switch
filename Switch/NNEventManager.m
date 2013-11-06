@@ -19,6 +19,7 @@
 #include <ApplicationServices/ApplicationServices.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
 
+#import "NNAPIEnabledWorker.h"
 #import "NNHotKey.h"
 #import "NNCoreWindowController.h"
 #import "NSNotificationCenter+RACSupport.h"
@@ -100,11 +101,15 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
             return notification.userInfo[NNCoreWindowControllerActiveKey];
         }];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accessibilityAPIAvailabilityChangedNotification:) name:NNAPIEnabledWorker.notificationName object:nil];
+    
     return self;
 }
 
 - (void)dealloc;
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NNAPIEnabledWorker.notificationName object:nil];
+    
     [self removeEventTap];
 }
 
@@ -160,12 +165,12 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     BOOL switcherActive = self.activatedSwitcher;
     
     if (type == kCGEventTapDisabledByTimeout) {
-        // Re-enable the event tap.
-        NNLog(@"Event tap timed out?!");
-        CGEventTapEnable(self->eventTap, true);
-    }
-    
-    if (type == kCGEventTapDisabledByUserInput) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // Re-enable the event tap.
+            NNLog(@"Event tap timed out?!");
+            CGEventTapEnable(self->eventTap, true);
+        });
+    } else if (type == kCGEventTapDisabledByUserInput) {
         NotTested();
     }
     
@@ -255,6 +260,13 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     dispatch_async(dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:NNEventManagerKeyNotificationName object:self userInfo:@{ NNEventManagerEventTypeKey : @(eventType) }];
     });
+}
+
+- (void)accessibilityAPIAvailabilityChangedNotification:(NSNotification *)notification;
+{
+    NNLog(@"Reinstalling event tap!");
+    [self removeEventTap];
+    [self insertEventTap];
 }
 
 @end

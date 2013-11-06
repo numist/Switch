@@ -17,6 +17,9 @@
 #import <NNKit/NNPollingObject+Protected.h>
 
 
+NSString *NNAXAPIEnabledKey = @"AXAPIEnabled";
+
+
 @interface NNAPIEnabledWorker ()
 
 @property (nonatomic, assign, readwrite) BOOL APIEnabled;
@@ -65,7 +68,7 @@
     BOOL enabled = [[self class] isAPIEnabled];
     if (enabled != self.APIEnabled) {
         self.APIEnabled = enabled;
-        [self postNotification:@{ @"AXAPIEnabled" : @(enabled) }];
+        [self postNotification:@{ NNAXAPIEnabledKey : @(enabled) }];
     }
 }
 

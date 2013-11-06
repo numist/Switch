@@ -13,6 +13,9 @@
 //
 
 
+extern NSString *NNAXAPIEnabledKey;
+
+
 @interface NNAPIEnabledWorker : NNPollingObject
 
 + (BOOL)isAPIEnabled;

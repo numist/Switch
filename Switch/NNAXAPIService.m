@@ -17,6 +17,13 @@
 #import "NNAPIEnabledWorker.h"
 
 
+@interface NNAXAPIService ()
+
+@property (nonatomic, strong) NNAPIEnabledWorker *worker;
+
+@end
+
+
 @implementation NNAXAPIService
 
 - (NNServiceType)serviceType;
@@ -40,7 +47,34 @@
 
 - (void)accessibilityAPIDisabled:(NSNotification *)note;
 {
+    self.worker = [NNAPIEnabledWorker new];
+    
     AXIsProcessTrustedWithOptions((__bridge CFDictionaryRef)@{ (__bridge NSString *)kAXTrustedCheckOptionPrompt : @YES });
+}
+
+- (void)accessibilityAPIAvailabilityChangedNotification:(NSNotification *)notification;
+{
+    BOOL accessibilityEnabled = [notification.userInfo[NNAXAPIEnabledKey] boolValue];
+    
+    NNLog(@"Accessibility API is %@abled", accessibilityEnabled ? @"en" : @"dis");
+    
+    if (!accessibilityEnabled) {
+        self.worker = nil;
+    }
+}
+
+- (void)setWorker:(NNAPIEnabledWorker *)worker;
+{
+    if (worker == _worker) {
+        return;
+    }
+    if (_worker) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NNAPIEnabledWorker.notificationName object:_worker];
+    }
+    if (worker) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accessibilityAPIAvailabilityChangedNotification:) name:NNAPIEnabledWorker.notificationName object:self.worker];
+    }
+    _worker = worker;
 }
 
 @end
