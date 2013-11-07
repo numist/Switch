@@ -114,8 +114,6 @@ NSString *NNHAXApplicationWasInvalidatedNotification = @"NNHAXApplicationWasInva
             _icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
         } else {
             NNLog(@"Application %@ does not have an icon!", self);
-            // TODO(numist): Can this even happen?
-            NotTested();
         }
     }
     
