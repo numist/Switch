@@ -49,16 +49,10 @@
     _windows = [NSOrderedSet new];
     _firstUpdate = YES;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pollCompleteNotification:) name:[[NNWindowListWorker class] notificationName] object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pollCompleteNotification:) name:[[NNWindowWorker class] notificationName] object:nil];
+    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(pollCompleteNotification:) name:[[NNWindowListWorker class] notificationName] object:nil];
+    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(pollCompleteNotification:) name:[[NNWindowWorker class] notificationName] object:nil];
     
     return self;
-}
-
-- (void)dealloc;
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:[[NNWindowListWorker class] notificationName] object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:[[NNWindowWorker class] notificationName] object:nil];
 }
 
 #pragma mark Actions

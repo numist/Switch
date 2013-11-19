@@ -101,15 +101,13 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
             return notification.userInfo[NNCoreWindowControllerActiveKey];
         }];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accessibilityAPIAvailabilityChangedNotification:) name:NNAPIEnabledWorker.notificationName object:nil];
+    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(accessibilityAPIAvailabilityChangedNotification:) name:NNAPIEnabledWorker.notificationName object:nil];
     
     return self;
 }
 
 - (void)dealloc;
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NNAPIEnabledWorker.notificationName object:nil];
-    
     [self removeEventTap];
 }
 

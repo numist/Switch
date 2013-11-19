@@ -76,16 +76,10 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
     [self setUpReactions];
     
     self.keyManager = [NNEventManager sharedManager];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hotKeyManagerEventNotification:) name:NNEventManagerKeyNotificationName object:self.keyManager];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hotKeyManagerMouseNotification:) name:NNEventManagerMouseNotificationName object:self.keyManager];
+    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(hotKeyManagerEventNotification:) name:NNEventManagerKeyNotificationName object:self.keyManager];
+    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(hotKeyManagerMouseNotification:) name:NNEventManagerMouseNotificationName object:self.keyManager];
     
     return self;
-}
-
-- (void)dealloc;
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NNEventManagerKeyNotificationName object:self.keyManager];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NNEventManagerMouseNotificationName object:self.keyManager];
 }
 
 - (BOOL)isWindowLoaded;

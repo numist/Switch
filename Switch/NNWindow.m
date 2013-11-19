@@ -83,7 +83,7 @@
         (void)self.haxWindow;
     });
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(haxApplicationWasDestroyed:) name:NNHAXApplicationWasInvalidatedNotification object:_application];
+    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(haxApplicationWasDestroyed:) name:NNHAXApplicationWasInvalidatedNotification object:_application];
     
     NNLog(@"Created window %@ belonging to application %@", self, _application);
     
@@ -110,11 +110,6 @@
 - (NSString *)description;
 {
     return [NSString stringWithFormat:@"%p <%u (%@)>", self, self.windowID, self.name];
-}
-
-- (void)dealloc;
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NNHAXApplicationWasInvalidatedNotification object:self.application];
 }
 
 #pragma mark HAXElementDelegate
