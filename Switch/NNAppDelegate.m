@@ -14,13 +14,7 @@
 
 #import "NNAppDelegate.h"
 
-#import "NNAXAPIService.h"
-#import "NNCoreWindowService.h"
-#import "NNEventManager.h"
-#import "NNLoggingService.h"
 #import "NNPreferencesService.h"
-#import "NNStatusBarMenuService.h"
-#import "NSNotificationCenter+RACSupport.h"
 
 
 @implementation NNAppDelegate
@@ -29,12 +23,7 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    [[NNServiceManager sharedManager] registerService:[NNEventManager self]];
-    [[NNServiceManager sharedManager] registerService:[NNLoggingService self]];
-    [[NNServiceManager sharedManager] registerService:[NNPreferencesService self]];
-    [[NNServiceManager sharedManager] registerService:[NNCoreWindowService self]];
-    [[NNServiceManager sharedManager] registerService:[NNStatusBarMenuService self]];
-    [[NNServiceManager sharedManager] registerService:[NNAXAPIService self]];
+    [[NNServiceManager sharedManager] registerAllPossibleServices];
     
     NNLog(@"Launched %@ %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:(__bridge id)kCFBundleNameKey], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]);
 }

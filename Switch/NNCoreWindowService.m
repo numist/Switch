@@ -9,6 +9,7 @@
 #import "NNCoreWindowService.h"
 
 #import "NNCoreWindowController.h"
+#import "NNEventManager.h"
 
 
 @interface NNCoreWindowService ()
@@ -25,6 +26,11 @@
 - (NNServiceType)serviceType;
 {
     return NNServiceTypePersistent;
+}
+
+- (NSSet *)dependencies;
+{
+    return [NSSet setWithObject:[NNEventManager self]];
 }
 
 - (void)startService;

@@ -359,7 +359,6 @@
 		BC63AB901755C6EC00016B9E /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				BC5A978D180E5A66002ECD56 /* Services */,
 				BCA734F216DAC53F00CD4C74 /* NNAppDelegate.h */,
 				BCA734F316DAC53F00CD4C74 /* NNAppDelegate.m */,
 				BC6B6D11178DDBDA001D691D /* NNCoreWindowController.h */,
@@ -556,6 +555,7 @@
 				BCBF525517B079FF00716200 /* Hotkeys */,
 				BCA7358F16E585D400CD4C74 /* Polling */,
 				BCCA7B0D1809006400CE36E5 /* ReactiveCocoa Extras */,
+				BC5A978D180E5A66002ECD56 /* Services */,
 				BCFF230F177DD42E008759C4 /* Window Filtering */,
 				BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */,
 				BCCA7ACE180896D100CE36E5 /* helpers.h */,
