@@ -22,6 +22,7 @@
 		BC6B6D00178B711E001D691D /* NNMainThreadGuard.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6CFF178B711E001D691D /* NNMainThreadGuard.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		BC6B6D13178DDBDA001D691D /* NNCoreWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6D12178DDBDA001D691D /* NNCoreWindowController.m */; };
 		BC6B6D1C178DE8E5001D691D /* NNAPIEnabledWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6D1B178DE8E5001D691D /* NNAPIEnabledWorker.m */; };
+		BC82B3F1183C48EE00FDD3B9 /* NNCoreWindowService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC82B3F0183C48EE00FDD3B9 /* NNCoreWindowService.m */; };
 		BC8D8DA1177BA53100B7A135 /* NNHUDCollectionViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC8D8DA0177BA53100B7A135 /* NNHUDCollectionViewTests.m */; };
 		BC948E2E180CFAA6008ED28A /* weave.png in Resources */ = {isa = PBXBuildFile; fileRef = BC948E2D180CFAA6008ED28A /* weave.png */; };
 		BCA734E116DAC53F00CD4C74 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCA734E016DAC53F00CD4C74 /* Cocoa.framework */; };
@@ -224,6 +225,8 @@
 		BC6B6D12178DDBDA001D691D /* NNCoreWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNCoreWindowController.m; sourceTree = "<group>"; };
 		BC6B6D1A178DE8E5001D691D /* NNAPIEnabledWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNAPIEnabledWorker.h; sourceTree = "<group>"; };
 		BC6B6D1B178DE8E5001D691D /* NNAPIEnabledWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNAPIEnabledWorker.m; sourceTree = "<group>"; };
+		BC82B3EF183C48EE00FDD3B9 /* NNCoreWindowService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNCoreWindowService.h; sourceTree = "<group>"; };
+		BC82B3F0183C48EE00FDD3B9 /* NNCoreWindowService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNCoreWindowService.m; sourceTree = "<group>"; };
 		BC8D8DA0177BA53100B7A135 /* NNHUDCollectionViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDCollectionViewTests.m; sourceTree = "<group>"; };
 		BC948E2D180CFAA6008ED28A /* weave.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = weave.png; path = Resources/weave.png; sourceTree = "<group>"; };
 		BCA734DD16DAC53F00CD4C74 /* Switch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Switch.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -339,8 +342,8 @@
 			children = (
 				BC19D3DB18143AB1009CEC1F /* NNAXAPIService.h */,
 				BC19D3DC18143AB1009CEC1F /* NNAXAPIService.m */,
-				BC6B6D11178DDBDA001D691D /* NNCoreWindowController.h */,
-				BC6B6D12178DDBDA001D691D /* NNCoreWindowController.m */,
+				BC82B3EF183C48EE00FDD3B9 /* NNCoreWindowService.h */,
+				BC82B3F0183C48EE00FDD3B9 /* NNCoreWindowService.m */,
 				BC5A9799180E6949002ECD56 /* NNLoggingService.h */,
 				BC5A979A180E6949002ECD56 /* NNLoggingService.m */,
 				BC19D3D8181436FB009CEC1F /* NNPreferencesService.h */,
@@ -357,6 +360,8 @@
 				BC5A978D180E5A66002ECD56 /* Services */,
 				BCA734F216DAC53F00CD4C74 /* NNAppDelegate.h */,
 				BCA734F316DAC53F00CD4C74 /* NNAppDelegate.m */,
+				BC6B6D11178DDBDA001D691D /* NNCoreWindowController.h */,
+				BC6B6D12178DDBDA001D691D /* NNCoreWindowController.m */,
 				BCCA7A601807894A00CE36E5 /* NNPreferencesWindowController.h */,
 				BCCA7A611807894A00CE36E5 /* NNPreferencesWindowController.m */,
 				BCCA7A621807894A00CE36E5 /* NNPreferencesWindowController.xib */,
@@ -897,6 +902,7 @@
 				BCA7354316E1621400CD4C74 /* constants.m in Sources */,
 				BC5A979B180E6949002ECD56 /* NNLoggingService.m in Sources */,
 				BCA7354916E1F14D00CD4C74 /* NNSelectionBoxView.m in Sources */,
+				BC82B3F1183C48EE00FDD3B9 /* NNCoreWindowService.m in Sources */,
 				BCFF231B177DDFE8008759C4 /* NNPowerboxWindowFilter.m in Sources */,
 				BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */,
 				BC63AB8F1755907D00016B9E /* NNHUDCollectionView.m in Sources */,

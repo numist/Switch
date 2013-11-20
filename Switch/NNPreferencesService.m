@@ -14,6 +14,8 @@
 
 #import "NNPreferencesService.h"
 
+#import <NNKit/NNService+Protected.h>
+
 #import "NNEventManager.h"
 #import "NNHotKey.h"
 #import "NNPreferencesWindowController.h"
@@ -36,6 +38,11 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
 - (NNServiceType)serviceType;
 {
     return NNServiceTypePersistent;
+}
+
+- (Protocol *)subscriberProtocol;
+{
+    return @protocol(NNPreferencesServiceDelegate);
 }
 
 - (void)startService;
@@ -65,7 +72,7 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
     
     self.preferencesWindowController = [[NNPreferencesWindowController alloc] initWithWindowNibName:@"NNPreferencesWindowController"];
     if ([[NSUserDefaults standardUserDefaults] boolForKey:kNNFirstLaunchKey]) {
-        [defaults setBool:NO forKey:kNNFirstLaunchKey];
+        [self setObject:@NO forKey:kNNFirstLaunchKey];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self showPreferencesWindow:self];
         });
@@ -81,6 +88,17 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
     [self.preferencesWindowController showWindow:sender];
     [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
     [self.preferencesWindowController.window makeKeyAndOrderFront:sender];
+}
+
+- (void)setObject:(id)object forKey:(NSString *)key;
+{
+    [[NSUserDefaults standardUserDefaults] setObject:object forKey:key];
+    [(id<NNPreferencesServiceDelegate>)self.subscriberDispatcher preferencesService:self didSetValue:object forKey:key];
+}
+
+- (id)objectForKey:(NSString *)key;
+{
+    return [[NSUserDefaults standardUserDefaults] objectForKey:key];
 }
 
 #pragma mark Private

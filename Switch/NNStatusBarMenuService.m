@@ -15,9 +15,10 @@
 #import "NNStatusBarMenuService.h"
 
 #import "NNAppDelegate.h"
+#import "NNPreferencesService.h"
 
 
-@interface NNStatusBarMenuService () <NSMenuDelegate>
+@interface NNStatusBarMenuService () <NSMenuDelegate, NNPreferencesServiceDelegate>
 
 @property (nonatomic, strong) NSStatusItem *statusItem;
 @property (nonatomic, strong) NSSet *debugItems;
@@ -95,6 +96,25 @@
 {
     return NNServiceTypePersistent;
 }
+
+- (NSSet *)dependencies;
+{
+    return [NSSet setWithObject:[NNPreferencesService class]];
+}
+
+- (void)startService;
+{
+    [[NNServiceManager sharedManager] addSubscriber:self forService:[NNPreferencesService class]];
+}
+
+#pragma mark NNPreferencesServiceDelegate
+
+- (oneway void)preferencesService:(NNPreferencesService *)service didSetValue:(id)value forKey:(NSString *)key;
+{
+    #pragma message "Use this to enable/disable the status bar item"
+}
+
+#pragma mark NNStatusBarMenuService
 
 - (IBAction)snapshot:(id)sender;
 {

@@ -34,7 +34,7 @@ NSString const *NNCoreWindowControllerActiveKey = @"NNCoreWindowControllerActive
 static NSTimeInterval kNNWindowDisplayDelay = 0.1;
 
 
-@interface NNCoreWindowController () <NNWindowStoreDelegate, NNHUDCollectionViewDataSource, NNHUDCollectionViewDelegate, NNService>
+@interface NNCoreWindowController () <NNWindowStoreDelegate, NNHUDCollectionViewDataSource, NNHUDCollectionViewDelegate>
 
 #pragma mark State
 @property (nonatomic, strong) NSDate *invocationTime;
@@ -275,28 +275,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
     }
     
     return result;
-}
-
-#pragma mark NNService
-
-+ (id)sharedService;
-{
-    static id<NNService> _sharedService = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _sharedService = [[self alloc] initWithWindow:nil];
-    });
-    return _sharedService;
-}
-
-- (NNServiceType)serviceType;
-{
-    return NNServiceTypePersistent;
-}
-
-- (NSSet *)dependencies;
-{
-    return nil;
 }
 
 #pragma mark NNHUDCollectionViewDataSource

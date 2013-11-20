@@ -15,8 +15,22 @@
 #import <Foundation/Foundation.h>
 
 
+@class NNPreferencesService;
+
+
+@protocol NNPreferencesServiceDelegate <NSObject>
+
+@optional
+- (oneway void)preferencesService:(NNPreferencesService *)service didSetValue:(id)value forKey:(NSString *)key;
+
+@end
+
+
 @interface NNPreferencesService : NNService
 
 - (void)showPreferencesWindow:(id)sender;
+
+- (void)setObject:(id)object forKey:(NSString *)key;
+- (id)objectForKey:(NSString *)key;
 
 @end

@@ -15,7 +15,7 @@
 #import "NNAppDelegate.h"
 
 #import "NNAXAPIService.h"
-#import "NNCoreWindowController.h"
+#import "NNCoreWindowService.h"
 #import "NNEventManager.h"
 #import "NNLoggingService.h"
 #import "NNPreferencesService.h"
@@ -31,7 +31,7 @@
 {
     [[NNServiceManager sharedManager] registerService:[NNLoggingService self]];
     [[NNServiceManager sharedManager] registerService:[NNPreferencesService self]];
-    [[NNServiceManager sharedManager] registerService:[NNCoreWindowController self]];
+    [[NNServiceManager sharedManager] registerService:[NNCoreWindowService self]];
     [[NNServiceManager sharedManager] registerService:[NNStatusBarMenuService self]];
     [[NNServiceManager sharedManager] registerService:[NNAXAPIService self]];
 

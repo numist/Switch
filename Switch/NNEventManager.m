@@ -17,6 +17,7 @@
 #import "NNEventManager.h"
 
 #include <ApplicationServices/ApplicationServices.h>
+#import <NNKit/NNCleanupProxy.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
 
 #import "NNAPIEnabledWorker.h"
