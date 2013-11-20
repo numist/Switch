@@ -17,6 +17,7 @@
 
 
 @class NNHotKey;
+@class NNEventManager;
 
 
 typedef NS_ENUM(NSUInteger, NNEventManagerEventType) {
@@ -31,20 +32,17 @@ typedef NS_ENUM(NSUInteger, NNEventManagerEventType) {
     NNEventManagerEventTypeShowPreferences,
 };
 
-typedef NS_ENUM(NSUInteger, NNEventManagerMouseEventType) {
-    NNEventManagerMouseEventTypeMove,
-};
+
+@protocol NNEventManagerDelegate <NSObject>
+@optional
+
+- (oneway void)eventManager:(NNEventManager *)manager didProcessKeyForEventType:(NNEventManagerEventType)eventType;
+- (oneway void)eventManagerDidDetectMouseMove:(NNEventManager *)manager;
+
+@end
 
 
-extern NSString *NNEventManagerMouseNotificationName;
-extern NSString *NNEventManagerKeyNotificationName;
-extern NSString *NNEventManagerEventTypeKey;
-extern NSString *NNEventManagerEventMouseLocationKey;
-
-
-@interface NNEventManager : NSObject
-
-+ (NNEventManager *)sharedManager;
+@interface NNEventManager : NNService
 
 - (void)registerHotKey:(NNHotKey *)hotKey forEvent:(NNEventManagerEventType)eventType;
 

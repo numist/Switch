@@ -24,7 +24,7 @@
 static NSString *kNNFirstLaunchKey = @"firstLaunch";
 
 
-@interface NNPreferencesService ()
+@interface NNPreferencesService () <NNEventManagerDelegate>
 
 @property (nonatomic, strong) NNPreferencesWindowController *preferencesWindowController;
 
@@ -63,7 +63,7 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
 #   endif
     
     // TODO: When these become customizable, they will become fields in the app's preferences.
-    NNEventManager *keyManager = [NNEventManager sharedManager];
+    NNEventManager *keyManager = [NNEventManager sharedService];
     [keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_Tab modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeInvoke];
     [keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_Tab modifiers:(NNHotKeyModifierOption | NNHotKeyModifierShift)] forEvent:NNEventManagerEventTypeDecrement];
     [keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_ANSI_W modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeCloseWindow];
@@ -79,6 +79,22 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
     }
 
     [defaults synchronize];
+    
+    [[NNServiceManager sharedManager] addSubscriber:self forService:[NNEventManager self]];
+}
+
+- (void)stopService;
+{
+    [[NNServiceManager sharedManager] removeSubscriber:self forService:[NNEventManager self]];
+}
+
+#pragma mark NNEventManagerDelegate
+
+- (oneway void)eventManager:(NNEventManager *)manager didProcessKeyForEventType:(NNEventManagerEventType)eventType;
+{
+    if (eventType == NNEventManagerEventTypeShowPreferences) {
+        [self showPreferencesWindow:manager];
+    }
 }
 
 #pragma mark - NNPreferencesService

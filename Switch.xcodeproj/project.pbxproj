@@ -344,6 +344,8 @@
 				BC19D3DC18143AB1009CEC1F /* NNAXAPIService.m */,
 				BC82B3EF183C48EE00FDD3B9 /* NNCoreWindowService.h */,
 				BC82B3F0183C48EE00FDD3B9 /* NNCoreWindowService.m */,
+				BCA7353116DB2C0100CD4C74 /* NNEventManager.h */,
+				BCA7353216DB2C0100CD4C74 /* NNEventManager.m */,
 				BC5A9799180E6949002ECD56 /* NNLoggingService.h */,
 				BC5A979A180E6949002ECD56 /* NNLoggingService.m */,
 				BC19D3D8181436FB009CEC1F /* NNPreferencesService.h */,
@@ -580,8 +582,6 @@
 			children = (
 				BCBF524C17B079FA00716200 /* NNHotKey.h */,
 				BCBF524D17B079FA00716200 /* NNHotKey.m */,
-				BCA7353116DB2C0100CD4C74 /* NNEventManager.h */,
-				BCA7353216DB2C0100CD4C74 /* NNEventManager.m */,
 			);
 			name = Hotkeys;
 			sourceTree = "<group>";

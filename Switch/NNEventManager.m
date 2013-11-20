@@ -18,18 +18,13 @@
 
 #include <ApplicationServices/ApplicationServices.h>
 #import <NNKit/NNCleanupProxy.h>
+#import <NNKit/NNService+Protected.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
 
 #import "NNAPIEnabledWorker.h"
 #import "NNHotKey.h"
 #import "NNCoreWindowController.h"
 #import "NSNotificationCenter+RACSupport.h"
-
-
-NSString *NNEventManagerMouseNotificationName = @"NNEventManagerMouseNotificationName";
-NSString *NNEventManagerKeyNotificationName = @"NNEventManagerEventNotificationName";
-NSString *NNEventManagerEventTypeKey = @"eventType";
-NSString *NNEventManagerEventMouseLocationKey = @"mouseLocation";
 
 
 static NSSet *kNNKeysUnsettable;
@@ -72,7 +67,9 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     });
 }
 
-+ (NNEventManager *)sharedManager;
+#pragma mark NNService
+
++ (id)sharedService;
 {
     static NNEventManager *_singleton;
     
@@ -83,6 +80,18 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     
     return _singleton;
 }
+
+- (NNServiceType)serviceType;
+{
+    return NNServiceTypePersistent;
+}
+
+- (Protocol *)subscriberProtocol;
+{
+    return @protocol(NNEventManagerDelegate);
+}
+
+#pragma mark Initialization
 
 - (instancetype)init;
 {
@@ -115,7 +124,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
 - (void)registerHotKey:(NNHotKey *)hotKey forEvent:(NNEventManagerEventType)eventType;
 {
     if ([kNNKeysUnsettable containsObject:@(eventType)]) {
-        @throw [NSException exceptionWithName:@"NNEventManagerRegistrationException" reason:@"That keybinding cannot be set, try setting it's parent?" userInfo:@{ NNEventManagerEventTypeKey : @(eventType), @"key" : hotKey }];
+        @throw [NSException exceptionWithName:@"NNEventManagerRegistrationException" reason:@"That keybinding cannot be set, try setting it's parent?" userInfo:@{ @"eventType" : @(eventType), @"key" : hotKey }];
     }
     
     [self.keyMap setObject:@(eventType) forKey:hotKey];
@@ -174,12 +183,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     }
     
     if (switcherActive && type == kCGEventMouseMoved) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:NNEventManagerMouseNotificationName object:self userInfo:@{
-                NNEventManagerEventTypeKey : @(NNEventManagerMouseEventTypeMove),
-                NNEventManagerEventMouseLocationKey : [NSValue valueWithPoint:[NSEvent mouseLocation]]
-            }];
-        });
+        [(id<NNEventManagerDelegate>)self.subscriberDispatcher eventManagerDidDetectMouseMove:self];
         return event;
     }
     
@@ -256,9 +260,12 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
 
 - (void)dispatchEvent:(NNEventManagerEventType)eventType;
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:NNEventManagerKeyNotificationName object:self userInfo:@{ NNEventManagerEventTypeKey : @(eventType) }];
-    });
+    [(id<NNEventManagerDelegate>)self.subscriberDispatcher eventManager:self didProcessKeyForEventType:eventType];
+    
+    // When showing the preferences window, need to cancel the interface.
+    if (eventType == NNEventManagerEventTypeShowPreferences) {
+        [self dispatchEvent:NNEventManagerEventTypeCancel];
+    }
 }
 
 - (void)accessibilityAPIAvailabilityChangedNotification:(NSNotification *)notification;

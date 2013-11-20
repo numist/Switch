@@ -34,7 +34,7 @@ NSString const *NNCoreWindowControllerActiveKey = @"NNCoreWindowControllerActive
 static NSTimeInterval kNNWindowDisplayDelay = 0.1;
 
 
-@interface NNCoreWindowController () <NNWindowStoreDelegate, NNHUDCollectionViewDataSource, NNHUDCollectionViewDelegate>
+@interface NNCoreWindowController () <NNWindowStoreDelegate, NNHUDCollectionViewDataSource, NNHUDCollectionViewDelegate, NNEventManagerDelegate>
 
 #pragma mark State
 @property (nonatomic, strong) NSDate *invocationTime;
@@ -75,9 +75,8 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
     (void)self.window;
     [self setUpReactions];
     
-    self.keyManager = [NNEventManager sharedManager];
-    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(hotKeyManagerEventNotification:) name:NNEventManagerKeyNotificationName object:self.keyManager];
-    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(hotKeyManagerMouseNotification:) name:NNEventManagerMouseNotificationName object:self.keyManager];
+    self.keyManager = [NNEventManager sharedService];
+    [[NNServiceManager sharedManager] addSubscriber:self forService:[NNEventManager self]];
     
     return self;
 }
@@ -381,10 +380,8 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
     self.displayTimer = nil;
 }
 
-- (void)hotKeyManagerEventNotification:(NSNotification *)notification;
+- (void)eventManager:(NNEventManager *)manager didProcessKeyForEventType:(NNEventManagerEventType)eventType;
 {
-    NNEventManagerEventType eventType = [notification.userInfo[NNEventManagerEventTypeKey] unsignedIntegerValue];
-    
     switch (eventType) {
         case NNEventManagerEventTypeInvoke: {
             if (![NNAPIEnabledWorker isAPIEnabled]) {
@@ -538,10 +535,10 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
     }
 }
 
-- (void)hotKeyManagerMouseNotification:(NSNotification *)notification;
+- (oneway void)eventManagerDidDetectMouseMove:(NNEventManager *)manager;
 {
     if (self.active) {
-        NSPoint windowLocation = [self.window convertScreenToBase:[notification.userInfo[@"mouseLocation"] pointValue]];
+        NSPoint windowLocation = [self.window convertScreenToBase:[NSEvent mouseLocation]];
         if(NSPointInRect([self.collectionView convertPoint:windowLocation fromView:nil], [self.collectionView bounds])) {
             NSEvent *event = [NSEvent mouseEventWithType:NSMouseMoved location:windowLocation modifierFlags:NSAlternateKeyMask timestamp:(NSTimeInterval)0 windowNumber:self.window.windowNumber context:(NSGraphicsContext *)nil eventNumber:0 clickCount:0 pressure:1.0];
             [self.collectionView mouseMoved:event];

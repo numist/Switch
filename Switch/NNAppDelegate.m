@@ -29,20 +29,12 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
+    [[NNServiceManager sharedManager] registerService:[NNEventManager self]];
     [[NNServiceManager sharedManager] registerService:[NNLoggingService self]];
     [[NNServiceManager sharedManager] registerService:[NNPreferencesService self]];
     [[NNServiceManager sharedManager] registerService:[NNCoreWindowService self]];
     [[NNServiceManager sharedManager] registerService:[NNStatusBarMenuService self]];
     [[NNServiceManager sharedManager] registerService:[NNAXAPIService self]];
-
-    [[[NSNotificationCenter defaultCenter] rac_addObserverForName:NNEventManagerKeyNotificationName object:[NNEventManager sharedManager]]
-        subscribeNext:^(NSNotification *x) {
-            if ([x.userInfo[NNEventManagerEventTypeKey] unsignedIntegerValue] == NNEventManagerEventTypeShowPreferences) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self showPreferencesWindow];
-                });
-            }
-        }];
     
     NNLog(@"Launched %@ %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:(__bridge id)kCFBundleNameKey], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]);
 }
@@ -51,16 +43,6 @@
 
 - (IBAction)showPreferences:(id)sender {
     [[NNPreferencesService sharedService] showPreferencesWindow:sender];
-}
-
-#pragma mark Internal
-
-- (void)showPreferencesWindow;
-{
-    // HACK: There should be a better way to cancel the interface than committing identity fraud.
-    [[NSNotificationCenter defaultCenter] postNotificationName:NNEventManagerKeyNotificationName object:[NNEventManager sharedManager] userInfo:@{NNEventManagerEventTypeKey : @(NNEventManagerEventTypeCancel)}];
-    
-    [self showPreferences:self];
 }
 
 @end
