@@ -51,7 +51,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
 
 #pragma mark NNWindowStore and state
 @property (nonatomic, strong) NSMutableOrderedSet *windows;
-@property (nonatomic, strong) NNWindowStore *store;
 
 #pragma mark NNEventManager and state
 @property (nonatomic, strong) NNEventManager *keyManager;
@@ -69,7 +68,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
     if (!(self = [super initWithWindow:window])) { return nil; }
     
     self.windows = [NSMutableOrderedSet new];
-    self.store = [[NNWindowStore alloc] initWithDelegate:self];
     
     Check(![self isWindowLoaded]);
     (void)self.window;
@@ -142,7 +140,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
             if ([shouldDisplayInterface boolValue]) {
                 [self.window setFrame:[NSScreen mainScreen].frame display:YES];
                 [self.window orderFront:self];
-                [self.store startUpdatingWindowContents];
+                [[NNWindowStore sharedService] startUpdatingWindowContents];
                 NNLog(@"Showed interface (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
             } else {
                 NNLog(@"Hiding interface (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
@@ -185,17 +183,26 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
                 self.windowListLoaded = NO;
                 self.selectedIndex = 0;
              
-                [self.store startUpdatingWindowList];
-         } else {
+                [[NNServiceManager sharedManager] addSubscriber:self forService:[NNWindowStore self]];
+            } else {
                 NNLog(@"Deactivating Switch (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
                 Check(!self.pendingSwitch);
-             
-                [self.store stopUpdatingWindowList];
-                [self.store stopUpdatingWindowContents];
+
+                [[NNServiceManager sharedManager] removeSubscriber:self forService:[NNWindowStore self]];
+                [[NNWindowStore sharedService] stopUpdatingWindowContents];
                 [self.displayTimer invalidate];
                 self.displayTimer = nil;
                 self.pendingSwitch = NO;
                 [self.collectionView deselectCell];
+
+                NSMutableArray *indexes = [NSMutableArray new];
+                for (NSInteger i = (NSInteger)self.windows.count - 1; i >= 0; --i) {
+                    [indexes addObject:@(i)];
+                }
+                [self.collectionView beginUpdates];
+                [self.collectionView deleteCellsAtIndexes:indexes withAnimation:NO];
+                [self.windows removeAllObjects];
+                [self.collectionView endUpdates];
             }
             [[NSNotificationCenter defaultCenter] postNotificationName:(NSString *)NNCoreWindowControllerActivityNotification object:self userInfo:@{NNCoreWindowControllerActiveKey : active}];
         }];
@@ -313,11 +320,19 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
 
 - (void)storeWillChangeContent:(NNWindowStore *)store;
 {
+    if (!self.windowListLoaded) {
+        return;
+    }
+
     [self.collectionView beginUpdates];
 }
 
 - (void)store:(NNWindowStore *)store didChangeWindow:(NNWindow *)window atIndex:(NSUInteger)index forChangeType:(NNWindowStoreChangeType)type newIndex:(NSUInteger)newIndex;
 {
+    if (!self.windowListLoaded) {
+        return;
+    }
+
     switch (type) {
         case NNWindowStoreChangeInsert:
             [self.windows insertObject:window atIndex:newIndex];
@@ -351,19 +366,35 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
 
 - (void)storeDidChangeContent:(NNWindowStore *)store;
 {
-    if (!self.windowListLoaded) {
-        NNLog(@"Window list loaded with %lu windows (%.3fs elapsed)", (unsigned long)self.windows.count, [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
-        self.windowListLoaded = YES;
-    }
-    
     if ([self.windows count]) {
         if (self.selectedIndex >= [self.windows count]) {
             self.selectedIndex = [self.windows count] - 1;
         }
         [self.collectionView selectCellAtIndex:self.selectedIndex];
     }
+
+    if (!self.windowListLoaded) {
+        NNLog(@"Window list loaded with %lu windows (%.3fs elapsed)", (unsigned long)self.windows.count, [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+        self.windowListLoaded = YES;
+        return;
+    }
     
     [self.collectionView endUpdates];
+}
+
+- (void)store:(NNWindowStore *)store didUpdateWindowList:(NSOrderedSet *)windows;
+{
+    if (!self.windowListLoaded) {
+        NSMutableArray *indexes = [NSMutableArray new];
+        for (NSUInteger i = 0; i < windows.count; ++i) {
+            [indexes addObject:@(i)];
+        }
+        
+        [self.collectionView beginUpdates];
+        [self.collectionView insertCellsAtIndexes:indexes withAnimation:NO];
+        self.windows = [windows mutableCopy];
+        [self.collectionView endUpdates];
+    }
 }
 
 #pragma mark - Notifications/Timers
@@ -380,7 +411,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
     self.displayTimer = nil;
 }
 
-- (void)eventManager:(NNEventManager *)manager didProcessKeyForEventType:(NNEventManagerEventType)eventType;
+- (oneway void)eventManager:(NNEventManager *)manager didProcessKeyForEventType:(NNEventManagerEventType)eventType;
 {
     switch (eventType) {
         case NNEventManagerEventTypeInvoke: {

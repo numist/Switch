@@ -15,6 +15,7 @@
 #import "NNWindowStore.h"
 
 #import "NNApplication+Private.h"
+#import <NNKit/NNService+Protected.h>
 #import "NNWindow+Private.h"
 #import "NNWindowListWorker.h"
 #import "NNWindowWorker.h"
@@ -22,7 +23,6 @@
 
 @interface NNWindowStore ()
 
-@property (nonatomic, strong) id<NNWindowStoreDelegate> delegate;
 @property (nonatomic, assign) BOOL firstUpdate;
 
 // Serialization
@@ -41,23 +41,34 @@
 
 @implementation NNWindowStore
 
-- (instancetype)initWithDelegate:(id<NNWindowStoreDelegate>)delegate;
+- (instancetype)init;
 {
     if (!(self = [super init])) { return nil; }
     
-    _delegate = (id<NNWindowStoreDelegate>)[NNDelegateProxy proxyWithDelegate:delegate protocol:@protocol(NNWindowStoreDelegate)];
     _windows = [NSOrderedSet new];
     _firstUpdate = YES;
     
-    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(pollCompleteNotification:) name:[[NNWindowListWorker class] notificationName] object:nil];
-    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(pollCompleteNotification:) name:[[NNWindowWorker class] notificationName] object:nil];
+    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(pollCompleteNotification:) name:[NNWindowListWorker notificationName] object:nil];
+    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(pollCompleteNotification:) name:[NNWindowWorker notificationName] object:nil];
     
     return self;
 }
 
+#pragma mark NNService
+
+- (NNServiceType)serviceType;
+{
+    return NNServiceTypeOnDemand;
+}
+
+- (Protocol *)subscriberProtocol;
+{
+    return @protocol(NNWindowStoreDelegate);
+}
+
 #pragma mark Actions
 
-- (void)startUpdatingWindowList;
+- (void)startService;
 {
     NNAssertMainQueue();
 
@@ -68,7 +79,7 @@
     }
 }
 
-- (void)stopUpdatingWindowList;
+- (void)stopService;
 {
     NNAssertMainQueue();
 
@@ -109,12 +120,11 @@
 
 - (oneway void)windowWorker:(NNWindowWorker *)worker didUpdateContentsOfWindow:(NNWindow *)window;
 {
-    
     if ([self.windows containsObject:window]) {
-        id<NNWindowStoreDelegate> delegate = self.delegate;
-        [delegate storeWillChangeContent:self];
-        [delegate store:self didChangeWindow:window atIndex:[self.windows indexOfObject:window] forChangeType:NNWindowStoreChangeWindowContent newIndex:[self.windows indexOfObject:window]];
-        [delegate storeDidChangeContent:self];
+        id<NNWindowStoreDelegate> dispatcher = (id)self.subscriberDispatcher;
+        [dispatcher storeWillChangeContent:self];
+        [dispatcher store:self didChangeWindow:window atIndex:[self.windows indexOfObject:window] forChangeType:NNWindowStoreChangeWindowContent newIndex:[self.windows indexOfObject:window]];
+        [dispatcher storeDidChangeContent:self];
     }
 }
 
@@ -125,10 +135,10 @@
     NSMutableOrderedSet *oldWindows = [NSMutableOrderedSet orderedSetWithOrderedSet:self.windows];
     
     BOOL windowsChanged = ![oldWindows isEqual:newWindows];
-    __strong __typeof__(self.delegate) delegate = self.delegate;
+    id<NNWindowStoreDelegate> dispatcher = (id)self.subscriberDispatcher;
     
     if (windowsChanged || self.firstUpdate) {
-        [delegate storeWillChangeContent:self];
+        [dispatcher storeWillChangeContent:self];
     }
     
     NSMutableArray *changes = [NSMutableArray new];
@@ -136,7 +146,7 @@
         NNWindow *window = oldWindows[(NSUInteger)i];
         
         if (![newWindows containsObject:window]) {
-            [delegate store:self didChangeWindow:window atIndex:[oldWindows indexOfObject:window] forChangeType:NNWindowStoreChangeDelete newIndex:NSNotFound];
+            [dispatcher store:self didChangeWindow:window atIndex:[oldWindows indexOfObject:window] forChangeType:NNWindowStoreChangeDelete newIndex:NSNotFound];
             
             [changes addObject:window];
             
@@ -151,7 +161,7 @@
 
     for (NNWindow *window in newWindows) {
         if (![oldWindows containsObject:window]) {
-            [delegate store:self didChangeWindow:window atIndex:NSNotFound forChangeType:NNWindowStoreChangeInsert newIndex:[newWindows indexOfObject:window]];
+            [dispatcher store:self didChangeWindow:window atIndex:NSNotFound forChangeType:NNWindowStoreChangeInsert newIndex:[newWindows indexOfObject:window]];
             
             // Match old array with new.
             [oldWindows insertObject:window atIndex:[newWindows indexOfObject:window]];
@@ -168,7 +178,7 @@
         NSUInteger newIndex = [newWindows indexOfObject:window];
 
         if (oldIndex != newIndex) {
-            [delegate store:self didChangeWindow:window atIndex:oldIndex forChangeType:NNWindowStoreChangeMove newIndex:newIndex];
+            [dispatcher store:self didChangeWindow:window atIndex:oldIndex forChangeType:NNWindowStoreChangeMove newIndex:newIndex];
 
             [oldWindows removeObjectAtIndex:oldIndex];
             [oldWindows insertObject:window atIndex:[newWindows indexOfObject:window]];
@@ -178,7 +188,8 @@
     if (windowsChanged || self.firstUpdate) {
         self.windows = newWindows;
         
-        [delegate storeDidChangeContent:self];
+        [dispatcher store:self didUpdateWindowList:newWindows];
+        [dispatcher storeDidChangeContent:self];
         
         self.firstUpdate = NO;
     }

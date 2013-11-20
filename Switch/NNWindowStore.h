@@ -19,12 +19,7 @@
 @protocol NNWindowStoreDelegate;
 
 
-@interface NNWindowStore : NSObject
-
-- (instancetype)initWithDelegate:(id<NNWindowStoreDelegate>)delegate;
-
-- (void)startUpdatingWindowList;
-- (void)stopUpdatingWindowList;
+@interface NNWindowStore : NNService
 
 - (void)startUpdatingWindowContents;
 - (void)stopUpdatingWindowContents;
@@ -45,5 +40,6 @@ typedef NS_ENUM(NSUInteger, NNWindowStoreChangeType) {
 - (void)storeWillChangeContent:(NNWindowStore *)store;
 - (void)store:(NNWindowStore *)store didChangeWindow:(NNWindow *)window atIndex:(NSUInteger)index forChangeType:(NNWindowStoreChangeType)type newIndex:(NSUInteger)newIndex;
 - (void)storeDidChangeContent:(NNWindowStore *)store;
+- (void)store:(NNWindowStore *)store didUpdateWindowList:(NSOrderedSet *)windows;
 
 @end

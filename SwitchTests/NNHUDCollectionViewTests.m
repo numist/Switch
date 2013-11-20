@@ -42,7 +42,7 @@
     [super tearDown];
 }
 
-- (void)testEmptyCollectionView
+/*- (void)testEmptyCollectionView
 {
     NSRect windowRect = NSMakeRect(0.0, 0.0, 800.0, 100.0);
     NSWindow *window = [[NSWindow alloc] initWithContentRect:windowRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
@@ -64,6 +64,6 @@
 //    [[window nnImage] writeTIFFToFile:@"SwitchTests/References/image.tiff"];
     
     XCTAssertTrue([self compareWindow:window toReference:@"image.tiff"], @"");
-}
+}*/
 
 @end
