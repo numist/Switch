@@ -15,17 +15,8 @@
 #import "NNApplication.h"
 
 
-@class HAXWindow;
-@class NNWindow;
-
-
-extern NSString *NNHAXApplicationWasInvalidatedNotification;
-
-
 @interface NNApplication (Private)
 
-+ (instancetype)applicationWithPID:(pid_t)pid name:(NSString *)name;
-
-- (HAXWindow *)haxWindowForWindow:(NNWindow *)window __attribute__((nonnull(1)));
++ (instancetype)applicationWithPID:(pid_t)pid;
 
 @end

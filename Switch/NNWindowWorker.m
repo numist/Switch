@@ -60,47 +60,47 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 
 - (oneway void)main;
 {
-    NNWindow *window = self.window;
-
-    CGImageRef cgImage = [window cgWindowImage];
-    
-    if (cgImage) {
-        BOOL imageChanged = NO;
-        
-        size_t newWidth = CGImageGetWidth(cgImage);
-        size_t newHeight = CGImageGetHeight(cgImage);
-        { // Did the image change?
-            if (!self.previousCapture) {
-                imageChanged = YES;
-            } else {
-                size_t oldWidth = CGImageGetWidth(self.previousCapture);
-                size_t oldHeight = CGImageGetHeight(self.previousCapture);
-                
-                if (newWidth != oldWidth || newHeight != oldHeight) {
-                    imageChanged = YES;
-                } else {
-                    imageChanged = imagesDifferByCGDataProviderComparison(cgImage, self.previousCapture);
-                }
-            }
-        }
-        
-        if (!imageChanged) {
-            self.interval = MIN(NNPollingIntervalSlow, self.interval * 2.0);
-        } else {
-            self.interval = NNPollingIntervalFast;
-            self.previousCapture = cgImage;
-            
-            window.image = [[NSImage alloc] initWithCGImage:cgImage size:NSMakeSize(newWidth, newHeight)];
-            [self postNotification:@{ @"window" : window }];
-        }
-    } else if (window.exists) {
-        // Didn't get a real image, but the window exists. Try again ASAP.
-        self.interval = NNPollingIntervalFast;
-    } else {
-        // Window does not exist. Stop the worker loop.
-        self.interval = -1.0;
-        return;
-    }
+//    NNWindow *window = self.window;
+//
+//    CGImageRef cgImage = [window cgWindowImage];
+//    
+//    if (cgImage) {
+//        BOOL imageChanged = NO;
+//        
+//        size_t newWidth = CGImageGetWidth(cgImage);
+//        size_t newHeight = CGImageGetHeight(cgImage);
+//        { // Did the image change?
+//            if (!self.previousCapture) {
+//                imageChanged = YES;
+//            } else {
+//                size_t oldWidth = CGImageGetWidth(self.previousCapture);
+//                size_t oldHeight = CGImageGetHeight(self.previousCapture);
+//                
+//                if (newWidth != oldWidth || newHeight != oldHeight) {
+//                    imageChanged = YES;
+//                } else {
+//                    imageChanged = imagesDifferByCGDataProviderComparison(cgImage, self.previousCapture);
+//                }
+//            }
+//        }
+//        
+//        if (!imageChanged) {
+//            self.interval = MIN(NNPollingIntervalSlow, self.interval * 2.0);
+//        } else {
+//            self.interval = NNPollingIntervalFast;
+//            self.previousCapture = cgImage;
+//            
+//            window.image = [[NSImage alloc] initWithCGImage:cgImage size:NSMakeSize(newWidth, newHeight)];
+//            [self postNotification:@{ @"window" : window }];
+//        }
+//    } else if (window.exists) {
+//        // Didn't get a real image, but the window exists. Try again ASAP.
+//        self.interval = NNPollingIntervalFast;
+//    } else {
+//        // Window does not exist. Stop the worker loop.
+//        self.interval = -1.0;
+//        return;
+//    }
 }
 
 @end

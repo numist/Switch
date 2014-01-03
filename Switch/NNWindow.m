@@ -18,7 +18,6 @@
 #import <Haxcessibility/HAXElement+Protected.h>
 
 #import "NNApplication+Private.h"
-#import "NNWindowCache.h"
 
 
 @interface NNWindow () <HAXElementDelegate>
@@ -34,32 +33,7 @@
 
 + (instancetype)windowWithDescription:(NSDictionary *)description;
 {
-    if (![self descriptionDescribesInterestingWindow:description]) {
-        return nil;
-    }
-    
-    @synchronized(self) {
-        CGWindowID windowID = (CGWindowID)[[description objectForKey:(__bridge NSString *)kCGWindowNumber] unsignedLongValue];
-        NNWindow *result = [[NNWindowCache sharedCache] cachedWindowWithID:windowID];
-        
-        if (!result) {
-            result = [[self alloc] initWithDescription:description];
-            
-            if (result) {
-                [[NNWindowCache sharedCache] cacheWindow:result withID:windowID];
-            }
-        }
-        
-        // #24: update window's info dict in case the frame or title changed
-        result.windowDescription = description;
-
-        return result;
-    }
-}
-
-+ (BOOL)descriptionDescribesInterestingWindow:(NSDictionary *)description;
-{
-    return [[description objectForKey:(__bridge NSString *)kCGWindowLayer] longValue] == kCGNormalWindowLevel;
+    return [[self alloc] initWithDescription:description];
 }
 
 - (instancetype)initWithDescription:(NSDictionary *)description;
@@ -71,21 +45,7 @@
     }
 
     _windowDescription = [description copy];
-    _application = [NNApplication applicationWithPID:[[self.windowDescription objectForKey:(NSString *)kCGWindowOwnerPID] intValue] name:[self.windowDescription objectForKey:(NSString *)kCGWindowOwnerName]];
-
-    
-    if (!_application) {
-        return nil;
-    }
-    
-    // Load the HAXWindow ASAP, but without blocking.
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        (void)self.haxWindow;
-    });
-    
-    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(haxApplicationWasDestroyed:) name:NNHAXApplicationWasInvalidatedNotification object:_application];
-    
-    NNLog(@"Created window %@ belonging to application %@", self, _application);
+    _application = [NNApplication applicationWithPID:[[self.windowDescription objectForKey:(NSString *)kCGWindowOwnerPID] intValue]];
     
     return self;
 }
@@ -103,8 +63,7 @@
 
 - (BOOL)isEqual:(id)object;
 {
-    Check(object);
-    return ([object isKindOfClass:[self class]] && [self hash] == [object hash]);
+    return ([object isKindOfClass:[self class]] && [[self windowDescription] isEqual:[object windowDescription]]);
 }
 
 - (NSString *)description;
@@ -112,148 +71,38 @@
     return [NSString stringWithFormat:@"%p <%u (%@)>", self, self.windowID, self.name];
 }
 
-#pragma mark HAXElementDelegate
-
-- (void)elementWasDestroyed:(HAXElement *)element;
+- (BOOL)isRelatedToLowerWindow:(NNWindow *)window;
 {
-    NNLog(@"HAX element for window %@ was destroyed", self);
-
-    if (element == self->_haxWindow) {
-        [self handleElementDestruction];
+    if (self.application.canBeActivated && window.application.canBeActivated && ![self.application isEqual:window.application]) {
+        return NO;
     }
-}
 
-#pragma mark Notifications
-
-- (void)haxApplicationWasDestroyed:(NSNotification *)notification;
-{
-    NNLog(@"HAX element for window %@ destroyed (parent desroyed)", self);
-
-    if (notification.object == self.application && self->_haxWindow) {
-        [self handleElementDestruction];
+    #pragma message "Going to need a Tweetbot-specific rule here for when an image opens within the frame of the main window…"
+    if (![self enclosedByWindow:window]) {
+        return NO;
     }
+    
+    return YES;
 }
 
 #pragma mark Dynamic accessors
 
-@synthesize haxWindow = _haxWindow;
-
-- (HAXWindow *)haxWindow;
-{
-    @synchronized(self) {
-        if (!_haxWindow) {
-            _haxWindow = [self.application haxWindowForWindow:self];
-            _haxWindow.delegate = self;
-        }
-        if (!_haxWindow && [[NNWindowCache sharedCache] cachedWindowWithID:self.windowID]) {
-            [[NNWindowCache sharedCache] removeWindowWithID:self.windowID];
-        }
-
-        return _haxWindow;
-    }
-}
-
-@dynamic cgBounds;
-- (NSRect)cgBounds;
+- (NSRect)frame;
 {
     CGRect result = {{},{}};
     bool success = CGRectMakeWithDictionaryRepresentation((__bridge CFDictionaryRef)[self.windowDescription objectForKey:(NSString *)kCGWindowBounds], &result);
-    BailUnless(success, ((NSRect){{},{}}));
+    BailUnless(success, ((NSRect){{0.0,0.0},{0.0,0.0}}));
     return result;
 }
 
-@synthesize name = _name;
 - (NSString *)name;
 {
-    if (!_name) {
-        _name = [self.windowDescription objectForKey:(__bridge NSString *)kCGWindowName];
-    }
-    return _name;
+    return [self.windowDescription objectForKey:(__bridge NSString *)kCGWindowName];
 }
 
 - (CGWindowID)windowID;
 {
     return (CGWindowID)[[self.windowDescription objectForKey:(__bridge NSString *)kCGWindowNumber] unsignedLongValue];
-}
-
-#pragma mark NNWindow
-
-- (BOOL)exists;
-{
-    CFArrayRef cgList = CGWindowListCreate(kCGWindowListOptionIncludingWindow, self.windowID);
-    
-    if (![CFBridgingRelease(cgList) count]) {
-        return NO;
-    }
-    
-    return YES;
-}
-
-- (BOOL)raise;
-{
-    NSDate *start = [NSDate date];
-
-    // First, raise the window
-    NSError *error = nil;
-    if (![self.haxWindow performAction:(__bridge NSString *)kAXRaiseAction error:&error]) {
-        NNLog(@"Raising %@ window %@ failed after %.3fs: %@", self.application.name, self, [[NSDate date] timeIntervalSinceDate:start], error);
-        return NO;
-    }
-    
-    // Then raise the application (if it's not already topmost)
-    if (![self.application raise]) {
-        NNLog(@"Raising application %@ failed.", self.application);
-        return NO;
-    }
-    
-    NNLog(@"Raising %@ window %@ took %.3fs", self.application.name, self, [[NSDate date] timeIntervalSinceDate:start]);
-    return YES;
-}
-
-- (BOOL)close;
-{
-    NSDate *start = [NSDate date];
-
-    NSError *error = nil;
-    HAXElement *element = [self.haxWindow elementOfClass:[HAXElement class] forKey:(__bridge NSString *)kAXCloseButtonAttribute error:NULL];
-	BOOL result = [element performAction:(__bridge NSString *)kAXPressAction error:&error];
-    
-    NSTimeInterval elapsed = [[NSDate date] timeIntervalSinceDate:start];
-    if (result) {
-        NNLog(@"Closing %@ window %@ took %.3fs", self.application.name, self, elapsed);
-    } else {
-        NNLog(@"Closing %@ window %@ failed after %.3fs: %@", self.application.name, self, elapsed, error);
-    }
-    
-    return result;
-}
-
-#pragma mark Private
-
-- (void)handleElementDestruction;
-{
-    @synchronized(self) {
-        self->_haxWindow = nil;
-    }
-
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        @synchronized(self) {
-            (void)self.haxWindow;
-        }
-    });
-}
-
-- (CGImageRef)cgWindowImage;
-{
-    CGImageRef result = NNCFAutorelease(CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, self.windowID, kCGWindowImageBoundsIgnoreFraming));
-    
-    BailUnless(result, NULL);
-    
-    if (CGImageGetHeight(result) < 1.0 || CGImageGetWidth(result) < 1.0) {
-        return NULL;
-    }
-    
-    return result;
 }
 
 @end

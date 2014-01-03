@@ -60,7 +60,7 @@
     }
 
     _iconLayer.contents = _icon;
-    _thumbnail = window.image;
+    #pragma message "_thumbnail = window.image;"
     _thumbnailLayer.contents = _thumbnail;
     
     return self;

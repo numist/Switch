@@ -17,10 +17,15 @@
 #import <NNKit/NNPollingObject+Protected.h>
 #import <ReactiveCocoa/EXTScope.h>
 
-#import "NNWindow+Private.h"
-
 
 static NSTimeInterval refreshInterval = 0.1;
+
+
+@interface NNWindowListWorker ()
+
+@property (nonatomic, copy, readwrite) NSArray *windowInfoList;
+
+@end
 
 
 @implementation NNWindowListWorker
@@ -38,19 +43,12 @@ static NSTimeInterval refreshInterval = 0.1;
 
 - (oneway void)main;
 {
-    CFArrayRef cgInfo = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements,  kCGNullWindowID);
-    NSArray *info = CFBridgingRelease(cgInfo);
-    
-    NSMutableOrderedSet *windows = [NSMutableOrderedSet orderedSetWithCapacity:[info count]];
-    
-    for (unsigned i = 0; i < [info count]; i++) {
-        NNWindow *window = [NNWindow windowWithDescription:info[i]];
-        if (window) {
-            [windows addObject:window];
-        }
+    CFArrayRef cgWindowInfoList = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements,  kCGNullWindowID);
+    NSArray *windowInfoList = CFBridgingRelease(cgWindowInfoList);
+    if (![self.windowInfoList isEqualToArray:windowInfoList]) {
+        self.windowInfoList = windowInfoList;
+        [self postNotification:@{@"windows" : self.windowInfoList}];
     }
-    
-    [self postNotification:@{@"windows" : [NSOrderedSet orderedSetWithOrderedSet:[NNWindow filterInvalidWindowsFromSet:windows]]}];
 }
 
 @end

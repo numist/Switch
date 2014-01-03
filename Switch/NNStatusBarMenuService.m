@@ -87,7 +87,8 @@
     
     statusItem.menu = menu;
     
-    _statusItem = statusItem;
+    #pragma message "Disabled UI here"
+//    _statusItem = statusItem;
     
     return self;
 }

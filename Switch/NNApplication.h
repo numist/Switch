@@ -26,7 +26,6 @@
 
 - (BOOL)isCurrentApplication;
 - (BOOL)isFrontMostApplication;
-
-- (BOOL)raise;
+- (BOOL)canBeActivated;
 
 @end

@@ -16,6 +16,13 @@
 
 #import "NNPreferencesService.h"
 
+#import "NNWindowListService.h"
+
+
+@interface NNAppDelegate () <NNWindowListSubscriber>
+
+@end
+
 
 @implementation NNAppDelegate
 
@@ -26,12 +33,19 @@
     [[NNServiceManager sharedManager] registerAllPossibleServices];
     
     NNLog(@"Launched %@ %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:(__bridge id)kCFBundleNameKey], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]);
+
+    [[NNServiceManager sharedManager] addSubscriber:self forService:[NNWindowListService class]];
 }
 
 #pragma mark IBActions
 
 - (IBAction)showPreferences:(id)sender {
     [[NNPreferencesService sharedService] showPreferencesWindow:sender];
+}
+
+- (oneway void)windowListService:(NNWindowListService *)service updatedList:(NSOrderedSet *)windows;
+{
+    NSLog(@"Updated window list contains %lu windows.", windows.count);
 }
 
 @end

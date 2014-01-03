@@ -24,11 +24,6 @@
 
 + (instancetype)windowWithDescription:(NSDictionary *)description;
 
-@property (nonatomic, readonly) BOOL exists;
-@property (nonatomic, readonly) CGWindowID windowID;
 @property (atomic, strong) NSDictionary *windowDescription;
-
-- (void)setImage:(NSImage *)image;
-- (CGImageRef)cgWindowImage;
 
 @end

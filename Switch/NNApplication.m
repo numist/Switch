@@ -16,11 +16,7 @@
 
 #import <Haxcessibility/Haxcessibility.h>
 
-#import "NNApplicationCache.h"
 #import "NNWindow+Private.h"
-
-
-NSString *NNHAXApplicationWasInvalidatedNotification = @"NNHAXApplicationWasInvalidatedNotification";
 
 
 @interface NNApplication () <HAXElementDelegate>
@@ -28,46 +24,22 @@ NSString *NNHAXApplicationWasInvalidatedNotification = @"NNHAXApplicationWasInva
 @property (nonatomic, readonly, assign) pid_t pid;
 @property (atomic, retain) NSRunningApplication *app;
 
-@property (nonatomic, strong) dispatch_queue_t haxLock;
-@property (nonatomic, strong, readonly) HAXApplication *haxApp;
-
 @end
 
 
 @implementation NNApplication
 
-+ (instancetype)applicationWithPID:(pid_t)pid name:(NSString *)name;
++ (instancetype)applicationWithPID:(pid_t)pid;
 {
-    @synchronized(self) {
-        NNApplication *result = [[NNApplicationCache sharedCache] cachedApplicationWithPID:pid];
-        
-        if (!result) {
-            result = [[self alloc] initWithPID:pid name:name];
-            
-            if (result) {
-                [[NNApplicationCache sharedCache] cacheApplication:result withPID:pid];
-            }
-        }
-        
-        return result;
-    }
+    return [[self alloc] initWithPID:pid];
 }
 
-- (instancetype)initWithPID:(pid_t)pid name:(NSString *)name;
+- (instancetype)initWithPID:(pid_t)pid;
 {
     if (!(self = [super init])) { return nil; }
     
     _pid = pid;
-    _name = name;
-    
-    _haxLock = dispatch_queue_create([[NSString stringWithFormat:@"%@ <%p>", [self class], self] UTF8String], DISPATCH_QUEUE_SERIAL);
-
     _app = [NSRunningApplication runningApplicationWithProcessIdentifier:pid];
-    
-    // Load the HAXWindow ASAP, but without blocking.
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        (void)self.haxApp;
-    });
 
     return self;
 }
@@ -96,70 +68,15 @@ NSString *NNHAXApplicationWasInvalidatedNotification = @"NNHAXApplicationWasInva
 
 #pragma mark Properties
 
-@synthesize name = _name;
 - (NSString *)name;
 {
-    if (!_name) {
-        _name = [self.app localizedName];
-    }
-    return _name;
+    return [self.app localizedName];
 }
 
-@synthesize icon = _icon;
 - (NSImage *)icon;
 {
-    if (!_icon) {
-        NSString *path = [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:[self.app bundleIdentifier]];
-        if (path) {
-            _icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
-        } else {
-            NNLog(@"Application %@ does not have an icon!", self);
-        }
-    }
-    
-    return _icon;
-}
-
-#pragma mark HAXElementDelegate
-
-- (void)elementWasDestroyed:(HAXElement *)element;
-{
-    @synchronized(self) {
-        if (element != self->_haxApp) { return; }
-        
-        NNLog(@"HAX element for application %@ was destroyed", self);
-
-        self->_haxApp = nil;
-    }
-    [[NSNotificationCenter defaultCenter] postNotificationName:NNHAXApplicationWasInvalidatedNotification object:self];
-    
-    // Try to reload the accessibility object for the app when convenient.
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        @synchronized(self) {
-            (void)self.haxApp;
-        }
-    });
-}
-
-#pragma mark Dynamic accessors
-
-@synthesize haxApp = _haxApp;
-
-- (HAXApplication *)haxApp;
-{
-    @synchronized(self) {
-        if (!_haxApp) {
-            _haxApp = [HAXApplication applicationWithPID:self.pid];
-            _haxApp.delegate = self;
-            
-            NNLog(@"HAX element for application %@ fetched as %@", self, _haxApp);
-        }
-        if (!_haxApp && [[NNApplicationCache sharedCache] cachedApplicationWithPID:self.pid]) {
-            [[NNApplicationCache sharedCache] removeApplicationWithPID:self.pid];
-        }
-        
-        return _haxApp;
-    }
+    NSString *path = [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:[self.app bundleIdentifier]];
+    return [[NSWorkspace sharedWorkspace] iconForFile:path];
 }
 
 #pragma mark NNApplication
@@ -174,40 +91,10 @@ NSString *NNHAXApplicationWasInvalidatedNotification = @"NNHAXApplicationWasInva
     return self.app.active;
 }
 
-- (BOOL)raise;
+- (BOOL)canBeActivated;
 {
-    if (![self isFrontMostApplication]) {
-        return [self.app activateWithOptions:NSApplicationActivateIgnoringOtherApps];
-    }
-    
-    return YES;
-}
-
-#pragma mark Private
-
-- (HAXWindow *)haxWindowForWindow:(NNWindow *)window;
-{
-    __block HAXWindow *result = nil;
-    
-    NSRect windowRect = window.cgBounds;
-    NSString *windowName = window.name;
-    
-    dispatch_sync(self.haxLock, ^{
-        NSArray *haxWindows = [self.haxApp windows];
-        for (HAXWindow *haxWindow in haxWindows) {
-            if (NNNSRectsEqual(windowRect, haxWindow.frame)) {
-                if (result) {
-                    result = [windowName isEqualToString:haxWindow.title] ? haxWindow : result;
-                } else {
-                    result = haxWindow;
-                }
-            }
-        }
-    });
-    
-    NNLog(@"HAX element for window %@ fetched as %@", window, result);
-
-    return result;
+    NSApplicationActivationPolicy activationPolicy = self.app.activationPolicy;
+    return activationPolicy == NSApplicationActivationPolicyRegular || activationPolicy == NSApplicationActivationPolicyAccessory;
 }
 
 @end

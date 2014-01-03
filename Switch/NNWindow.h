@@ -20,12 +20,11 @@
 
 @interface NNWindow : NSObject <NSCopying>
 
-@property (nonatomic, readonly) NNApplication *application;
-@property (nonatomic, readonly) NSRect cgBounds;
-@property (atomic, strong, readonly) NSImage *image;
-@property (nonatomic, readonly) NSString *name;
+@property (nonatomic, assign, readonly) CGWindowID windowID;
+@property (nonatomic, strong, readonly) NNApplication *application;
+@property (nonatomic, assign, readonly) NSRect frame;
+@property (nonatomic, strong, readonly) NSString *name;
 
-- (BOOL)raise;
-- (BOOL)close;
+- (BOOL)isRelatedToLowerWindow:(NNWindow *)window;
 
 @end

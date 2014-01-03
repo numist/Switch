@@ -50,7 +50,7 @@
          */
         if (![sheet.name length] && ![prevSibling.name length]) {
             BOOL isTranslucent = [[prevSibling.windowDescription objectForKey:(__bridge NSString*)kCGWindowAlpha] doubleValue] < 1.0;
-            BOOL isShort = prevSibling.cgBounds.size.height < 16.0;
+            BOOL isShort = prevSibling.frame.size.height < 16.0;
             
             if (isTranslucent && isShort) {
                 [mutableWindows removeObjectAtIndex:i];

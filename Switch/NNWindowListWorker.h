@@ -15,6 +15,4 @@
 
 @interface NNWindowListWorker : NNPollingObject
 
-- (instancetype)init;
-
 @end

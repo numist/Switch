@@ -43,7 +43,7 @@
          * • is fully enclosed by the window it decorates.
          * • has a height of < 33 points (in practice, 30).
          */
-        if (![window.name length] && window.cgBounds.size.height < 33.0) {
+        if (![window.name length] && window.frame.size.height < 33.0) {
             NNWindow *mainWindow = [window nextNamedSiblingFromSet:mutableWindows];
             
             if ([window enclosedByWindow:mainWindow]) {

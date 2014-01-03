@@ -83,8 +83,8 @@ static NSSet *registeredAppNames;
 
 - (NNVec2)offsetOfCenterToCenterOfWindow:(NNWindow *)window;
 {
-    NSRect selfBounds = self.cgBounds;
-    NSRect windowBounds = window.cgBounds;
+    NSRect selfBounds = self.frame;
+    NSRect windowBounds = window.frame;
     
     return (NNVec2){
         .x = ((windowBounds.origin.x + (windowBounds.size.width / 2.0)) - (selfBounds.origin.x + (selfBounds.size.width / 2.0))),
@@ -94,8 +94,8 @@ static NSSet *registeredAppNames;
 
 - (NSSize)sizeDifferenceFromWindow:(NNWindow *)window;
 {
-    NSRect selfBounds = self.cgBounds;
-    NSRect windowBounds = window.cgBounds;
+    NSRect selfBounds = self.frame;
+    NSRect windowBounds = window.frame;
 
     return (NSSize){
         .width = selfBounds.size.width - windowBounds.size.width,

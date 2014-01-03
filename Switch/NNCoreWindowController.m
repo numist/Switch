@@ -227,7 +227,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
                         dispatch_queue_t actionQueue = [selectedWindow.application isCurrentApplication] ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 
                         dispatch_async(actionQueue, ^{
-                            raiseSuccessful = [selectedWindow raise];
+                            #pragma message "raiseSuccessful = [selectedWindow raise];"
                          
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 if (raiseSuccessful) {
@@ -358,7 +358,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
             break;
             
         case NNWindowStoreChangeWindowContent: {
-            [self.collectionView[index] setThumbnail:window.image];
+            #pragma message "[self.collectionView[index] setThumbnail:window.image];"
             break;
         }
     }
@@ -539,8 +539,8 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
                 [thumb setActive:NO];
                 
                 dispatch_async(actionQueue, ^{
-                    [nextWindow raise];
-                    success = [selectedWindow close];
+                    #pragma message "[nextWindow raise];"
+                    #pragma message "success = [selectedWindow close];"
                     
                     if (!success) {
                         // We *should* re-raise selectedWindow, but if it didn't succeed at -close it will also probably fail to -raise.

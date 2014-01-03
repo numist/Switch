@@ -35,7 +35,8 @@
 
 - (void)startService;
 {
-    self->_coreWindowController = [[NNCoreWindowController alloc] initWithWindow:nil];
+    #pragma message "Disabled UI here"
+//    self->_coreWindowController = [[NNCoreWindowController alloc] initWithWindow:nil];
 }
 
 @end
