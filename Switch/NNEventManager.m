@@ -175,7 +175,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     if (type == kCGEventTapDisabledByTimeout) {
         dispatch_async(dispatch_get_main_queue(), ^{
             // Re-enable the event tap.
-            NNLog(@"Event tap timed out?!");
+            SWLog(@"Event tap timed out?!");
             CGEventTapEnable(self->eventTap, true);
         });
     } else if (type == kCGEventTapDisabledByUserInput) {
@@ -270,7 +270,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
 
 - (void)accessibilityAPIAvailabilityChangedNotification:(NSNotification *)notification;
 {
-    NNLog(@"Reinstalling event tap!");
+    SWLog(@"Reinstalling event tap!");
     [self removeEventTap];
     [self insertEventTap];
 }

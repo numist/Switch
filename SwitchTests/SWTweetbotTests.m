@@ -11,25 +11,20 @@
 //
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-//  This file tests for regressions concerning Tweetbot:
-//  * https://github.com/numist/Switch/issues/2
-//
 
-#import <XCTest/XCTest.h>
-
-#import "NNWindowFilteringTests.h"
+#import "SWWindowListServiceTests.h"
 
 
-@interface NNTweetbotRegressionTests : XCTestCase
+@interface SWTweetbotTests : SWWindowListServiceTests
 
 @end
 
 
-@implementation NNTweetbotRegressionTests
+@implementation SWTweetbotTests
 
-- (NNWindow *)mainWindow;
+- (NSDictionary *)mainWindowInfoDict;
 {
-    return [NNWindow windowWithDescription:@{
+    return @{
         NNWindowAlpha : @1,
         NNWindowBounds : DICT_FROM_RECT(((CGRect){
             .size.height = 636,
@@ -46,13 +41,13 @@
         NNWindowOwnerPID : @9258,
         NNWindowSharingState : @1,
         NNWindowStoreType : @2,
-    }];
+    };
 }
 
-- (NSOrderedSet *)mainWindows;
+- (NSArray *)mainWindowsInfoList;
 {
-    return [NSOrderedSet orderedSetWithArray:@[
-        [NNWindow windowWithDescription:@{
+    return @[
+        @{
             NNWindowAlpha : @1,
             NNWindowBounds : DICT_FROM_RECT(((CGRect){
                 .size.height = 30,
@@ -69,14 +64,14 @@
             NNWindowOwnerPID : @9258,
             NNWindowSharingState : @1,
             NNWindowStoreType : @2,
-        }],
-        [self mainWindow]
-    ]];
+        },
+        [self mainWindowInfoDict]
+    ];
 }
 
-- (NNWindow *)imageWindow;
+- (NSDictionary *)imageWindowInfoDict;
 {
-    return [NNWindow windowWithDescription:@{
+    return @{
         NNWindowAlpha : @1,
         NNWindowBounds : DICT_FROM_RECT(((CGRect){
             .size.height = 379,
@@ -93,25 +88,46 @@
         NNWindowOwnerPID : @9258,
         NNWindowSharingState : @1,
         NNWindowStoreType : @2,
-    }];
+    };
 }
 
+// https://github.com/numist/Switch/issues/2
 - (void)testFilterUnreadBanner;
 {
-    XCTAssertEqualObjects([NSOrderedSet orderedSetWithObject:[self mainWindow]], [NNWindow filterInvalidWindowsFromSet:[self mainWindows]], @"Unread banner was not filtered out correctly");
+    NSDictionary *windowDescription = self.mainWindowInfoDict;
+    NSArray *infoList = self.mainWindowsInfoList;
+
+    [self updateListServiceWithInfoList:infoList];
+    
+    XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))1, @"");
+    XCTAssertEqual(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).windows.count, infoList.count, @"");
+    XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, windowDescription, @"");
 }
 
+// https://github.com/numist/Switch/issues/2
 - (void)testFilterWithImageWindow;
 {
-    NSMutableOrderedSet *windows = [NSMutableOrderedSet orderedSetWithOrderedSet:[self mainWindows]];
-    [windows addObject:[self imageWindow]];
+    NSMutableArray *infoList = [self.mainWindowsInfoList mutableCopy];
+    [infoList addObject:self.imageWindowInfoDict];
     
-    XCTAssertEqualObjects(([NSOrderedSet orderedSetWithArray:@[[self mainWindow], [self imageWindow]]]), [NNWindow filterInvalidWindowsFromSet:windows], @"Tweetbot unread banner was not filtered out correctly");
+    [self updateListServiceWithInfoList:infoList];
+    
+    XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))2, @"");
+    if (self.listService.windows.count == 2) {
+        XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, self.imageWindowInfoDict, @"");
+        XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:1]).mainWindow.windowDescription, self.mainWindowInfoDict, @"");
+    }
 
-    [windows removeObjectAtIndex:(windows.count - 1)];
-    [windows insertObject:[self imageWindow] atIndex:0];
+    [infoList removeObjectAtIndex:(infoList.count - 1)];
+    [infoList insertObject:self.imageWindowInfoDict atIndex:0];
     
-    XCTAssertEqualObjects(([NSOrderedSet orderedSetWithArray:@[[self imageWindow], [self mainWindow]]]), [NNWindow filterInvalidWindowsFromSet:windows], @"Unread banner was not filtered out correctly");
+    [self updateListServiceWithInfoList:infoList];
+    
+    XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))2, @"");
+    if (self.listService.windows.count == 2) {
+        XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, self.mainWindowInfoDict, @"");
+        XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:1]).mainWindow.windowDescription, self.imageWindowInfoDict, @"");
+    }
 }
 
 @end

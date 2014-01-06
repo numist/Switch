@@ -12,10 +12,12 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if 0
+
 #import "NNWindowFilter.h"
 
-#import "NNApplication.h"
-#import "NNWindow.h"
+#import "SWApplication.h"
+#import "SWWindow.h"
 #import "NNWindow+NNWindowFiltering.h"
 
 
@@ -32,7 +34,7 @@
     NSMutableOrderedSet *mutableWindows = [windows mutableCopy];
     
     for (NSUInteger i = 0; i < [mutableWindows count]; ++i) {
-        NNWindow *window = mutableWindows[i];
+        SWWindow *window = mutableWindows[i];
         
         if (![window.application.name isEqualToString:self.applicationName]) { continue; }
         
@@ -44,7 +46,7 @@
          * • has a height of < 33 points (in practice, 30).
          */
         if (![window.name length] && window.frame.size.height < 33.0) {
-            NNWindow *mainWindow = [window nextNamedSiblingFromSet:mutableWindows];
+            SWWindow *mainWindow = [window nextNamedSiblingFromSet:mutableWindows];
             
             if ([window enclosedByWindow:mainWindow]) {
                 [mutableWindows removeObjectAtIndex:i--];
@@ -63,7 +65,7 @@
          * These rules should be sufficient to reduce the likelihood of false positives to an acceptable level.
          */
         if (i > 0 && ![window.name length]) {
-            NNWindow *mainWindow = [window previousNamedSiblingFromSet:mutableWindows];
+            SWWindow *mainWindow = [window previousNamedSiblingFromSet:mutableWindows];
             
             if (mainWindow) {
                 NNVec2 c2cOffset = [window offsetOfCenterToCenterOfWindow:mainWindow];
@@ -92,3 +94,5 @@
 }
 
 @end
+
+#endif

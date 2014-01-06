@@ -18,13 +18,13 @@
 #import <ReactiveCocoa/EXTScope.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
 
-#import "NNApplication.h"
-#import "NNWindow.h"
+#import "SWApplication.h"
+#import "SWWindow.h"
 
 
 @interface NNWindowThumbnailView ()
 
-@property (nonatomic, weak, readonly) NNWindow *modelWindow;
+@property (nonatomic, weak, readonly) SWWindow *modelWindow;
 @property (nonatomic, strong, readonly) RACSignal *thumbnailSignal;
 
 @property (nonatomic, strong) NSImage *thumbnail;
@@ -38,7 +38,7 @@
 
 @implementation NNWindowThumbnailView
 
-- (id)initWithFrame:(NSRect)frame window:(NNWindow *)window;
+- (id)initWithFrame:(NSRect)frame window:(SWWindow *)window;
 {
     if (!(self = [super initWithFrame:frame])) { return nil; }
     

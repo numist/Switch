@@ -11,24 +11,21 @@
 //
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-//  This file tests for regressions concerning Github, which does not name its main window.
-//
 
-#import <XCTest/XCTest.h>
-
-#import "NNWindowFilteringTests.h"
+#import "SWWindowListServiceTests.h"
 
 
-@interface NNGithubRegressionTests : XCTestCase
+@interface SWGithubTests : SWWindowListServiceTests
 
 @end
 
 
-@implementation NNGithubRegressionTests
+@implementation SWGithubTests
 
+// This never had an Issue on Github, but it was a problem. Fixed in the Github app at the end of 2013 (thanks! <3), test kept for compatibility.
 - (void)testUnnamedGithubWindow;
 {
-    NSOrderedSet *windows = [NSOrderedSet orderedSetWithObject:[NNWindow windowWithDescription:@{
+    NSDictionary *windowDescription = @{
         NNWindowAlpha : @1,
         NNWindowBounds : DICT_FROM_RECT(((CGRect){
             .size.height = 742,
@@ -44,9 +41,14 @@
         NNWindowOwnerPID : @23598,
         NNWindowSharingState : @1,
         NNWindowStoreType : @2,
-    }]];
+    };
+    NSArray *infoList = @[windowDescription];
     
-    XCTAssertEqualObjects(windows, [NNWindow filterInvalidWindowsFromSet:windows], @"Github was incorrectly filtered out");
+    [self updateListServiceWithInfoList:infoList];
+    
+    XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))1, @"");
+    XCTAssertEqual(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).windows.count, infoList.count, @"");
+    XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, windowDescription, @"");
 }
 
 @end

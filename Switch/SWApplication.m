@@ -1,5 +1,5 @@
 //
-//  NNApplication.m
+//  SWApplication.m
 //  Switch
 //
 //  Created by Scott Perry on 02/21/13.
@@ -12,14 +12,14 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "NNApplication.h"
+#import "SWApplication.h"
 
 #import <Haxcessibility/Haxcessibility.h>
 
-#import "NNWindow+Private.h"
+#import "SWWindow.h"
 
 
-@interface NNApplication () <HAXElementDelegate>
+@interface SWApplication () <HAXElementDelegate>
 
 @property (nonatomic, readonly, assign) pid_t pid;
 @property (atomic, retain) NSRunningApplication *app;
@@ -27,7 +27,7 @@
 @end
 
 
-@implementation NNApplication
+@implementation SWApplication
 
 + (instancetype)applicationWithPID:(pid_t)pid;
 {

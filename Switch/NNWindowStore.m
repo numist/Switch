@@ -14,11 +14,11 @@
 
 #import "NNWindowStore.h"
 
-#import "NNApplication+Private.h"
+#import "SWApplication.h"
 #import <NNKit/NNService+Protected.h>
-#import "NNWindow+Private.h"
-#import "NNWindowListWorker.h"
-#import "NNWindowWorker.h"
+#import "SWWindow.h"
+#import "SWWindowListWorker.h"
+#import "SWWindowWorker.h"
 
 
 @interface NNWindowStore ()
@@ -29,7 +29,7 @@
 @property (nonatomic, strong) dispatch_queue_t lock;
 
 // Window list updates
-@property (nonatomic, strong) NNWindowListWorker *listWorker;
+@property (nonatomic, strong) SWWindowListWorker *listWorker;
 @property (nonatomic, strong) NSOrderedSet *windows;
 
 // Window content updates
@@ -48,8 +48,8 @@
     _windows = [NSOrderedSet new];
     _firstUpdate = YES;
     
-    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(pollCompleteNotification:) name:[NNWindowListWorker notificationName] object:nil];
-    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(pollCompleteNotification:) name:[NNWindowWorker notificationName] object:nil];
+    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(pollCompleteNotification:) name:[SWWindowListWorker notificationName] object:nil];
+    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(pollCompleteNotification:) name:[SWWindowWorker notificationName] object:nil];
     
     return self;
 }
@@ -70,12 +70,12 @@
 
 - (void)startService;
 {
-    NNAssertMainQueue();
+    [super startService];
 
     self.firstUpdate = YES;
 
     if (!self.listWorker) {
-        self.listWorker = [NNWindowListWorker new];
+        self.listWorker = [SWWindowListWorker new];
     }
 }
 
@@ -85,6 +85,8 @@
 
     self.listWorker = nil;
     [self listWorker:nil didUpdateWindowList:[NSOrderedSet new]];
+    
+    [super stopService];
 }
 
 - (void)startUpdatingWindowContents;
@@ -93,8 +95,8 @@
 
     self.updatingWindowContents = YES;
     self.windowWorkers = [NSMutableDictionary dictionaryWithCapacity:[_windows count]];
-    for (NNWindow *window in _windows) {
-        NNWindowWorker *worker = [[NNWindowWorker alloc] initWithModelObject:window];
+    for (SWWindow *window in _windows) {
+        SWWindowWorker *worker = [[SWWindowWorker alloc] initWithModelObject:window];
         [self.windowWorkers setObject:worker forKey:window];
     }
 }
@@ -111,14 +113,14 @@
 
 - (void)pollCompleteNotification:(NSNotification *)note;
 {
-    if ([note.object isKindOfClass:[NNWindowListWorker class]]) {
+    if ([note.object isKindOfClass:[SWWindowListWorker class]]) {
         [self listWorker:note.object didUpdateWindowList:note.userInfo[@"windows"]];
-    } else if ([note.object isKindOfClass:[NNWindowWorker class]]) {
+    } else if ([note.object isKindOfClass:[SWWindowWorker class]]) {
         [self windowWorker:note.object didUpdateContentsOfWindow:note.userInfo[@"window"]];
     }
 }
 
-- (oneway void)windowWorker:(NNWindowWorker *)worker didUpdateContentsOfWindow:(NNWindow *)window;
+- (oneway void)windowWorker:(SWWindowWorker *)worker didUpdateContentsOfWindow:(SWWindow *)window;
 {
     if ([self.windows containsObject:window]) {
         id<NNWindowStoreDelegate> dispatcher = (id)self.subscriberDispatcher;
@@ -128,7 +130,7 @@
     }
 }
 
-- (void)listWorker:(NNWindowListWorker *)worker didUpdateWindowList:(NSOrderedSet *)newWindows;
+- (void)listWorker:(SWWindowListWorker *)worker didUpdateWindowList:(NSOrderedSet *)newWindows;
 {
     if (worker != self.listWorker) { return; }
     
@@ -143,7 +145,7 @@
     
     NSMutableArray *changes = [NSMutableArray new];
     for (int i = (int)[oldWindows count] - 1; i >= 0; --i) {
-        NNWindow *window = oldWindows[(NSUInteger)i];
+        SWWindow *window = oldWindows[(NSUInteger)i];
         
         if (![newWindows containsObject:window]) {
             [dispatcher store:self didChangeWindow:window atIndex:[oldWindows indexOfObject:window] forChangeType:NNWindowStoreChangeDelete newIndex:NSNotFound];
@@ -159,7 +161,7 @@
     [oldWindows removeObjectsInArray:changes];
     [changes removeAllObjects];
 
-    for (NNWindow *window in newWindows) {
+    for (SWWindow *window in newWindows) {
         if (![oldWindows containsObject:window]) {
             [dispatcher store:self didChangeWindow:window atIndex:NSNotFound forChangeType:NNWindowStoreChangeInsert newIndex:[newWindows indexOfObject:window]];
             
@@ -167,13 +169,13 @@
             [oldWindows insertObject:window atIndex:[newWindows indexOfObject:window]];
             
             if (self.updatingWindowContents) {
-                NNWindowWorker *windowWorker = [[NNWindowWorker alloc] initWithModelObject:window];
+                SWWindowWorker *windowWorker = [[SWWindowWorker alloc] initWithModelObject:window];
                 [self.windowWorkers setObject:windowWorker forKey:window];
             }
         }
     }
     
-    for (NNWindow *window in newWindows) {
+    for (SWWindow *window in newWindows) {
         NSUInteger oldIndex = [oldWindows indexOfObject:window];
         NSUInteger newIndex = [newWindows indexOfObject:window];
 

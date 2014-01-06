@@ -14,7 +14,7 @@
 
 #import "NNStatusBarMenuService.h"
 
-#import "NNAppDelegate.h"
+#import "SWAppDelegate.h"
 #import "NNPreferencesService.h"
 
 
@@ -105,7 +105,15 @@
 
 - (void)startService;
 {
+    [super startService];
+
     [[NNServiceManager sharedManager] addSubscriber:self forService:[NNPreferencesService class]];
+}
+- (void)stopService;
+{
+    [[NNServiceManager sharedManager] removeSubscriber:self forService:[NNPreferencesService class]];
+    
+    [super stopService];
 }
 
 #pragma mark NNPreferencesServiceDelegate
@@ -119,13 +127,13 @@
 
 - (IBAction)snapshot:(id)sender;
 {
-    [[NNLoggingService sharedService] takeWindowListSnapshot];
+    [[SWLoggingService sharedService] takeWindowListSnapshot];
     [self openLogFolder:self];
 }
 
 - (IBAction)openLogFolder:(id)sender;
 {
-    [[NSWorkspace sharedWorkspace] openFile:[[NNLoggingService sharedService] logDirectoryPath]];
+    [[NSWorkspace sharedWorkspace] openFile:[[SWLoggingService sharedService] logDirectoryPath]];
 }
 
 - (void)menuNeedsUpdate:(NSMenu *)menu;

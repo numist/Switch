@@ -1,5 +1,5 @@
 //
-//  NNLoggingService.m
+//  SWLoggingService.m
 //  Switch
 //
 //  Created by Scott Perry on 10/15/13.
@@ -12,19 +12,19 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "NNLoggingService.h"
+#import "SWLoggingService.h"
 
-#import "NNWindow+Private.h"
+#import "SWWindow.h"
 
 
-@interface NNLoggingService ()
+@interface SWLoggingService ()
 
 @property (nonatomic, strong) NSDateComponents *logDate;
 
 @end
 
 
-@implementation NNLoggingService
+@implementation SWLoggingService
 
 #pragma mark - NNService
 
@@ -33,7 +33,7 @@
     return NNServiceTypePersistent;
 }
 
-#pragma mark - NNLoggingService
+#pragma mark - SWLoggingService
 
 - (NSString *)logDirectoryPath;
 {
@@ -76,18 +76,19 @@
         return CFBridgingRelease(cgInfo);
     }();
     
-    NSOrderedSet *objectList = ^{
+    #pragma message "window List snapshots need to work again maybe."
+    NSOrderedSet *objectList = nil; /*^{
         NSMutableOrderedSet *result = [NSMutableOrderedSet orderedSetWithCapacity:[rawList count]];
         for (unsigned i = 0; i < [rawList count]; i++) {
-            NNWindow *window = [NNWindow windowWithDescription:rawList[i]];
+            SWWindow *window = [SWWindow windowWithDescription:rawList[i]];
             if (window) {
                 [result addObject:window];
             }
         }
         return result;
-    }();
+    }();*/
     
-    NSOrderedSet *filteredList = [NNWindow filterInvalidWindowsFromSet:objectList];
+    NSOrderedSet *filteredList = nil;/*[SWWindow filterInvalidWindowsFromSet:objectList];*/
     
     NSString *snapshotDir = [[self logDirectoryPath] stringByAppendingPathComponent:[NSString stringWithFormat:@"snapshot-%llu", (uint64_t)[[NSDate date] timeIntervalSince1970]]];
     BailUnless([self createDirectory:snapshotDir],);

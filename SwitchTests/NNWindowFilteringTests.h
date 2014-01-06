@@ -15,9 +15,6 @@
 #ifndef Switch_NNWindowFilteringTests_h
 #define Switch_NNWindowFilteringTests_h
 
-#import "NNWindow+NNWindowFiltering.h"
-#import "NNWindow+Private.h"
-
 
 #define DICT_FROM_RECT(rect) (__bridge NSDictionary *)CGRectCreateDictionaryRepresentation(rect)
 

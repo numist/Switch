@@ -1,9 +1,9 @@
 //
-//  NNWindowThumbnailView.h
+//  SWWindowListServiceTests.m
 //  Switch
 //
-//  Created by Scott Perry on 02/21/13.
-//  Copyright © 2013 Scott Perry.
+//  Created by Scott Perry on 01/05/14.
+//  Copyright © 2014 Scott Perry.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 //
@@ -12,17 +12,45 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import <Cocoa/Cocoa.h>
+#import "SWWindowListServiceTests.h"
 
 
-@class SWWindow;
+@interface SWWindowListService (Internal)
+
+- (void)_updateWindowList:(NSArray *)windowInfoList;
+
+@end
 
 
-@interface NNWindowThumbnailView : NSView
+@implementation SWWindowListServiceTests
 
-- (instancetype)initWithFrame:(NSRect)frameRect window:(SWWindow *)window;
+- (void)setUp
+{
+    [super setUp];
 
-- (void)setActive:(BOOL)active;
-- (void)setThumbnail:(NSImage *)image;
+    self->_listService = [SWWindowListService new];
+}
+
+- (void)tearDown
+{
+    self->_listService = nil;
+    
+    [super tearDown];
+}
+
+- (void)updateListServiceWithInfoList:(NSArray *)infoList;
+{
+    [self.listService _updateWindowList:infoList];
+}
+
+#pragma mark - Tests
+
+- (void)testEmpty
+{
+    XCTAssertNil(self.listService.windows, @"");
+    
+    [self.listService _updateWindowList:@[]];
+    XCTAssertEqualObjects(self.listService.windows, [NSOrderedSet new], @"");
+}
 
 @end

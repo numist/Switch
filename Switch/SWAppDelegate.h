@@ -1,5 +1,5 @@
 //
-//  NNAppDelegate.m
+//  SWAppDelegate.h
 //  Switch
 //
 //  Created by Scott Perry on 02/24/13.
@@ -12,40 +12,11 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "NNAppDelegate.h"
-
-#import "NNPreferencesService.h"
-
-#import "NNWindowListService.h"
+#import <Cocoa/Cocoa.h>
 
 
-@interface NNAppDelegate () <NNWindowListSubscriber>
+@interface SWAppDelegate : NSObject <NSApplicationDelegate>
 
-@end
-
-
-@implementation NNAppDelegate
-
-#pragma mark NSApplicationDelegate
-
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
-{
-    [[NNServiceManager sharedManager] registerAllPossibleServices];
-    
-    NNLog(@"Launched %@ %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:(__bridge id)kCFBundleNameKey], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]);
-
-    [[NNServiceManager sharedManager] addSubscriber:self forService:[NNWindowListService class]];
-}
-
-#pragma mark IBActions
-
-- (IBAction)showPreferences:(id)sender {
-    [[NNPreferencesService sharedService] showPreferencesWindow:sender];
-}
-
-- (oneway void)windowListService:(NNWindowListService *)service updatedList:(NSOrderedSet *)windows;
-{
-    NSLog(@"Updated window list contains %lu windows.", windows.count);
-}
+- (IBAction)showPreferences:(id)sender;
 
 @end

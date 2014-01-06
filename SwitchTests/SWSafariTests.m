@@ -11,32 +11,46 @@
 //
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-//  This file tests for regressions concerning Safari:
-//  * https://github.com/numist/Switch/issues/8
-//
 
-#import <XCTest/XCTest.h>
-
-#import "NNWindowFilteringTests.h"
+#import "SWWindowListServiceTests.h"
 
 
-@interface NNSafariRegressionTests : XCTestCase
+@interface SWSafariTests : SWWindowListServiceTests
 
 @end
 
 
-@implementation NNSafariRegressionTests
+@implementation SWSafariTests
 
+// https://github.com/numist/Switch/issues/8
 - (void)testSearchMatches;
 {
-    NSOrderedSet *windows = [NSOrderedSet orderedSetWithArray:@[
-        [NNWindow windowWithDescription:@{
+    NSDictionary *windowDescription = @{
+        NNWindowAlpha : @1,
+        NNWindowBounds : DICT_FROM_RECT(((CGRect){
+           .size.height = 706,
+           .size.width = 1366,
+           .origin.x = 0,
+           .origin.y = 22
+        })),
+        NNWindowIsOnscreen : @1,
+        NNWindowLayer : @0,
+        NNWindowMemoryUsage : @316020,
+        NNWindowName : @"mikeash.com: Performance Comparisons of Common Operations",
+        NNWindowNumber : @31886,
+        NNWindowOwnerName : @"Safari",
+        NNWindowOwnerPID : @164,
+        NNWindowSharingState : @1,
+        NNWindowStoreType : @2,
+    };
+    NSArray *infoList = @[
+        @{
             NNWindowAlpha : @1,
             NNWindowBounds : DICT_FROM_RECT(((CGRect){
-                .size.height = 26,
-                .size.width = 224,
-                .origin.x = 50,
-                .origin.y = 413
+              .size.height = 26,
+              .size.width = 224,
+              .origin.x = 50,
+              .origin.y = 413
             })),
             NNWindowIsOnscreen : @1,
             NNWindowLayer : @0,
@@ -47,29 +61,14 @@
             NNWindowOwnerPID : @164,
             NNWindowSharingState : @1,
             NNWindowStoreType : @2,
-        }],
-        [NNWindow windowWithDescription:@{
-            NNWindowAlpha : @1,
-            NNWindowBounds : DICT_FROM_RECT(((CGRect){
-                .size.height = 706,
-                .size.width = 1366,
-                .origin.x = 0,
-                .origin.y = 22
-            })),
-            NNWindowIsOnscreen : @1,
-            NNWindowLayer : @0,
-            NNWindowMemoryUsage : @316020,
-            NNWindowName : @"mikeash.com: Performance Comparisons of Common Operations",
-            NNWindowNumber : @31886,
-            NNWindowOwnerName : @"Safari",
-            NNWindowOwnerPID : @164,
-            NNWindowSharingState : @1,
-            NNWindowStoreType : @2,
-        }]
-    ]];
-    NSOrderedSet *filtered = [NSOrderedSet orderedSetWithObject:windows[1]];
+        },
+        windowDescription
+    ];
     
-    XCTAssertEqualObjects(filtered, [NNWindow filterInvalidWindowsFromSet:windows], @"Safari search result match window was not filtered out correctly");
+    [self updateListServiceWithInfoList:infoList];
+    XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))1, @"Safari was incorrectly grouped");
+    XCTAssertEqual(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).windows.count, infoList.count, @"");
+    XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, windowDescription, @"");
 }
 
 @end

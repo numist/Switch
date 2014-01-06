@@ -33,6 +33,8 @@
 
 - (void)startService;
 {
+    [super startService];
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accessibilityAPIDisabled:) name:NNAXAPIDisabledNotification object:nil];
     
     if (![NNAPIEnabledWorker isAPIEnabled]) {
@@ -43,6 +45,8 @@
 - (void)stopService;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NNAXAPIDisabledNotification object:nil];
+
+    [super stopService];
 }
 
 - (void)accessibilityAPIDisabled:(NSNotification *)note;
@@ -56,7 +60,7 @@
 {
     BOOL accessibilityEnabled = [notification.userInfo[NNAXAPIEnabledKey] boolValue];
     
-    NNLog(@"Accessibility API is %@abled", accessibilityEnabled ? @"en" : @"dis");
+    SWLog(@"Accessibility API is %@abled", accessibilityEnabled ? @"en" : @"dis");
     
     if (!accessibilityEnabled) {
         self.worker = nil;

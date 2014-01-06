@@ -47,6 +47,8 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
 
 - (void)startService;
 {
+    [super startService];
+    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults registerDefaults:self._defaultValues];
     
@@ -87,6 +89,8 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
 - (void)stopService;
 {
     [[NNServiceManager sharedManager] removeSubscriber:self forService:[NNEventManager self]];
+    
+    [super stopService];
 }
 
 #pragma mark NNEventManagerDelegate

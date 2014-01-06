@@ -1,9 +1,9 @@
 //
-//  NNDashRegressionTests.m
+//  SWDashTests.m
 //  Switch
 //
-//  Created by Scott Perry on 10/16/13.
-//  Copyright © 2013 Scott Perry.
+//  Created by Scott Perry on 01/05/14.
+//  Copyright © 2014 Scott Perry.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 //
@@ -11,23 +11,21 @@
 //
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-//  This file tests for regressions concerning Github, which does not name its main window.
-//
 
-#import <XCTest/XCTest.h>
-
-#import "NNWindowFilteringTests.h"
+#import "SWWindowListServiceTests.h"
 
 
-@interface NNDashRegressionTests : XCTestCase
+@interface SWDashTests : SWWindowListServiceTests
 
 @end
 
-@implementation NNDashRegressionTests
 
+@implementation SWDashTests
+
+// https://github.com/numist/Switch/issues/48
 - (void)testUnnamedDashWindow;
 {
-    NSOrderedSet *windows = [NSOrderedSet orderedSetWithObject:[NNWindow windowWithDescription:@{
+    NSDictionary *windowDescription = @{
         NNWindowAlpha : @1,
         NNWindowBounds : DICT_FROM_RECT(((CGRect){
             .size.height = 616,
@@ -43,9 +41,13 @@
         NNWindowOwnerPID : @7852,
         NNWindowSharingState : @1,
         NNWindowStoreType : @2,
-    }]];
+    };
+    NSArray *infoList = @[windowDescription];
     
-    XCTAssertEqualObjects(windows, [NNWindow filterInvalidWindowsFromSet:windows], @"Dash was incorrectly filtered out");
+    [self updateListServiceWithInfoList:infoList];
+    XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))1, @"Dash was incorrectly filtered out");
+    XCTAssertEqual(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).windows.count, infoList.count, @"");
+    XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, windowDescription, @"");
 }
 
 @end

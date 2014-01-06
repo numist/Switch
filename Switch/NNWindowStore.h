@@ -15,7 +15,7 @@
 #import <Foundation/Foundation.h>
 
 
-@class NNWindow;
+@class SWWindow;
 @protocol NNWindowStoreDelegate;
 
 
@@ -38,7 +38,7 @@ typedef NS_ENUM(NSUInteger, NNWindowStoreChangeType) {
 
 @optional
 - (void)storeWillChangeContent:(NNWindowStore *)store;
-- (void)store:(NNWindowStore *)store didChangeWindow:(NNWindow *)window atIndex:(NSUInteger)index forChangeType:(NNWindowStoreChangeType)type newIndex:(NSUInteger)newIndex;
+- (void)store:(NNWindowStore *)store didChangeWindow:(SWWindow *)window atIndex:(NSUInteger)index forChangeType:(NNWindowStoreChangeType)type newIndex:(NSUInteger)newIndex;
 - (void)storeDidChangeContent:(NNWindowStore *)store;
 - (void)store:(NNWindowStore *)store didUpdateWindowList:(NSOrderedSet *)windows;
 
