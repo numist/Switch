@@ -42,11 +42,10 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
 
 @property (nonatomic, assign) NSUInteger numberOfCells;
 @property (nonatomic, strong) NSMutableArray *cells;
+@property (nonatomic, assign, readwrite) BOOL reloading;
 
 @property (nonatomic, strong) NNSelectionBoxView *selectionBox;
 @property (nonatomic, assign) NSUInteger selectedIndex;
-
-@property (nonatomic, strong) NSMutableArray *updates;
 
 @end
 
@@ -61,8 +60,6 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
     }
     
     _cells = [NSMutableArray new];
-    _updates = [NSMutableArray new];
-    
     return self;
 }
 
@@ -88,14 +85,7 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
     return nil;
 }
 
-- (NSUInteger)indexForCell:(NSView *)cell;
-{
-    NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
-
-    return [self.cells indexOfObject:cell];
-}
-
-- (NSUInteger)indexForSelectedRow;
+- (NSUInteger)indexForSelectedCell;
 {
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
     abort();
@@ -105,7 +95,6 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
 
 - (void)selectCellAtIndex:(NSUInteger)index;
 {
-    // TODO(numist): this should probably be coalesced into the current update block if such a thing exists.
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
     
     self.selectedIndex = index;
@@ -122,106 +111,20 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
 
 - (void)deselectCell;
 {
-    // TODO(numist): this should probably be coalesced into the current update block if such a thing exists.
     [self.selectionBox removeFromSuperview];
     self.selectionBox = nil;
-}
-
-- (void)beginUpdates;
-{
-    NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
-    
-    [self.updates addObject:[NSMutableArray new]];
-}
-
-- (void)endUpdates;
-{
-    NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
-    NSAssert([self.updates count], @"endUpdates called without a corresponding call to beginUpdates");
-    
-    NSArray *updates = [self.updates lastObject];
-    [self.updates removeLastObject];
-
-    for (NNHUDCollectionViewUpdate *update in updates) {
-        NSView *cell = update.index < [self.cells count] ? [self.cells objectAtIndex:update.index] : nil;
-        switch (update.type) {
-            case NNHUDCollectionViewUpdateDelete:
-                [self.cells removeObjectAtIndex:update.index];
-                [cell removeFromSuperview];
-                cell = nil;
-                self.numberOfCells--;
-                break;
-            
-            case NNHUDCollectionViewUpdateInsert: {
-                id<NNHUDCollectionViewDataSource> dataSource = self.dataSource;
-                BailWithBlockUnless(dataSource, ^{ abort(); });
-                cell = [dataSource HUDView:self viewForCellAtIndex:update.index];
-                BailWithBlockUnless(cell, ^{ abort(); });
-                [self.cells insertObject:cell atIndex:update.index];
-                [self addSubview:cell];
-                self.numberOfCells++;
-                break;
-            }
-            
-            case NNHUDCollectionViewUpdateMove: {
-                cell = [self.cells objectAtIndex:update.index];
-                [self.cells removeObjectAtIndex:update.index];
-                [self.cells insertObject:cell atIndex:update.newIndex];
-                break;
-            }
-        }
-        
-        [self setSize:[self computeCollectionViewSize]];
-        self.selectionBox.frame = nnItemRect((self.frame.size.height - kNNWindowToThumbInset * 2.0), self.selectedIndex);
-        for (NSUInteger i = 0; i < [self.cells count]; i++) {
-            ((NSView *)[self.cells objectAtIndex:i]).frame = [self computeFrameForCellAtIndex:i];
-        }
-    }
-    
-    if ([updates count]) {
-        [self setNeedsDisplay:YES];
-    }
-}
-
-- (void)insertCellsAtIndexes:(NSArray *)indexes withAnimation:(BOOL)animate;
-{
-    NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
-    
-    NSMutableArray *updates = [self.updates lastObject];
-    for (NSNumber *index in indexes) {
-        [updates addObject:[[NNHUDCollectionViewUpdate alloc] initWithType:NNHUDCollectionViewUpdateInsert index:[index unsignedIntegerValue] animate:animate]];
-    }
-}
-
-- (void)deleteCellsAtIndexes:(NSArray *)indexes withAnimation:(BOOL)animate;
-{
-    NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
-    
-    NSMutableArray *updates = [self.updates lastObject];
-    for (NSNumber *index in indexes) {
-        [updates addObject:[[NNHUDCollectionViewUpdate alloc] initWithType:NNHUDCollectionViewUpdateDelete index:[index unsignedIntegerValue] animate:animate]];
-    }
-}
-
-- (void)moveCellAtIndex:(NSUInteger)index toIndex:(NSUInteger)newIndex;
-{
-    NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
-    
-    [[self.updates lastObject] addObject:[[NNHUDCollectionViewUpdate alloc] initMoveWithIndex:index newIndex:newIndex]];
 }
 
 - (void)reloadData;
 {
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
     
-    static BOOL reloading = NO;
-    
     // Keep honking, I'm reloading.
-    if (!reloading) {
-        reloading = YES;
+    if (!self.reloading) {
+        self.reloading = YES;
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            reloading = NO;
+            self.reloading = NO;
 
             __strong __typeof__(self.dataSource) dataSource = self.dataSource;
 
@@ -230,14 +133,14 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
             
             self.numberOfCells = [dataSource HUDViewNumberOfCells:self];
             // dataSource side effect may have called reloadData, in which case it's not safe to continue anymore.
-            if (reloading) { return; }
+            if (self.reloading) { return; }
             
             [self setSize:[self computeCollectionViewSize]];
             
             for (NSUInteger i = 0; i < self.numberOfCells; i++) {
                 NSView *cell = [dataSource HUDView:self viewForCellAtIndex:i];
                 // dataSource side effect may have called reloadData, in which case it's not safe to continue anymore.
-                if (reloading) { return; }
+                if (self.reloading) { return; }
                 
                 [self.cells insertObject:cell atIndex:i];
                 cell.frame = [self computeFrameForCellAtIndex:i];
@@ -310,10 +213,10 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
 
 #pragma mark - Custom-indexed Subscripting
 
-- (id)objectAtIndexedSubscript:(NSUInteger)idx;
-{
-    return [self cellForIndex:idx];
-}
+//- (id)objectAtIndexedSubscript:(NSUInteger)idx;
+//{
+//    return [self cellForIndex:idx];
+//}
 
 #pragma mark - Internal
 

@@ -23,10 +23,13 @@
 @property (nonatomic, copy, readonly) SWWindowGroup *selectedWindowGroup;
 @property (nonatomic, assign, readonly) NSInteger selectedIndex;
 
+- (NSUInteger)selectedUIndex;
+
 - (instancetype)increment;
 - (instancetype)incrementWithoutWrapping;
 - (instancetype)decrement;
 - (instancetype)decrementWithoutWrapping;
+- (instancetype)selectIndex:(NSInteger)index;
 - (instancetype)updateWithWindowGroups:(NSOrderedSet *)windowGroups;
 
 @end

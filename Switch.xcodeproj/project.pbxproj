@@ -38,7 +38,6 @@
 		BCA734F716DAC53F00CD4C74 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCA734F516DAC53F00CD4C74 /* MainMenu.xib */; };
 		BCA7350016DAC54000CD4C74 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCA734E016DAC53F00CD4C74 /* Cocoa.framework */; };
 		BCA7350816DAC54000CD4C74 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BCA7350616DAC54000CD4C74 /* InfoPlist.strings */; };
-		BCA7351716DAC59000CD4C74 /* NNWindowStore.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7351616DAC59000CD4C74 /* NNWindowStore.m */; };
 		BCA7351B16DAC5E200CD4C74 /* SWWindowListWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7351A16DAC5E200CD4C74 /* SWWindowListWorker.m */; };
 		BCA7351E16DAC61F00CD4C74 /* SWWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7351D16DAC61F00CD4C74 /* SWWindow.m */; };
 		BCA7352216DAC6A900CD4C74 /* SWWindowWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7352116DAC6A900CD4C74 /* SWWindowWorker.m */; };
@@ -250,8 +249,6 @@
 		BCA734FD16DAC54000CD4C74 /* SwitchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwitchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCA7350516DAC54000CD4C74 /* SwitchTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SwitchTests-Info.plist"; sourceTree = "<group>"; };
 		BCA7350716DAC54000CD4C74 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		BCA7351516DAC59000CD4C74 /* NNWindowStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNWindowStore.h; sourceTree = "<group>"; };
-		BCA7351616DAC59000CD4C74 /* NNWindowStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNWindowStore.m; sourceTree = "<group>"; };
 		BCA7351916DAC5E200CD4C74 /* SWWindowListWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWWindowListWorker.h; sourceTree = "<group>"; };
 		BCA7351A16DAC5E200CD4C74 /* SWWindowListWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWWindowListWorker.m; sourceTree = "<group>"; };
 		BCA7351C16DAC61F00CD4C74 /* SWWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWWindow.h; sourceTree = "<group>"; };
@@ -538,8 +535,6 @@
 				BCA7351D16DAC61F00CD4C74 /* SWWindow.m */,
 				BC662BB0186A7662003CF66C /* SWWindowGroup.h */,
 				BC662BB1186A7662003CF66C /* SWWindowGroup.m */,
-				BCA7351516DAC59000CD4C74 /* NNWindowStore.h */,
-				BCA7351616DAC59000CD4C74 /* NNWindowStore.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -869,7 +864,6 @@
 			files = (
 				BCA734ED16DAC53F00CD4C74 /* main.m in Sources */,
 				BCA734F416DAC53F00CD4C74 /* SWAppDelegate.m in Sources */,
-				BCA7351716DAC59000CD4C74 /* NNWindowStore.m in Sources */,
 				BCA7351B16DAC5E200CD4C74 /* SWWindowListWorker.m in Sources */,
 				BCA7351E16DAC61F00CD4C74 /* SWWindow.m in Sources */,
 				BCA7352216DAC6A900CD4C74 /* SWWindowWorker.m in Sources */,

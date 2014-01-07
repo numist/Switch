@@ -88,7 +88,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
 
 - (Protocol *)subscriberProtocol;
 {
-    return @protocol(NNEventManagerDelegate);
+    return @protocol(SWEventManagerSubscriber);
 }
 
 #pragma mark Initialization
@@ -183,11 +183,11 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     }
     
     if (switcherActive && type == kCGEventMouseMoved) {
-        [(id<NNEventManagerDelegate>)self.subscriberDispatcher eventManagerDidDetectMouseMove:self];
+        [(id<SWEventManagerSubscriber>)self.subscriberDispatcher eventManagerDidDetectMouseMove:self];
         return event;
     }
     
-    // Paranoid sanity check.
+    // Escape if the event is not a key/modifier change event.
     if ((type != kCGEventKeyDown) && (type != kCGEventKeyUp) && (type != kCGEventFlagsChanged)) {
         return event;
     }
@@ -260,7 +260,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
 
 - (void)dispatchEvent:(NNEventManagerEventType)eventType;
 {
-    [(id<NNEventManagerDelegate>)self.subscriberDispatcher eventManager:self didProcessKeyForEventType:eventType];
+    [(id<SWEventManagerSubscriber>)self.subscriberDispatcher eventManager:self didProcessKeyForEventType:eventType];
     
     // When showing the preferences window, need to cancel the interface.
     if (eventType == NNEventManagerEventTypeShowPreferences) {

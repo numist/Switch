@@ -71,6 +71,7 @@
     NSAssert([NSThread isMainThread], @"Boundary call was not made on main thread");
     
     self.worker = nil;
+    self.windows = nil;
     
     [(id<SWWindowListSubscriber>)self.subscriberDispatcher windowListServiceStopped:self];
     

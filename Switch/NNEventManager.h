@@ -33,7 +33,7 @@ typedef NS_ENUM(NSUInteger, NNEventManagerEventType) {
 };
 
 
-@protocol NNEventManagerDelegate <NSObject>
+@protocol SWEventManagerSubscriber <NSObject>
 @optional
 
 - (oneway void)eventManager:(NNEventManager *)manager didProcessKeyForEventType:(NNEventManagerEventType)eventType;

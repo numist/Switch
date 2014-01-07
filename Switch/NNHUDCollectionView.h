@@ -32,21 +32,14 @@
 - (NSUInteger)numberOfCells;
 
 - (NSView *)cellForIndex:(NSUInteger)index;
-- (NSUInteger)indexForCell:(NSView *)cell;
 
-- (NSUInteger)indexForSelectedRow;
+- (NSUInteger)indexForSelectedCell;
 - (void)selectCellAtIndex:(NSUInteger)index;
 - (void)deselectCell;
 
-- (void)beginUpdates;
-- (void)endUpdates;
-- (void)insertCellsAtIndexes:(NSArray *)indexes withAnimation:(BOOL)animate;
-- (void)deleteCellsAtIndexes:(NSArray *)indexes withAnimation:(BOOL)animate;
-- (void)moveCellAtIndex:(NSUInteger)index toIndex:(NSUInteger)newIndex;
-
 - (void)reloadData;
 
-- (id)objectAtIndexedSubscript:(NSUInteger)idx;
+//- (id)objectAtIndexedSubscript:(NSUInteger)idx;
 
 @end
 

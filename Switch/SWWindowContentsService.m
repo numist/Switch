@@ -21,11 +21,32 @@
 #import "SWWindowWorker.h"
 
 
+
+@interface _SWWindowContentContainer : NSObject
+
+@property (nonatomic, strong) NSImage *content;
+@property (nonatomic, strong) SWWindow *window;
+@property (nonatomic, strong, readonly) SWWindowWorker *worker;
+
+@end
+@implementation _SWWindowContentContainer
+- (void)setWindow:(SWWindow *)window;
+{
+    if (!_window) {
+        self->_worker = [[SWWindowWorker alloc] initWithModelObject:window];
+    } else {
+        Check(_window.windowID == window.windowID);
+    }
+    _window = window;
+}
+@end
+
+
+
 @interface SWWindowContentsService () <SWWindowListSubscriber>
 
-@property (nonatomic, strong) NSMutableDictionary *workers;
-@property (nonatomic, strong) NSMutableDictionary *content;
-@property (nonatomic, strong) dispatch_queue_t queue;
+@property (nonatomic, strong, readonly) NSMutableDictionary *contentContainers;
+@property (nonatomic, strong, readonly) dispatch_queue_t queue;
 
 @end
 
@@ -36,8 +57,7 @@
 {
     if (!(self = [super init])) { return nil; }
     
-    _workers = [NSMutableDictionary new];
-    _content = [NSMutableDictionary new];
+    _contentContainers = [NSMutableDictionary new];
     _queue = dispatch_queue_create([[NSString stringWithFormat:@""] UTF8String], DISPATCH_QUEUE_SERIAL);
     
     [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(windowUpdateNotification:) name:[SWWindowWorker notificationName] object:nil];
@@ -47,7 +67,7 @@
 
 - (NNServiceType)serviceType;
 {
-    return NNServiceTypePersistent;
+    return NNServiceTypeOnDemand;
 }
 
 - (NSSet *)dependencies;
@@ -65,7 +85,9 @@
     [super startService];
     
     NSOrderedSet *windows = [SWWindowListService sharedService].windows;
-    [self windowListService:nil updatedList:windows];
+    if (windows) {
+        [self windowListService:nil updatedList:windows];
+    }
     
     [[NNServiceManager sharedManager] addObserver:self forService:[SWWindowListService class]];
 }
@@ -73,30 +95,37 @@
 - (void)stopService;
 {
     dispatch_async(self.queue, ^{
-        [self.workers removeAllObjects];
+        [self.contentContainers removeAllObjects];
     });
+    
+    [[NNServiceManager sharedManager] removeObserver:self forService:[SWWindowListService class]];
     
     [super stopService];
 }
 
 - (NSImage *)contentForWindow:(SWWindow *)window;
 {
-    return [self.content objectForKey:window];
+    _SWWindowContentContainer *contentObject = [self.contentContainers objectForKey:@(window.windowID)];
+    return contentObject.content;
 }
 
 - (void)windowUpdateNotification:(NSNotification *)notification;
 {
     dispatch_async(self.queue, ^{
-        if (![self.workers objectForKey:@(((SWWindowWorker *)notification.object).windowID)]) {
+        SWWindowWorker *worker = notification.object;
+        _SWWindowContentContainer *contentContainer = [self.contentContainers objectForKey:@(worker.windowID)];
+        if (!contentContainer) {
             return;
         }
         
         NSImage *content = notification.userInfo[@"content"];
-        SWWindow *window = notification.userInfo[@"window"];
+        if (!Check(content)) {
+            return;
+        }
         
-        [self.content setObject:content forKey:@(window.windowID)];
+        contentContainer.content = content;
         
-        [(id<SWWindowContentsSubscriber>)self.subscriberDispatcher windowContentService:self updatedContent:content forWindow:window];
+        [(id<SWWindowContentsSubscriber>)self.subscriberDispatcher windowContentService:self updatedContent:contentContainer.content forWindow:contentContainer.window];
     });
 }
 
@@ -105,39 +134,30 @@
 - (oneway void)windowListService:(SWWindowListService *)service updatedList:(NSOrderedSet *)windowList;
 {
     dispatch_async(self.queue, ^{
+        // Flatten the window group hierarchy into an unordered set of windows.
         NSMutableSet *existingWindows = [NSMutableSet new];
         for (SWWindowGroup *windowGroup in windowList) {
             for (SWWindow *window in windowGroup.windows) {
                 [existingWindows addObject:window];
             }
         }
-        
-        NSSet *trackedWindows;
-        NSMutableSet *appearedWindows;
-        NSMutableSet *vanishedWindows;
-        
-        // Update window workers
-        trackedWindows = [NSSet setWithArray:[self.workers allKeys]];
-        
-        appearedWindows = [existingWindows mutableCopy];
-        [appearedWindows minusSet:trackedWindows];
-        for (SWWindow *window in appearedWindows) {
-            [self.workers setObject:[[SWWindowWorker alloc] initWithModelObject:window] forKey:window];
+
+        // Update/create content containers for all windows that exist.
+        for (SWWindow *window in existingWindows) {
+            _SWWindowContentContainer *contentContainer = [self.contentContainers objectForKey:@(window.windowID)];
+            if (!contentContainer) {
+                contentContainer = [_SWWindowContentContainer new];
+                [self.contentContainers setObject:contentContainer forKey:@(window.windowID)];
+            }
+            
+            contentContainer.window = window;
         }
         
-        vanishedWindows = [trackedWindows mutableCopy];
-        [vanishedWindows minusSet:existingWindows];
-        for (SWWindow *window in vanishedWindows) {
-            [self.workers removeObjectForKey:window];
-        }
-        
-        // Update window content cache
-        trackedWindows = [NSSet setWithArray:[self.content allKeys]];
-        
-        vanishedWindows = [trackedWindows mutableCopy];
-        [vanishedWindows minusSet:existingWindows];
-        for (SWWindow *window in vanishedWindows) {
-            [self.content removeObjectForKey:window];
+        // Remove content containers for windows that don't exist.
+        for (_SWWindowContentContainer *contentContainer in [self.contentContainers allValues]) {
+            if (![existingWindows containsObject:contentContainer.window]) {
+                [self.contentContainers removeObjectForKey:@(contentContainer.window.windowID)];
+            }
         }
     });
 }

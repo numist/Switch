@@ -24,7 +24,7 @@
 static NSString *kNNFirstLaunchKey = @"firstLaunch";
 
 
-@interface NNPreferencesService () <NNEventManagerDelegate>
+@interface NNPreferencesService () <SWEventManagerSubscriber>
 
 @property (nonatomic, strong) NNPreferencesWindowController *preferencesWindowController;
 
@@ -93,7 +93,7 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
     [super stopService];
 }
 
-#pragma mark NNEventManagerDelegate
+#pragma mark SWEventManagerSubscriber
 
 - (oneway void)eventManager:(NNEventManager *)manager didProcessKeyForEventType:(NNEventManagerEventType)eventType;
 {

@@ -19,11 +19,6 @@
 #import "SWWindowListService.h"
 
 
-@interface SWAppDelegate () <SWWindowListSubscriber>
-
-@end
-
-
 @implementation SWAppDelegate
 
 #pragma mark NSApplicationDelegate
@@ -33,19 +28,12 @@
     [[NNServiceManager sharedManager] registerAllPossibleServices];
     
     SWLog(@"Launched %@ %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:(__bridge id)kCFBundleNameKey], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]);
-
-    [[NNServiceManager sharedManager] addSubscriber:self forService:[SWWindowListService class]];
 }
 
 #pragma mark IBActions
 
 - (IBAction)showPreferences:(id)sender {
     [[NNPreferencesService sharedService] showPreferencesWindow:sender];
-}
-
-- (oneway void)windowListService:(SWWindowListService *)service updatedList:(NSOrderedSet *)windows;
-{
-    NSLog(@"Updated window list contains %lu windows.", windows.count);
 }
 
 @end

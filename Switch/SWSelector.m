@@ -56,6 +56,15 @@
 
 #pragma mark - SWSelector
 
+- (NSUInteger)selectedUIndex;
+{
+    if (!Check(self.selectedIndex >= 0)) {
+        return 0;
+    }
+    
+    return (NSUInteger)self.selectedIndex;
+}
+
 - (instancetype)increment;
 {
     NSInteger newSelectedIndex = self.selectedIndex + 1;
@@ -122,6 +131,24 @@
     }
     
     return self;
+}
+
+- (instancetype)selectIndex:(NSInteger)index;
+{
+    if (self.windowGroups) {
+        if (!self.windowGroups.count) {
+            Check(self.selectedIndex == NSNotFound);
+            index = NSNotFound;
+        } else {
+            Check(index >= 0);
+            index = MAX(index, 0);
+            
+            Check(index < (NSInteger)self.windowGroups.count);
+            index = MIN(index, (NSInteger)self.windowGroups.count - 1);
+        }
+    }
+    
+    return [[[self class] alloc] initWithWindowGroups:self.windowGroups selectedIndex:index];
 }
 
 - (instancetype)updateWithWindowGroups:(NSOrderedSet *)windowGroups;
