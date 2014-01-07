@@ -24,7 +24,6 @@
 #import "NNWindowThumbnailView.h"
 #import "SWApplication.h"
 #import "SWSelector.h"
-#import "SWWindowContentsService.h"
 #import "SWWindowGroup.h"
 #import "SWWindowListService.h"
 
@@ -36,7 +35,7 @@ NSString const *NNCoreWindowControllerActiveKey = @"NNCoreWindowControllerActive
 static NSTimeInterval kNNWindowDisplayDelay = 0.1;
 
 
-@interface NNCoreWindowController () <SWWindowListSubscriber, SWEventManagerSubscriber, SWWindowContentsSubscriber, NNHUDCollectionViewDataSource, NNHUDCollectionViewDelegate>
+@interface NNCoreWindowController () <SWWindowListSubscriber, SWEventManagerSubscriber, NNHUDCollectionViewDataSource, NNHUDCollectionViewDelegate>
 
 #pragma mark Core state
 @property (nonatomic, assign) BOOL active;
@@ -134,7 +133,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
             if ([shouldDisplayInterface boolValue]) {
                 [self.window setFrame:[NSScreen mainScreen].frame display:YES];
                 [self.window orderFront:self];
-                [[NNServiceManager sharedManager] addSubscriber:self forService:[SWWindowContentsService class]];
                 SWLog(@"Showed interface (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
             } else {
                 SWLog(@"Hiding interface (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
@@ -183,11 +181,12 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
                 Check(!self.pendingSwitch);
 
                 [[NNServiceManager sharedManager] removeSubscriber:self forService:[SWWindowListService self]];
-                [[NNServiceManager sharedManager] removeSubscriber:self forService:[SWWindowContentsService class]];
 
                 [self.displayTimer invalidate];
                 self.displayTimer = nil;
                 self.pendingSwitch = NO;
+                
+                // To save on CPU, we dispose of all views, whch will disable their content updating mechanisms.
                 self.windowGroups = nil;
                 [self.collectionView reloadData];
                 [self.collectionView deselectCell];
@@ -209,6 +208,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
                     SWWindowGroup *selectedWindow = self.selector.selectedWindowGroup;
                  
                     if (selectedWindow) {
+                        #pragma message "thumb might be nil if the interface never showed. need to make showingInterface a property and make thumbnail manipulations dependant on it"
                         NNWindowThumbnailView *thumb = (NNWindowThumbnailView *)[self.collectionView cellForIndex:self.selector.selectedUIndex];
                         Check([thumb isKindOfClass:[NNWindowThumbnailView class]]);
                         
@@ -276,13 +276,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
     } else {
         SWLog(@"Window list updated with %lu windows (%.3fs elapsed)", (unsigned long)self.windowGroups.count, [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
     }
-}
-
-#pragma mark SWWindowContentsSubscriber
-
-- (oneway void)windowContentService:(SWWindowContentsService *)windowService updatedContent:(NSImage *)content forWindow:(SWWindow *)window;
-{
-//    NSLog(@"Updated window contents for %@", window);
 }
 
 #pragma mark NNHUDCollectionViewDataSource
