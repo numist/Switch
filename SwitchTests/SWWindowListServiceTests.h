@@ -15,7 +15,7 @@
 #import <XCTest/XCTest.h>
 
 #import "SWWindowListService.h"
-#import "NNWindowFilteringTests.h"
+#import "SWWindowFilteringTests.h"
 #import "SWWindowGroup.h"
 #import "SWWindow.h"
 

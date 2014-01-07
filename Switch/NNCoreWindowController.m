@@ -207,10 +207,13 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
                  
                     __block BOOL raiseSuccessful = YES;
                     SWWindowGroup *selectedWindow = self.selector.selectedWindowGroup;
-                    NNWindowThumbnailView *thumb = [self cellForWindow:selectedWindow];
-                    thumb.active = NO;
                  
                     if (selectedWindow) {
+                        NNWindowThumbnailView *thumb = (NNWindowThumbnailView *)[self.collectionView cellForIndex:self.selector.selectedUIndex];
+                        Check([thumb isKindOfClass:[NNWindowThumbnailView class]]);
+                        
+                        thumb.active = NO;
+
                         // If sending events to Switch itself, we have to use the main thread!
                         dispatch_queue_t actionQueue = [selectedWindow.application isCurrentApplication] ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 
@@ -253,15 +256,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
         }];
 }
 
-- (NNWindowThumbnailView *)cellForWindow:(SWWindowGroup *)window;
-{
-    if (!Check(window)) {
-        return nil;
-    }
-    
-    return [[NNWindowThumbnailView alloc] initWithFrame:NSZeroRect window:window];
-}
-
 #pragma mark SWWindowListSubscriber
 
 - (oneway void)windowListService:(SWWindowListService *)service updatedList:(NSOrderedSet *)windows;
@@ -288,7 +282,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
 
 - (oneway void)windowContentService:(SWWindowContentsService *)windowService updatedContent:(NSImage *)content forWindow:(SWWindow *)window;
 {
-    NSLog(@"Updated window contents for %@", window);
+//    NSLog(@"Updated window contents for %@", window);
 }
 
 #pragma mark NNHUDCollectionViewDataSource
@@ -300,10 +294,10 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
 
 - (NSView *)HUDView:(NNHUDCollectionView *)view viewForCellAtIndex:(NSUInteger)index;
 {
-    SWWindowGroup *window = [self.windowGroups objectAtIndex:index];
-    BailUnless(window, [[NSView alloc] initWithFrame:NSZeroRect]);
+    SWWindowGroup *windowGroup = [self.windowGroups objectAtIndex:index];
+    BailUnless(windowGroup, [[NSView alloc] initWithFrame:NSZeroRect]);
     
-    return [self cellForWindow:window];
+    return [[NNWindowThumbnailView alloc] initWithFrame:NSZeroRect window:windowGroup];
 }
 
 #pragma mark NNHUDCollectionViewDelegate
@@ -404,10 +398,12 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
             if (self.active) {
                 __block BOOL success;
                 SWWindowGroup *selectedWindowGroup = self.selector.selectedWindowGroup;
-                #pragma message "cellForWindow -> cellForWindowGroup"
-                NNWindowThumbnailView *thumb = [self cellForWindow:selectedWindowGroup];
+                NNWindowThumbnailView *thumb = (NNWindowThumbnailView *)[self.collectionView cellForIndex:self.selector.selectedUIndex];
                 
+                #pragma message "Test what happens when hitting closewindow on an empty list of windows, or before the window list has loaded."
                 Check(self.windowListLoaded);
+                Check(selectedWindowGroup);
+                Check([thumb isKindOfClass:[NNWindowThumbnailView class]]);
                 
                 /** Closing a window will change the window list ordering in unwanted ways if all of the following are true:
                  *     • The first window is being closed

@@ -75,7 +75,7 @@
             return self;
         }
         
-        if (newSelectedIndex >= self.windowGroups.count) {
+        if (newSelectedIndex >= (NSInteger)self.windowGroups.count) {
             newSelectedIndex %= self.windowGroups.count;
             
             Check(newSelectedIndex == 0);
@@ -91,7 +91,7 @@
         return [self increment];
     }
     
-    if (self.selectedIndex < (self.windowGroups.count - 1)) {
+    if (self.selectedUIndex < (self.windowGroups.count - 1)) {
         return [self increment];
     }
     
@@ -100,7 +100,7 @@
 
 - (instancetype)decrement;
 {
-    Check(!self.windowGroups || self.selectedIndex < self.windowGroups.count);
+    Check(!self.windowGroups || self.selectedUIndex < self.windowGroups.count);
 
     NSInteger newSelectedIndex = self.selectedIndex - 1;
     

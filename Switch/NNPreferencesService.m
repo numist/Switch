@@ -72,8 +72,7 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
     [keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_Escape modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeCancel];
     [keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_ANSI_Comma modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeShowPreferences];
    
-    #pragma message "Disabled UI here"
-//    self.preferencesWindowController = [[NNPreferencesWindowController alloc] initWithWindowNibName:@"NNPreferencesWindowController"];
+    self.preferencesWindowController = [[NNPreferencesWindowController alloc] initWithWindowNibName:@"NNPreferencesWindowController"];
     if ([[NSUserDefaults standardUserDefaults] boolForKey:kNNFirstLaunchKey]) {
         [self setObject:@NO forKey:kNNFirstLaunchKey];
         dispatch_async(dispatch_get_main_queue(), ^{
