@@ -95,7 +95,9 @@
     
     BOOL isSaveDialog = NO;
     for (SWWindow *window in self.windows) {
-        if ([window.application.name isEqualToString:@"com.apple.security.pboxd"] || [window.application.name isEqualToString:@"com.apple.appkit.xpc.openAndSavePanelService"]) {
+        if ([window.application.name isEqualToString:@"com.apple.security.pboxd"]
+        || [window.application.name isEqualToString:@"com.apple.appkit.xpc.openAndSav"])
+        {
             isSaveDialog = YES;
             /** XXX: in case of recursive calls, should check to make sure the window that the save dialog refers to is not already included in the group. Example:
              

@@ -23,7 +23,7 @@
 @implementation SWPowerboxTests
 
 // https://github.com/numist/Switch/issues/10
-- (void)testPowerboxSaveDialog
+- (void)testPowerboxSaveDialog_10_9_Seed;
 {
     NSDictionary *windowDescription = @{
         NNWindowAlpha : @1,
@@ -62,7 +62,7 @@
             NNWindowSharingState : @1,
             NNWindowStoreType : @2,
         },@{
-            NNWindowAlpha : @(0.8500000238418579),
+            NNWindowAlpha : @0.8500000238418579,
             NNWindowBounds : DICT_FROM_RECT(((CGRect){
                 .size.height = 10,
                 .size.width = 478,
@@ -100,8 +100,114 @@
 
     [self updateListServiceWithInfoList:infoList];
     XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))1, @"Powerbox save dialog wasn't grouped correctly");
-    XCTAssertEqual(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).windows.count, infoList.count, @"");
-    XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, windowDescription, @"Main window for group was not identified correctly");
+    if (self.listService.windows.count == 1) {
+        XCTAssertEqual(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).windows.count, infoList.count, @"");
+        XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, windowDescription, @"Main window for group was not identified correctly");
+    }
+}
+
+- (void)testPowerboxSaveDialog_10_9_0;
+{
+    NSDictionary *windowDescription = @{
+        NNWindowAlpha : @1,
+        NNWindowBounds : DICT_FROM_RECT(((CGRect){
+            .size.height = 412,
+            .size.width = 640,
+            .origin.x = 259,
+            .origin.y = 79
+        })),
+        NNWindowIsOnscreen : @1,
+        NNWindowLayer : @0,
+        NNWindowMemoryUsage : @1101076,
+        NNWindowName : @"Untitled.txt",
+        NNWindowNumber : @48043,
+        NNWindowOwnerName : @"TextEdit",
+        NNWindowOwnerPID : @82763,
+        NNWindowSharingState : @1,
+        NNWindowStoreType : @2,
+    };
+
+    NSArray *infoList = @[
+        @{
+            NNWindowAlpha : @0.8500000238418579,
+            NNWindowBounds : DICT_FROM_RECT(((CGRect){
+                .size.height = 10,
+                .size.width = 503,
+                .origin.x = 328,
+                .origin.y = 101
+            })),
+            NNWindowIsOnscreen : @1,
+            NNWindowLayer : @0,
+            NNWindowMemoryUsage : @21756,
+            NNWindowNumber : @48051,
+            NNWindowOwnerName : @"TextEdit",
+            NNWindowOwnerPID : @82763,
+            NNWindowSharingState : @1,
+            NNWindowStoreType : @2,
+        },
+        @{
+            NNWindowAlpha : @1,
+            NNWindowBounds : DICT_FROM_RECT(((CGRect){
+                .size.height = 58,
+                .size.width = 463,
+                .origin.x = 347,
+                .origin.y = 313
+            })),
+            NNWindowIsOnscreen : @1,
+            NNWindowLayer : @0,
+            NNWindowMemoryUsage : @111868,
+            NNWindowName : @"",
+            NNWindowNumber : @48050,
+            NNWindowOwnerName : @"TextEdit",
+            NNWindowOwnerPID : @82763,
+            NNWindowSharingState : @1,
+            NNWindowStoreType : @2,
+        },
+        @{
+            NNWindowAlpha : @1,
+            NNWindowBounds : DICT_FROM_RECT(((CGRect){
+                .size.height = 319,
+                .size.width = 489,
+                .origin.x = 334,
+                .origin.y = 101
+            })),
+            NNWindowIsOnscreen : @1,
+            NNWindowLayer : @0,
+            NNWindowMemoryUsage : @636156,
+            NNWindowName : @"Save",
+            NNWindowNumber : @48045,
+            NNWindowOwnerName : @"com.apple.appkit.xpc.openAndSav",
+            NNWindowOwnerPID : @82769,
+            NNWindowSharingState : @1,
+            NNWindowStoreType : @2,
+        },
+        @{
+            NNWindowAlpha : @1,
+            NNWindowBounds : DICT_FROM_RECT(((CGRect){
+                .size.height = 319,
+                .size.width = 490,
+                .origin.x = 334,
+                .origin.y = 101
+            })),
+            NNWindowIsOnscreen : @1,
+            NNWindowLayer : @0,
+            NNWindowMemoryUsage : @806740,
+            NNWindowName : @"Save",
+            NNWindowNumber : @48046,
+            NNWindowOwnerName : @"TextEdit",
+            NNWindowOwnerPID : @82763,
+            NNWindowSharingState : @1,
+            NNWindowStoreType : @2,
+        },
+        windowDescription
+    ];
+
+    [self updateListServiceWithInfoList:infoList];
+    XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))1, @"Powerbox save dialog wasn't grouped correctly");
+    if (self.listService.windows.count == 1) {
+        XCTAssertEqual(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).windows.count, infoList.count, @"");
+        XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, windowDescription, @"Main window for group was not identified correctly");
+    }
 }
 
 @end

@@ -29,17 +29,18 @@
 
 @implementation SWApplication
 
-+ (instancetype)applicationWithPID:(pid_t)pid;
++ (instancetype)applicationWithPID:(pid_t)pid name:(NSString *)name;
 {
-    return [[self alloc] initWithPID:pid];
+    return [[self alloc] initWithPID:pid name:name];
 }
 
-- (instancetype)initWithPID:(pid_t)pid;
+- (instancetype)initWithPID:(pid_t)pid name:(NSString *)name;
 {
     if (!(self = [super init])) { return nil; }
     
     _pid = pid;
     _app = [NSRunningApplication runningApplicationWithProcessIdentifier:pid];
+    _name = name ?: [_app localizedName];
 
     return self;
 }
@@ -67,11 +68,6 @@
 }
 
 #pragma mark Properties
-
-- (NSString *)name;
-{
-    return [self.app localizedName];
-}
 
 - (NSImage *)icon;
 {

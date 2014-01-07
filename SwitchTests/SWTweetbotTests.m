@@ -114,8 +114,8 @@
     
     XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))2, @"");
     if (self.listService.windows.count == 2) {
-        XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, self.imageWindowInfoDict, @"");
-        XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:1]).mainWindow.windowDescription, self.mainWindowInfoDict, @"");
+        XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, self.mainWindowInfoDict, @"");
+        XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:1]).mainWindow.windowDescription, self.imageWindowInfoDict, @"");
     }
 
     [infoList removeObjectAtIndex:(infoList.count - 1)];
@@ -125,8 +125,8 @@
     
     XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))2, @"");
     if (self.listService.windows.count == 2) {
-        XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, self.mainWindowInfoDict, @"");
-        XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:1]).mainWindow.windowDescription, self.imageWindowInfoDict, @"");
+        XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, self.imageWindowInfoDict, @"");
+        XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:1]).mainWindow.windowDescription, self.mainWindowInfoDict, @"");
     }
 }
 

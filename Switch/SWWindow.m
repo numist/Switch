@@ -36,7 +36,7 @@
     }
 
     _windowDescription = [description copy];
-    _application = [SWApplication applicationWithPID:[[self.windowDescription objectForKey:(NSString *)kCGWindowOwnerPID] intValue]];
+    _application = [SWApplication applicationWithPID:[[self.windowDescription objectForKey:(NSString *)kCGWindowOwnerPID] intValue] name:[self.windowDescription objectForKey:(NSString *)kCGWindowOwnerName]];
     
     return self;
 }
@@ -81,6 +81,8 @@
     }
     
     #pragma message "Going to need a better Tweetbot-specific rule here for when an image opens within the frame of the main window…"
+    Check(self.application);
+    Check(self.application.name);
     if ([self.application.name isEqualToString:@"Tweetbot"] && ![self enclosedByWindow:window]) {
         return NO;
     }

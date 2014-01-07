@@ -29,6 +29,7 @@
 		BCA5E9A8187A307F004D70EE /* SWSelectorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA5E9A7187A307F004D70EE /* SWSelectorTests.m */; };
 		BCA5E9AA187A3CCA004D70EE /* SWWindowListServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA5E9A9187A3CCA004D70EE /* SWWindowListServiceTests.m */; };
 		BCA5E9AD187A4020004D70EE /* SWDashTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA5E9AC187A4020004D70EE /* SWDashTests.m */; };
+		BCA5E9B8187BB06F004D70EE /* SWApplication+SWTestingOverloads.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA5E9B7187BB06F004D70EE /* SWApplication+SWTestingOverloads.m */; };
 		BCA734E116DAC53F00CD4C74 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCA734E016DAC53F00CD4C74 /* Cocoa.framework */; };
 		BCA734EB16DAC53F00CD4C74 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BCA734E916DAC53F00CD4C74 /* InfoPlist.strings */; };
 		BCA734ED16DAC53F00CD4C74 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA734EC16DAC53F00CD4C74 /* main.m */; };
@@ -233,6 +234,7 @@
 		BCA5E9A9187A3CCA004D70EE /* SWWindowListServiceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWWindowListServiceTests.m; sourceTree = "<group>"; };
 		BCA5E9AC187A4020004D70EE /* SWDashTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWDashTests.m; sourceTree = "<group>"; };
 		BCA5E9AE187A4070004D70EE /* SWWindowListServiceTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWWindowListServiceTests.h; sourceTree = "<group>"; };
+		BCA5E9B7187BB06F004D70EE /* SWApplication+SWTestingOverloads.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SWApplication+SWTestingOverloads.m"; sourceTree = "<group>"; };
 		BCA734DD16DAC53F00CD4C74 /* Switch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Switch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCA734E016DAC53F00CD4C74 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		BCA734E316DAC53F00CD4C74 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -288,7 +290,7 @@
 		BCCE8CEC18091AFC006B0059 /* NSImage+NNFilesystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSImage+NNFilesystem.h"; sourceTree = "<group>"; };
 		BCCE8CED18091AFC006B0059 /* NSImage+NNFilesystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSImage+NNFilesystem.m"; sourceTree = "<group>"; };
 		BCCE8CEF18091F75006B0059 /* SWTweetbotTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWTweetbotTests.m; sourceTree = "<group>"; };
-		BCCE8CF118092584006B0059 /* NNWindowFilteringTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NNWindowFilteringTests.h; sourceTree = "<group>"; };
+		BCCE8CF118092584006B0059 /* SWWindowFilteringTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SWWindowFilteringTests.h; sourceTree = "<group>"; };
 		BCCE8CF21809266A006B0059 /* SWSafariTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWSafariTests.m; sourceTree = "<group>"; };
 		BCCE8CF41809297B006B0059 /* SWSheetTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWSheetTests.m; sourceTree = "<group>"; };
 		BCCE8CF618092CDF006B0059 /* SWPowerboxTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWPowerboxTests.m; sourceTree = "<group>"; };
@@ -515,7 +517,8 @@
 			children = (
 				BCA5E9AE187A4070004D70EE /* SWWindowListServiceTests.h */,
 				BCA5E9A9187A3CCA004D70EE /* SWWindowListServiceTests.m */,
-				BCCE8CF118092584006B0059 /* NNWindowFilteringTests.h */,
+				BCA5E9B7187BB06F004D70EE /* SWApplication+SWTestingOverloads.m */,
+				BCCE8CF118092584006B0059 /* SWWindowFilteringTests.h */,
 				BCA7350516DAC54000CD4C74 /* SwitchTests-Info.plist */,
 				BCA7350616DAC54000CD4C74 /* InfoPlist.strings */,
 				BCCE8CE918091A4F006B0059 /* NSWindow+NNScreenCapture.h */,
@@ -907,6 +910,7 @@
 				BCCE8CF31809266A006B0059 /* SWSafariTests.m in Sources */,
 				BCCE8CF018091F75006B0059 /* SWTweetbotTests.m in Sources */,
 				BCA5E9AA187A3CCA004D70EE /* SWWindowListServiceTests.m in Sources */,
+				BCA5E9B8187BB06F004D70EE /* SWApplication+SWTestingOverloads.m in Sources */,
 				BCCE8CEB18091A4F006B0059 /* NSWindow+NNScreenCapture.m in Sources */,
 				BCCE8CF51809297B006B0059 /* SWSheetTests.m in Sources */,
 				BCCE8CF718092CDF006B0059 /* SWPowerboxTests.m in Sources */,
