@@ -297,7 +297,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
     SWWindowGroup *windowGroup = [self.windowGroups objectAtIndex:index];
     BailUnless(windowGroup, [[NSView alloc] initWithFrame:NSZeroRect]);
     
-    return [[NNWindowThumbnailView alloc] initWithFrame:NSZeroRect window:windowGroup];
+    return [[NNWindowThumbnailView alloc] initWithFrame:NSZeroRect windowGroup:windowGroup];
 }
 
 #pragma mark NNHUDCollectionViewDelegate

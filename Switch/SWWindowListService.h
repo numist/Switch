@@ -30,6 +30,9 @@
 
 @interface SWWindowListService : NNService
 
++ (NSOrderedSet *)filterInfoDictionariesToWindowObjects:(NSArray *)infoDicts;
++ (NSOrderedSet *)filterWindowObjectsToWindowGroups:(NSOrderedSet *)rawWindowList;
+
 @property (nonatomic, copy, readonly) NSOrderedSet *windows;
 
 @end

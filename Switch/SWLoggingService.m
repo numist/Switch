@@ -15,6 +15,7 @@
 #import "SWLoggingService.h"
 
 #import "SWWindow.h"
+#import "SWWindowListService.h"
 
 
 @interface SWLoggingService ()
@@ -76,19 +77,9 @@
         return CFBridgingRelease(cgInfo);
     }();
     
-    #pragma message "window List snapshots need to work again maybe."
-    NSOrderedSet *objectList = nil; /*^{
-        NSMutableOrderedSet *result = [NSMutableOrderedSet orderedSetWithCapacity:[rawList count]];
-        for (unsigned i = 0; i < [rawList count]; i++) {
-            SWWindow *window = [SWWindow windowWithDescription:rawList[i]];
-            if (window) {
-                [result addObject:window];
-            }
-        }
-        return result;
-    }();*/
+    NSOrderedSet *windowList = [SWWindowListService filterInfoDictionariesToWindowObjects:rawList];
     
-    NSOrderedSet *filteredList = nil;/*[SWWindow filterInvalidWindowsFromSet:objectList];*/
+    NSOrderedSet *windowGroupList = [SWWindowListService filterWindowObjectsToWindowGroups:windowList];
     
     NSString *snapshotDir = [[self logDirectoryPath] stringByAppendingPathComponent:[NSString stringWithFormat:@"snapshot-%llu", (uint64_t)[[NSDate date] timeIntervalSince1970]]];
     BailUnless([self createDirectory:snapshotDir],);
@@ -106,10 +97,10 @@
     });
     [handle writeData:[@"Raw list:\n" dataUsingEncoding:NSUTF8StringEncoding]];
     [handle writeData:[[rawList debugDescription] dataUsingEncoding:NSUTF8StringEncoding]];
-    [handle writeData:[@"\nObject list:\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    [handle writeData:[[objectList debugDescription] dataUsingEncoding:NSUTF8StringEncoding]];
-    [handle writeData:[@"\n\nFiltered list:\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    [handle writeData:[[filteredList debugDescription] dataUsingEncoding:NSUTF8StringEncoding]];
+    [handle writeData:[@"\nWindow list:\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [handle writeData:[[windowList debugDescription] dataUsingEncoding:NSUTF8StringEncoding]];
+    [handle writeData:[@"\n\nWindow group list:\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [handle writeData:[[windowGroupList debugDescription] dataUsingEncoding:NSUTF8StringEncoding]];
     [handle writeData:[@"\n\n" dataUsingEncoding:NSUTF8StringEncoding]];
     
     for (NSDictionary *description in rawList) {

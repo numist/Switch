@@ -15,14 +15,13 @@
 #import <Cocoa/Cocoa.h>
 
 
-@class SWWindow;
+@class SWWindowGroup;
 
 
 @interface NNWindowThumbnailView : NSView
 
-- (instancetype)initWithFrame:(NSRect)frameRect window:(SWWindow *)window;
+- (instancetype)initWithFrame:(NSRect)frameRect windowGroup:(SWWindowGroup *)window;
 
 - (void)setActive:(BOOL)active;
-- (void)setThumbnail:(NSImage *)image;
 
 @end

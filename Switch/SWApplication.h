@@ -23,7 +23,7 @@
 
 + (instancetype)applicationWithPID:(pid_t)pid name:(NSString *)name;
 
-@property (nonatomic, strong, readonly) NSImage *icon;
+@property (nonatomic, copy, readonly) NSImage *icon;
 @property (nonatomic, strong, readonly) NSString *name;
 
 - (BOOL)isCurrentApplication;

@@ -78,9 +78,7 @@
     [super stopService];
 }
 
-#pragma mark - Private
-
-- (NSOrderedSet *)_filterInfoDictionariesToWindowObjects:(NSArray *)infoDicts;
++ (NSOrderedSet *)filterInfoDictionariesToWindowObjects:(NSArray *)infoDicts;
 {
     NSMutableOrderedSet *rawWindowList = [NSMutableOrderedSet orderedSetWithArray:infoDicts];
     
@@ -96,7 +94,7 @@
     return rawWindowList;
 }
 
-- (NSOrderedSet *)_filterWindowObjectsToWindowGroups:(NSOrderedSet *)rawWindowList;
++ (NSOrderedSet *)filterWindowObjectsToWindowGroups:(NSOrderedSet *)rawWindowList;
 {
     NSMutableOrderedSet *mutableWindowGroupList = [NSMutableOrderedSet new];
     
@@ -147,20 +145,6 @@
     return [mutableWindowGroupList reversedOrderedSet];
 }
 
-// This is also declared in the tests as the entry point in which to insert data
-- (void)_updateWindowList:(NSArray *)windowInfoList;
-{
-    BailUnless(windowInfoList,);
-    NSOrderedSet *windowObjectList = [self _filterInfoDictionariesToWindowObjects:windowInfoList];
-    NSOrderedSet *windowGroupList = [self _filterWindowObjectsToWindowGroups:windowObjectList];
-    
-    if (![self.windows isEqualToOrderedSet:windowGroupList]) {
-        self.windows = windowGroupList;
-        [(id<SWWindowListSubscriber>)self.subscriberDispatcher windowListService:self updatedList:self.windows];
-    }
-}
-
-
 #pragma mark - Notifications
 
 - (void)_workerUpdatedWindowList:(NSNotification *)notification;
@@ -172,6 +156,21 @@
     NSParameterAssert([notification.userInfo[@"windows"] isKindOfClass:[NSArray class]]);
 
     [self _updateWindowList:notification.userInfo[@"windows"]];
+}
+
+#pragma mark - Private
+
+// This is also declared in the tests as the entry point in which to insert data
+- (void)_updateWindowList:(NSArray *)windowInfoList;
+{
+    BailUnless(windowInfoList,);
+    NSOrderedSet *windowObjectList = [[self class] filterInfoDictionariesToWindowObjects:windowInfoList];
+    NSOrderedSet *windowGroupList = [[self class] filterWindowObjectsToWindowGroups:windowObjectList];
+    
+    if (![self.windows isEqualToOrderedSet:windowGroupList]) {
+        self.windows = windowGroupList;
+        [(id<SWWindowListSubscriber>)self.subscriberDispatcher windowListService:self updatedList:self.windows];
+    }
 }
 
 @end

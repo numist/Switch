@@ -45,6 +45,11 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
     return @protocol(NNPreferencesServiceDelegate);
 }
 
+- (NSSet *)dependencies;
+{
+    return [NSSet setWithArray:@[[NNEventManager class]]];
+}
+
 - (void)startService;
 {
     [super startService];
@@ -82,12 +87,12 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
 
     [defaults synchronize];
     
-    [[NNServiceManager sharedManager] addSubscriber:self forService:[NNEventManager self]];
+    [[NNServiceManager sharedManager] addSubscriber:self forService:[NNEventManager class]];
 }
 
 - (void)stopService;
 {
-    [[NNServiceManager sharedManager] removeSubscriber:self forService:[NNEventManager self]];
+    [[NNServiceManager sharedManager] removeSubscriber:self forService:[NNEventManager class]];
     
     [super stopService];
 }

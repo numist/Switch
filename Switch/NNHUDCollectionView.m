@@ -133,14 +133,20 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
             
             self.numberOfCells = [dataSource HUDViewNumberOfCells:self];
             // dataSource side effect may have called reloadData, in which case it's not safe to continue anymore.
-            if (self.reloading) { return; }
+            if (self.reloading) {
+                SWLog(@"reloadData called while reloading data!");
+                return;
+            }
             
             [self setSize:[self computeCollectionViewSize]];
             
             for (NSUInteger i = 0; i < self.numberOfCells; i++) {
                 NSView *cell = [dataSource HUDView:self viewForCellAtIndex:i];
                 // dataSource side effect may have called reloadData, in which case it's not safe to continue anymore.
-                if (self.reloading) { return; }
+                if (self.reloading) {
+                    SWLog(@"reloadData called while reloading data!");
+                    return;
+                }
                 
                 [self.cells insertObject:cell atIndex:i];
                 cell.frame = [self computeFrameForCellAtIndex:i];
