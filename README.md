@@ -32,7 +32,7 @@ At this point, `⌘R` should have you up and running!
 Thanks!
 -------
 
-Switch relies on a number of [external frameworks](https://github.com/numist/Switch/tree/develop/Frameworks), thanks to the people responsible for them, you've saved me time and tears.
+Switch relies on a number of [external frameworks](https://github.com/numist/Switch/tree/develop/Frameworks). Thanks to the people responsible for them, you've saved me time and tears.
 
 Many people have influenced Switch's development without being authors (or perhaps even realizing it). Special thanks goes out to:
 * [@andymatuschak](https://github.com/andymatuschak)
