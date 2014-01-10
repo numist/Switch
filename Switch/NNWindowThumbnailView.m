@@ -112,17 +112,17 @@
     self.thumbnailLayer.frame = self.bounds;
     
     NSRect thumbFrame = self.thumbnailLayer.frame;
-    CGFloat maxThumbDimension = MAX(thumbFrame.size.width, thumbFrame.size.height);
-
     NSRect windowFrame = self.windowGroup.frame;
-    CGFloat maxWindowDimension = MAX(windowFrame.size.width, windowFrame.size.height);
     
-    CGFloat scale = maxThumbDimension / maxWindowDimension;
+    CGFloat scale = MIN(thumbFrame.size.width / windowFrame.size.width, thumbFrame.size.height / windowFrame.size.height);
     
     CGFloat scaledXOffset = (thumbFrame.size.width - (windowFrame.size.width * scale)) / 2.0;
     CGFloat scaledYOffset = (thumbFrame.size.height - (windowFrame.size.height * scale)) / 2.0;
     
-    for (NSUInteger i = 0; i < self.windowGroup.windows.count; i++) {
+    #pragma message "Only draw the main window for now. This is the same as the old behaviour, so it's not a drawing regression."
+    // However it would be really great to figure out why subwindows don't seem to be drawing in the right places. The frames look reasonable in the debugger…
+    NSUInteger i = [self.windowGroup.windows indexOfObject:self.windowGroup.mainWindow];
+//    for (NSUInteger i = 0; i < self.windowGroup.windows.count; i++) {
         SWWindow *window = self.windowGroup.windows[i];
         CALayer *layer = [self _sublayerForWindow:window];
         NSRect frame = window.frame;
@@ -142,7 +142,7 @@
         frame.origin.y += scaledYOffset;
         
         layer.frame = frame;
-    }
+//    }
     
     
     
