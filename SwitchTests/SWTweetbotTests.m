@@ -130,4 +130,54 @@
     }
 }
 
+// No ticket, verify that the frame of an image window doesn't cause it to be coalesced into the main window (image windows are unnamed and could be positioned within the frame of the main window)
+- (void)testImageInsideAndAboveMainWindow;
+{
+    NSDictionary *imageWindowInfo = @{
+        NNWindowAlpha : @1,
+        NNWindowBounds : DICT_FROM_RECT(((CGRect){
+            .size.height = 244,
+            .size.width = 464,
+            .origin.x = 880,
+            .origin.y = 287
+        })),
+        NNWindowIsOnscreen : @1,
+        NNWindowLayer : @0,
+        NNWindowMemoryUsage : @664916,
+        NNWindowName : @"",
+        NNWindowNumber : @54150,
+        NNWindowOwnerName : @"Tweetbot",
+        NNWindowOwnerPID : @90385,
+        NNWindowSharingState : @1,
+        NNWindowStoreType : @2,
+    };
+    NSDictionary *mainWindowInfo = @{
+        NNWindowAlpha : @1,
+        NNWindowBounds : DICT_FROM_RECT(((CGRect){
+            .size.height = 636,
+            .size.width = 480,
+            .origin.x = 872,
+            .origin.y = 73
+        })),
+        NNWindowIsOnscreen : @1,
+        NNWindowLayer : @0,
+        NNWindowMemoryUsage : @1226068,
+        NNWindowName : @"Main Window",
+        NNWindowNumber : @52387,
+        NNWindowOwnerName : @"Tweetbot",
+        NNWindowOwnerPID : @90385,
+        NNWindowSharingState : @1,
+        NNWindowStoreType : @2,
+    };
+    NSArray *infoList = @[imageWindowInfo, mainWindowInfo];
+
+    [self updateListServiceWithInfoList:infoList];
+    
+    XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))2, @"");
+    if (self.listService.windows.count == 2) {
+        XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, imageWindowInfo, @"");
+        XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:1]).mainWindow.windowDescription, mainWindowInfo, @"");
+    }
+}
+
 @end
