@@ -32,7 +32,7 @@
 @property (nonatomic, assign) BOOL valid;
 
 
-@property (nonatomic, weak, readonly) SWWindowGroup *modelWindow;
+@property (nonatomic, strong, readonly) SWWindowGroup *windowGroup;
 @property (nonatomic, strong, readonly) RACSignal *thumbnailSignal;
 
 @property (nonatomic, strong) NSImage *icon;
@@ -45,22 +45,44 @@
 
 @implementation NNWindowThumbnailView
 
-- (id)initWithFrame:(NSRect)frame windowGroup:(SWWindowGroup *)window;
+- (id)initWithFrame:(NSRect)frame windowGroup:(SWWindowGroup *)windowGroup;
 {
     if (!(self = [super initWithFrame:frame])) { return nil; }
     
-    _modelWindow = window;
+    //
+    // Data initialization
+    //
+    _windowGroup = windowGroup;
+    
+    NSMutableOrderedSet *windowIDList = [NSMutableOrderedSet new];
+    NSMutableDictionary *windowFrames = [NSMutableDictionary new];
+    for (SWWindow *window in _windowGroup.windows) {
+        [windowIDList addObject:@(window.windowID)];
+        [windowFrames setObject:[NSValue valueWithRect:window.frame] forKey:@(window.windowID)];
+    }
+    _windowIDList = windowIDList;
+    _windowFrames = windowFrames;
+    
+    _valid = YES;
+    
+    //
+    // View initialization
+    //
     
     [self setWantsLayer:YES];
     self.layerContentsRedrawPolicy = NSViewLayerContentsRedrawOnSetNeedsDisplay;
     [self _createLayers];
     
-    // Disable implicit animation on frame changes.
-    ((id<NSAnimatablePropertyContainer>)self.animator).animations = @{@"frame" : [NSNull null]};
+    for (SWWindow *window in _windowGroup.windows) {
+        NSImage *content = [[SWWindowContentsService sharedService] contentForWindow:window];
+        if (content) {
+            [self _sublayerForWindow:window].contents = content;
+        }
+    }
     
     NSImage *icon;
     {
-        icon = window.application.icon;
+        icon = windowGroup.application.icon;
 
         // This is necessary or the CALayer may draw a low resolution representation when a higher resolution is needed, and it's better to be too high-resolution than too low.
         NSSize imageSize = icon.size;
@@ -71,18 +93,59 @@
     _icon = icon;
     _iconLayer.contents = icon;
     
-    #pragma message "create a sublayer for each of the window ids in the group's window IDs, fill their contents with SWWindowContentsService cached contents, if available"
+    //
+    // Configuration initialization
+    //
+    
+    // Disable implicit animation on frame changes.
+    ((id<NSAnimatablePropertyContainer>)self.animator).animations = @{@"frame" : [NSNull null]};
 
     [self setNeedsLayout:YES];
+    
+    [[NNServiceManager sharedManager] addSubscriber:self forService:[SWWindowContentsService class]];
     
     return self;
 }
 
 - (void)layout;
 {
-//    NSRect thumbFrame = self.bounds;
-//    CGFloat thumbSize = thumbFrame.size.width;
+    self.thumbnailLayer.frame = self.bounds;
+    
+    NSRect thumbFrame = self.thumbnailLayer.frame;
+    CGFloat maxThumbDimension = MAX(thumbFrame.size.width, thumbFrame.size.height);
 
+    NSRect windowFrame = self.windowGroup.frame;
+    CGFloat maxWindowDimension = MAX(windowFrame.size.width, windowFrame.size.height);
+    
+    CGFloat scale = maxThumbDimension / maxWindowDimension;
+    
+    CGFloat scaledXOffset = (thumbFrame.size.width - (windowFrame.size.width * scale)) / 2.0;
+    CGFloat scaledYOffset = (thumbFrame.size.height - (windowFrame.size.height * scale)) / 2.0;
+    
+    for (NSUInteger i = 0; i < self.windowGroup.windows.count; i++) {
+        SWWindow *window = self.windowGroup.windows[i];
+        CALayer *layer = [self _sublayerForWindow:window];
+        NSRect frame = window.frame;
+        
+        // Move the frame's origin to be anchored at the "bottom left" of the windowFrame.
+        frame.origin.x -= windowFrame.origin.x;
+        frame.origin.y -= windowFrame.origin.y;
+        
+        // Scale the frame into the layer's space.
+        frame.origin.x *= scale;
+        frame.origin.y *= scale;
+        frame.size.width *= scale;
+        frame.size.height *= scale;
+        
+        // Center the group within the thumbnail frame.
+        frame.origin.x += scaledXOffset;
+        frame.origin.y += scaledYOffset;
+        
+        layer.frame = frame;
+    }
+    
+    
+    
     #pragma message "This is going to have to recompute a frame space from the window frames and map that to the view's bounds, and then update the frames of each of the thumbnails in thumbnailLayer.subLayers accordingly"
     
     [self _updateIconLayout];
@@ -127,7 +190,23 @@
 
 - (oneway void)windowListService:(SWWindowListService *)service updatedList:(NSOrderedSet *)windows;
 {
-    #pragma message "Check the window list to make sure that a window group with the same wid list as self.windowIDList exists in the set. Enable/Disable red state (self.valid) as appropriate."
+    BOOL thisWindowExists = NO;
+    for (SWWindowGroup *windowGroup in windows) {
+        NSMutableOrderedSet *windowIDList = [NSMutableOrderedSet new];
+        for (SWWindow *window in _windowGroup.windows) {
+            [windowIDList addObject:@(window.windowID)];
+        }
+
+        if ([windowIDList isEqual:self.windowIDList]) {
+            thisWindowExists = YES;
+            
+            #pragma message "forin windows, update descriptions, check frames. setneedslayout if any of them are different."
+            
+            break;
+        }
+    }
+    
+    self.valid = thisWindowExists;
 }
 
 #pragma mark SWWindowContentsSubscriber
@@ -147,8 +226,7 @@
         [self setNeedsLayout:YES];
     }
     
-    NSUInteger layerIndex = [self.windowIDList indexOfObject:@(windowID)];
-    ((CALayer *)self.thumbnailLayer.sublayers[layerIndex]).contents = content;
+    [self _sublayerForWindow:window].contents = content;
 }
 
 #pragma mark Internal
@@ -167,6 +245,10 @@
     self.thumbnailLayer = newLayer();
     self.thumbnailLayer.zPosition = 1.0;
     [self.layer addSublayer:self.thumbnailLayer];
+    
+    for (SWWindow *window in self.windowGroup.windows) {
+        [self.thumbnailLayer addSublayer:newLayer()];
+    }
     
     self.iconLayer = newLayer();
     self.iconLayer.zPosition = 2.0;
@@ -192,6 +274,13 @@
         .origin.x = thumbFrame.origin.x + (thumbFrame.size.width - imageSize.width),
         .origin.y = thumbFrame.origin.y
     };
+}
+
+- (CALayer *)_sublayerForWindow:(SWWindow *)window;
+{
+    NSUInteger windowCount = self.windowGroup.windows.count;
+    
+    return self.thumbnailLayer.sublayers[windowCount - ([self.windowGroup.windows indexOfObject:window] + 1)];
 }
 
 @end
