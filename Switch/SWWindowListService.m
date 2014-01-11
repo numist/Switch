@@ -151,7 +151,7 @@
 {
     NSAssert([NSThread isMainThread], @"Boundary call was not made on main thread");
     
-    if (notification.object != self.worker) { NotTested(); return; }
+    if (notification.object != self.worker) { return; }
     
     NSParameterAssert([notification.userInfo[@"windows"] isKindOfClass:[NSArray class]]);
 
