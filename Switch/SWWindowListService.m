@@ -32,6 +32,8 @@
 
 @implementation SWWindowListService
 
+#pragma mark Initialization
+
 - (id)init;
 {
     NSAssert([NSThread isMainThread], @"Boundary call was not made on main thread");
@@ -77,6 +79,8 @@
     
     [super stopService];
 }
+
+#pragma mark SWWindowListService
 
 + (NSOrderedSet *)filterInfoDictionariesToWindowObjects:(NSArray *)infoDicts;
 {
@@ -145,7 +149,7 @@
     return [mutableWindowGroupList reversedOrderedSet];
 }
 
-#pragma mark - Notifications
+#pragma mark - Private
 
 - (void)_workerUpdatedWindowList:(NSNotification *)notification;
 {
@@ -154,13 +158,11 @@
     if (notification.object != self.worker) { return; }
     
     NSParameterAssert([notification.userInfo[@"windows"] isKindOfClass:[NSArray class]]);
-
+    
     [self _updateWindowList:notification.userInfo[@"windows"]];
 }
 
-#pragma mark - Private
-
-// This is also declared in the tests as the entry point in which to insert data
+// NOTE: This is also declared in the tests as the entry point in which to insert data
 - (void)_updateWindowList:(NSArray *)windowInfoList;
 {
     BailUnless(windowInfoList,);

@@ -1,5 +1,5 @@
 //
-//  NNAPIEnabledWorker.m
+//  SWAPIEnabledWorker.m
 //  Switch
 //
 //  Created by Scott Perry on 07/10/13.
@@ -11,23 +11,48 @@
 //
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-#import "NNAPIEnabledWorker.h"
+#import "SWAPIEnabledWorker.h"
 
 #import <dlfcn.h>
 #import <NNKit/NNPollingObject+Protected.h>
 
 
-NSString *NNAXAPIEnabledKey = @"AXAPIEnabled";
+NSString *SWAXAPIEnabledKey = @"AXAPIEnabled";
 
 
-@interface NNAPIEnabledWorker ()
+@interface SWAPIEnabledWorker ()
 
 @property (nonatomic, assign, readwrite) BOOL APIEnabled;
 
 @end
 
 
-@implementation NNAPIEnabledWorker
+@implementation SWAPIEnabledWorker
+
+#pragma mark Initialization
+
+- (instancetype)init;
+{
+    if (!(self = [super initWithQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)])) { return nil; }
+    
+    _APIEnabled = [[self class] isAPIEnabled];
+    self.interval = 0.25;
+    
+    return self;
+}
+
+#pragma mark NNPollingObject
+
+- (void)main;
+{
+    BOOL enabled = [[self class] isAPIEnabled];
+    if (enabled != self.APIEnabled) {
+        self.APIEnabled = enabled;
+        [self postNotification:@{ SWAXAPIEnabledKey : @(enabled) }];
+    }
+}
+
+#pragma mark SWAPIEnabledWorker
 
 + (BOOL)isAPIEnabled;
 {
@@ -51,25 +76,6 @@ NSString *NNAXAPIEnabledKey = @"AXAPIEnabled";
     }
     
     return (BOOL)result;
-}
-
-- (instancetype)init;
-{
-    if (!(self = [super initWithQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)])) { return nil; }
-    
-    _APIEnabled = [[self class] isAPIEnabled];
-    self.interval = 0.25;
-    
-    return self;
-}
-
-- (void)main;
-{
-    BOOL enabled = [[self class] isAPIEnabled];
-    if (enabled != self.APIEnabled) {
-        self.APIEnabled = enabled;
-        [self postNotification:@{ NNAXAPIEnabledKey : @(enabled) }];
-    }
 }
 
 @end

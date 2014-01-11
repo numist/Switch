@@ -28,6 +28,8 @@
 
 @implementation SWApplication
 
+#pragma mark Initialization
+
 + (instancetype)applicationWithPID:(pid_t)pid name:(NSString *)name;
 {
     return [[self alloc] initWithPID:pid name:name];
@@ -43,6 +45,8 @@
 
     return self;
 }
+
+#pragma mark NSObject
 
 - (instancetype)copyWithZone:(NSZone *)zone;
 {
@@ -66,15 +70,13 @@
     return [NSString stringWithFormat:@"%p <%d (%@)>", self, self.pid, self.name];
 }
 
-#pragma mark Properties
+#pragma mark SWApplication
 
 - (NSImage *)icon;
 {
     NSString *path = [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:[self.app bundleIdentifier]];
     return [[NSWorkspace sharedWorkspace] iconForFile:path];
 }
-
-#pragma mark NNApplication
 
 - (BOOL)isCurrentApplication;
 {

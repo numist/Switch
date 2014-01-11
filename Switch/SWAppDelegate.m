@@ -14,8 +14,7 @@
 
 #import "SWAppDelegate.h"
 
-#import "NNPreferencesService.h"
-
+#import "SWPreferencesService.h"
 #import "SWWindowListService.h"
 
 
@@ -30,10 +29,10 @@
     SWLog(@"Launched %@ %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:(__bridge id)kCFBundleNameKey], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]);
 }
 
-#pragma mark IBActions
+#pragma mark IBAction
 
 - (IBAction)showPreferences:(id)sender {
-    [[NNPreferencesService sharedService] showPreferencesWindow:sender];
+    [[SWPreferencesService sharedService] showPreferencesWindow:sender];
 }
 
 @end

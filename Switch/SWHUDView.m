@@ -1,5 +1,5 @@
 //
-//  NNSelectionBoxView.h
+//  SWHUDView.m
 //  Switch
 //
 //  Created by Scott Perry on 03/02/13.
@@ -12,9 +12,22 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "NNRoundedRectView.h"
+#import "SWHUDView.h"
 
 
-@interface NNSelectionBoxView : NNRoundedRectView
+@implementation SWHUDView
+
+#pragma mark Initialization
+
+- (id)initWithFrame:(NSRect)frame
+{
+    if (!(self = [super initWithFrame:frame])) { return nil; }
+
+    self.border = 0.0;
+    self.radius = kNNWindowRoundRectRadius;
+    self.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+    
+    return self;
+}
 
 @end

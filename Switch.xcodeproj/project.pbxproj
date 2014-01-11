@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BC19D3DA181436FB009CEC1F /* NNPreferencesService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3D9181436FB009CEC1F /* NNPreferencesService.m */; };
+		BC19D3DA181436FB009CEC1F /* SWPreferencesService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3D9181436FB009CEC1F /* SWPreferencesService.m */; };
 		BC19D3DD18143AB1009CEC1F /* SWAccessibilityService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3DC18143AB1009CEC1F /* SWAccessibilityService.m */; };
-		BC5A9798180E5A6F002ECD56 /* NNStatusBarMenuService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5A9797180E5A6F002ECD56 /* NNStatusBarMenuService.m */; };
+		BC5A9798180E5A6F002ECD56 /* SWStatusBarMenuService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5A9797180E5A6F002ECD56 /* SWStatusBarMenuService.m */; };
 		BC5A979B180E6949002ECD56 /* SWLoggingService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5A979A180E6949002ECD56 /* SWLoggingService.m */; };
-		BC63AB8F1755907D00016B9E /* NNHUDCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */; };
+		BC63AB8F1755907D00016B9E /* SWHUDCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC63AB8E1755907D00016B9E /* SWHUDCollectionView.m */; };
 		BC63AB921756FBE400016B9E /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB911756FBE300016B9E /* Carbon.framework */; };
 		BC63AB9A175701D900016B9E /* Haxcessibility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
 		BC63ABA517598C4100016B9E /* debugger.c in Sources */ = {isa = PBXBuildFile; fileRef = BC63ABA217598C4100016B9E /* debugger.c */; };
@@ -19,10 +19,10 @@
 		BC662BA7186A42E4003CF66C /* SWWindowListService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC662BA6186A42E4003CF66C /* SWWindowListService.m */; };
 		BC662BB2186A7662003CF66C /* SWWindowGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = BC662BB1186A7662003CF66C /* SWWindowGroup.m */; };
 		BC6B6D00178B711E001D691D /* NNMainThreadGuard.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6CFF178B711E001D691D /* NNMainThreadGuard.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		BC6B6D13178DDBDA001D691D /* NNCoreWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6D12178DDBDA001D691D /* NNCoreWindowController.m */; };
-		BC6B6D1C178DE8E5001D691D /* NNAPIEnabledWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6D1B178DE8E5001D691D /* NNAPIEnabledWorker.m */; };
-		BC82B3F1183C48EE00FDD3B9 /* NNCoreWindowService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC82B3F0183C48EE00FDD3B9 /* NNCoreWindowService.m */; };
-		BC8D8DA1177BA53100B7A135 /* NNHUDCollectionViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC8D8DA0177BA53100B7A135 /* NNHUDCollectionViewTests.m */; };
+		BC6B6D13178DDBDA001D691D /* SWCoreWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6D12178DDBDA001D691D /* SWCoreWindowController.m */; };
+		BC6B6D1C178DE8E5001D691D /* SWAPIEnabledWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6D1B178DE8E5001D691D /* SWAPIEnabledWorker.m */; };
+		BC82B3F1183C48EE00FDD3B9 /* SWCoreWindowService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC82B3F0183C48EE00FDD3B9 /* SWCoreWindowService.m */; };
+		BC8D8DA1177BA53100B7A135 /* SWHUDCollectionViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC8D8DA0177BA53100B7A135 /* SWHUDCollectionViewTests.m */; };
 		BC948E2E180CFAA6008ED28A /* weave.png in Resources */ = {isa = PBXBuildFile; fileRef = BC948E2D180CFAA6008ED28A /* weave.png */; };
 		BCA5E99818766FE1004D70EE /* SWWindowContentsService.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA5E99718766FE1004D70EE /* SWWindowContentsService.m */; };
 		BCA5E9A6187A21A9004D70EE /* SWSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA5E9A5187A21A9004D70EE /* SWSelector.m */; };
@@ -42,21 +42,20 @@
 		BCA7351E16DAC61F00CD4C74 /* SWWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7351D16DAC61F00CD4C74 /* SWWindow.m */; };
 		BCA7352216DAC6A900CD4C74 /* SWWindowWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7352116DAC6A900CD4C74 /* SWWindowWorker.m */; };
 		BCA7352516DAC93C00CD4C74 /* SWApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7352416DAC93C00CD4C74 /* SWApplication.m */; };
-		BCA7352F16DB239900CD4C74 /* NNWindowThumbnailView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7352E16DB239900CD4C74 /* NNWindowThumbnailView.m */; };
-		BCA7353316DB2C0100CD4C74 /* NNEventManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7353216DB2C0100CD4C74 /* NNEventManager.m */; };
-		BCA7353816E148EF00CD4C74 /* NNRoundedRectView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7353716E148EF00CD4C74 /* NNRoundedRectView.m */; };
+		BCA7352F16DB239900CD4C74 /* SWWindowThumbnailView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7352E16DB239900CD4C74 /* SWWindowThumbnailView.m */; };
+		BCA7353316DB2C0100CD4C74 /* SWEventManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7353216DB2C0100CD4C74 /* SWEventManager.m */; };
+		BCA7353816E148EF00CD4C74 /* SWRoundedRectView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7353716E148EF00CD4C74 /* SWRoundedRectView.m */; };
 		BCA7353A16E14EF000CD4C74 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCA7353916E14EF000CD4C74 /* QuartzCore.framework */; };
 		BCA7354316E1621400CD4C74 /* constants.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354216E1621400CD4C74 /* constants.m */; };
-		BCA7354916E1F14D00CD4C74 /* NNSelectionBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354816E1F14D00CD4C74 /* NNSelectionBoxView.m */; };
-		BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */; };
-		BCBF525017B079FA00716200 /* NNHotKey.m in Sources */ = {isa = PBXBuildFile; fileRef = BCBF524D17B079FA00716200 /* NNHotKey.m */; };
+		BCA7354916E1F14D00CD4C74 /* SWSelectionBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354816E1F14D00CD4C74 /* SWSelectionBoxView.m */; };
+		BCA7354D16E2ED5000CD4C74 /* SWHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354C16E2ED5000CD4C74 /* SWHUDView.m */; };
+		BCBF525017B079FA00716200 /* SWHotKey.m in Sources */ = {isa = PBXBuildFile; fileRef = BCBF524D17B079FA00716200 /* SWHotKey.m */; };
 		BCCA7A5F18076AF500CE36E5 /* NNKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCCA7A5618076ADB00CE36E5 /* NNKit.framework */; };
-		BCCA7A631807894A00CE36E5 /* NNPreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7A611807894A00CE36E5 /* NNPreferencesWindowController.m */; };
-		BCCA7A641807894A00CE36E5 /* NNPreferencesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCCA7A621807894A00CE36E5 /* NNPreferencesWindowController.xib */; };
+		BCCA7A631807894A00CE36E5 /* SWPreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7A611807894A00CE36E5 /* SWPreferencesWindowController.m */; };
+		BCCA7A641807894A00CE36E5 /* SWPreferencesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCCA7A621807894A00CE36E5 /* SWPreferencesWindowController.xib */; };
 		BCCA7AB21807CD2B00CE36E5 /* NNKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCCA7A5618076ADB00CE36E5 /* NNKit.framework */; };
 		BCCA7AD0180896D100CE36E5 /* helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7ACF180896D100CE36E5 /* helpers.m */; };
 		BCCA7B181809008900CE36E5 /* NSNotificationCenter+RACSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7B171809008900CE36E5 /* NSNotificationCenter+RACSupport.m */; };
-		BCCA7B2B1809112900CE36E5 /* NNHelperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7B2A1809112900CE36E5 /* NNHelperTests.m */; };
 		BCCE8CEB18091A4F006B0059 /* NSWindow+NNScreenCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCE8CEA18091A4F006B0059 /* NSWindow+NNScreenCapture.m */; };
 		BCCE8CEE18091AFC006B0059 /* NSImage+NNFilesystem.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCE8CED18091AFC006B0059 /* NSImage+NNFilesystem.m */; };
 		BCCE8CF018091F75006B0059 /* SWTweetbotTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCE8CEF18091F75006B0059 /* SWTweetbotTests.m */; };
@@ -69,7 +68,7 @@
 		BCDDB2C2178EF1B200C22E47 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */; };
 		BCDDB2C3178EF29300C22E47 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */; };
 		BCF357E9176CEEF200458AFF /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCF357E0176CEE9F00458AFF /* ReactiveCocoa.framework */; };
-		BCFF2315177DD812008759C4 /* NNTweetbotWindowFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFF2314177DD812008759C4 /* NNTweetbotWindowFilter.m */; };
+		BCFF2315177DD812008759C4 /* SWTweetbotWindowFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFF2314177DD812008759C4 /* SWTweetbotWindowFilter.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -197,16 +196,16 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		BC19D3D8181436FB009CEC1F /* NNPreferencesService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNPreferencesService.h; sourceTree = "<group>"; };
-		BC19D3D9181436FB009CEC1F /* NNPreferencesService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNPreferencesService.m; sourceTree = "<group>"; };
+		BC19D3D8181436FB009CEC1F /* SWPreferencesService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWPreferencesService.h; sourceTree = "<group>"; };
+		BC19D3D9181436FB009CEC1F /* SWPreferencesService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWPreferencesService.m; sourceTree = "<group>"; };
 		BC19D3DB18143AB1009CEC1F /* SWAccessibilityService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWAccessibilityService.h; sourceTree = "<group>"; };
 		BC19D3DC18143AB1009CEC1F /* SWAccessibilityService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWAccessibilityService.m; sourceTree = "<group>"; };
-		BC5A9796180E5A6F002ECD56 /* NNStatusBarMenuService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNStatusBarMenuService.h; sourceTree = "<group>"; };
-		BC5A9797180E5A6F002ECD56 /* NNStatusBarMenuService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNStatusBarMenuService.m; sourceTree = "<group>"; };
+		BC5A9796180E5A6F002ECD56 /* SWStatusBarMenuService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWStatusBarMenuService.h; sourceTree = "<group>"; };
+		BC5A9797180E5A6F002ECD56 /* SWStatusBarMenuService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWStatusBarMenuService.m; sourceTree = "<group>"; };
 		BC5A9799180E6949002ECD56 /* SWLoggingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWLoggingService.h; sourceTree = "<group>"; };
 		BC5A979A180E6949002ECD56 /* SWLoggingService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWLoggingService.m; sourceTree = "<group>"; };
-		BC63AB8D1755907D00016B9E /* NNHUDCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHUDCollectionView.h; sourceTree = "<group>"; };
-		BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDCollectionView.m; sourceTree = "<group>"; };
+		BC63AB8D1755907D00016B9E /* SWHUDCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWHUDCollectionView.h; sourceTree = "<group>"; };
+		BC63AB8E1755907D00016B9E /* SWHUDCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWHUDCollectionView.m; sourceTree = "<group>"; };
 		BC63AB911756FBE300016B9E /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		BC63AB94175701C200016B9E /* Haxcessibility.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Haxcessibility.xcodeproj; path = Frameworks/Haxcessibility/Haxcessibility.xcodeproj; sourceTree = "<group>"; };
 		BC63ABA217598C4100016B9E /* debugger.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = debugger.c; sourceTree = "<group>"; };
@@ -217,13 +216,13 @@
 		BC662BB0186A7662003CF66C /* SWWindowGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWWindowGroup.h; sourceTree = "<group>"; };
 		BC662BB1186A7662003CF66C /* SWWindowGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWWindowGroup.m; sourceTree = "<group>"; };
 		BC6B6CFF178B711E001D691D /* NNMainThreadGuard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNMainThreadGuard.m; sourceTree = "<group>"; };
-		BC6B6D11178DDBDA001D691D /* NNCoreWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNCoreWindowController.h; sourceTree = "<group>"; };
-		BC6B6D12178DDBDA001D691D /* NNCoreWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNCoreWindowController.m; sourceTree = "<group>"; };
-		BC6B6D1A178DE8E5001D691D /* NNAPIEnabledWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNAPIEnabledWorker.h; sourceTree = "<group>"; };
-		BC6B6D1B178DE8E5001D691D /* NNAPIEnabledWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNAPIEnabledWorker.m; sourceTree = "<group>"; };
-		BC82B3EF183C48EE00FDD3B9 /* NNCoreWindowService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNCoreWindowService.h; sourceTree = "<group>"; };
-		BC82B3F0183C48EE00FDD3B9 /* NNCoreWindowService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNCoreWindowService.m; sourceTree = "<group>"; };
-		BC8D8DA0177BA53100B7A135 /* NNHUDCollectionViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDCollectionViewTests.m; sourceTree = "<group>"; };
+		BC6B6D11178DDBDA001D691D /* SWCoreWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWCoreWindowController.h; sourceTree = "<group>"; };
+		BC6B6D12178DDBDA001D691D /* SWCoreWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWCoreWindowController.m; sourceTree = "<group>"; };
+		BC6B6D1A178DE8E5001D691D /* SWAPIEnabledWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWAPIEnabledWorker.h; sourceTree = "<group>"; };
+		BC6B6D1B178DE8E5001D691D /* SWAPIEnabledWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWAPIEnabledWorker.m; sourceTree = "<group>"; };
+		BC82B3EF183C48EE00FDD3B9 /* SWCoreWindowService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWCoreWindowService.h; sourceTree = "<group>"; };
+		BC82B3F0183C48EE00FDD3B9 /* SWCoreWindowService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWCoreWindowService.m; sourceTree = "<group>"; };
+		BC8D8DA0177BA53100B7A135 /* SWHUDCollectionViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWHUDCollectionViewTests.m; sourceTree = "<group>"; };
 		BC948E2D180CFAA6008ED28A /* weave.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = weave.png; path = Resources/weave.png; sourceTree = "<group>"; };
 		BCA5E99618766FE1004D70EE /* SWWindowContentsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWWindowContentsService.h; sourceTree = "<group>"; };
 		BCA5E99718766FE1004D70EE /* SWWindowContentsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWWindowContentsService.m; sourceTree = "<group>"; };
@@ -257,31 +256,30 @@
 		BCA7352116DAC6A900CD4C74 /* SWWindowWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWWindowWorker.m; sourceTree = "<group>"; };
 		BCA7352316DAC93C00CD4C74 /* SWApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWApplication.h; sourceTree = "<group>"; };
 		BCA7352416DAC93C00CD4C74 /* SWApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWApplication.m; sourceTree = "<group>"; };
-		BCA7352D16DB239900CD4C74 /* NNWindowThumbnailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNWindowThumbnailView.h; sourceTree = "<group>"; };
-		BCA7352E16DB239900CD4C74 /* NNWindowThumbnailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNWindowThumbnailView.m; sourceTree = "<group>"; };
-		BCA7353116DB2C0100CD4C74 /* NNEventManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNEventManager.h; sourceTree = "<group>"; };
-		BCA7353216DB2C0100CD4C74 /* NNEventManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNEventManager.m; sourceTree = "<group>"; };
-		BCA7353616E148EF00CD4C74 /* NNRoundedRectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNRoundedRectView.h; sourceTree = "<group>"; };
-		BCA7353716E148EF00CD4C74 /* NNRoundedRectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNRoundedRectView.m; sourceTree = "<group>"; };
+		BCA7352D16DB239900CD4C74 /* SWWindowThumbnailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWWindowThumbnailView.h; sourceTree = "<group>"; };
+		BCA7352E16DB239900CD4C74 /* SWWindowThumbnailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWWindowThumbnailView.m; sourceTree = "<group>"; };
+		BCA7353116DB2C0100CD4C74 /* SWEventManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWEventManager.h; sourceTree = "<group>"; };
+		BCA7353216DB2C0100CD4C74 /* SWEventManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWEventManager.m; sourceTree = "<group>"; };
+		BCA7353616E148EF00CD4C74 /* SWRoundedRectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRoundedRectView.h; sourceTree = "<group>"; };
+		BCA7353716E148EF00CD4C74 /* SWRoundedRectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRoundedRectView.m; sourceTree = "<group>"; };
 		BCA7353916E14EF000CD4C74 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		BCA7354116E1621400CD4C74 /* constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = constants.h; sourceTree = "<group>"; };
 		BCA7354216E1621400CD4C74 /* constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = constants.m; sourceTree = "<group>"; };
-		BCA7354716E1F14D00CD4C74 /* NNSelectionBoxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNSelectionBoxView.h; sourceTree = "<group>"; };
-		BCA7354816E1F14D00CD4C74 /* NNSelectionBoxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNSelectionBoxView.m; sourceTree = "<group>"; };
+		BCA7354716E1F14D00CD4C74 /* SWSelectionBoxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWSelectionBoxView.h; sourceTree = "<group>"; };
+		BCA7354816E1F14D00CD4C74 /* SWSelectionBoxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWSelectionBoxView.m; sourceTree = "<group>"; };
 		BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = imageComparators.h; sourceTree = "<group>"; };
-		BCA7354B16E2ED5000CD4C74 /* NNHUDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHUDView.h; sourceTree = "<group>"; };
-		BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHUDView.m; sourceTree = "<group>"; };
-		BCBF524C17B079FA00716200 /* NNHotKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNHotKey.h; sourceTree = "<group>"; };
-		BCBF524D17B079FA00716200 /* NNHotKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHotKey.m; sourceTree = "<group>"; };
+		BCA7354B16E2ED5000CD4C74 /* SWHUDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWHUDView.h; sourceTree = "<group>"; };
+		BCA7354C16E2ED5000CD4C74 /* SWHUDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWHUDView.m; sourceTree = "<group>"; };
+		BCBF524C17B079FA00716200 /* SWHotKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWHotKey.h; sourceTree = "<group>"; };
+		BCBF524D17B079FA00716200 /* SWHotKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWHotKey.m; sourceTree = "<group>"; };
 		BCCA7A4E18076ADB00CE36E5 /* NNKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = NNKit.xcodeproj; path = Frameworks/NNKit/NNKit.xcodeproj; sourceTree = "<group>"; };
-		BCCA7A601807894A00CE36E5 /* NNPreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNPreferencesWindowController.h; sourceTree = "<group>"; };
-		BCCA7A611807894A00CE36E5 /* NNPreferencesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNPreferencesWindowController.m; sourceTree = "<group>"; };
-		BCCA7A621807894A00CE36E5 /* NNPreferencesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NNPreferencesWindowController.xib; sourceTree = "<group>"; };
+		BCCA7A601807894A00CE36E5 /* SWPreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWPreferencesWindowController.h; sourceTree = "<group>"; };
+		BCCA7A611807894A00CE36E5 /* SWPreferencesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWPreferencesWindowController.m; sourceTree = "<group>"; };
+		BCCA7A621807894A00CE36E5 /* SWPreferencesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SWPreferencesWindowController.xib; sourceTree = "<group>"; };
 		BCCA7ACE180896D100CE36E5 /* helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helpers.h; sourceTree = "<group>"; };
 		BCCA7ACF180896D100CE36E5 /* helpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = helpers.m; sourceTree = "<group>"; };
 		BCCA7B161809008900CE36E5 /* NSNotificationCenter+RACSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSNotificationCenter+RACSupport.h"; path = "Frameworks/ReactiveCocoa/RACExtensions/NSNotificationCenter+RACSupport.h"; sourceTree = SOURCE_ROOT; };
 		BCCA7B171809008900CE36E5 /* NSNotificationCenter+RACSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSNotificationCenter+RACSupport.m"; path = "Frameworks/ReactiveCocoa/RACExtensions/NSNotificationCenter+RACSupport.m"; sourceTree = SOURCE_ROOT; };
-		BCCA7B2A1809112900CE36E5 /* NNHelperTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNHelperTests.m; sourceTree = "<group>"; };
 		BCCE8CE918091A4F006B0059 /* NSWindow+NNScreenCapture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSWindow+NNScreenCapture.h"; sourceTree = "<group>"; };
 		BCCE8CEA18091A4F006B0059 /* NSWindow+NNScreenCapture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSWindow+NNScreenCapture.m"; sourceTree = "<group>"; };
 		BCCE8CEC18091AFC006B0059 /* NSImage+NNFilesystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSImage+NNFilesystem.h"; sourceTree = "<group>"; };
@@ -294,7 +292,7 @@
 		BCCE8CF818093037006B0059 /* SWGithubTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWGithubTests.m; sourceTree = "<group>"; };
 		BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		BCF357D6176CEE9E00458AFF /* ReactiveCocoa.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactiveCocoa.xcodeproj; path = Frameworks/ReactiveCocoa/ReactiveCocoaFramework/ReactiveCocoa.xcodeproj; sourceTree = "<group>"; };
-		BCFF2314177DD812008759C4 /* NNTweetbotWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNTweetbotWindowFilter.m; sourceTree = "<group>"; };
+		BCFF2314177DD812008759C4 /* SWTweetbotWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWTweetbotWindowFilter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -336,16 +334,16 @@
 			children = (
 				BC19D3DB18143AB1009CEC1F /* SWAccessibilityService.h */,
 				BC19D3DC18143AB1009CEC1F /* SWAccessibilityService.m */,
-				BC82B3EF183C48EE00FDD3B9 /* NNCoreWindowService.h */,
-				BC82B3F0183C48EE00FDD3B9 /* NNCoreWindowService.m */,
-				BCA7353116DB2C0100CD4C74 /* NNEventManager.h */,
-				BCA7353216DB2C0100CD4C74 /* NNEventManager.m */,
+				BC82B3EF183C48EE00FDD3B9 /* SWCoreWindowService.h */,
+				BC82B3F0183C48EE00FDD3B9 /* SWCoreWindowService.m */,
+				BCA7353116DB2C0100CD4C74 /* SWEventManager.h */,
+				BCA7353216DB2C0100CD4C74 /* SWEventManager.m */,
 				BC5A9799180E6949002ECD56 /* SWLoggingService.h */,
 				BC5A979A180E6949002ECD56 /* SWLoggingService.m */,
-				BC19D3D8181436FB009CEC1F /* NNPreferencesService.h */,
-				BC19D3D9181436FB009CEC1F /* NNPreferencesService.m */,
-				BC5A9796180E5A6F002ECD56 /* NNStatusBarMenuService.h */,
-				BC5A9797180E5A6F002ECD56 /* NNStatusBarMenuService.m */,
+				BC19D3D8181436FB009CEC1F /* SWPreferencesService.h */,
+				BC19D3D9181436FB009CEC1F /* SWPreferencesService.m */,
+				BC5A9796180E5A6F002ECD56 /* SWStatusBarMenuService.h */,
+				BC5A9797180E5A6F002ECD56 /* SWStatusBarMenuService.m */,
 				BCA5E99618766FE1004D70EE /* SWWindowContentsService.h */,
 				BCA5E99718766FE1004D70EE /* SWWindowContentsService.m */,
 				BC662BA5186A42E4003CF66C /* SWWindowListService.h */,
@@ -359,11 +357,11 @@
 			children = (
 				BCA734F216DAC53F00CD4C74 /* SWAppDelegate.h */,
 				BCA734F316DAC53F00CD4C74 /* SWAppDelegate.m */,
-				BC6B6D11178DDBDA001D691D /* NNCoreWindowController.h */,
-				BC6B6D12178DDBDA001D691D /* NNCoreWindowController.m */,
-				BCCA7A601807894A00CE36E5 /* NNPreferencesWindowController.h */,
-				BCCA7A611807894A00CE36E5 /* NNPreferencesWindowController.m */,
-				BCCA7A621807894A00CE36E5 /* NNPreferencesWindowController.xib */,
+				BC6B6D11178DDBDA001D691D /* SWCoreWindowController.h */,
+				BC6B6D12178DDBDA001D691D /* SWCoreWindowController.m */,
+				BCCA7A601807894A00CE36E5 /* SWPreferencesWindowController.h */,
+				BCCA7A611807894A00CE36E5 /* SWPreferencesWindowController.m */,
+				BCCA7A621807894A00CE36E5 /* SWPreferencesWindowController.xib */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -502,8 +500,7 @@
 			children = (
 				BCA5E9AB187A3FF4004D70EE /* Regression */,
 				BCA5E9A7187A307F004D70EE /* SWSelectorTests.m */,
-				BCCA7B2A1809112900CE36E5 /* NNHelperTests.m */,
-				BC8D8DA0177BA53100B7A135 /* NNHUDCollectionViewTests.m */,
+				BC8D8DA0177BA53100B7A135 /* SWHUDCollectionViewTests.m */,
 				BCA7350416DAC54000CD4C74 /* Supporting Files */,
 			);
 			path = SwitchTests;
@@ -542,16 +539,16 @@
 		BCA7352C16DB237E00CD4C74 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				BCA7354B16E2ED5000CD4C74 /* NNHUDView.h */,
-				BCA7354C16E2ED5000CD4C74 /* NNHUDView.m */,
-				BC63AB8D1755907D00016B9E /* NNHUDCollectionView.h */,
-				BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */,
-				BCA7353616E148EF00CD4C74 /* NNRoundedRectView.h */,
-				BCA7353716E148EF00CD4C74 /* NNRoundedRectView.m */,
-				BCA7354716E1F14D00CD4C74 /* NNSelectionBoxView.h */,
-				BCA7354816E1F14D00CD4C74 /* NNSelectionBoxView.m */,
-				BCA7352D16DB239900CD4C74 /* NNWindowThumbnailView.h */,
-				BCA7352E16DB239900CD4C74 /* NNWindowThumbnailView.m */,
+				BCA7354B16E2ED5000CD4C74 /* SWHUDView.h */,
+				BCA7354C16E2ED5000CD4C74 /* SWHUDView.m */,
+				BC63AB8D1755907D00016B9E /* SWHUDCollectionView.h */,
+				BC63AB8E1755907D00016B9E /* SWHUDCollectionView.m */,
+				BCA7353616E148EF00CD4C74 /* SWRoundedRectView.h */,
+				BCA7353716E148EF00CD4C74 /* SWRoundedRectView.m */,
+				BCA7354716E1F14D00CD4C74 /* SWSelectionBoxView.h */,
+				BCA7354816E1F14D00CD4C74 /* SWSelectionBoxView.m */,
+				BCA7352D16DB239900CD4C74 /* SWWindowThumbnailView.h */,
+				BCA7352E16DB239900CD4C74 /* SWWindowThumbnailView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -576,8 +573,8 @@
 		BCA7358F16E585D400CD4C74 /* Polling */ = {
 			isa = PBXGroup;
 			children = (
-				BC6B6D1A178DE8E5001D691D /* NNAPIEnabledWorker.h */,
-				BC6B6D1B178DE8E5001D691D /* NNAPIEnabledWorker.m */,
+				BC6B6D1A178DE8E5001D691D /* SWAPIEnabledWorker.h */,
+				BC6B6D1B178DE8E5001D691D /* SWAPIEnabledWorker.m */,
 				BCA7352016DAC6A900CD4C74 /* SWWindowWorker.h */,
 				BCA7352116DAC6A900CD4C74 /* SWWindowWorker.m */,
 				BCA7351916DAC5E200CD4C74 /* SWWindowListWorker.h */,
@@ -589,8 +586,8 @@
 		BCBF525517B079FF00716200 /* Hotkeys */ = {
 			isa = PBXGroup;
 			children = (
-				BCBF524C17B079FA00716200 /* NNHotKey.h */,
-				BCBF524D17B079FA00716200 /* NNHotKey.m */,
+				BCBF524C17B079FA00716200 /* SWHotKey.h */,
+				BCBF524D17B079FA00716200 /* SWHotKey.m */,
 			);
 			name = Hotkeys;
 			sourceTree = "<group>";
@@ -647,7 +644,7 @@
 		BCFF230F177DD42E008759C4 /* Window Filtering */ = {
 			isa = PBXGroup;
 			children = (
-				BCFF2314177DD812008759C4 /* NNTweetbotWindowFilter.m */,
+				BCFF2314177DD812008759C4 /* SWTweetbotWindowFilter.m */,
 			);
 			name = "Window Filtering";
 			sourceTree = "<group>";
@@ -826,7 +823,7 @@
 				BCA734EB16DAC53F00CD4C74 /* InfoPlist.strings in Resources */,
 				BCA734F716DAC53F00CD4C74 /* MainMenu.xib in Resources */,
 				BC948E2E180CFAA6008ED28A /* weave.png in Resources */,
-				BCCA7A641807894A00CE36E5 /* NNPreferencesWindowController.xib in Resources */,
+				BCCA7A641807894A00CE36E5 /* SWPreferencesWindowController.xib in Resources */,
 				BC660D5B1796573200CE8333 /* Sparkle.dsa_pub.pem in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -868,28 +865,28 @@
 				BCA7351E16DAC61F00CD4C74 /* SWWindow.m in Sources */,
 				BCA7352216DAC6A900CD4C74 /* SWWindowWorker.m in Sources */,
 				BCCA7B181809008900CE36E5 /* NSNotificationCenter+RACSupport.m in Sources */,
-				BC19D3DA181436FB009CEC1F /* NNPreferencesService.m in Sources */,
+				BC19D3DA181436FB009CEC1F /* SWPreferencesService.m in Sources */,
 				BCCA7AD0180896D100CE36E5 /* helpers.m in Sources */,
 				BCA7352516DAC93C00CD4C74 /* SWApplication.m in Sources */,
-				BCA7352F16DB239900CD4C74 /* NNWindowThumbnailView.m in Sources */,
-				BC5A9798180E5A6F002ECD56 /* NNStatusBarMenuService.m in Sources */,
-				BC6B6D13178DDBDA001D691D /* NNCoreWindowController.m in Sources */,
-				BCA7353316DB2C0100CD4C74 /* NNEventManager.m in Sources */,
+				BCA7352F16DB239900CD4C74 /* SWWindowThumbnailView.m in Sources */,
+				BC5A9798180E5A6F002ECD56 /* SWStatusBarMenuService.m in Sources */,
+				BC6B6D13178DDBDA001D691D /* SWCoreWindowController.m in Sources */,
+				BCA7353316DB2C0100CD4C74 /* SWEventManager.m in Sources */,
 				BC6B6D00178B711E001D691D /* NNMainThreadGuard.m in Sources */,
-				BCCA7A631807894A00CE36E5 /* NNPreferencesWindowController.m in Sources */,
-				BC6B6D1C178DE8E5001D691D /* NNAPIEnabledWorker.m in Sources */,
-				BCA7353816E148EF00CD4C74 /* NNRoundedRectView.m in Sources */,
+				BCCA7A631807894A00CE36E5 /* SWPreferencesWindowController.m in Sources */,
+				BC6B6D1C178DE8E5001D691D /* SWAPIEnabledWorker.m in Sources */,
+				BCA7353816E148EF00CD4C74 /* SWRoundedRectView.m in Sources */,
 				BCA5E9A6187A21A9004D70EE /* SWSelector.m in Sources */,
-				BCFF2315177DD812008759C4 /* NNTweetbotWindowFilter.m in Sources */,
+				BCFF2315177DD812008759C4 /* SWTweetbotWindowFilter.m in Sources */,
 				BC662BA7186A42E4003CF66C /* SWWindowListService.m in Sources */,
 				BCA5E99818766FE1004D70EE /* SWWindowContentsService.m in Sources */,
-				BCBF525017B079FA00716200 /* NNHotKey.m in Sources */,
+				BCBF525017B079FA00716200 /* SWHotKey.m in Sources */,
 				BCA7354316E1621400CD4C74 /* constants.m in Sources */,
 				BC5A979B180E6949002ECD56 /* SWLoggingService.m in Sources */,
-				BCA7354916E1F14D00CD4C74 /* NNSelectionBoxView.m in Sources */,
-				BC82B3F1183C48EE00FDD3B9 /* NNCoreWindowService.m in Sources */,
-				BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */,
-				BC63AB8F1755907D00016B9E /* NNHUDCollectionView.m in Sources */,
+				BCA7354916E1F14D00CD4C74 /* SWSelectionBoxView.m in Sources */,
+				BC82B3F1183C48EE00FDD3B9 /* SWCoreWindowService.m in Sources */,
+				BCA7354D16E2ED5000CD4C74 /* SWHUDView.m in Sources */,
+				BC63AB8F1755907D00016B9E /* SWHUDCollectionView.m in Sources */,
 				BC63ABA517598C4100016B9E /* debugger.c in Sources */,
 				BC19D3DD18143AB1009CEC1F /* SWAccessibilityService.m in Sources */,
 				BC662BB2186A7662003CF66C /* SWWindowGroup.m in Sources */,
@@ -909,10 +906,9 @@
 				BCCE8CF51809297B006B0059 /* SWSheetTests.m in Sources */,
 				BCCE8CF718092CDF006B0059 /* SWPowerboxTests.m in Sources */,
 				BCCE8CEE18091AFC006B0059 /* NSImage+NNFilesystem.m in Sources */,
-				BC8D8DA1177BA53100B7A135 /* NNHUDCollectionViewTests.m in Sources */,
+				BC8D8DA1177BA53100B7A135 /* SWHUDCollectionViewTests.m in Sources */,
 				BCA5E9AD187A4020004D70EE /* SWDashTests.m in Sources */,
 				BCA5E9A8187A307F004D70EE /* SWSelectorTests.m in Sources */,
-				BCCA7B2B1809112900CE36E5 /* NNHelperTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -22,6 +22,8 @@
 
 @implementation SWWindow
 
+#pragma mark Initialization
+
 + (instancetype)windowWithDescription:(NSDictionary *)description;
 {
     return [[self alloc] initWithDescription:description];
@@ -40,6 +42,8 @@
     
     return self;
 }
+
+#pragma mark NSObject
 
 - (instancetype)copyWithZone:(NSZone *)zone;
 {
@@ -60,6 +64,26 @@
 - (NSString *)description;
 {
     return [NSString stringWithFormat:@"%p <%u (%@)>", self, self.windowID, self.name];
+}
+
+#pragma mark SWWindow
+
+- (NSRect)frame;
+{
+    CGRect result = {{},{}};
+    bool success = CGRectMakeWithDictionaryRepresentation((__bridge CFDictionaryRef)[self.windowDescription objectForKey:(NSString *)kCGWindowBounds], &result);
+    BailUnless(success, ((NSRect){{0.0,0.0},{0.0,0.0}}));
+    return result;
+}
+
+- (NSString *)name;
+{
+    return [self.windowDescription objectForKey:(__bridge NSString *)kCGWindowName];
+}
+
+- (CGWindowID)windowID;
+{
+    return (CGWindowID)[[self.windowDescription objectForKey:(__bridge NSString *)kCGWindowNumber] unsignedLongValue];
 }
 
 - (BOOL)isRelatedToLowerWindow:(SWWindow *)window;
@@ -119,26 +143,6 @@
     NSSize sizeDifference = [window sizeDifferenceFromWindow:self];
     
     return sizeDifference.width > absC2COffset.x * 2.0 && sizeDifference.height > absC2COffset.y * 2.0;
-}
-
-#pragma mark Dynamic accessors
-
-- (NSRect)frame;
-{
-    CGRect result = {{},{}};
-    bool success = CGRectMakeWithDictionaryRepresentation((__bridge CFDictionaryRef)[self.windowDescription objectForKey:(NSString *)kCGWindowBounds], &result);
-    BailUnless(success, ((NSRect){{0.0,0.0},{0.0,0.0}}));
-    return result;
-}
-
-- (NSString *)name;
-{
-    return [self.windowDescription objectForKey:(__bridge NSString *)kCGWindowName];
-}
-
-- (CGWindowID)windowID;
-{
-    return (CGWindowID)[[self.windowDescription objectForKey:(__bridge NSString *)kCGWindowNumber] unsignedLongValue];
 }
 
 @end

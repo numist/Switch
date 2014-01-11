@@ -18,7 +18,6 @@
 @class SWWindow;
 
 
-#pragma message "AccessibilityService"
 @interface SWAccessibilityService : NNService
 
 - (void)checkAPI;

@@ -1,5 +1,5 @@
 //
-//  NNPreferencesService.m
+//  SWPreferencesService.m
 //  Switch
 //
 //  Created by Scott Perry on 10/20/13.
@@ -12,28 +12,28 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "NNPreferencesService.h"
+#import "SWPreferencesService.h"
 
 #import <NNKit/NNService+Protected.h>
 
-#import "NNEventManager.h"
-#import "NNHotKey.h"
-#import "NNPreferencesWindowController.h"
+#import "SWEventManager.h"
+#import "SWHotKey.h"
+#import "SWPreferencesWindowController.h"
 
 
 static NSString *kNNFirstLaunchKey = @"firstLaunch";
 
 
-@interface NNPreferencesService () <SWEventManagerSubscriber>
+@interface SWPreferencesService () <SWEventManagerSubscriber>
 
-@property (nonatomic, strong) NNPreferencesWindowController *preferencesWindowController;
+@property (nonatomic, strong) SWPreferencesWindowController *preferencesWindowController;
 
 @end
 
 
-@implementation NNPreferencesService
+@implementation SWPreferencesService
 
-#pragma mark - NNService
+#pragma mark NNService
 
 - (NNServiceType)serviceType;
 {
@@ -42,12 +42,12 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
 
 - (Protocol *)subscriberProtocol;
 {
-    return @protocol(NNPreferencesServiceDelegate);
+    return @protocol(SWPreferencesServiceDelegate);
 }
 
 - (NSSet *)dependencies;
 {
-    return [NSSet setWithArray:@[[NNEventManager class]]];
+    return [NSSet setWithArray:@[[SWEventManager class]]];
 }
 
 - (void)startService;
@@ -70,14 +70,14 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
 #   endif
     
     // TODO: When these become customizable, they will become fields in the app's preferences.
-    NNEventManager *keyManager = [NNEventManager sharedService];
-    [keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_Tab modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeInvoke];
-    [keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_Tab modifiers:(NNHotKeyModifierOption | NNHotKeyModifierShift)] forEvent:NNEventManagerEventTypeDecrement];
-    [keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_ANSI_W modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeCloseWindow];
-    [keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_Escape modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeCancel];
-    [keyManager registerHotKey:[NNHotKey hotKeyWithKeycode:kVK_ANSI_Comma modifiers:NNHotKeyModifierOption] forEvent:NNEventManagerEventTypeShowPreferences];
+    SWEventManager *keyManager = [SWEventManager sharedService];
+    [keyManager registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:SWHotKeyModifierOption] forEvent:SWEventManagerEventTypeInvoke];
+    [keyManager registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:(SWHotKeyModifierOption | SWHotKeyModifierShift)] forEvent:SWEventManagerEventTypeDecrement];
+    [keyManager registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_ANSI_W modifiers:SWHotKeyModifierOption] forEvent:SWEventManagerEventTypeCloseWindow];
+    [keyManager registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Escape modifiers:SWHotKeyModifierOption] forEvent:SWEventManagerEventTypeCancel];
+    [keyManager registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_ANSI_Comma modifiers:SWHotKeyModifierOption] forEvent:SWEventManagerEventTypeShowPreferences];
    
-    self.preferencesWindowController = [[NNPreferencesWindowController alloc] initWithWindowNibName:@"NNPreferencesWindowController"];
+    self.preferencesWindowController = [[SWPreferencesWindowController alloc] initWithWindowNibName:@"SWPreferencesWindowController"];
     if ([[NSUserDefaults standardUserDefaults] boolForKey:kNNFirstLaunchKey]) {
         [self setObject:@NO forKey:kNNFirstLaunchKey];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -87,26 +87,26 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
 
     [defaults synchronize];
     
-    [[NNServiceManager sharedManager] addSubscriber:self forService:[NNEventManager class]];
+    [[NNServiceManager sharedManager] addObserver:self forService:[SWEventManager class]];
 }
 
 - (void)stopService;
 {
-    [[NNServiceManager sharedManager] removeSubscriber:self forService:[NNEventManager class]];
+    [[NNServiceManager sharedManager] removeObserver:self forService:[SWEventManager class]];
     
     [super stopService];
 }
 
 #pragma mark SWEventManagerSubscriber
 
-- (oneway void)eventManager:(NNEventManager *)manager didProcessKeyForEventType:(NNEventManagerEventType)eventType;
+- (oneway void)eventManager:(SWEventManager *)manager didProcessKeyForEventType:(SWEventManagerEventType)eventType;
 {
-    if (eventType == NNEventManagerEventTypeShowPreferences) {
+    if (eventType == SWEventManagerEventTypeShowPreferences) {
         [self showPreferencesWindow:manager];
     }
 }
 
-#pragma mark - NNPreferencesService
+#pragma mark SWPreferencesService
 
 - (void)showPreferencesWindow:(id)sender;
 {
@@ -118,7 +118,7 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
 - (void)setObject:(id)object forKey:(NSString *)key;
 {
     [[NSUserDefaults standardUserDefaults] setObject:object forKey:key];
-    [(id<NNPreferencesServiceDelegate>)self.subscriberDispatcher preferencesService:self didSetValue:object forKey:key];
+    [(id<SWPreferencesServiceDelegate>)self.subscriberDispatcher preferencesService:self didSetValue:object forKey:key];
 }
 
 - (id)objectForKey:(NSString *)key;
@@ -126,7 +126,7 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
     return [[NSUserDefaults standardUserDefaults] objectForKey:key];
 }
 
-#pragma mark Private
+#pragma mark Internal
 
 - (NSDictionary *)_defaultValues;
 {

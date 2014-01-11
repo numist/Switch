@@ -1,8 +1,8 @@
 //
-//  NNPreferencesService.h
+//  SWHotKey.h
 //  Switch
 //
-//  Created by Scott Perry on 10/20/13.
+//  Created by Scott Perry on 07/16/13.
 //  Copyright © 2013 Scott Perry.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -15,22 +15,19 @@
 #import <Foundation/Foundation.h>
 
 
-@class NNPreferencesService;
+typedef NS_OPTIONS(char, SWHotKeyModifierKey) {
+    SWHotKeyModifierShift    = 1 << 0,
+    SWHotKeyModifierOption   = 1 << 1,
+    SWHotKeyModifierControl  = 1 << 2,
+    SWHotKeyModifierCmd      = 1 << 3,
+};
 
 
-@protocol NNPreferencesServiceDelegate <NSObject>
+@interface SWHotKey : NSObject <NSCopying>
 
-@optional
-- (oneway void)preferencesService:(NNPreferencesService *)service didSetValue:(id)value forKey:(NSString *)key;
+@property (nonatomic, readonly) unsigned code;
+@property (nonatomic, readonly) unsigned modifiers;
 
-@end
-
-
-@interface NNPreferencesService : NNService
-
-- (void)showPreferencesWindow:(id)sender;
-
-- (void)setObject:(id)object forKey:(NSString *)key;
-- (id)objectForKey:(NSString *)key;
++ (SWHotKey *)hotKeyWithKeycode:(unsigned)code modifiers:(unsigned)modifiers;
 
 @end

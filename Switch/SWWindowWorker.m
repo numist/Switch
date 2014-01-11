@@ -36,6 +36,8 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 
 @implementation SWWindowWorker
 
+#pragma mark Initialization
+
 - (instancetype)initWithModelObject:(SWWindow *)window;
 {
     BailUnless(window, nil);
@@ -56,12 +58,7 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
     }
 }
 
-- (CGWindowID)windowID;
-{
-    return self.window.windowID;
-}
-
-#pragma mark Internal
+#pragma mark NNPollingObject
 
 - (oneway void)main;
 {
@@ -110,6 +107,13 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
         self.interval = -1.0;
         return;
     }
+}
+
+#pragma mark SWWindowWorker
+
+- (CGWindowID)windowID;
+{
+    return self.window.windowID;
 }
 
 @end

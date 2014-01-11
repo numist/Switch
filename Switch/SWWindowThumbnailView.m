@@ -1,5 +1,5 @@
 //
-//  NNWindowThumbnailView.m
+//  SWWindowThumbnailView.m
 //  Switch
 //
 //  Created by Scott Perry on 02/21/13.
@@ -12,7 +12,7 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "NNWindowThumbnailView.h"
+#import "SWWindowThumbnailView.h"
 
 #import <Foundation/NSGeometry.h>
 #import <QuartzCore/QuartzCore.h>
@@ -25,7 +25,7 @@
 #import "SWWindowContentsService.h"
 
 
-@interface NNWindowThumbnailView () <SWWindowListSubscriber, SWWindowContentsSubscriber>
+@interface SWWindowThumbnailView () <SWWindowListSubscriber, SWWindowContentsSubscriber>
 
 @property (nonatomic, strong, readonly) NSOrderedSet *windowIDList;
 @property (nonatomic, strong, readonly) NSMutableDictionary *windowFrames;
@@ -43,7 +43,9 @@
 @end
 
 
-@implementation NNWindowThumbnailView
+@implementation SWWindowThumbnailView
+
+#pragma mark Initialization
 
 - (id)initWithFrame:(NSRect)frame windowGroup:(SWWindowGroup *)windowGroup;
 {
@@ -107,6 +109,8 @@
     return self;
 }
 
+#pragma mark NSView
+
 - (void)layout;
 {
     self.thumbnailLayer.frame = self.bounds;
@@ -147,7 +151,7 @@
     [self _updateIconLayout];
 }
 
-#pragma mark NNWindowThumbnailView
+#pragma mark SWWindowThumbnailView
 
 - (void)setActive:(BOOL)active;
 {

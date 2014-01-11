@@ -1,5 +1,5 @@
 //
-//  NNStatusBarMenuService.m
+//  SWStatusBarMenuService.m
 //  Switch
 //
 //  Created by Scott Perry on 10/15/13.
@@ -12,13 +12,13 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "NNStatusBarMenuService.h"
+#import "SWStatusBarMenuService.h"
 
 #import "SWAppDelegate.h"
-#import "NNPreferencesService.h"
+#import "SWPreferencesService.h"
 
 
-@interface NNStatusBarMenuService () <NSMenuDelegate, NNPreferencesServiceDelegate>
+@interface SWStatusBarMenuService () <NSMenuDelegate, SWPreferencesServiceDelegate>
 
 @property (nonatomic, strong) NSStatusItem *statusItem;
 @property (nonatomic, strong) NSSet *debugItems;
@@ -26,7 +26,9 @@
 @end
 
 
-@implementation NNStatusBarMenuService
+@implementation SWStatusBarMenuService
+
+#pragma mark Initialization
 
 - (instancetype)init;
 {
@@ -92,37 +94,34 @@
     return self;
 }
 
+#pragma mark NNService
+
 - (NNServiceType)serviceType;
 {
     return NNServiceTypePersistent;
-}
-
-- (NSSet *)dependencies;
-{
-    return [NSSet setWithObject:[NNPreferencesService class]];
 }
 
 - (void)startService;
 {
     [super startService];
 
-    [[NNServiceManager sharedManager] addSubscriber:self forService:[NNPreferencesService class]];
+    [[NNServiceManager sharedManager] addSubscriber:self forService:[SWPreferencesService class]];
 }
 - (void)stopService;
 {
-    [[NNServiceManager sharedManager] removeSubscriber:self forService:[NNPreferencesService class]];
+    [[NNServiceManager sharedManager] removeSubscriber:self forService:[SWPreferencesService class]];
     
     [super stopService];
 }
 
-#pragma mark NNPreferencesServiceDelegate
+#pragma mark SWPreferencesServiceDelegate
 
-- (oneway void)preferencesService:(NNPreferencesService *)service didSetValue:(id)value forKey:(NSString *)key;
+- (oneway void)preferencesService:(SWPreferencesService *)service didSetValue:(id)value forKey:(NSString *)key;
 {
     #pragma message "Use this to enable/disable the status bar item"
 }
 
-#pragma mark NNStatusBarMenuService
+#pragma mark SWStatusBarMenuService
 
 - (IBAction)snapshot:(id)sender;
 {

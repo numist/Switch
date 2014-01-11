@@ -1,8 +1,8 @@
 //
-//  NNCoreWindowController.h
+//  SWPreferencesWindowController.h
 //  Switch
 //
-//  Created by Scott Perry on 07/10/13.
+//  Created by Scott Perry on 10/10/13.
 //  Copyright © 2013 Scott Perry.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -15,10 +15,16 @@
 #import <Cocoa/Cocoa.h>
 
 
-extern NSString const *NNCoreWindowControllerActivityNotification;
-extern NSString const *NNCoreWindowControllerActiveKey;
+@interface SWPreferencesWindowController : NSWindowController
 
+@property (nonatomic, weak) IBOutlet NSTextFieldCell *currentVersionCell;
+@property (nonatomic, weak) IBOutlet NSButton *autoLaunchEnabledBox;
 
-@interface NNCoreWindowController : NSWindowController
+- (IBAction)autoLaunchChanged:(NSButton *)sender;
+- (IBAction)autoUpdatesChanged:(NSButton *)sender;
+- (IBAction)checkForUpdatesPressed:(NSButton *)sender;
+- (IBAction)preReleaseUpdatesChanged:(NSButton *)sender;
+- (IBAction)changelogPressed:(NSButton *)sender;
+- (IBAction)quitPressed:(NSButton *)sender;
 
 @end

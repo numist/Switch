@@ -1,5 +1,5 @@
 //
-//  NNCoreWindowService.h
+//  SWCoreWindowService.h
 //  Switch
 //
 //  Created by Scott Perry on 11/19/13.
@@ -8,6 +8,6 @@
 
 #import <NNKit/NNKit.h>
 
-@interface NNCoreWindowService : NNService
+@interface SWCoreWindowService : NNService
 
 @end

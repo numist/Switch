@@ -14,14 +14,14 @@
 
 #import <XCTest/XCTest.h>
 
-#import "NNHUDCollectionView.h"
+#import "SWHUDCollectionView.h"
 #import "NSWindow+NNScreenCapture.h"
 
-@interface NNHUDCollectionViewTests : XCTestCase
+@interface SWHUDCollectionViewTests : XCTestCase
 
 @end
 
-@implementation NNHUDCollectionViewTests
+@implementation SWHUDCollectionViewTests
 
 - (BOOL)compareWindow:(NSWindow *)window toReference:(NSString *)filename;
 {

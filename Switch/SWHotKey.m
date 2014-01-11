@@ -1,5 +1,5 @@
 //
-//  NNHotKey.m
+//  SWHotKey.m
 //  Switch
 //
 //  Created by Scott Perry on 07/16/13.
@@ -12,14 +12,16 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "NNHotKey.h"
+#import "SWHotKey.h"
 
 
-@implementation NNHotKey
+@implementation SWHotKey
 
-+ (NNHotKey *)hotKeyWithKeycode:(unsigned)code modifiers:(unsigned)modifiers;
+#pragma mark Initialization
+
++ (SWHotKey *)hotKeyWithKeycode:(unsigned)code modifiers:(unsigned)modifiers;
 {
-    return [[NNHotKey alloc] initWithKeycode:code modifiers:modifiers];
+    return [[SWHotKey alloc] initWithKeycode:code modifiers:modifiers];
 }
 
 - (instancetype)initWithKeycode:(unsigned int)code modifiers:(unsigned int)modifiers;
@@ -32,6 +34,8 @@
     return self;
 }
 
+#pragma mark NSObject
+
 - (NSUInteger)hash;
 {
     return self.modifiers | self.code;
@@ -39,7 +43,7 @@
 
 - (BOOL)isEqual:(id)object;
 {
-    return [self isKindOfClass:[object class]] && [object isKindOfClass:[self class]] && ((NNHotKey *)object).code == self.code && ((NNHotKey *)object).modifiers == self.modifiers;
+    return [self isKindOfClass:[object class]] && [object isKindOfClass:[self class]] && ((SWHotKey *)object).code == self.code && ((SWHotKey *)object).modifiers == self.modifiers;
 }
 
 - (instancetype)copyWithZone:(NSZone *)zone;
@@ -47,31 +51,33 @@
     return self;
 }
 
-- (NSString *)modifierDescription;
-{
-    NSString *result = @"";
-    
-    if (self.modifiers & NNHotKeyModifierCmd) {
-        result = [result stringByAppendingString:@"⌘"];
-    }
-    if (self.modifiers & NNHotKeyModifierShift) {
-        result = [result stringByAppendingString:@"⇧"];
-    }
-    if (self.modifiers & NNHotKeyModifierOption) {
-        result = [result stringByAppendingString:@"⌥"];
-    }
-    if (self.modifiers & NNHotKeyModifierControl) {
-        result = [result stringByAppendingString:@"⌃"];
-    }
-    
-    return result;
-}
-
 - (NSString *)description;
 {
     return [NSString stringWithFormat:@"%@%u",
             [self modifierDescription],
             self.code];
+}
+
+#pragma mark Internal
+
+- (NSString *)modifierDescription;
+{
+    NSString *result = @"";
+    
+    if (self.modifiers & SWHotKeyModifierCmd) {
+        result = [result stringByAppendingString:@"⌘"];
+    }
+    if (self.modifiers & SWHotKeyModifierShift) {
+        result = [result stringByAppendingString:@"⇧"];
+    }
+    if (self.modifiers & SWHotKeyModifierOption) {
+        result = [result stringByAppendingString:@"⌥"];
+    }
+    if (self.modifiers & SWHotKeyModifierControl) {
+        result = [result stringByAppendingString:@"⌃"];
+    }
+    
+    return result;
 }
 
 @end

@@ -53,6 +53,8 @@
 
 @implementation SWWindowContentsService
 
+#pragma mark Initialization
+
 - (id)init;
 {
     if (!(self = [super init])) { return nil; }
@@ -60,10 +62,12 @@
     _contentContainers = [NSMutableDictionary new];
     _queue = dispatch_queue_create([[NSString stringWithFormat:@""] UTF8String], DISPATCH_QUEUE_SERIAL);
     
-    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(windowUpdateNotification:) name:[SWWindowWorker notificationName] object:nil];
+    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(_windowUpdateNotification:) name:[SWWindowWorker notificationName] object:nil];
     
     return self;
 }
+
+#pragma mark NNService
 
 - (NNServiceType)serviceType;
 {
@@ -103,33 +107,15 @@
     [super stopService];
 }
 
+#pragma mark SWWindowContentsService
+
 - (NSImage *)contentForWindow:(SWWindow *)window;
 {
     _SWWindowContentContainer *contentObject = [self.contentContainers objectForKey:@(window.windowID)];
     return contentObject.content;
 }
 
-- (void)windowUpdateNotification:(NSNotification *)notification;
-{
-    dispatch_async(self.queue, ^{
-        SWWindowWorker *worker = notification.object;
-        _SWWindowContentContainer *contentContainer = [self.contentContainers objectForKey:@(worker.windowID)];
-        if (!contentContainer) {
-            return;
-        }
-        
-        NSImage *content = notification.userInfo[@"content"];
-        if (!Check(content)) {
-            return;
-        }
-        
-        contentContainer.content = content;
-        
-        [(id<SWWindowContentsSubscriber>)self.subscriberDispatcher windowContentService:self updatedContent:contentContainer.content forWindow:contentContainer.window];
-    });
-}
-
-#pragma mark - SWWindowListSubscriber
+#pragma mark SWWindowListSubscriber
 
 - (oneway void)windowListService:(SWWindowListService *)service updatedList:(NSOrderedSet *)windowList;
 {
@@ -159,6 +145,28 @@
                 [self.contentContainers removeObjectForKey:@(contentContainer.window.windowID)];
             }
         }
+    });
+}
+
+#pragma mark Internal
+
+- (void)_windowUpdateNotification:(NSNotification *)notification;
+{
+    dispatch_async(self.queue, ^{
+        SWWindowWorker *worker = notification.object;
+        _SWWindowContentContainer *contentContainer = [self.contentContainers objectForKey:@(worker.windowID)];
+        if (!contentContainer) {
+            return;
+        }
+        
+        NSImage *content = notification.userInfo[@"content"];
+        if (!Check(content)) {
+            return;
+        }
+        
+        contentContainer.content = content;
+        
+        [(id<SWWindowContentsSubscriber>)self.subscriberDispatcher windowContentService:self updatedContent:contentContainer.content forWindow:contentContainer.window];
     });
 }
 

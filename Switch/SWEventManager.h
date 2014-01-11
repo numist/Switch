@@ -1,5 +1,5 @@
 //
-//  NNEventManager.h
+//  SWEventManager.h
 //  Switch
 //
 //  Created by Scott Perry on 02/21/13.
@@ -16,34 +16,34 @@
 #import <Carbon/Carbon.h>
 
 
-@class NNHotKey;
-@class NNEventManager;
+@class SWHotKey;
+@class SWEventManager;
 
 
-typedef NS_ENUM(NSUInteger, NNEventManagerEventType) {
-    NNEventManagerEventTypeInvoke,
-    NNEventManagerEventTypeDismiss,        // You cannot set this, it is bound to the release of all modifiers after a NNEventManagerEventTypeInvoke
-    NNEventManagerEventTypeIncrement,      // You cannot set this, it is bound to the same key as NNEventManagerEventTypeInvoke (keyDown)
-    NNEventManagerEventTypeEndIncrement,   // You cannot set this, it is bound to the same key as NNEventManagerEventTypeInvoke (keyUp)
-    NNEventManagerEventTypeDecrement,
-    NNEventManagerEventTypeEndDecrement,   // You cannot set this, it is bound to the same key as NNEventManagerEventTypeDecrement (keyUp)
-    NNEventManagerEventTypeCloseWindow,
-    NNEventManagerEventTypeCancel,
-    NNEventManagerEventTypeShowPreferences,
+typedef NS_ENUM(NSUInteger, SWEventManagerEventType) {
+    SWEventManagerEventTypeInvoke,
+    SWEventManagerEventTypeDismiss,        // You cannot set this, it is bound to the release of all modifiers after a SWEventManagerEventTypeInvoke
+    SWEventManagerEventTypeIncrement,      // You cannot set this, it is bound to the same key as SWEventManagerEventTypeInvoke (keyDown)
+    SWEventManagerEventTypeEndIncrement,   // You cannot set this, it is bound to the same key as SWEventManagerEventTypeInvoke (keyUp)
+    SWEventManagerEventTypeDecrement,
+    SWEventManagerEventTypeEndDecrement,   // You cannot set this, it is bound to the same key as SWEventManagerEventTypeDecrement (keyUp)
+    SWEventManagerEventTypeCloseWindow,
+    SWEventManagerEventTypeCancel,
+    SWEventManagerEventTypeShowPreferences,
 };
 
 
 @protocol SWEventManagerSubscriber <NSObject>
 @optional
 
-- (oneway void)eventManager:(NNEventManager *)manager didProcessKeyForEventType:(NNEventManagerEventType)eventType;
-- (oneway void)eventManagerDidDetectMouseMove:(NNEventManager *)manager;
+- (oneway void)eventManager:(SWEventManager *)manager didProcessKeyForEventType:(SWEventManagerEventType)eventType;
+- (oneway void)eventManagerDidDetectMouseMove:(SWEventManager *)manager;
 
 @end
 
 
-@interface NNEventManager : NNService
+@interface SWEventManager : NNService
 
-- (void)registerHotKey:(NNHotKey *)hotKey forEvent:(NNEventManagerEventType)eventType;
+- (void)registerHotKey:(SWHotKey *)hotKey forEvent:(SWEventManagerEventType)eventType;
 
 @end

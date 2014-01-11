@@ -30,6 +30,8 @@ static NSTimeInterval refreshInterval = 0.1;
 
 @implementation SWWindowListWorker
 
+#pragma mark Initialization
+
 - (instancetype)init;
 {
     if (!(self = [super initWithQueue:dispatch_get_global_queue(0, 0)])) { return nil; }
@@ -39,7 +41,7 @@ static NSTimeInterval refreshInterval = 0.1;
     return self;
 }
 
-#pragma mark Internal
+#pragma mark NNPollingObject
 
 - (oneway void)main;
 {

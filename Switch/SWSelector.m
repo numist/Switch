@@ -24,7 +24,7 @@
 
 @implementation SWSelector
 
-#pragma mark - NSObject
+#pragma mark Initialization
 
 - (instancetype)initWithWindowGroups:(NSOrderedSet *)windowGroups selectedIndex:(NSInteger)index;
 {
@@ -54,7 +54,7 @@
     return [self initWithWindowGroups:nil selectedIndex:0];
 }
 
-#pragma mark - SWSelector
+#pragma mark SWSelector
 
 - (NSUInteger)selectedUIndex;
 {

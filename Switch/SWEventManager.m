@@ -1,5 +1,5 @@
 //
-//  NNEventManager.m
+//  SWEventManager.m
 //  Switch
 //
 //  Created by Scott Perry on 02/21/13.
@@ -14,16 +14,13 @@
 // From alterkeys.c : http://osxbook.com
 //
 
-#import "NNEventManager.h"
+#import "SWEventManager.h"
 
-#include <ApplicationServices/ApplicationServices.h>
-#import <NNKit/NNCleanupProxy.h>
 #import <NNKit/NNService+Protected.h>
-#import <ReactiveCocoa/ReactiveCocoa.h>
 
-#import "NNAPIEnabledWorker.h"
-#import "NNHotKey.h"
-#import "NNCoreWindowController.h"
+#import "SWAPIEnabledWorker.h"
+#import "SWHotKey.h"
+#import "SWCoreWindowController.h"
 #import "NSNotificationCenter+RACSupport.h"
 
 
@@ -31,17 +28,17 @@ static NSSet *kNNKeysUnsettable;
 static NSDictionary *kNNKeysNeedKeyUpEvent;
 
 
-@interface NNEventManager () {
+@interface SWEventManager () {
     CFMachPortRef eventTap;
     CFRunLoopSourceRef runLoopSource;
 }
 
 @property (nonatomic, assign) BOOL activatedSwitcher;
-@property (nonatomic, assign) __typeof__(NNHotKeyModifierKey) modifiers;
+@property (nonatomic, assign) __typeof__(SWHotKeyModifierKey) modifiers;
 
 @property (nonatomic, strong, readonly) NSMutableDictionary *keyMap;
 
-- (CGEventRef)eventTapProxy:(CGEventTapProxy)proxy didReceiveEvent:(CGEventRef)event ofType:(CGEventType)type;
+- (CGEventRef)_eventTapProxy:(CGEventTapProxy)proxy didReceiveEvent:(CGEventRef)event ofType:(CGEventType)type;
 
 @end
 
@@ -49,37 +46,55 @@ static NSDictionary *kNNKeysNeedKeyUpEvent;
 static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
                                     CGEventRef event, void *refcon)
 {
-    return [(__bridge NNEventManager *)refcon eventTapProxy:proxy didReceiveEvent:event ofType:type];
+    return [(__bridge SWEventManager *)refcon _eventTapProxy:proxy didReceiveEvent:event ofType:type];
 }
 
 
-@implementation NNEventManager
+@implementation SWEventManager
+
+#pragma mark Initialization
 
 + (void)initialize;
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        kNNKeysUnsettable = [NSSet setWithArray:@[ @(NNEventManagerEventTypeIncrement), @(NNEventManagerEventTypeEndIncrement), @(NNEventManagerEventTypeEndDecrement)]];
+        kNNKeysUnsettable = [NSSet setWithArray:@[ @(SWEventManagerEventTypeIncrement), @(SWEventManagerEventTypeEndIncrement), @(SWEventManagerEventTypeEndDecrement)]];
         kNNKeysNeedKeyUpEvent = @{
-            @(NNEventManagerEventTypeIncrement) : @(NNEventManagerEventTypeEndIncrement),
-            @(NNEventManagerEventTypeDecrement) : @(NNEventManagerEventTypeEndDecrement)
+            @(SWEventManagerEventTypeIncrement) : @(SWEventManagerEventTypeEndIncrement),
+            @(SWEventManagerEventTypeDecrement) : @(SWEventManagerEventTypeEndDecrement)
         };
     });
 }
 
-#pragma mark NNService
-
-+ (id)sharedService;
+- (instancetype)init;
 {
-    static NNEventManager *_singleton;
+    if (!(self = [super init])) { return nil; }
     
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _singleton = [NNEventManager new];
-    });
+    NSAssert([[NSThread currentThread] isMainThread], @"%@ must be instanciated on the main thread", [self class]);
     
-    return _singleton;
+    if (![self _insertEventTap]) {
+        return nil;
+    }
+    
+    _keyMap = [NSMutableDictionary new];
+    
+    RAC(self, activatedSwitcher) = [[NSNotificationCenter.defaultCenter
+        rac_addObserverForName:(NSString *)SWCoreWindowControllerActivityNotification object:nil]
+        map:^(NSNotification *notification) {
+            return notification.userInfo[SWCoreWindowControllerActiveKey];
+        }];
+    
+    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(accessibilityAPIAvailabilityChangedNotification:) name:SWAPIEnabledWorker.notificationName object:nil];
+    
+    return self;
 }
+
+- (void)dealloc;
+{
+    [self _removeEventTap];
+}
+
+#pragma mark NNService
 
 - (NNServiceType)serviceType;
 {
@@ -91,40 +106,12 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     return @protocol(SWEventManagerSubscriber);
 }
 
-#pragma mark Initialization
+#pragma mark SWEventManager
 
-- (instancetype)init;
-{
-    if (!(self = [super init])) { return nil; }
-    
-    NSAssert([[NSThread currentThread] isMainThread], @"%@ must be instanciated on the main thread", [self class]);
-    
-    if (![self insertEventTap]) {
-        return nil;
-    }
-    
-    _keyMap = [NSMutableDictionary new];
-    
-    RAC(self, activatedSwitcher) = [[NSNotificationCenter.defaultCenter
-        rac_addObserverForName:(NSString *)NNCoreWindowControllerActivityNotification object:nil]
-        map:^(NSNotification *notification) {
-            return notification.userInfo[NNCoreWindowControllerActiveKey];
-        }];
-    
-    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(accessibilityAPIAvailabilityChangedNotification:) name:NNAPIEnabledWorker.notificationName object:nil];
-    
-    return self;
-}
-
-- (void)dealloc;
-{
-    [self removeEventTap];
-}
-
-- (void)registerHotKey:(NNHotKey *)hotKey forEvent:(NNEventManagerEventType)eventType;
+- (void)registerHotKey:(SWHotKey *)hotKey forEvent:(SWEventManagerEventType)eventType;
 {
     if ([kNNKeysUnsettable containsObject:@(eventType)]) {
-        @throw [NSException exceptionWithName:@"NNEventManagerRegistrationException" reason:@"That keybinding cannot be set, try setting it's parent?" userInfo:@{ @"eventType" : @(eventType), @"key" : hotKey }];
+        @throw [NSException exceptionWithName:@"SWEventManagerRegistrationException" reason:@"That keybinding cannot be set, try setting it's parent?" userInfo:@{ @"eventType" : @(eventType), @"key" : hotKey }];
     }
     
     [self.keyMap setObject:@(eventType) forKey:hotKey];
@@ -132,7 +119,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
 
 #pragma mark Internal
 
-- (void)removeEventTap;
+- (void)_removeEventTap;
 {
     if (self->runLoopSource) {
         CFRunLoopRemoveSource(CFRunLoopGetCurrent(), self->runLoopSource, kCFRunLoopCommonModes);
@@ -144,7 +131,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     }
 }
 
-- (BOOL)insertEventTap;
+- (BOOL)_insertEventTap;
 {
     // Create an event tap. We are interested in key presses.
     CGEventMask eventMask = (CGEventMaskBit(kCGEventKeyDown) | CGEventMaskBit(kCGEventKeyUp) | CGEventMaskBit(kCGEventFlagsChanged) | CGEventMaskBit(kCGEventMouseMoved));
@@ -155,7 +142,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     // Create a run loop source.
     self->runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, self->eventTap, 0);
     BailWithBlockUnless(self->runLoopSource, ^{
-        [self removeEventTap];
+        [self _removeEventTap];
         return NO;
     });
     
@@ -168,7 +155,7 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     return YES;
 }
 
-- (CGEventRef)eventTapProxy:(CGEventTapProxy)proxy didReceiveEvent:(CGEventRef)event ofType:(CGEventType)type;
+- (CGEventRef)_eventTapProxy:(CGEventTapProxy)proxy didReceiveEvent:(CGEventRef)event ofType:(CGEventType)type;
 {
     BOOL switcherActive = self.activatedSwitcher;
     
@@ -195,29 +182,29 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     // Parse the incoming keycode and modifier key information.
     CGKeyCode keycode = (CGKeyCode)CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
     
-    __typeof__(NNHotKeyModifierKey) modifiers = 0;
+    __typeof__(SWHotKeyModifierKey) modifiers = 0;
     if ((CGEventGetFlags(event) & kCGEventFlagMaskAlternate) == kCGEventFlagMaskAlternate) {
-        modifiers |= NNHotKeyModifierOption;
+        modifiers |= SWHotKeyModifierOption;
     }
     if ((CGEventGetFlags(event) & kCGEventFlagMaskShift) == kCGEventFlagMaskShift) {
-        modifiers |= NNHotKeyModifierShift;
+        modifiers |= SWHotKeyModifierShift;
     }
     if ((CGEventGetFlags(event) & kCGEventFlagMaskControl) == kCGEventFlagMaskControl) {
-        modifiers |= NNHotKeyModifierControl;
+        modifiers |= SWHotKeyModifierControl;
     }
     if ((CGEventGetFlags(event) & kCGEventFlagMaskCommand) == kCGEventFlagMaskCommand) {
-        modifiers |= NNHotKeyModifierCmd;
+        modifiers |= SWHotKeyModifierCmd;
     }
     
-    NNHotKey *key = [NNHotKey hotKeyWithKeycode:keycode modifiers:modifiers];
+    SWHotKey *key = [SWHotKey hotKeyWithKeycode:keycode modifiers:modifiers];
     
     // Invocation is a special case, enabling all other keys
     if (!switcherActive && type == kCGEventKeyDown) {
-        NSArray *invokeKeys = [self.keyMap allKeysForObject:@(NNEventManagerEventTypeInvoke)];
-        for (NNHotKey *hotKey in invokeKeys) {
-            if (hotKey.code == keycode && (hotKey.modifiers | NNHotKeyModifierShift) == (modifiers | NNHotKeyModifierShift)) {
+        NSArray *invokeKeys = [self.keyMap allKeysForObject:@(SWEventManagerEventTypeInvoke)];
+        for (SWHotKey *hotKey in invokeKeys) {
+            if (hotKey.code == keycode && (hotKey.modifiers | SWHotKeyModifierShift) == (modifiers | SWHotKeyModifierShift)) {
                 switcherActive = YES;
-                [self dispatchEvent:NNEventManagerEventTypeInvoke];
+                [self _dispatchEvent:SWEventManagerEventTypeInvoke];
                 break;
             }
         }
@@ -225,15 +212,15 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     
     if (switcherActive) {
         if (!modifiers && self.modifiers != modifiers) {
-            [self dispatchEvent:NNEventManagerEventTypeDismiss];
+            [self _dispatchEvent:SWEventManagerEventTypeDismiss];
             self.modifiers = modifiers;
             return NULL;
         }
         
         NSNumber *boxedKeyDownEventType = self.keyMap[key];
         // Invoke maps to Increment at this point
-        if (boxedKeyDownEventType && [boxedKeyDownEventType unsignedIntegerValue] == NNEventManagerEventTypeInvoke) {
-            boxedKeyDownEventType = @(NNEventManagerEventTypeIncrement);
+        if (boxedKeyDownEventType && [boxedKeyDownEventType unsignedIntegerValue] == SWEventManagerEventTypeInvoke) {
+            boxedKeyDownEventType = @(SWEventManagerEventTypeIncrement);
         }
 
         // Prefetch keyup event, if applicable.
@@ -244,9 +231,9 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
         
         if (boxedKeyDownEventType) {
             if (type == kCGEventKeyDown) {
-                [self dispatchEvent:[boxedKeyDownEventType unsignedIntegerValue]];
+                [self _dispatchEvent:[boxedKeyDownEventType unsignedIntegerValue]];
             } else if (boxedKeyUpEventType) {
-                [self dispatchEvent:[boxedKeyUpEventType unsignedIntegerValue]];
+                [self _dispatchEvent:[boxedKeyUpEventType unsignedIntegerValue]];
             }
         }
         
@@ -258,21 +245,21 @@ static CGEventRef nnCGEventCallback(CGEventTapProxy proxy, CGEventType type,
     return event;
 }
 
-- (void)dispatchEvent:(NNEventManagerEventType)eventType;
+- (void)_dispatchEvent:(SWEventManagerEventType)eventType;
 {
     [(id<SWEventManagerSubscriber>)self.subscriberDispatcher eventManager:self didProcessKeyForEventType:eventType];
     
     // When showing the preferences window, need to cancel the interface.
-    if (eventType == NNEventManagerEventTypeShowPreferences) {
-        [self dispatchEvent:NNEventManagerEventTypeCancel];
+    if (eventType == SWEventManagerEventTypeShowPreferences) {
+        [self _dispatchEvent:SWEventManagerEventTypeCancel];
     }
 }
 
 - (void)accessibilityAPIAvailabilityChangedNotification:(NSNotification *)notification;
 {
     SWLog(@"Reinstalling event tap!");
-    [self removeEventTap];
-    [self insertEventTap];
+    [self _removeEventTap];
+    [self _insertEventTap];
 }
 
 @end

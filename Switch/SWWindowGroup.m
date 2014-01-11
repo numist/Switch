@@ -20,6 +20,8 @@
 
 @implementation SWWindowGroup
 
+#pragma mark Initialization
+
 - (instancetype)initWithWindows:(NSOrderedSet *)windows mainWindow:(SWWindow *)mainWindow;
 {
     NSParameterAssert([windows containsObject:mainWindow]);
@@ -31,6 +33,8 @@
     
     return self;
 }
+
+#pragma mark NSObject
 
 - (NSUInteger)hash;
 {
@@ -65,6 +69,8 @@
     return self;
 }
 
+#pragma mark SWWindow
+
 - (SWApplication *)application;
 {
     return self.mainWindow.application;
@@ -88,6 +94,8 @@
     
     return (NSRect){.origin = min, .size.width = max.x - min.x, .size.height = max.y - min.y};
 }
+
+#pragma mark SWWindowGroup
 
 - (BOOL)isRelatedToLowerGroup:(SWWindowGroup *)group;
 {

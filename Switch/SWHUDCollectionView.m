@@ -1,5 +1,5 @@
 //
-//  NNHUDCollectionView.m
+//  SWHUDCollectionView.m
 //  Switch
 //
 //  Created by Scott Perry on 05/28/13.
@@ -12,45 +12,47 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "NNHUDCollectionView.h"
+#import "SWHUDCollectionView.h"
 
-#import "NNSelectionBoxView.h"
+#import "SWSelectionBoxView.h"
 
 
-typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
-    NNHUDCollectionViewUpdateInsert,
-    NNHUDCollectionViewUpdateMove,
-    NNHUDCollectionViewUpdateDelete
+typedef NS_ENUM(uint8_t, SWHUDCollectionViewUpdateType) {
+    SWHUDCollectionViewUpdateInsert,
+    SWHUDCollectionViewUpdateMove,
+    SWHUDCollectionViewUpdateDelete
 };
 
-@interface NNHUDCollectionViewUpdate : NSObject
-@property (nonatomic, assign, readonly) NNHUDCollectionViewUpdateType type;
+@interface SWHUDCollectionViewUpdate : NSObject
+@property (nonatomic, assign, readonly) SWHUDCollectionViewUpdateType type;
 @property (nonatomic, assign, readonly) NSUInteger index;
 @property (nonatomic, assign, readonly) NSUInteger newIndex;
 @property (nonatomic, assign, readonly) BOOL animate;
 @end
 
-@implementation NNHUDCollectionViewUpdate
-- (instancetype)initWithType:(NNHUDCollectionViewUpdateType)type index:(NSUInteger)index animate:(BOOL)animate;
+@implementation SWHUDCollectionViewUpdate
+- (instancetype)initWithType:(SWHUDCollectionViewUpdateType)type index:(NSUInteger)index animate:(BOOL)animate;
 { self = [super init]; if (!self) { return nil; } _type = type; _index = index; _animate = animate; return self; }
 - (instancetype)initMoveWithIndex:(NSUInteger)index newIndex:(NSUInteger)newIndex;
-{ self = [self initWithType:NNHUDCollectionViewUpdateMove index:index animate:YES]; _newIndex = newIndex; return self; }
+{ self = [self initWithType:SWHUDCollectionViewUpdateMove index:index animate:YES]; _newIndex = newIndex; return self; }
 @end
 
 
-@interface NNHUDCollectionView ()
+@interface SWHUDCollectionView ()
 
 @property (nonatomic, assign) NSUInteger numberOfCells;
 @property (nonatomic, strong) NSMutableArray *cells;
 @property (nonatomic, assign, readwrite) BOOL reloading;
 
-@property (nonatomic, strong) NNSelectionBoxView *selectionBox;
+@property (nonatomic, strong) SWSelectionBoxView *selectionBox;
 @property (nonatomic, assign) NSUInteger selectedIndex;
 
 @end
 
 
-@implementation NNHUDCollectionView
+@implementation SWHUDCollectionView
+
+#pragma mark Initialization
 
 - (id)initWithFrame:(NSRect)frame
 {
@@ -63,17 +65,69 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
     return self;
 }
 
-#pragma mark - NNHUDCollectionView properties
+#pragma mark NSResponder
 
-- (void)setDataSource:(id<NNHUDCollectionViewDataSource>)dataSource;
+- (BOOL)acceptsFirstResponder;
+{
+    return YES;
+}
+
+- (void)mouseMoved:(NSEvent *)theEvent;
+{
+    NSUInteger i = [self _indexForCellAtPoint:theEvent.locationInWindow];
+    
+    if (i < self.numberOfCells && self.selectedIndex != i) {
+        id<SWHUDCollectionViewDelegate> delegate = self.delegate;
+        
+        self.selectedIndex = i;
+        
+        if ([delegate respondsToSelector:@selector(HUDView:willSelectCellAtIndex:)]) {
+            [delegate HUDView:self willSelectCellAtIndex:i];
+        }
+        
+        [self selectCellAtIndex:self.selectedIndex];
+        
+        if ([delegate respondsToSelector:@selector(HUDView:didSelectCellAtIndex:)]) {
+            [delegate HUDView:self didSelectCellAtIndex:self.selectedIndex];
+        }
+    }
+    
+    [super mouseMoved:theEvent];
+}
+
+- (void)mouseUp:(NSEvent *)theEvent;
+{
+    NSUInteger i = [self _indexForCellAtPoint:theEvent.locationInWindow];
+    
+    if (i < self.numberOfCells) {
+        id<SWHUDCollectionViewDelegate> delegate = self.delegate;
+        
+        Check(self.selectedIndex == i);
+        self.selectedIndex = i;
+        
+        if ([delegate respondsToSelector:@selector(HUDView:activateCellAtIndex:)]) {
+            [delegate HUDView:self activateCellAtIndex:i];
+        }
+    } else {
+        [super mouseUp:theEvent];
+    }
+}
+
+- (void)mouseDown:(NSEvent *)theEvent;
+{
+    // Do not pass this event up the responder chain.
+    return;
+}
+
+#pragma mark SWHUDCollectionView
+
+- (void)setDataSource:(id<SWHUDCollectionViewDataSource>)dataSource;
 {
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
     _dataSource = dataSource;
     
     [self reloadData];
 }
-
-#pragma mark - NNHUDCollectionView methods
 
 - (NSView *)cellForIndex:(NSUInteger)index;
 {
@@ -100,7 +154,7 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
     self.selectedIndex = index;
 
     if (!self.selectionBox) {
-        NNSelectionBoxView *selectionBox = [[NNSelectionBoxView alloc] initWithFrame:NSZeroRect];
+        SWSelectionBoxView *selectionBox = [[SWSelectionBoxView alloc] initWithFrame:NSZeroRect];
         [self addSubview:selectionBox positioned:NSWindowBelow relativeTo:nil];
         self.selectionBox = selectionBox;
     }
@@ -138,7 +192,7 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
                 return;
             }
             
-            [self setSize:[self computeCollectionViewSize]];
+            [self _setSize:[self _computeCollectionViewSize]];
             
             for (NSUInteger i = 0; i < self.numberOfCells; i++) {
                 NSView *cell = [dataSource HUDView:self viewForCellAtIndex:i];
@@ -149,7 +203,7 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
                 }
                 
                 [self.cells insertObject:cell atIndex:i];
-                cell.frame = [self computeFrameForCellAtIndex:i];
+                cell.frame = [self _computeFrameForCellAtIndex:i];
                 [self addSubview:cell];
             }
             
@@ -163,70 +217,9 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
     }
 }
 
-#pragma mark - NSResponder
+#pragma mark Internal
 
-- (BOOL)acceptsFirstResponder;
-{
-    return YES;
-}
-
-- (void)mouseMoved:(NSEvent *)theEvent;
-{
-    NSUInteger i = [self indexForCellAtPoint:theEvent.locationInWindow];
-    
-    if (i < self.numberOfCells && self.selectedIndex != i) {
-        id<NNHUDCollectionViewDelegate> delegate = self.delegate;
-        
-        self.selectedIndex = i;
-        
-        if ([delegate respondsToSelector:@selector(HUDView:willSelectCellAtIndex:)]) {
-            [delegate HUDView:self willSelectCellAtIndex:i];
-        }
-        
-        [self selectCellAtIndex:self.selectedIndex];
-        
-        if ([delegate respondsToSelector:@selector(HUDView:didSelectCellAtIndex:)]) {
-            [delegate HUDView:self didSelectCellAtIndex:self.selectedIndex];
-        }
-    }
-    
-    [super mouseMoved:theEvent];
-}
-
-- (void)mouseUp:(NSEvent *)theEvent;
-{
-    NSUInteger i = [self indexForCellAtPoint:theEvent.locationInWindow];
-
-    if (i < self.numberOfCells) {
-        id<NNHUDCollectionViewDelegate> delegate = self.delegate;
-        
-        Check(self.selectedIndex == i);
-        self.selectedIndex = i;
-        
-        if ([delegate respondsToSelector:@selector(HUDView:activateCellAtIndex:)]) {
-            [delegate HUDView:self activateCellAtIndex:i];
-        }
-    } else {
-        [super mouseUp:theEvent];
-    }
-}
-
-- (void)mouseDown:(NSEvent *)theEvent;
-{
-    // Do not pass this event up the responder chain.
-    return;
-}
-
-#pragma mark - Custom-indexed Subscripting
-
-//- (id)objectAtIndexedSubscript:(NSUInteger)idx;
-//{
-//    return [self cellForIndex:idx];
-//}
-
-#pragma mark - Internal
-
-- (void)setSize:(NSSize)size;
+- (void)_setSize:(NSSize)size;
 {
     self.frame = (NSRect){
         .size = size,
@@ -235,7 +228,7 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
     };
 }
 
-- (CGFloat)computeCellSize;
+- (CGFloat)_computeCellSize;
 {
     CGFloat cellSize = self.maxCellSize;
     CGFloat maxTheoreticalWindowWidth = nnTotalWidth(cellSize, self.numberOfCells);
@@ -248,9 +241,9 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
     return cellSize;
 }
 
-- (NSSize)computeCollectionViewSize;
+- (NSSize)_computeCollectionViewSize;
 {
-    CGFloat cellSize = [self computeCellSize];
+    CGFloat cellSize = [self _computeCellSize];
     CGFloat maxTheoreticalWindowWidth = nnTotalWidth(cellSize, self.numberOfCells);
     
     if (self.numberOfCells == 0) {
@@ -267,16 +260,16 @@ typedef NS_ENUM(uint8_t, NNHUDCollectionViewUpdateType) {
     };
 }
 
-- (NSRect)computeFrameForCellAtIndex:(NSUInteger)index;
+- (NSRect)_computeFrameForCellAtIndex:(NSUInteger)index;
 {
-    return nnThumbRect([self computeCellSize], index);
+    return nnThumbRect([self _computeCellSize], index);
 }
 
-- (NSUInteger)indexForCellAtPoint:(NSPoint)point;
+- (NSUInteger)_indexForCellAtPoint:(NSPoint)point;
 {
     unsigned i;
     for (i = 0; i < self.numberOfCells; ++i) {
-        NSRect frame = [self convertRect:[self computeFrameForCellAtIndex:i] toView:nil];
+        NSRect frame = [self convertRect:[self _computeFrameForCellAtIndex:i] toView:nil];
         
         if (NSPointInRect(point, frame)) {
             break;

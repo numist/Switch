@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4510" systemVersion="12E55" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment defaultVersion="1080" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4510"/>
+        <deployment defaultVersion="1090" identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NNPreferencesWindowController">
@@ -23,7 +23,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="443" height="250"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MdG-lg-5ok">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MdG-lg-5ok">
                         <rect key="frame" x="34" y="213" width="54" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Startup:" id="Z5R-VO-7Xa">
@@ -32,7 +32,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="GOI-F4-7zG">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GOI-F4-7zG">
                         <rect key="frame" x="28" y="165" width="60" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Updates:" id="bYX-XM-vEp">
@@ -41,7 +41,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="FUs-H6-GKR">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FUs-H6-GKR">
                         <rect key="frame" x="17" y="45" width="71" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Shutdown:" id="tC5-eZ-brc">
@@ -50,7 +50,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button translatesAutoresizingMaskIntoConstraints="NO" id="4f9-4k-zig">
+                    <button misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4f9-4k-zig">
                         <rect key="frame" x="92" y="212" width="164" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Launch Switch at login" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="ET5-iY-OlP">
@@ -61,7 +61,7 @@
                             <action selector="autoLaunchChanged:" target="-2" id="NKO-lv-cFI"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="PYg-8W-fTo">
+                    <button verticalHuggingPriority="249" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PYg-8W-fTo">
                         <rect key="frame" x="92" y="164" width="226" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Check for updates automatically" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Sqn-yi-Uqm">
@@ -83,7 +83,7 @@
                             <action selector="checkForUpdatesPressed:" target="-2" id="bt2-k1-kC2"/>
                         </connections>
                     </button>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zYc-Zb-j8z">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zYc-Zb-j8z">
                         <rect key="frame" x="91" y="144" width="228" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Currently using version x.y.z" id="oqm-d1-nra">
@@ -92,7 +92,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button translatesAutoresizingMaskIntoConstraints="NO" id="C2j-ZG-EID">
+                    <button misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="C2j-ZG-EID">
                         <rect key="frame" x="92" y="120" width="192" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="I want pre-release updates" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="lse-Ad-is8">
@@ -103,7 +103,7 @@
                             <action selector="preReleaseUpdatesChanged:" target="-2" id="tnG-Rj-Tx1"/>
                         </connections>
                     </button>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AbQ-dx-QlN">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AbQ-dx-QlN">
                         <rect key="frame" x="91" y="86" width="305" height="28"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Beta updates are more frequent and less stable, but are also more shiny!" id="bvi-4G-TFr">
@@ -123,7 +123,7 @@
                             <action selector="changelogPressed:" target="-2" id="q5B-QW-Zb3"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="KBc-ay-mPX">
+                    <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KBc-ay-mPX">
                         <rect key="frame" x="88" y="35" width="112" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="Quit Switch" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="grD-QM-lkx">
@@ -134,7 +134,7 @@
                             <action selector="quitPressed:" target="-2" id="PbI-vL-7aL"/>
                         </connections>
                     </button>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bY3-Kz-hwy">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bY3-Kz-hwy">
                         <rect key="frame" x="91" y="20" width="227" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Switch will still launch at login if selected." id="ce4-7N-H3X">
@@ -143,7 +143,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="TLd-Pl-ld8">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TLd-Pl-ld8">
                         <rect key="frame" x="91" y="192" width="145" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Start Switch automatically." id="Suo-mM-7BV">

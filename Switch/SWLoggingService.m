@@ -44,10 +44,10 @@
 
 - (void)rotateLogIfNecessary;
 {
-    if (![self dayChanged]) { return; }
+    if (![self _dayChanged]) { return; }
     
     NSString *logDir = [self logDirectoryPath];
-    BailUnless([self createDirectory:logDir],);
+    BailUnless([self _createDirectory:logDir],);
     
     // Remove old log files.
     NSTimeInterval longTime = 671993.28;
@@ -67,7 +67,7 @@
     
     // Do not redirect output if attached to a console.
     if (isatty(STDERR_FILENO)) { return; }
-    freopen([[self logFilePath] cStringUsingEncoding:NSASCIIStringEncoding], "a+", stderr);
+    freopen([[self _logFilePath] cStringUsingEncoding:NSASCIIStringEncoding], "a+", stderr);
 }
 
 - (void)takeWindowListSnapshot;
@@ -82,7 +82,7 @@
     NSOrderedSet *windowGroupList = [SWWindowListService filterWindowObjectsToWindowGroups:windowList];
     
     NSString *snapshotDir = [[self logDirectoryPath] stringByAppendingPathComponent:[NSString stringWithFormat:@"snapshot-%llu", (uint64_t)[[NSDate date] timeIntervalSince1970]]];
-    BailUnless([self createDirectory:snapshotDir],);
+    BailUnless([self _createDirectory:snapshotDir],);
     
     NSString *listFile = [snapshotDir stringByAppendingPathComponent:@"windowlist.txt"];
     
@@ -136,7 +136,7 @@
 
 #pragma mark Internal
 
-- (NSString *)logFilePath;
+- (NSString *)_logFilePath;
 {
     Assert(self.logDate);
     
@@ -144,7 +144,7 @@
     return [[self logDirectoryPath] stringByAppendingPathComponent:filename];
 }
 
-- (BOOL)dayChanged;
+- (BOOL)_dayChanged;
 {
     NSDateComponents *todaysComponents = ^{
         NSDate *today = [NSDate date];
@@ -164,7 +164,7 @@
     return NO;
 }
 
-- (BOOL)createDirectory:(NSString *)path;
+- (BOOL)_createDirectory:(NSString *)path;
 {
     NSFileManager *manager = [NSFileManager defaultManager];
 

@@ -18,7 +18,7 @@
 #import <Haxcessibility/Haxcessibility.h>
 #import <Haxcessibility/HAXElement+Protected.h>
 
-#import "NNAPIEnabledWorker.h"
+#import "SWAPIEnabledWorker.h"
 #import "SWApplication.h"
 #import "SWWindow.h"
 
@@ -26,13 +26,15 @@
 @interface SWAccessibilityService ()
 
 @property (nonatomic, copy) NSSet *windows;
-@property (nonatomic, strong) NNAPIEnabledWorker *worker;
+@property (nonatomic, strong) SWAPIEnabledWorker *worker;
 @property (nonatomic, strong, readonly) dispatch_queue_t haxQueue;
 
 @end
 
 
 @implementation SWAccessibilityService
+
+#pragma mark Initialization
 
 - (instancetype)init;
 {
@@ -42,6 +44,8 @@
     
     return self;
 }
+
+#pragma mark NNService
 
 - (NNServiceType)serviceType;
 {
@@ -55,35 +59,26 @@
     [self checkAPI];
 }
 
-- (void)accessibilityAPIAvailabilityChangedNotification:(NSNotification *)notification;
-{
-    BOOL accessibilityEnabled = [notification.userInfo[NNAXAPIEnabledKey] boolValue];
-    
-    SWLog(@"Accessibility API is %@abled", accessibilityEnabled ? @"en" : @"dis");
-    
-    if (accessibilityEnabled) {
-        self.worker = nil;
-    }
-}
+#pragma mark SWAccessibilityService
 
-- (void)setWorker:(NNAPIEnabledWorker *)worker;
+- (void)setWorker:(SWAPIEnabledWorker *)worker;
 {
     if (worker == _worker) {
         return;
     }
     if (_worker) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:NNAPIEnabledWorker.notificationName object:_worker];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:SWAPIEnabledWorker.notificationName object:_worker];
     }
     if (worker) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accessibilityAPIAvailabilityChangedNotification:) name:NNAPIEnabledWorker.notificationName object:self.worker];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_accessibilityAPIAvailabilityChangedNotification:) name:SWAPIEnabledWorker.notificationName object:self.worker];
     }
     _worker = worker;
 }
 
 - (void)checkAPI;
 {
-    if (![NNAPIEnabledWorker isAPIEnabled]) {
-        self.worker = [NNAPIEnabledWorker new];
+    if (![SWAPIEnabledWorker isAPIEnabled]) {
+        self.worker = [SWAPIEnabledWorker new];
         
         AXIsProcessTrustedWithOptions((__bridge CFDictionaryRef)@{ (__bridge NSString *)kAXTrustedCheckOptionPrompt : @YES });
     }
@@ -117,7 +112,18 @@
     });
 }
 
-#pragma mark - Private
+#pragma mark Internal
+
+- (void)_accessibilityAPIAvailabilityChangedNotification:(NSNotification *)notification;
+{
+    BOOL accessibilityEnabled = [notification.userInfo[SWAXAPIEnabledKey] boolValue];
+    
+    SWLog(@"Accessibility API is %@abled", accessibilityEnabled ? @"en" : @"dis");
+    
+    if (accessibilityEnabled) {
+        self.worker = nil;
+    }
+}
 
 - (void)_raiseWindow:(SWWindow *)window completion:(void (^)(NSError *))completionBlock;
 {
@@ -151,9 +157,9 @@
     if (![window.application isFrontMostApplication]) {
         NSRunningApplication *runningApplication = [NSRunningApplication runningApplicationWithProcessIdentifier:window.application.pid];
         if (![runningApplication activateWithOptions:NSApplicationActivateIgnoringOtherApps]) {
-            SWLog(@"Raising application %@ failed.", window.application);
-#pragma message "Need a real NSError in here"
-            error = [NSError new];
+            NSString *errorString = [NSString stringWithFormat:@"Raising application %@ failed.", window.application];
+            SWLog(@"%@", errorString);
+            error = [NSError errorWithDomain:@"SWAccessibilityServiceDomain" code:__LINE__ userInfo:@{NSLocalizedDescriptionKey : errorString}];
             dispatch_async(dispatch_get_main_queue(), ^{
                 completionBlock(error);
             });

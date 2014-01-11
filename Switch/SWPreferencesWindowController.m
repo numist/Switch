@@ -1,5 +1,5 @@
 //
-//  NNPreferencesWindowController.m
+//  SWPreferencesWindowController.m
 //  Switch
 //
 //  Created by Scott Perry on 10/10/13.
@@ -12,17 +12,17 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "NNPreferencesWindowController.h"
+#import "SWPreferencesWindowController.h"
 
 #import <Sparkle/Sparkle.h>
 
 
-@interface NNPreferencesWindowController ()
+@interface SWPreferencesWindowController ()
 
 @end
 
 
-@implementation NNPreferencesWindowController
+@implementation SWPreferencesWindowController
 
 #pragma mark NSWindowController
 
@@ -34,16 +34,16 @@
     currentVersionCell.title = [NSString stringWithFormat:@"Currently using version %@", [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"]];
     
     NSButton *autoLaunchEnabled = self.autoLaunchEnabledBox;
-    autoLaunchEnabled.state = [self isAutoLaunchEnabled] ? NSOnState : NSOffState;
+    autoLaunchEnabled.state = [self _isAutoLaunchEnabled] ? NSOnState : NSOffState;
 }
 
-#pragma mark Target-action
+#pragma mark IBAction
 
 - (IBAction)autoLaunchChanged:(NSButton *)sender {
     if (sender.state == NSOnState) {
-        [self enableAutoLaunch];
+        [self _enableAutoLaunch];
     } else {
-        [self disableAutolaunch];
+        [self _disableAutolaunch];
     }
 }
 
@@ -78,12 +78,12 @@
 // See http://www.delitestudio.com/2011/10/25/start-dockless-apps-at-login-with-app-sandbox-enabled/ for more info.
 //
 
-- (BOOL)isAutoLaunchEnabled;
+- (BOOL)_isAutoLaunchEnabled;
 {
-    return !![self selfFromLSSharedFileList];
+    return !![self _selfFromLSSharedFileList];
 }
 
-- (void)enableAutoLaunch;
+- (void)_enableAutoLaunch;
 {
 	NSURL *url = [NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]];
     
@@ -94,9 +94,9 @@
 	}
 }
 
-- (void)disableAutolaunch;
+- (void)_disableAutolaunch;
 {
-    LSSharedFileListItemRef itemRef = [self selfFromLSSharedFileList];
+    LSSharedFileListItemRef itemRef = [self _selfFromLSSharedFileList];
     Check(itemRef);
     if (itemRef) {
         LSSharedFileListRef loginItems = NNCFAutorelease(LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL));
@@ -104,7 +104,7 @@
     }
 }
 
-- (LSSharedFileListItemRef)selfFromLSSharedFileList;
+- (LSSharedFileListItemRef)_selfFromLSSharedFileList;
 {
 	LSSharedFileListRef loginItems = NNCFAutorelease(LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL));
     BailUnless(loginItems, NULL);
