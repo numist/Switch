@@ -15,27 +15,15 @@
 #import <NNKit/NNKit.h>
 
 
-@class SWAccessibilityService;
 @class SWWindow;
 
-
-@protocol SWAccessibilitySubscriber <NSObject>
-@optional
-
-- (oneway void)accessibilityService:(SWAccessibilityService *)axService didRaiseWindow:(SWWindow *)window;
-- (oneway void)accessibilityService:(SWAccessibilityService *)axService didFailToRaiseWindow:(SWWindow *)window withError:(NSError *)error;
-
-- (oneway void)accessibilityService:(SWAccessibilityService *)axService didCloseWindow:(SWWindow *)window;
-- (oneway void)accessibilityService:(SWAccessibilityService *)axService didFailToCloseWindow:(SWWindow *)window withError:(NSError *)error;
-
-@end
 
 #pragma message "AccessibilityService"
 @interface SWAccessibilityService : NNService
 
 - (void)checkAPI;
 
-- (void)raiseWindow:(SWWindow *)window;
-- (void)closeWindow:(SWWindow *)window;
+- (void)raiseWindow:(SWWindow *)window completion:(void(^)(NSError *))completionBlock;
+- (void)closeWindow:(SWWindow *)window completion:(void(^)(NSError *))completionBlock;
 
 @end

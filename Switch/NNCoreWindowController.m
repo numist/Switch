@@ -75,6 +75,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
     [self setUpReactions];
     
     [[NNServiceManager sharedManager] addSubscriber:self forService:[NNEventManager class]];
+    [[NNServiceManager sharedManager] addObserver:self forService:[SWAccessibilityService class]];
     
     return self;
 }
@@ -205,33 +206,24 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.pendingSwitch = NO;
                  
-                    __block BOOL raiseSuccessful = YES;
                     SWWindowGroup *selectedWindow = self.selector.selectedWindowGroup;
-                 
                     if (selectedWindow) {
                         NNWindowThumbnailView *thumb = (NNWindowThumbnailView *)[self.collectionView cellForIndex:self.selector.selectedUIndex];
                         Check(!thumb || [thumb isKindOfClass:[NNWindowThumbnailView class]]);
                         
                         thumb.active = NO;
 
-                        // If sending events to Switch itself, we have to use the main thread!
-                        dispatch_queue_t actionQueue = [selectedWindow.application isCurrentApplication] ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-
-                        dispatch_async(actionQueue, ^{
-                            #pragma message "raiseSuccessful = [selectedWindow raise];"
-                            raiseSuccessful = YES;
-                         
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                if (raiseSuccessful) {
-                                    if (!self.active) {
-                                        SWLog(@"Switcher already inactive after successful -raise");
-                                        DebugBreak();
-                                    }
-                                    self.active = NO;
+                        [[SWAccessibilityService sharedService] raiseWindow:selectedWindow completion:^(NSError *error) {
+                            if (!error) {
+                                if (!self.active) {
+                                    SWLog(@"Switcher already inactive after successful -raise");
+                                    DebugBreak();
                                 }
-                                thumb.active = YES;
-                            });
-                        });
+                                NNWindowThumbnailView *thumb = (NNWindowThumbnailView *)[self.collectionView cellForIndex:self.selector.selectedUIndex];
+                                self.active = NO;
+                            }
+                            thumb.active = YES;
+                        }];
                     } else {
                         SWLog(@"No windows to raise! (Selection index: %lu)", self.selector.selectedUIndex);
                         self.active = NO;
@@ -421,17 +413,22 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
                 
                 [thumb setActive:NO];
                 
+                #pragma clang diagnostic push
+                #pragma clang diagnostic ignored "-Wshadow"
+                __weak __typeof(thumb) weakThumb = thumb;
                 dispatch_async(actionQueue, ^{
-                    #pragma message "[nextWindow raise];"
-                    #pragma message "success = [selectedWindow close];"
-                    
-                    if (!success) {
-                        // We *should* re-raise selectedWindow, but if it didn't succeed at -close it will also probably fail to -raise.
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [thumb setActive:YES];
-                        });
-                    }
+                    [[SWAccessibilityService sharedService] raiseWindow:nextWindow completion:nil];
+                    [[SWAccessibilityService sharedService] closeWindow:selectedWindowGroup completion:^(NSError *error) {
+                        if (error) {
+                            // We *should* re-raise selectedWindow, but if it didn't succeed at -close it will also probably fail to -raise.
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                __typeof(thumb) thumb = weakThumb;
+                                [thumb setActive:YES];
+                            });
+                        }
+                    }];
                 });
+                #pragma clang diagnostic pop
             }
 
             break;
