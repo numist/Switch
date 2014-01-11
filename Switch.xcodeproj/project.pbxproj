@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BC19D3DA181436FB009CEC1F /* NNPreferencesService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3D9181436FB009CEC1F /* NNPreferencesService.m */; };
-		BC19D3DD18143AB1009CEC1F /* NNAXAPIService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3DC18143AB1009CEC1F /* NNAXAPIService.m */; };
+		BC19D3DD18143AB1009CEC1F /* SWAccessibilityService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3DC18143AB1009CEC1F /* SWAccessibilityService.m */; };
 		BC5A9798180E5A6F002ECD56 /* NNStatusBarMenuService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5A9797180E5A6F002ECD56 /* NNStatusBarMenuService.m */; };
 		BC5A979B180E6949002ECD56 /* SWLoggingService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5A979A180E6949002ECD56 /* SWLoggingService.m */; };
 		BC63AB8F1755907D00016B9E /* NNHUDCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC63AB8E1755907D00016B9E /* NNHUDCollectionView.m */; };
@@ -199,8 +199,8 @@
 /* Begin PBXFileReference section */
 		BC19D3D8181436FB009CEC1F /* NNPreferencesService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNPreferencesService.h; sourceTree = "<group>"; };
 		BC19D3D9181436FB009CEC1F /* NNPreferencesService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNPreferencesService.m; sourceTree = "<group>"; };
-		BC19D3DB18143AB1009CEC1F /* NNAXAPIService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNAXAPIService.h; sourceTree = "<group>"; };
-		BC19D3DC18143AB1009CEC1F /* NNAXAPIService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNAXAPIService.m; sourceTree = "<group>"; };
+		BC19D3DB18143AB1009CEC1F /* SWAccessibilityService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWAccessibilityService.h; sourceTree = "<group>"; };
+		BC19D3DC18143AB1009CEC1F /* SWAccessibilityService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWAccessibilityService.m; sourceTree = "<group>"; };
 		BC5A9796180E5A6F002ECD56 /* NNStatusBarMenuService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNStatusBarMenuService.h; sourceTree = "<group>"; };
 		BC5A9797180E5A6F002ECD56 /* NNStatusBarMenuService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNStatusBarMenuService.m; sourceTree = "<group>"; };
 		BC5A9799180E6949002ECD56 /* SWLoggingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWLoggingService.h; sourceTree = "<group>"; };
@@ -334,8 +334,8 @@
 		BC5A978D180E5A66002ECD56 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				BC19D3DB18143AB1009CEC1F /* NNAXAPIService.h */,
-				BC19D3DC18143AB1009CEC1F /* NNAXAPIService.m */,
+				BC19D3DB18143AB1009CEC1F /* SWAccessibilityService.h */,
+				BC19D3DC18143AB1009CEC1F /* SWAccessibilityService.m */,
 				BC82B3EF183C48EE00FDD3B9 /* NNCoreWindowService.h */,
 				BC82B3F0183C48EE00FDD3B9 /* NNCoreWindowService.m */,
 				BCA7353116DB2C0100CD4C74 /* NNEventManager.h */,
@@ -891,7 +891,7 @@
 				BCA7354D16E2ED5000CD4C74 /* NNHUDView.m in Sources */,
 				BC63AB8F1755907D00016B9E /* NNHUDCollectionView.m in Sources */,
 				BC63ABA517598C4100016B9E /* debugger.c in Sources */,
-				BC19D3DD18143AB1009CEC1F /* NNAXAPIService.m in Sources */,
+				BC19D3DD18143AB1009CEC1F /* SWAccessibilityService.m in Sources */,
 				BC662BB2186A7662003CF66C /* SWWindowGroup.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

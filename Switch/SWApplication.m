@@ -21,7 +21,6 @@
 
 @interface SWApplication () <HAXElementDelegate>
 
-@property (nonatomic, readonly, assign) pid_t pid;
 @property (atomic, retain) NSRunningApplication *app;
 
 @end

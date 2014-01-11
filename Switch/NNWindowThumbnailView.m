@@ -144,10 +144,6 @@
         layer.frame = frame;
 //    }
     
-    
-    
-    #pragma message "This is going to have to recompute a frame space from the window frames and map that to the view's bounds, and then update the frames of each of the thumbnails in thumbnailLayer.subLayers accordingly"
-    
     [self _updateIconLayout];
 }
 

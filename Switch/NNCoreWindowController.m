@@ -22,6 +22,7 @@
 #import "NNEventManager.h"
 #import "NNHUDCollectionView.h"
 #import "NNWindowThumbnailView.h"
+#import "SWAccessibilityService.h"
 #import "SWApplication.h"
 #import "SWSelector.h"
 #import "SWWindowGroup.h"
@@ -208,9 +209,8 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
                     SWWindowGroup *selectedWindow = self.selector.selectedWindowGroup;
                  
                     if (selectedWindow) {
-                        #pragma message "thumb might be nil if the interface never showed. need to make showingInterface a property and make thumbnail manipulations dependant on it"
                         NNWindowThumbnailView *thumb = (NNWindowThumbnailView *)[self.collectionView cellForIndex:self.selector.selectedUIndex];
-                        Check([thumb isKindOfClass:[NNWindowThumbnailView class]]);
+                        Check(!thumb || [thumb isKindOfClass:[NNWindowThumbnailView class]]);
                         
                         thumb.active = NO;
 
@@ -329,10 +329,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
 {
     switch (eventType) {
         case NNEventManagerEventTypeInvoke: {
-            if (![NNAPIEnabledWorker isAPIEnabled]) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:NNAXAPIDisabledNotification object:self];
-                return;
-            }
+            [[SWAccessibilityService sharedService] checkAPI];
             
             // If the interface is not being shown, bring it up.
             if (!self.active) {

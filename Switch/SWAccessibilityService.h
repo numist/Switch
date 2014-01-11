@@ -1,5 +1,5 @@
 //
-//  NNAXAPIService.h
+//  SWAccessibilityService.h
 //  Switch
 //
 //  Created by Scott Perry on 10/20/13.
@@ -14,6 +14,28 @@
 
 #import <NNKit/NNKit.h>
 
-@interface NNAXAPIService : NNService
+
+@class SWAccessibilityService;
+@class SWWindow;
+
+
+@protocol SWAccessibilitySubscriber <NSObject>
+@optional
+
+- (oneway void)accessibilityService:(SWAccessibilityService *)axService didRaiseWindow:(SWWindow *)window;
+- (oneway void)accessibilityService:(SWAccessibilityService *)axService didFailToRaiseWindow:(SWWindow *)window withError:(NSError *)error;
+
+- (oneway void)accessibilityService:(SWAccessibilityService *)axService didCloseWindow:(SWWindow *)window;
+- (oneway void)accessibilityService:(SWAccessibilityService *)axService didFailToCloseWindow:(SWWindow *)window withError:(NSError *)error;
+
+@end
+
+#pragma message "AccessibilityService"
+@interface SWAccessibilityService : NNService
+
+- (void)checkAPI;
+
+- (void)raiseWindow:(SWWindow *)window;
+- (void)closeWindow:(SWWindow *)window;
 
 @end
