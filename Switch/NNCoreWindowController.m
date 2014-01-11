@@ -213,17 +213,23 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
                         
                         thumb.active = NO;
 
+                        #pragma clang diagnostic push
+                        #pragma clang diagnostic ignored "-Wshadow"
+                        __weak __typeof(thumb) weakThumb = thumb;
                         [[SWAccessibilityService sharedService] raiseWindow:selectedWindow completion:^(NSError *error) {
+                            NNWindowThumbnailView *thumb = weakThumb;
+
                             if (!error) {
                                 if (!self.active) {
                                     SWLog(@"Switcher already inactive after successful -raise");
                                     DebugBreak();
                                 }
-                                NNWindowThumbnailView *thumb = (NNWindowThumbnailView *)[self.collectionView cellForIndex:self.selector.selectedUIndex];
                                 self.active = NO;
                             }
+                            
                             thumb.active = YES;
                         }];
+                        #pragma clang diagnostic pop
                     } else {
                         SWLog(@"No windows to raise! (Selection index: %lu)", self.selector.selectedUIndex);
                         self.active = NO;
