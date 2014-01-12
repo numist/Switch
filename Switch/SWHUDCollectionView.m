@@ -17,27 +17,6 @@
 #import "SWSelectionBoxView.h"
 
 
-typedef NS_ENUM(uint8_t, SWHUDCollectionViewUpdateType) {
-    SWHUDCollectionViewUpdateInsert,
-    SWHUDCollectionViewUpdateMove,
-    SWHUDCollectionViewUpdateDelete
-};
-
-@interface SWHUDCollectionViewUpdate : NSObject
-@property (nonatomic, assign, readonly) SWHUDCollectionViewUpdateType type;
-@property (nonatomic, assign, readonly) NSUInteger index;
-@property (nonatomic, assign, readonly) NSUInteger newIndex;
-@property (nonatomic, assign, readonly) BOOL animate;
-@end
-
-@implementation SWHUDCollectionViewUpdate
-- (instancetype)initWithType:(SWHUDCollectionViewUpdateType)type index:(NSUInteger)index animate:(BOOL)animate;
-{ self = [super init]; if (!self) { return nil; } _type = type; _index = index; _animate = animate; return self; }
-- (instancetype)initMoveWithIndex:(NSUInteger)index newIndex:(NSUInteger)newIndex;
-{ self = [self initWithType:SWHUDCollectionViewUpdateMove index:index animate:YES]; _newIndex = newIndex; return self; }
-@end
-
-
 @interface SWHUDCollectionView ()
 
 @property (nonatomic, assign) NSUInteger numberOfCells;
