@@ -149,7 +149,7 @@
     return [mutableWindowGroupList reversedOrderedSet];
 }
 
-#pragma mark - Private
+#pragma mark Internal
 
 - (void)_workerUpdatedWindowList:(NSNotification *)notification;
 {

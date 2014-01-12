@@ -242,8 +242,8 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
                 
                 [thumb setActive:NO];
                 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wshadow"
+#               pragma clang diagnostic push
+#               pragma clang diagnostic ignored "-Wshadow"
                 __weak __typeof(thumb) weakThumb = thumb;
                 dispatch_async(actionQueue, ^{
                     [[SWAccessibilityService sharedService] raiseWindow:nextWindow completion:nil];
@@ -257,7 +257,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
                         }
                     }];
                 });
-#pragma clang diagnostic pop
+#               pragma clang diagnostic pop
             }
             
             break;
@@ -396,8 +396,8 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
     
     thumb.active = NO;
     
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wshadow"
+#   pragma clang diagnostic push
+#   pragma clang diagnostic ignored "-Wshadow"
     __weak __typeof(thumb) weakThumb = thumb;
     [[SWAccessibilityService sharedService] raiseWindow:selectedWindow completion:^(NSError *error) {
         SWWindowThumbnailView *thumb = weakThumb;
@@ -412,7 +412,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
         
         thumb.active = YES;
     }];
-#pragma clang diagnostic pop
+#   pragma clang diagnostic pop
 }
 
 - (void)_setUpReactions;

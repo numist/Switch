@@ -27,14 +27,14 @@
 
 @implementation SWLoggingService
 
-#pragma mark - NNService
+#pragma mark NNService
 
 - (NNServiceType)serviceType;
 {
     return NNServiceTypePersistent;
 }
 
-#pragma mark - SWLoggingService
+#pragma mark SWLoggingService
 
 - (NSString *)logDirectoryPath;
 {
