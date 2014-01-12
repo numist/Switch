@@ -115,13 +115,13 @@
 {
     self.thumbnailLayer.frame = self.bounds;
     
-    NSRect thumbFrame = self.thumbnailLayer.frame;
-    NSRect windowFrame = self.windowGroup.frame;
+    NSSize thumbSize = self.thumbnailLayer.bounds.size;
+    NSRect windowGroupFrame = self.windowGroup.frame;
     
-    CGFloat scale = MIN(thumbFrame.size.width / windowFrame.size.width, thumbFrame.size.height / windowFrame.size.height);
+    CGFloat scale = MIN(thumbSize.width / windowGroupFrame.size.width, thumbSize.height / windowGroupFrame.size.height);
     
-    CGFloat scaledXOffset = (thumbFrame.size.width - (windowFrame.size.width * scale)) / 2.0;
-    CGFloat scaledYOffset = (thumbFrame.size.height - (windowFrame.size.height * scale)) / 2.0;
+    CGFloat scaledXOffset = (thumbSize.width - (windowGroupFrame.size.width * scale)) / 2.0;
+    CGFloat scaledYOffset = (thumbSize.height - (windowGroupFrame.size.height * scale)) / 2.0;
     
     #pragma message "Only draw the main window for now. This is the same as the old behaviour, so it's not a drawing regression."
     // However it would be really great to figure out why subwindows don't seem to be drawing in the right places. The frames look reasonable in the debugger…
@@ -132,8 +132,8 @@
         NSRect frame = window.frame;
         
         // Move the frame's origin to be anchored at the "bottom left" of the windowFrame.
-        frame.origin.x -= windowFrame.origin.x;
-        frame.origin.y -= windowFrame.origin.y;
+        frame.origin.x -= windowGroupFrame.origin.x;
+        frame.origin.y -= windowGroupFrame.origin.y;
         
         // Scale the frame into the layer's space.
         frame.origin.x *= scale;
@@ -192,15 +192,24 @@
 {
     BOOL thisWindowExists = NO;
     for (SWWindowGroup *windowGroup in windows) {
+        // Make a window ID list to represent this window group.
         NSMutableOrderedSet *windowIDList = [NSMutableOrderedSet new];
-        for (SWWindow *window in _windowGroup.windows) {
+        for (SWWindow *window in windowGroup.windows) {
             [windowIDList addObject:@(window.windowID)];
         }
 
         if ([windowIDList isEqual:self.windowIDList]) {
             thisWindowExists = YES;
             
-            #pragma message "forin windows, update descriptions, check frames. setneedslayout if any of them are different."
+            for (SWWindow *window in windowGroup.windows) {
+                NSValue *oldBoxedRect = self.windowFrames[@(window.windowID)];
+                NSValue *newBoxedRect = [NSValue valueWithRect:window.frame];
+                
+                if (![newBoxedRect isEqualToValue:oldBoxedRect]) {
+                    self.windowFrames[@(window.windowID)] = newBoxedRect;
+                    [self setNeedsLayout:YES];
+                }
+            }
             
             break;
         }
