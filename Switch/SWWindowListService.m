@@ -30,6 +30,9 @@
 @end
 
 
+static NSMutableSet *loggedWindows;
+
+
 @implementation SWWindowListService
 
 #pragma mark Initialization
@@ -63,6 +66,7 @@
 
     [super startService];
     
+    loggedWindows = [NSMutableSet new];
     self.worker = [SWWindowListWorker new];
 
     [(id<SWWindowListSubscriber>)self.subscriberDispatcher windowListServiceStarted:self];
@@ -72,6 +76,7 @@
 {
     NSAssert([NSThread isMainThread], @"Boundary call was not made on main thread");
     
+    loggedWindows = nil;
     self.worker = nil;
     self.windows = nil;
     
@@ -116,6 +121,15 @@
             }
             
             [mutableWindowGroupList addObject:group];
+            
+            if (![loggedWindows containsObject:group]) {
+                if (!group.mainWindow.name) {
+                    SWLog(@"Window for application %@ is not named.", mainWindow.application);
+                } else if (!group.mainWindow.name.length) {
+                    SWLog(@"Window for application %@ has zero-length name.", mainWindow.application);
+                }
+                [loggedWindows addObject:group];
+            }
 
             windows = [NSMutableOrderedSet new];
             mainWindow = nil;
