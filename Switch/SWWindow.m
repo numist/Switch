@@ -91,6 +91,7 @@
 {
     NSParameterAssert(window.application.canBeActivated);
     
+    // Powerbox (for example) names its windows, but cannot be activated.
     if (!self.application.canBeActivated) {
         return YES;
     }
@@ -100,13 +101,22 @@
         return NO;
     }
 
-    // Powerbox (for example) names its windows, but cannot be activated.
+    // Named windows are (usually) main windows themselves
     if (self.name.length && window.name.length) {
         return NO;
     }
     
     if ([self.application.name isEqualToString:@"Tweetbot"]) {
         return [self tweetbot_isRelatedToLowerWindow:window];
+    }
+    
+    // This is a special case for catching the shadow opening for sheets
+    if (self.frame.size.height < 20.0 && [self.windowDescription[(__bridge NSString *)kCGWindowAlpha] floatValue] < 1.0) {
+        return YES;
+    }
+    
+    if (![self enclosedByWindow:window]) {
+        return NO;
     }
     
     return YES;

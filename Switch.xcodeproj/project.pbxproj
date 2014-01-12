@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		BC19D3DA181436FB009CEC1F /* SWPreferencesService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3D9181436FB009CEC1F /* SWPreferencesService.m */; };
 		BC19D3DD18143AB1009CEC1F /* SWAccessibilityService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3DC18143AB1009CEC1F /* SWAccessibilityService.m */; };
+		BC3C78C4188262EB0021C244 /* SWMacVimTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC3C78C3188262EB0021C244 /* SWMacVimTests.m */; };
 		BC5A9798180E5A6F002ECD56 /* SWStatusBarMenuService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5A9797180E5A6F002ECD56 /* SWStatusBarMenuService.m */; };
 		BC5A979B180E6949002ECD56 /* SWLoggingService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5A979A180E6949002ECD56 /* SWLoggingService.m */; };
 		BC63AB8F1755907D00016B9E /* SWHUDCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC63AB8E1755907D00016B9E /* SWHUDCollectionView.m */; };
@@ -200,6 +201,7 @@
 		BC19D3D9181436FB009CEC1F /* SWPreferencesService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWPreferencesService.m; sourceTree = "<group>"; };
 		BC19D3DB18143AB1009CEC1F /* SWAccessibilityService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWAccessibilityService.h; sourceTree = "<group>"; };
 		BC19D3DC18143AB1009CEC1F /* SWAccessibilityService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWAccessibilityService.m; sourceTree = "<group>"; };
+		BC3C78C3188262EB0021C244 /* SWMacVimTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWMacVimTests.m; sourceTree = "<group>"; };
 		BC5A9796180E5A6F002ECD56 /* SWStatusBarMenuService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWStatusBarMenuService.h; sourceTree = "<group>"; };
 		BC5A9797180E5A6F002ECD56 /* SWStatusBarMenuService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWStatusBarMenuService.m; sourceTree = "<group>"; };
 		BC5A9799180E6949002ECD56 /* SWLoggingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWLoggingService.h; sourceTree = "<group>"; };
@@ -414,6 +416,7 @@
 			children = (
 				BCA5E9AC187A4020004D70EE /* SWDashTests.m */,
 				BCCE8CF818093037006B0059 /* SWGithubTests.m */,
+				BC3C78C3188262EB0021C244 /* SWMacVimTests.m */,
 				BCCE8CF618092CDF006B0059 /* SWPowerboxTests.m */,
 				BCCE8CF21809266A006B0059 /* SWSafariTests.m */,
 				BCCE8CF41809297B006B0059 /* SWSheetTests.m */,
@@ -907,6 +910,7 @@
 				BCCE8CEB18091A4F006B0059 /* NSWindow+NNScreenCapture.m in Sources */,
 				BCCE8CF51809297B006B0059 /* SWSheetTests.m in Sources */,
 				BCCE8CF718092CDF006B0059 /* SWPowerboxTests.m in Sources */,
+				BC3C78C4188262EB0021C244 /* SWMacVimTests.m in Sources */,
 				BCCE8CEE18091AFC006B0059 /* NSImage+NNFilesystem.m in Sources */,
 				BC8D8DA1177BA53100B7A135 /* SWHUDCollectionViewTests.m in Sources */,
 				BCA5E9AD187A4020004D70EE /* SWDashTests.m in Sources */,
