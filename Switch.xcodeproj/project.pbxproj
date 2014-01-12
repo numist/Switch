@@ -49,6 +49,7 @@
 		BCA7354316E1621400CD4C74 /* constants.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354216E1621400CD4C74 /* constants.m */; };
 		BCA7354916E1F14D00CD4C74 /* SWSelectionBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354816E1F14D00CD4C74 /* SWSelectionBoxView.m */; };
 		BCA7354D16E2ED5000CD4C74 /* SWHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354C16E2ED5000CD4C74 /* SWHUDView.m */; };
+		BCBC848F1882138B00E5B52E /* SWWindow+TweetbotQuirks.m in Sources */ = {isa = PBXBuildFile; fileRef = BCBC848E1882138B00E5B52E /* SWWindow+TweetbotQuirks.m */; };
 		BCBF525017B079FA00716200 /* SWHotKey.m in Sources */ = {isa = PBXBuildFile; fileRef = BCBF524D17B079FA00716200 /* SWHotKey.m */; };
 		BCCA7A5F18076AF500CE36E5 /* NNKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCCA7A5618076ADB00CE36E5 /* NNKit.framework */; };
 		BCCA7A631807894A00CE36E5 /* SWPreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7A611807894A00CE36E5 /* SWPreferencesWindowController.m */; };
@@ -68,7 +69,6 @@
 		BCDDB2C2178EF1B200C22E47 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */; };
 		BCDDB2C3178EF29300C22E47 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */; };
 		BCF357E9176CEEF200458AFF /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCF357E0176CEE9F00458AFF /* ReactiveCocoa.framework */; };
-		BCFF2315177DD812008759C4 /* SWTweetbotWindowFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = BCFF2314177DD812008759C4 /* SWTweetbotWindowFilter.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -270,6 +270,8 @@
 		BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = imageComparators.h; sourceTree = "<group>"; };
 		BCA7354B16E2ED5000CD4C74 /* SWHUDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWHUDView.h; sourceTree = "<group>"; };
 		BCA7354C16E2ED5000CD4C74 /* SWHUDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWHUDView.m; sourceTree = "<group>"; };
+		BCBC848D1882138B00E5B52E /* SWWindow+TweetbotQuirks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SWWindow+TweetbotQuirks.h"; sourceTree = "<group>"; };
+		BCBC848E1882138B00E5B52E /* SWWindow+TweetbotQuirks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SWWindow+TweetbotQuirks.m"; sourceTree = "<group>"; };
 		BCBF524C17B079FA00716200 /* SWHotKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWHotKey.h; sourceTree = "<group>"; };
 		BCBF524D17B079FA00716200 /* SWHotKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWHotKey.m; sourceTree = "<group>"; };
 		BCCA7A4E18076ADB00CE36E5 /* NNKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = NNKit.xcodeproj; path = Frameworks/NNKit/NNKit.xcodeproj; sourceTree = "<group>"; };
@@ -292,7 +294,6 @@
 		BCCE8CF818093037006B0059 /* SWGithubTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWGithubTests.m; sourceTree = "<group>"; };
 		BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		BCF357D6176CEE9E00458AFF /* ReactiveCocoa.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactiveCocoa.xcodeproj; path = Frameworks/ReactiveCocoa/ReactiveCocoaFramework/ReactiveCocoa.xcodeproj; sourceTree = "<group>"; };
-		BCFF2314177DD812008759C4 /* SWTweetbotWindowFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWTweetbotWindowFilter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -644,7 +645,8 @@
 		BCFF230F177DD42E008759C4 /* Window Filtering */ = {
 			isa = PBXGroup;
 			children = (
-				BCFF2314177DD812008759C4 /* SWTweetbotWindowFilter.m */,
+				BCBC848D1882138B00E5B52E /* SWWindow+TweetbotQuirks.h */,
+				BCBC848E1882138B00E5B52E /* SWWindow+TweetbotQuirks.m */,
 			);
 			name = "Window Filtering";
 			sourceTree = "<group>";
@@ -873,11 +875,11 @@
 				BC6B6D13178DDBDA001D691D /* SWCoreWindowController.m in Sources */,
 				BCA7353316DB2C0100CD4C74 /* SWEventManager.m in Sources */,
 				BC6B6D00178B711E001D691D /* NNMainThreadGuard.m in Sources */,
+				BCBC848F1882138B00E5B52E /* SWWindow+TweetbotQuirks.m in Sources */,
 				BCCA7A631807894A00CE36E5 /* SWPreferencesWindowController.m in Sources */,
 				BC6B6D1C178DE8E5001D691D /* SWAPIEnabledWorker.m in Sources */,
 				BCA7353816E148EF00CD4C74 /* SWRoundedRectView.m in Sources */,
 				BCA5E9A6187A21A9004D70EE /* SWSelector.m in Sources */,
-				BCFF2315177DD812008759C4 /* SWTweetbotWindowFilter.m in Sources */,
 				BC662BA7186A42E4003CF66C /* SWWindowListService.m in Sources */,
 				BCA5E99818766FE1004D70EE /* SWWindowContentsService.m in Sources */,
 				BCBF525017B079FA00716200 /* SWHotKey.m in Sources */,

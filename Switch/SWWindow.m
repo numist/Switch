@@ -13,6 +13,7 @@
 //
 
 #import "SWWindow.h"
+#import "SWWindow+TweetbotQuirks.h"
 
 #import <Haxcessibility/Haxcessibility.h>
 #import <Haxcessibility/HAXElement+Protected.h>
@@ -104,11 +105,8 @@
         return NO;
     }
     
-    #pragma message "Going to need a better Tweetbot-specific rule here for when an image opens within the frame of the main window…"
-    Check(self.application);
-    Check(self.application.name);
-    if ([self.application.name isEqualToString:@"Tweetbot"] && ![self enclosedByWindow:window]) {
-        return NO;
+    if ([self.application.name isEqualToString:@"Tweetbot"]) {
+        return [self tweetbot_isRelatedToLowerWindow:window];
     }
     
     return YES;
