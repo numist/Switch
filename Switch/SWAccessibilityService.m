@@ -232,10 +232,10 @@
     for (HAXWindow *haxWindow in haxWindows) {
         NSString *haxTitle = haxWindow.title;
         BOOL framesMatch = NNNSRectsEqual(window.frame, haxWindow.frame);
+        // AX will return an empty string when CG returns nil/unset!
         BOOL namesMatch = (window.name.length == 0 && haxTitle.length == 0) || [window.name isEqualToString:haxTitle];
         
         if (framesMatch && namesMatch) {
-            Check(!window.name == !haxTitle);
             result = haxWindow;
         }
     }
