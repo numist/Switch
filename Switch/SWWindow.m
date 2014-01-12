@@ -108,6 +108,9 @@
     
     if ([self.application.name isEqualToString:@"Tweetbot"]) {
         return [self tweetbot_isRelatedToLowerWindow:window];
+    } else if ([self.application.name isEqualToString:@"MacVim"]) {
+        // MacVim isn't known to have any extraneous unnamed windows… yet?
+        return NO;
     }
     
     // This is a special case for catching the shadow opening for sheets
