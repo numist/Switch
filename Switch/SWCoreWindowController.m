@@ -440,6 +440,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
       skip:1]
      subscribeNext:^(NSNumber *shouldDisplayInterface) {
          if ([shouldDisplayInterface boolValue]) {
+             #pragma message "It would be nice to add a bit more delay if a raise is currently in progress, to avoid flickering the interface."
              [self _displayInterface];
          } else {
              [self _hideInterface];
