@@ -162,7 +162,7 @@
         NSImage *content = notification.userInfo[@"content"];
         if (!Check(content)) {
             return;
-        }
+        }   
         
         contentContainer.content = content;
         

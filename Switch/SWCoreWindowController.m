@@ -327,13 +327,18 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 - (void)_activate;
 {
     SWLog(@"Switch is active (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
-    Check(![self.windowGroups count]);
-    Check(!self.displayTimer);
+    
+    if (!Check(!self.displayTimer)) {
+        [self.displayTimer invalidate];
+    }
     
     self.displayTimer = [NSTimer scheduledTimerWithTimeInterval:kNNWindowDisplayDelay target:self selector:@selector(_displayTimerFired:) userInfo:nil repeats:NO];
-    self.adjustedIndex = NO;
-    self.windowListLoaded = NO;
-    self.selector = [SWSelector new];
+
+    if (Check(![self.windowGroups count])) {
+        self.adjustedIndex = NO;
+        self.windowListLoaded = NO;
+        self.selector = [SWSelector new];
+    }
     
     [[NNServiceManager sharedManager] addSubscriber:self forService:[SWWindowListService self]];
 }
@@ -341,9 +346,13 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 - (void)_deactivate;
 {
     SWLog(@"Deactivating Switch (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
-    Check(!self.pendingSwitch);
-    
+
     [[NNServiceManager sharedManager] removeSubscriber:self forService:[SWWindowListService self]];
+    
+    if (!Check(!self.pendingSwitch)) {
+        self.active = YES;
+        return;
+    }
     
     [self.displayTimer invalidate];
     self.displayTimer = nil;
@@ -382,7 +391,10 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
 - (void)_raiseSelectedWindow;
 {
-    Check(self.pendingSwitch && self.windowListLoaded);
+    if (!Check(self.pendingSwitch && self.windowListLoaded)) {
+        NotTested();
+        return;
+    }
     
     self.pendingSwitch = NO;
     
@@ -407,7 +419,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
         if (!error) {
             if (!self.active) {
                 SWLog(@"Switcher already inactive after successful -raise");
-                DebugBreak();
             }
             self.active = NO;
         }
