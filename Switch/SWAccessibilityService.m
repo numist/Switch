@@ -21,6 +21,7 @@
 #import "SWAPIEnabledWorker.h"
 #import "SWApplication.h"
 #import "SWWindow.h"
+#import "SWWindowGroup.h"
 
 
 @interface SWAccessibilityService ()
@@ -219,6 +220,9 @@
 
 - (HAXWindow *)_haxWindowForWindow:(SWWindow *)window;
 {
+    // If window is a group, the frame will be calculated incorrectly, and no accessibility object for the window will be found!
+    Check(![window isKindOfClass:[SWWindowGroup class]]);
+
     HAXWindow *result = nil;
     
     if ([window.application.name isEqualToString:@"Safari"]) {

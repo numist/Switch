@@ -223,7 +223,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
                  * This can be worked around by first raising the second window.
                  * This may still result in odd behaviour if firstWindow.close fails, but applications not responding to window close events is incorrect behaviour (performance is a feature!) whereas window list shenanigans are (relatively) expected.
                  */
-                SWWindow *nextWindow = nil;
+                SWWindowGroup *nextWindow = nil;
                 {
                     BOOL onlyChild = ([self.windowGroups indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop){
                         if (idx == self.selector.selectedUIndex) { return NO; }
@@ -246,8 +246,8 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
 #               pragma clang diagnostic ignored "-Wshadow"
                 __weak __typeof(thumb) weakThumb = thumb;
                 dispatch_async(actionQueue, ^{
-                    [[SWAccessibilityService sharedService] raiseWindow:nextWindow completion:nil];
-                    [[SWAccessibilityService sharedService] closeWindow:selectedWindowGroup completion:^(NSError *error) {
+                    [[SWAccessibilityService sharedService] raiseWindow:nextWindow.mainWindow completion:nil];
+                    [[SWAccessibilityService sharedService] closeWindow:selectedWindowGroup.mainWindow completion:^(NSError *error) {
                         if (error) {
                             // We *should* re-raise selectedWindow, but if it didn't succeed at -close it will also probably fail to -raise.
                             dispatch_async(dispatch_get_main_queue(), ^{
@@ -399,7 +399,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
 #   pragma clang diagnostic push
 #   pragma clang diagnostic ignored "-Wshadow"
     __weak __typeof(thumb) weakThumb = thumb;
-    [[SWAccessibilityService sharedService] raiseWindow:selectedWindow completion:^(NSError *error) {
+    [[SWAccessibilityService sharedService] raiseWindow:selectedWindow.mainWindow completion:^(NSError *error) {
         SWWindowThumbnailView *thumb = weakThumb;
         
         if (!error) {
