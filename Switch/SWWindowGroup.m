@@ -103,6 +103,12 @@
     
     BOOL isSaveDialog = NO;
     for (SWWindow *window in self.windows) {
+        #pragma message "Check if the height is 10 or 20 on a retina machine"
+        if ([window.windowDescription[(__bridge NSString *)kCGWindowAlpha] doubleValue] < 1.0 && window.frame.size.height < 21.0 && self.windows.count > 1) {
+            isSaveDialog = YES;
+            break;
+        }
+        
         if ([window.application.name isEqualToString:@"com.apple.security.pboxd"]
         || [window.application.name isEqualToString:@"com.apple.appkit.xpc.openAndSav"])
         {

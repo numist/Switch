@@ -203,7 +203,75 @@
     ];
 
     [self updateListServiceWithInfoList:infoList];
+    
     XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))1, @"Powerbox save dialog wasn't grouped correctly");
+    if (self.listService.windows.count == 1) {
+        XCTAssertEqual(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).windows.count, infoList.count, @"");
+        XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, windowDescription, @"Main window for group was not identified correctly");
+    }
+}
+
+- (void)testMacVimSaveDialog;
+{
+    NSDictionary *windowDescription = 	@{
+    	NNWindowLayer : @0,
+    	NNWindowName : @"[No Name] + - VIM",
+    	NNWindowMemoryUsage : @1752852,
+    	NNWindowIsOnscreen : @1,
+    	NNWindowSharingState : @1,
+    	NNWindowOwnerPID : @47503,
+    	NNWindowNumber : @90316,
+    	NNWindowOwnerName : @"MacVim",
+    	NNWindowStoreType : @2,
+    	NNWindowBounds : @{
+    		@"Height" : @675,
+    		@"Width" : @584,
+    		@"X" : @50,
+    		@"Y" : @22,
+    	},
+    	NNWindowAlpha : @1.000000,
+    };
+    NSArray *infoList = @[
+    	@{
+    		NNWindowLayer : @0,
+    		NNWindowMemoryUsage : @21756,
+    		NNWindowIsOnscreen : @1,
+    		NNWindowSharingState : @1,
+    		NNWindowOwnerPID : @47503,
+    		NNWindowNumber : @90319,
+    		NNWindowOwnerName : @"MacVim",
+    		NNWindowStoreType : @2,
+    		NNWindowBounds : @{
+    			@"Height" : @10,
+    			@"Width" : @437,
+    			@"X" : @124,
+    			@"Y" : @44,
+    		},
+    		NNWindowAlpha : @0.850000,
+    	},
+    	@{
+    		NNWindowLayer : @0,
+    		NNWindowMemoryUsage : @305172,
+    		NNWindowIsOnscreen : @1,
+    		NNWindowSharingState : @1,
+    		NNWindowOwnerPID : @47503,
+    		NNWindowNumber : @90318,
+    		NNWindowOwnerName : @"MacVim",
+    		NNWindowStoreType : @2,
+    		NNWindowBounds : @{
+    			@"Height" : @166,
+    			@"Width" : @424,
+    			@"X" : @130,
+    			@"Y" : @44,
+    		},
+    		NNWindowAlpha : @1.000000,
+    	},
+        windowDescription,
+    ];
+    
+    [self updateListServiceWithInfoList:infoList];
+    
+    XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))1, @"Save dialog wasn't grouped correctly");
     if (self.listService.windows.count == 1) {
         XCTAssertEqual(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).windows.count, infoList.count, @"");
         XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, windowDescription, @"Main window for group was not identified correctly");

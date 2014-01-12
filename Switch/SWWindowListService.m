@@ -176,7 +176,6 @@ static NSMutableSet *loggedWindows;
     [self _updateWindowList:notification.userInfo[@"windows"]];
 }
 
-// NOTE: This is also declared in the tests as the entry point in which to insert data
 - (void)_updateWindowList:(NSArray *)windowInfoList;
 {
     BailUnless(windowInfoList,);
