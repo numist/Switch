@@ -292,7 +292,20 @@
 {
     NSUInteger windowCount = self.windowGroup.windows.count;
     
-    NSUInteger index = windowCount - ([self.windowGroup.windows indexOfObject:window] + 1);
+    NSUInteger index = [self.windowGroup.windows indexOfObject:window];
+    
+    // It's possible that we're racing a window list update. If we lost, find the window in the list by windowID instead of failing right away.
+    if (index > self.thumbnailLayer.sublayers.count) {
+        for (SWWindow *storedWindow in self.windowGroup.windows) {
+            if (storedWindow.windowID == window.windowID) {
+                index = [self.windowGroup.windows indexOfObject:storedWindow];
+                break;
+            }
+        }
+    }
+
+    // Sublayers are in reverse order as windows.
+    index = windowCount - (index + 1);
     
     if (!Check(index < self.thumbnailLayer.sublayers.count)) {
         return nil;
