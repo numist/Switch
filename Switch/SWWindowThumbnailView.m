@@ -32,7 +32,7 @@
 @property (nonatomic, assign) BOOL valid;
 
 
-@property (nonatomic, strong, readonly) SWWindowGroup *windowGroup;
+@property (nonatomic, strong) SWWindowGroup *windowGroup;
 @property (nonatomic, strong, readonly) RACSignal *thumbnailSignal;
 
 @property (nonatomic, strong) NSImage *icon;
@@ -208,8 +208,11 @@
                 if (![newBoxedRect isEqualToValue:oldBoxedRect]) {
                     self.windowFrames[@(window.windowID)] = newBoxedRect;
                     [self setNeedsLayout:YES];
+                    
                 }
             }
+            
+            self.windowGroup = windowGroup;
             
             break;
         }
@@ -289,7 +292,13 @@
 {
     NSUInteger windowCount = self.windowGroup.windows.count;
     
-    return self.thumbnailLayer.sublayers[windowCount - ([self.windowGroup.windows indexOfObject:window] + 1)];
+    NSUInteger index = windowCount - ([self.windowGroup.windows indexOfObject:window] + 1);
+    
+    if (!Check(index < self.thumbnailLayer.sublayers.count)) {
+        return nil;
+    }
+    
+    return self.thumbnailLayer.sublayers[index];
 }
 
 @end
