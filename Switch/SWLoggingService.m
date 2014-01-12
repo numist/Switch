@@ -140,7 +140,7 @@
 {
     Assert(self.logDate);
     
-    NSString *filename = [NSString stringWithFormat:@"Switch-%2ld-%2ld-%2ld.log", self.logDate.year, self.logDate.month, self.logDate.day];
+    NSString *filename = [NSString stringWithFormat:@"Switch-%02ld-%02ld-%02ld.log", self.logDate.year, self.logDate.month, self.logDate.day];
     return [[self logDirectoryPath] stringByAppendingPathComponent:filename];
 }
 
