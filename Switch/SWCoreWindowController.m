@@ -31,7 +31,7 @@ NSString const *SWCoreWindowControllerActivityNotification = @"SWCoreWindowContr
 NSString const *SWCoreWindowControllerActiveKey = @"SWCoreWindowControllerActiveKey";
 
 
-static NSTimeInterval kNNWindowDisplayDelay = 0.1;
+static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
 
 @interface SWCoreWindowController () <SWWindowListSubscriber, SWEventManagerSubscriber, SWHUDCollectionViewDataSource, SWHUDCollectionViewDelegate>
@@ -137,6 +137,9 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
     
     if (!self.windowListLoaded) {
         SWLog(@"Window list loaded with %lu windows (%.3fs elapsed)", (unsigned long)self.windowGroups.count, [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+        
+        [self _layoutCollectionView];
+        
         self.windowListLoaded = YES;
     } else {
         SWLog(@"Window list updated with %lu windows (%.3fs elapsed)", (unsigned long)self.windowGroups.count, [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
@@ -354,7 +357,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
 
 - (void)_displayInterface;
 {
-    [self.window setFrame:[NSScreen mainScreen].frame display:YES];
     [self.window orderFront:self];
     SWLog(@"Showed interface (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
 }
@@ -490,6 +492,23 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.1;
              [self.collectionView deselectCell];
          }
      }];
+}
+
+- (void)_layoutCollectionView;
+{
+    [self.window setFrame:[NSScreen mainScreen].frame display:YES];
+    
+    NSRect windowRect = [NSScreen mainScreen].frame;
+    NSRect displayRect = [self.window convertRectFromScreen:windowRect];
+    
+    self.collectionView.maxWidth = displayRect.size.width - (kNNScreenToWindowInset * 2.0);
+    
+    NSRect collectionRect = self.collectionView.frame;
+    collectionRect.origin.x = (displayRect.size.width - collectionRect.size.width) / 2.0;
+    collectionRect.origin.y = (displayRect.size.height - collectionRect.size.height) / 2.0;
+    self.collectionView.frame = collectionRect;
+    
+    [self.collectionView reloadData];
 }
 
 - (void)_displayTimerFired:(NSTimer *)timer;
