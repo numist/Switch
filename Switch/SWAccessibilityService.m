@@ -139,13 +139,21 @@
         return;
     }
 
+    NSError *error = nil;
     HAXWindow *haxWindow = [self _haxWindowForWindow:window];
-    Check(haxWindow);
+    if (!Check(haxWindow)) {
+        NSString *errorString = [NSString stringWithFormat:@"Failed to get accessibility object for window %@", window];
+        SWLog(@"%@", errorString);
+        error = [NSError errorWithDomain:@"SWAccessibilityServiceDomain" code:__LINE__ userInfo:@{NSLocalizedDescriptionKey : errorString}];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionBlock(error);
+        });
+        return;
+    }
     
     NSDate *start = [NSDate date];
     
     // First, raise the window
-    NSError *error = nil;
     if (![haxWindow performAction:(__bridge NSString *)kAXRaiseAction error:&error]) {
         SWLog(@"Raising %@ window %@ failed after %.3fs: %@", window.application.name, window, [[NSDate date] timeIntervalSinceDate:start], error);
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -188,12 +196,19 @@
         return;
     }
 
+    NSError *error = nil;
     HAXWindow *haxWindow = [self _haxWindowForWindow:window];
-    Check(haxWindow);
+    if (!Check(haxWindow)) {
+        NSString *errorString = [NSString stringWithFormat:@"Failed to get accessibility object for window %@", window];
+        SWLog(@"%@", errorString);
+        error = [NSError errorWithDomain:@"SWAccessibilityServiceDomain" code:__LINE__ userInfo:@{NSLocalizedDescriptionKey : errorString}];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionBlock(error);
+        });
+        return;
+    }
     
     NSDate *start = [NSDate date];
-    
-    NSError *error = nil;
     
     HAXElement *element = [haxWindow elementOfClass:[HAXElement class] forKey:(__bridge NSString *)kAXCloseButtonAttribute error:&error];
     if (!element) {
@@ -244,7 +259,6 @@
         }
     }
     
-    Check(result);
     return result;
 }
 
