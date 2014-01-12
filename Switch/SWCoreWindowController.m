@@ -392,7 +392,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 - (void)_raiseSelectedWindow;
 {
     if (!Check(self.pendingSwitch && self.windowListLoaded)) {
-        NotTested();
         return;
     }
     
