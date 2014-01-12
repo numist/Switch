@@ -67,8 +67,10 @@
     
     [self updateListServiceWithInfoList:infoList];
     XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))1, @"Safari was incorrectly grouped");
-    XCTAssertEqual(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).windows.count, infoList.count, @"");
-    XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, windowDescription, @"");
+    if (self.listService.windows.count == 1) {
+        XCTAssertEqual(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).windows.count, infoList.count, @"");
+        XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, windowDescription, @"");
+    }
 }
 
 @end
