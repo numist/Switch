@@ -96,7 +96,7 @@
         Log(@"Failed to open %@ for writing", listFile);
     });
     [handle writeData:[@"Raw list:\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    [handle writeData:[[rawList debugDescription] dataUsingEncoding:NSUTF8StringEncoding]];
+    [handle writeData:[[self _formattedWindowList:rawList] dataUsingEncoding:NSUTF8StringEncoding]];
     [handle writeData:[@"\nWindow list:\n" dataUsingEncoding:NSUTF8StringEncoding]];
     [handle writeData:[[windowList debugDescription] dataUsingEncoding:NSUTF8StringEncoding]];
     [handle writeData:[@"\n\nWindow group list:\n" dataUsingEncoding:NSUTF8StringEncoding]];
@@ -184,6 +184,77 @@
     });
     
     return YES;
+}
+
+- (NSString *)_formattedWindowList:(NSArray *)rawList;
+{
+    NSMutableString *result = [@"@[\n" mutableCopy];
+    
+    for (NSDictionary *windowDescription in rawList) {
+        [result appendString:@"\t@{\n"];
+        
+        for (NSString *key in windowDescription) {
+            [result appendString:@"\t\t"];
+            [result appendString:[key stringByReplacingOccurrencesOfString:@"kCG" withString:@"NN"]];
+            [result appendString:@" : "];
+            
+            id value = windowDescription[key];
+            
+            [result appendString:@"@"];
+            if ([value isKindOfClass:[NSNumber class]]) {
+                const char *type = [(NSNumber *)value objCType];
+                
+                if (!strcmp(type, "q")) {
+                    [result appendFormat:@"%lld", [value longLongValue]];
+                } else if (!strcmp(type, "c")) {
+                    [result appendFormat:@"%d", [value charValue]];
+                } else if (!strcmp(type, "d")) {
+                    [result appendFormat:@"%f", [value doubleValue]];
+                } else if (!strcmp(type, "i")) {
+                    [result appendFormat:@"%d", [value intValue]];
+                } else {
+                    NotTested();
+                }
+            } else if ([value isKindOfClass:[NSString class]]) {
+                [result appendFormat:@"\"%@\"", value];
+            } else if ([value isKindOfClass:[NSDictionary class]]) {
+                [result appendString:@"{\n"];
+
+                Check(!strcmp([((NSDictionary *)value)[@"Height"] objCType], "d"));
+                [result appendString:@"\t\t\t@\"Height\" : @"];
+                [result appendFormat:@"%d", [((NSDictionary *)value)[@"Height"] intValue]];
+                [result appendString:@",\n"];
+
+                Check(!strcmp([((NSDictionary *)value)[@"Width"] objCType], "d"));
+                [result appendString:@"\t\t\t@\"Width\" : @"];
+                [result appendFormat:@"%d", [((NSDictionary *)value)[@"Width"] intValue]];
+                [result appendString:@",\n"];
+
+                Check(!strcmp([((NSDictionary *)value)[@"X"] objCType], "d"));
+                [result appendString:@"\t\t\t@\"X\" : @"];
+                [result appendFormat:@"%d", [((NSDictionary *)value)[@"X"] intValue]];
+                [result appendString:@",\n"];
+
+                Check(!strcmp([((NSDictionary *)value)[@"Y"] objCType], "d"));
+                [result appendString:@"\t\t\t@\"Y\" : @"];
+                [result appendFormat:@"%d", [((NSDictionary *)value)[@"Y"] intValue]];
+                [result appendString:@",\n"];
+
+                [result appendString:@"\t\t}"];
+            } else {
+                SWLog(@"Value is of type %@", NSStringFromClass([value class]));
+                NotTested();
+            }
+            
+            [result appendString:@",\n"];
+        }
+        
+        [result appendString:@"\t},\n"];
+    }
+    
+    [result appendString:@"];"];
+        
+    return result;
 }
 
 @end
