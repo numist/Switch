@@ -29,7 +29,7 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 
 @property (nonatomic, copy, readonly) SWWindow *window;
 
-@property (nonatomic, strong) __attribute__((NSObject)) CGImageRef previousCapture;
+@property (nonatomic, strong) NSImage *previousCapture;
 
 @end
 
@@ -49,24 +49,19 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
     return self;
 }
 
-- (void)dealloc;
-{
-    // Oops ARC won't save me here. rdar://14018474
-    if (_previousCapture) {
-        CFRelease(_previousCapture);
-        _previousCapture = nil;
-    }
-}
-
 #pragma mark NNPollingObject
 
 - (oneway void)main;
 {
     CGImageRef cgImage = NNCFAutorelease(CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, self.window.windowID, kCGWindowImageBoundsIgnoreFraming));
-
-    if (CGImageGetHeight(cgImage) < 1.0 || CGImageGetWidth(cgImage) < 1.0) {
+    CGFloat width = CGImageGetWidth(cgImage);
+    CGFloat height = CGImageGetHeight(cgImage);
+    
+    if (height < 1.0 || width < 1.0) {
         cgImage = NULL;
     }
+    
+    NSImage *image = [[NSImage alloc] initWithCGImage:cgImage size:NSMakeSize(width, height)];
     
     if (cgImage) {
         BOOL imageChanged = NO;
@@ -77,13 +72,13 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
             if (!self.previousCapture) {
                 imageChanged = YES;
             } else {
-                size_t oldWidth = CGImageGetWidth(self.previousCapture);
-                size_t oldHeight = CGImageGetHeight(self.previousCapture);
+                CGFloat oldWidth = self.previousCapture.size.width;
+                CGFloat oldHeight = self.previousCapture.size.height;
                 
                 if (newWidth != oldWidth || newHeight != oldHeight) {
                     imageChanged = YES;
                 } else {
-                    imageChanged = imagesDifferByCGDataProviderComparison(cgImage, self.previousCapture);
+                    imageChanged = imagesDifferByCachedTIFFComparison(image, self.previousCapture);
                 }
             }
         }
@@ -92,7 +87,7 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
             self.interval = MIN(NNPollingIntervalSlow, self.interval * 2.0);
         } else {
             self.interval = NNPollingIntervalFast;
-            self.previousCapture = cgImage;
+            self.previousCapture = image;
             
             [self postNotification:@{
                 @"window" : self.window,
