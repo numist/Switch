@@ -349,11 +349,6 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
     [[NNServiceManager sharedManager] removeSubscriber:self forService:[SWWindowListService self]];
     
-    if (!Check(!self.pendingSwitch)) {
-        self.active = YES;
-        return;
-    }
-    
     [self.displayTimer invalidate];
     self.displayTimer = nil;
     self.pendingSwitch = NO;
@@ -391,9 +386,8 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
 - (void)_raiseSelectedWindow;
 {
-    if (!Check(self.pendingSwitch && self.windowListLoaded)) {
-        return;
-    }
+
+    BailUnless(self.pendingSwitch && self.windowListLoaded,);
     
     self.pendingSwitch = NO;
     
