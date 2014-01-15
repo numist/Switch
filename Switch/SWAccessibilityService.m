@@ -179,7 +179,6 @@
     SWLog(@"Raising %@ window %@ took %.3fs", window.application.name, window, [[NSDate date] timeIntervalSinceDate:start]);
     dispatch_async(dispatch_get_main_queue(), ^{
         completionBlock(nil);
-        [haxWindow self];
     });
 }
 
