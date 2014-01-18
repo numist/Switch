@@ -249,7 +249,8 @@
         // AX will return an empty string when CG returns nil/unset!
         BOOL namesMatch = (window.name.length == 0 && haxTitle.length == 0) || [window.name isEqualToString:haxTitle];
         
-        if (framesMatch && namesMatch) {
+        // For some reason, the window names for Dash have been seen to differ.
+        if (framesMatch && (!result || namesMatch)) {
             result = haxWindow;
         }
     }
