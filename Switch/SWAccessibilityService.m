@@ -239,10 +239,6 @@
 
     HAXWindow *result = nil;
     
-    if ([window.application.name isEqualToString:@"Safari"]) {
-        Check(window.application.pid == 708);
-    }
-    
     HAXApplication *haxApplication = [HAXApplication applicationWithPID:window.application.pid];
     BailUnless(haxApplication, result);
     
