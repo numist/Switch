@@ -375,7 +375,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 {
     BailUnless(!self.adjustedIndex,);
     
-    if (self.selector.selectedIndex == 1 && [self.windowGroups count] > 1 && !((SWWindowGroup *)[self.windowGroups objectAtIndex:0]).mainWindow.application.isFrontMostApplication) {
+    if (self.selector.selectedIndex == 1 && [self.windowGroups count] > 1 && !((SWWindowGroup *)[self.windowGroups objectAtIndex:0]).mainWindow.application.runningApplication.active) {
         SWLog(@"Adjusted index to select first window (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
         self.selector = [[SWSelector new] updateWithWindowGroups:self.windowGroups];
     } else {

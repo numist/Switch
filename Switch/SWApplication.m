@@ -19,13 +19,6 @@
 #import "SWWindow.h"
 
 
-@interface SWApplication () <HAXElementDelegate>
-
-@property (atomic, retain) NSRunningApplication *app;
-
-@end
-
-
 @implementation SWApplication
 
 #pragma mark Initialization
@@ -40,8 +33,8 @@
     if (!(self = [super init])) { return nil; }
     
     _pid = pid;
-    _app = [NSRunningApplication runningApplicationWithProcessIdentifier:pid];
-    _name = name ?: [_app localizedName];
+    _runningApplication = [NSRunningApplication runningApplicationWithProcessIdentifier:pid];
+    _name = name ?: [_runningApplication localizedName];
 
     return self;
 }
@@ -74,7 +67,7 @@
 
 - (NSImage *)icon;
 {
-    NSString *path = [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:[self.app bundleIdentifier]];
+    NSString *path = [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:[self.runningApplication bundleIdentifier]];
     return [[NSWorkspace sharedWorkspace] iconForFile:path];
 }
 
@@ -83,14 +76,9 @@
     return self.pid == [[NSProcessInfo processInfo] processIdentifier];
 }
 
-- (BOOL)isFrontMostApplication;
-{
-    return self.app.active;
-}
-
 - (BOOL)canBeActivated;
 {
-    NSApplicationActivationPolicy activationPolicy = self.app.activationPolicy;
+    NSApplicationActivationPolicy activationPolicy = self.runningApplication.activationPolicy;
     return activationPolicy == NSApplicationActivationPolicyRegular || activationPolicy == NSApplicationActivationPolicyAccessory;
 }
 

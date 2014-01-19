@@ -163,8 +163,8 @@
     }
     
     // Then raise the application (if it's not already topmost)
-    if (![window.application isFrontMostApplication]) {
-        NSRunningApplication *runningApplication = [NSRunningApplication runningApplicationWithProcessIdentifier:window.application.pid];
+    NSRunningApplication *runningApplication = window.application.runningApplication;
+    if (!runningApplication.active) {
         if (![runningApplication activateWithOptions:NSApplicationActivateIgnoringOtherApps]) {
             NSString *errorString = [NSString stringWithFormat:@"Raising application %@ failed.", window.application];
             SWLog(@"%@", errorString);

@@ -26,9 +26,9 @@
 @property (nonatomic, assign, readonly) pid_t pid;
 @property (nonatomic, copy, readonly) NSImage *icon;
 @property (nonatomic, strong, readonly) NSString *name;
+@property (nonatomic, strong, readonly) NSRunningApplication *runningApplication;
 
 - (BOOL)isCurrentApplication;
-- (BOOL)isFrontMostApplication;
 - (BOOL)canBeActivated;
 
 @end
