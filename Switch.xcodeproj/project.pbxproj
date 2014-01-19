@@ -24,6 +24,7 @@
 		BC6B6D1C178DE8E5001D691D /* SWAPIEnabledWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6D1B178DE8E5001D691D /* SWAPIEnabledWorker.m */; };
 		BC82B3F1183C48EE00FDD3B9 /* SWCoreWindowService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC82B3F0183C48EE00FDD3B9 /* SWCoreWindowService.m */; };
 		BC8D8DA1177BA53100B7A135 /* SWHUDCollectionViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC8D8DA0177BA53100B7A135 /* SWHUDCollectionViewTests.m */; };
+		BC8E07AC188C890400C208D4 /* SWChromeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC8E07AB188C890400C208D4 /* SWChromeTests.m */; };
 		BC948E2E180CFAA6008ED28A /* weave.png in Resources */ = {isa = PBXBuildFile; fileRef = BC948E2D180CFAA6008ED28A /* weave.png */; };
 		BCA5E99818766FE1004D70EE /* SWWindowContentsService.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA5E99718766FE1004D70EE /* SWWindowContentsService.m */; };
 		BCA5E9A6187A21A9004D70EE /* SWSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA5E9A5187A21A9004D70EE /* SWSelector.m */; };
@@ -225,6 +226,7 @@
 		BC82B3EF183C48EE00FDD3B9 /* SWCoreWindowService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWCoreWindowService.h; sourceTree = "<group>"; };
 		BC82B3F0183C48EE00FDD3B9 /* SWCoreWindowService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWCoreWindowService.m; sourceTree = "<group>"; };
 		BC8D8DA0177BA53100B7A135 /* SWHUDCollectionViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWHUDCollectionViewTests.m; sourceTree = "<group>"; };
+		BC8E07AB188C890400C208D4 /* SWChromeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWChromeTests.m; sourceTree = "<group>"; };
 		BC948E2D180CFAA6008ED28A /* weave.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = weave.png; path = Resources/weave.png; sourceTree = "<group>"; };
 		BCA5E99618766FE1004D70EE /* SWWindowContentsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWWindowContentsService.h; sourceTree = "<group>"; };
 		BCA5E99718766FE1004D70EE /* SWWindowContentsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWWindowContentsService.m; sourceTree = "<group>"; };
@@ -414,6 +416,7 @@
 		BCA5E9AB187A3FF4004D70EE /* Regression */ = {
 			isa = PBXGroup;
 			children = (
+				BC8E07AB188C890400C208D4 /* SWChromeTests.m */,
 				BCA5E9AC187A4020004D70EE /* SWDashTests.m */,
 				BCCE8CF818093037006B0059 /* SWGithubTests.m */,
 				BC3C78C3188262EB0021C244 /* SWMacVimTests.m */,
@@ -907,6 +910,7 @@
 				BCCE8CF018091F75006B0059 /* SWTweetbotTests.m in Sources */,
 				BCA5E9AA187A3CCA004D70EE /* SWWindowListServiceTests.m in Sources */,
 				BCA5E9B8187BB06F004D70EE /* SWApplication+SWTestingOverloads.m in Sources */,
+				BC8E07AC188C890400C208D4 /* SWChromeTests.m in Sources */,
 				BCCE8CEB18091A4F006B0059 /* NSWindow+NNScreenCapture.m in Sources */,
 				BCCE8CF51809297B006B0059 /* SWSheetTests.m in Sources */,
 				BCCE8CF718092CDF006B0059 /* SWPowerboxTests.m in Sources */,

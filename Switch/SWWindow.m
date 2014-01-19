@@ -149,11 +149,7 @@
 
 - (BOOL)enclosedByWindow:(SWWindow *)window;
 {
-    NNVec2 c2cOffset = [self offsetOfCenterToCenterOfWindow:window];
-    NNVec2 absC2COffset = (NNVec2){ .x = fabs(c2cOffset.x), .y = fabs(c2cOffset.y) };
-    NSSize sizeDifference = [window sizeDifferenceFromWindow:self];
-    
-    return sizeDifference.width > absC2COffset.x * 2.0 && sizeDifference.height > absC2COffset.y * 2.0;
+    return CGRectContainsRect(window.frame, self.frame);
 }
 
 @end
