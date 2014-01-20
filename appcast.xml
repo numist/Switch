@@ -6,6 +6,21 @@
       <language>en</language>
 
         <item>
+          <title>0.0.6 (β)</title>
+          <pubDate>Sun, 19 Jan 2014 16:59:45 -0800</pubDate>
+          <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.6</sparkle:releaseNotesLink>
+          <enclosure
+            length="2385715"
+            sparkle:dsaSignature="MCwCFBV2LUqtPBL+wh6BnCLuApm2DBDiAhQdMMPgpLZud2FgYEjbkF1JFV0ARA=="
+            sparkle:shortVersionString="0.0.6 (β)"
+            sparkle:version="0.0.6"
+            type="application/octet-stream"
+            url="https://github.com/numist/Switch/releases/download/0.0.6/Switch.zip"
+          />
+          <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
+        </item>
+
+        <item>
           <title>0.0.5 (β)</title>
           <pubDate>Thu, 31 Oct 2013 20:20:20 -0700</pubDate>
           <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.5</sparkle:releaseNotesLink>
