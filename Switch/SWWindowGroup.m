@@ -104,6 +104,7 @@
     BOOL isSaveDialog = NO;
     for (SWWindow *window in self.windows) {
         #pragma message "Check if the height is 10 or 20 on a retina machine"
+        #pragma message "This is liable to catch non-save dialogs as well. Should there be a frame check?"
         if ([window.windowDescription[(__bridge NSString *)kCGWindowAlpha] doubleValue] < 1.0 && window.frame.size.height < 21.0 && self.windows.count > 1) {
             isSaveDialog = YES;
             break;

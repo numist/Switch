@@ -93,7 +93,9 @@ static NSMutableSet *loggedWindows;
     
     for (NSInteger i = (NSInteger)rawWindowList.count - 1; i >= 0; --i) {
         // Non-normal windows are filtered out as the accuracy of their ordering in the window list cannot be guaranteed.
-        if ([rawWindowList[(NSUInteger)i][(__bridge NSString *)kCGWindowLayer] longValue] != kCGNormalWindowLevel) {
+        if ([rawWindowList[(NSUInteger)i][(__bridge NSString *)kCGWindowLayer] longValue] != kCGNormalWindowLevel ||
+            [rawWindowList[(NSUInteger)i][(__bridge NSString *)kCGWindowAlpha] doubleValue] == 0.0)
+        {
             [rawWindowList removeObjectAtIndex:(NSUInteger)i];
         } else {
             [rawWindowList replaceObjectAtIndex:(NSUInteger)i withObject:[SWWindow windowWithDescription:rawWindowList[(NSUInteger)i]]];

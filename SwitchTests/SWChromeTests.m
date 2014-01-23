@@ -65,10 +65,138 @@
     ];
     
     [self updateListServiceWithInfoList:infoList];
-    XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))1, @"Dash was incorrectly filtered out");
+    XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))1, @"Chrome was incorrectly filtered");
     if (self.listService.windows.count == 1) {
         XCTAssertEqual(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).windows.count, infoList.count, @"");
         XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, windowDescription, @"");
+    }
+}
+
+- (void)testMultipleWindows;
+{
+    NSDictionary *window1Description = @{
+		NNWindowLayer : @0,
+		NNWindowName : @"",
+		NNWindowMemoryUsage : @5372,
+		NNWindowIsOnscreen : @1,
+		NNWindowSharingState : @1,
+		NNWindowOwnerPID : @8705,
+		NNWindowNumber : @17988,
+		NNWindowOwnerName : @"Google Chrome",
+		NNWindowStoreType : @2,
+		NNWindowBounds : @{
+			@"Height" : @1,
+			@"Width" : @456,
+			@"X" : @0,
+			@"Y" : @752,
+		},
+		NNWindowAlpha : @0.000000,
+	};
+	NSDictionary *window2Description = @{
+		NNWindowLayer : @0,
+		NNWindowName : @"(2) Facebook",
+		NNWindowMemoryUsage : @4350292,
+		NNWindowIsOnscreen : @1,
+		NNWindowSharingState : @1,
+		NNWindowOwnerPID : @8705,
+		NNWindowNumber : @17989,
+		NNWindowOwnerName : @"Google Chrome",
+		NNWindowStoreType : @2,
+		NNWindowBounds : @{
+			@"Height" : @731,
+			@"Width" : @1366,
+			@"X" : @0,
+			@"Y" : @22,
+		},
+		NNWindowAlpha : @1.000000,
+	};
+	NSDictionary *window3Description = @{
+		NNWindowLayer : @0,
+		NNWindowName : @"",
+		NNWindowMemoryUsage : @5372,
+		NNWindowIsOnscreen : @1,
+		NNWindowSharingState : @1,
+		NNWindowOwnerPID : @8705,
+		NNWindowNumber : @17960,
+		NNWindowOwnerName : @"Google Chrome",
+		NNWindowStoreType : @2,
+		NNWindowBounds : @{
+			@"Height" : @1,
+			@"Width" : @456,
+			@"X" : @0,
+			@"Y" : @752,
+		},
+		NNWindowAlpha : @0.000000,
+	};
+	NSDictionary *window4Description = @{
+		NNWindowLayer : @0,
+		NNWindowName : @"[Ardent] climbing this week? - numist@numist.net - numist.net Mail",
+		NNWindowMemoryUsage : @4112212,
+		NNWindowIsOnscreen : @1,
+		NNWindowSharingState : @1,
+		NNWindowOwnerPID : @8705,
+		NNWindowNumber : @17961,
+		NNWindowOwnerName : @"Google Chrome",
+		NNWindowStoreType : @2,
+		NNWindowBounds : @{
+			@"Height" : @731,
+			@"Width" : @1366,
+			@"X" : @0,
+			@"Y" : @22,
+		},
+		NNWindowAlpha : @1.000000,
+	};
+	NSDictionary *window5Description = @{
+		NNWindowLayer : @0,
+		NNWindowName : @"",
+		NNWindowMemoryUsage : @5372,
+		NNWindowIsOnscreen : @1,
+		NNWindowSharingState : @1,
+		NNWindowOwnerPID : @8705,
+		NNWindowNumber : @17963,
+		NNWindowOwnerName : @"Google Chrome",
+		NNWindowStoreType : @2,
+		NNWindowBounds : @{
+			@"Height" : @1,
+			@"Width" : @410,
+			@"X" : @68,
+			@"Y" : @740,
+		},
+		NNWindowAlpha : @0.000000,
+	};
+	NSDictionary *window6Description = @{
+		NNWindowLayer : @0,
+		NNWindowName : @"Google+ Hangouts",
+		NNWindowMemoryUsage : @3625300,
+		NNWindowIsOnscreen : @1,
+		NNWindowSharingState : @1,
+		NNWindowOwnerPID : @8705,
+		NNWindowNumber : @17964,
+		NNWindowOwnerName : @"Google Chrome",
+		NNWindowStoreType : @2,
+		NNWindowBounds : @{
+			@"Height" : @719,
+			@"Width" : @1229,
+			@"X" : @68,
+			@"Y" : @22,
+		},
+		NNWindowAlpha : @1.000000,
+	};
+	NSArray *infoList = @[
+		window1Description,
+		window2Description,
+		window3Description,
+		window4Description,
+		window5Description,
+		window6Description,
+	];
+	
+    [self updateListServiceWithInfoList:infoList];
+    XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))3, @"Chrome was incorrectly filtered");
+    if (self.listService.windows.count == 3) {
+        XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, window2Description, @"");
+        XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:1]).mainWindow.windowDescription, window4Description, @"");
+        XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:2]).mainWindow.windowDescription, window6Description, @"");
     }
 }
 
