@@ -17,6 +17,7 @@
 
 @interface SWAppDelegate : NSObject <NSApplicationDelegate>
 
+- (void)relaunch:(id)sender;
 - (IBAction)showPreferences:(id)sender;
 
 @end

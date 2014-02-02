@@ -14,6 +14,8 @@
 
 #import "SWAppDelegate.h"
 
+#import <Sparkle/Sparkle.h>
+
 #import "SWPreferencesService.h"
 #import "SWWindowListService.h"
 
@@ -27,6 +29,24 @@
     [[NNServiceManager sharedManager] registerAllPossibleServices];
     
     SWLog(@"Launched %@ %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:(__bridge id)kCFBundleNameKey], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]);
+}
+
+- (void)relaunch:(id)sender;
+{
+    NSString *launcherSource = [[NSBundle bundleForClass:[SUUpdater class]]  pathForResource:@"relaunch" ofType:@""];
+    Check(launcherSource);
+    NSString *launcherTarget = [NSTemporaryDirectory() stringByAppendingPathComponent:[launcherSource lastPathComponent]];
+    NSString *appPath = [[NSBundle mainBundle] bundlePath];
+    NSString *processID = [NSString stringWithFormat:@"%d", [[NSProcessInfo processInfo] processIdentifier]];
+    
+    NSError *error = NULL;
+    [[NSFileManager defaultManager] removeItemAtPath:launcherTarget error:&error];
+    Check(error);
+    [[NSFileManager defaultManager] copyItemAtPath:launcherSource toPath:launcherTarget error:&error];
+    Check(error);
+	
+    [NSTask launchedTaskWithLaunchPath:launcherTarget arguments:@[appPath, processID]];
+    [NSApp terminate:sender];
 }
 
 #pragma mark IBAction

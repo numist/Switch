@@ -22,6 +22,7 @@
 #import "SWApplication.h"
 #import "SWWindow.h"
 #import "SWWindowGroup.h"
+#import "SWAppDelegate.h"
 
 
 @interface SWAccessibilityService ()
@@ -123,6 +124,7 @@
     
     if (accessibilityEnabled) {
         self.worker = nil;
+        [(SWAppDelegate *)NSApplication.sharedApplication.delegate relaunch:nil];
     }
 }
 

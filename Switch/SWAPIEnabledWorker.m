@@ -56,26 +56,7 @@ NSString *SWAXAPIEnabledKey = @"AXAPIEnabled";
 
 + (BOOL)isAPIEnabled;
 {
-    // TODO(numist): Remove when it's time to deprecate Mountain Lion.
-    static Boolean (*isProcessTrustedWithOptions)(CFDictionaryRef options);
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        void* handle = dlopen(0,RTLD_NOW|RTLD_GLOBAL);
-        assert(handle);
-        isProcessTrustedWithOptions = dlsym(handle, "AXIsProcessTrustedWithOptions");
-        dlclose(handle);
-        handle = NULL;
-    });
-    
-    Boolean result;
-    
-    if (isProcessTrustedWithOptions) {
-        result = isProcessTrustedWithOptions(NULL);
-    } else {
-        result = AXIsProcessTrustedWithOptions(nil);
-    }
-    
-    return (BOOL)result;
+    return AXIsProcessTrustedWithOptions(nil);
 }
 
 @end

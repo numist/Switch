@@ -297,6 +297,7 @@
 		BCCE8CF618092CDF006B0059 /* SWPowerboxTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWPowerboxTests.m; sourceTree = "<group>"; };
 		BCCE8CF818093037006B0059 /* SWGithubTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWGithubTests.m; sourceTree = "<group>"; };
 		BCDDB2C1178EF1B200C22E47 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
+		BCEF6C44189DF3E30080ABAB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BCF357D6176CEE9E00458AFF /* ReactiveCocoa.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactiveCocoa.xcodeproj; path = Frameworks/ReactiveCocoa/ReactiveCocoaFramework/ReactiveCocoa.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -455,6 +456,7 @@
 				BCCA7A4D18076AD700CE36E5 /* NNKit */,
 				BCF357D5176CEE0200458AFF /* ReactiveCocoa */,
 				BC240D68178E9955003FE2BF /* Sparkle */,
+				BCEF6C44189DF3E30080ABAB /* Foundation.framework */,
 				BCA734E216DAC53F00CD4C74 /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -709,6 +711,11 @@
 				CLASSPREFIX = NN;
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Scott Perry";
+				TargetAttributes = {
+					BCA734FC16DAC54000CD4C74 = {
+						TestTargetID = BCA734DC16DAC53F00CD4C74;
+					};
+				};
 			};
 			buildConfigurationList = BCA734D816DAC53F00CD4C74 /* Build configuration list for PBXProject "Switch" */;
 			compatibilityVersion = "Xcode 3.2";
