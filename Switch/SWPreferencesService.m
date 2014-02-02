@@ -16,6 +16,7 @@
 
 #import <NNKit/NNService+Protected.h>
 
+#import "SWAPIEnabledWorker.h"
 #import "SWEventManager.h"
 #import "SWHotKey.h"
 #import "SWPreferencesWindowController.h"
@@ -78,7 +79,7 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
     [keyManager registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_ANSI_Comma modifiers:SWHotKeyModifierOption] forEvent:SWEventManagerEventTypeShowPreferences];
    
     self.preferencesWindowController = [[SWPreferencesWindowController alloc] initWithWindowNibName:@"SWPreferencesWindowController"];
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:kNNFirstLaunchKey]) {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:kNNFirstLaunchKey] && [SWAPIEnabledWorker isAPIEnabled]) {
         [self setObject:@NO forKey:kNNFirstLaunchKey];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self showPreferencesWindow:self];
