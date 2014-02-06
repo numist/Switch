@@ -123,10 +123,7 @@
     CGFloat scaledXOffset = (thumbSize.width - (windowGroupFrame.size.width * scale)) / 2.0;
     CGFloat scaledYOffset = (thumbSize.height - (windowGroupFrame.size.height * scale)) / 2.0;
     
-    #pragma message "Only draw the main window for now. This is the same as the old behaviour, so it's not a drawing regression."
-    // However it would be really great to figure out why subwindows don't seem to be drawing in the right places. The frames look reasonable in the debugger…
-    NSUInteger i = [self.windowGroup.windows indexOfObject:self.windowGroup.mainWindow];
-//    for (NSUInteger i = 0; i < self.windowGroup.windows.count; i++) {
+    for (NSUInteger i = 0; i < self.windowGroup.windows.count; i++) {
         SWWindow *window = self.windowGroup.windows[i];
         CALayer *layer = [self _sublayerForWindow:window];
         NSRect frame = window.frame;
@@ -134,6 +131,9 @@
         // Move the frame's origin to be anchored at the "bottom left" of the windowFrame.
         frame.origin.x -= windowGroupFrame.origin.x;
         frame.origin.y -= windowGroupFrame.origin.y;
+        
+        // Flip the y axis to convert from screen coordinates to view coordinates.
+        frame.origin.y = windowGroupFrame.size.height - (frame.origin.y + frame.size.height);
         
         // Scale the frame into the layer's space.
         frame.origin.x *= scale;
@@ -146,7 +146,7 @@
         frame.origin.y += scaledYOffset;
         
         layer.frame = frame;
-//    }
+    }
     
     [self _updateIconLayout];
 }
