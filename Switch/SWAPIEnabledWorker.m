@@ -56,7 +56,7 @@ NSString *SWAXAPIEnabledKey = @"AXAPIEnabled";
 
 + (BOOL)isAPIEnabled;
 {
-    return AXIsProcessTrustedWithOptions(nil);
+    return (BOOL)AXIsProcessTrustedWithOptions(nil);
 }
 
 @end

@@ -118,7 +118,7 @@
 
 - (oneway void)preferencesService:(SWPreferencesService *)service didSetValue:(id)value forKey:(NSString *)key;
 {
-    #pragma message "Use this to enable/disable the status bar item"
+    // See: Issue #46
 }
 
 #pragma mark SWStatusBarMenuService
