@@ -31,6 +31,22 @@ $line_length = 0
 #     otherwise: if current subcommand, feed (recurse)
 #     otherwise: else append to barf
 # 
+# Classes:
+# xcodebuild
+#     feed checks for build or clean commands
+#         if not found, feed into current build command, if exists
+#     if found, wrap up current command and replace
+#
+# build
+#     feed checks for compiler command (which is a class cluster, which includes TestSuite?)
+#         if not found, feed into current compiler command, if exists
+#     if found, wrap up current command and replace
+#
+# testsuite
+#     feed checks for test command (which is a class cluster, including testsuite and testcase)
+#         if not found, feed into current test command, if exists
+#     if found, wrap up current command and replace
+#
 # xcodebuild command expects build commands
 #   build command expects Compile/Ln/Test
 #     Compile (leaf)/Ln (leaf)/Test/etc (leafs) Test command expects Test Suite
@@ -42,11 +58,12 @@ $line_length = 0
 # Print indentation increases with each level
 #
 
+$type = nil
 $target = nil
 $project = nil
 $configuration = nil
 $target_started = nil
-TARGET = /=== BUILD TARGET (.*) OF PROJECT (.*) WITH CONFIGURATION (.*) ===/
+TARGET = /=== ([A-Z]*) TARGET (.*) OF PROJECT (.*) WITH CONFIGURATION (.*) ===/
 def parse_target(line)
   TARGET.match(line) do |matches|
     unless $target_started.nil?
@@ -54,12 +71,13 @@ def parse_target(line)
       Console.print "    Finished in #{duration} ms\n"
     end
     
-    $target = matches[1]
-    $project = matches[2]
-    $configuration = matches[3]
+    $type = matches[1].capitalize
+    $target = matches[2]
+    $project = matches[3]
+    $configuration = matches[4]
     $target_started = Time.now
     
-    Console.print "Build: #{$target} / #{$project} (#{$configuration})\n"
+    Console.print "#{$type}: #{$target} / #{$project} (#{$configuration})\n"
   end
 end
 
@@ -67,7 +85,7 @@ end
 COMMANDS = {
   "Check dependencies" => "Check dependencies", # No arguments
   "Create product structure" => "Create product structure", # No arguments
-  "Analyze" => "Analyze (deep)", # First argument is file
+  "Analyze" => "Analyze", # First argument is file
   "AnalyzeShallow" => "Analyze (shallow)", # First argument is file
   "CodeSign" => "Sign", # First argument is app
   "CompileC" => "Compile", # First argument is file
