@@ -99,13 +99,19 @@
 
 - (BOOL)isRelatedToLowerGroup:(SWWindowGroup *)group;
 {
-    BOOL isSameApp = [self.application isEqual:group.application];
+    // Ensure concentricity of groups, as a fast fail.
+    if (![self enclosedByWindow:group]) {
+        return NO;
+    }
+    
+    // Ensure that both windows belong to the same application, as a fast fail.
+    if (![self.application isEqual:group.application]) {
+        return NO;
+    }
     
     BOOL isSaveDialog = NO;
     for (SWWindow *window in self.windows) {
-        #pragma message "Check if the height is 10 or 20 on a retina machine"
-        #pragma message "This is liable to catch non-save dialogs as well. Should there be a frame check?"
-        if ([window.windowDescription[(__bridge NSString *)kCGWindowAlpha] doubleValue] < 1.0 && window.frame.size.height < 21.0 && self.windows.count > 1) {
+        if ([window.windowDescription[(__bridge NSString *)kCGWindowAlpha] doubleValue] < 1.0 && window.frame.size.height < 12.0 && self.windows.count > 1) {
             isSaveDialog = YES;
             break;
         }
@@ -143,7 +149,7 @@
         }
     }
     
-    return isSameApp && isSaveDialog;
+    return isSaveDialog;
 }
 
 @end
