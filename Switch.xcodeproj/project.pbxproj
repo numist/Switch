@@ -67,6 +67,7 @@
 		BCCE8CF51809297B006B0059 /* SWSheetTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCE8CF41809297B006B0059 /* SWSheetTests.m */; };
 		BCCE8CF718092CDF006B0059 /* SWPowerboxTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCE8CF618092CDF006B0059 /* SWPowerboxTests.m */; };
 		BCCE8CF918093037006B0059 /* SWGithubTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCE8CF818093037006B0059 /* SWGithubTests.m */; };
+		BCD48A7B18AB3450002F3ACE /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BC79689318A852E700BB1CC5 /* Sparkle.framework */; };
 		BCDDB2BD178EF16A00C22E47 /* ReactiveCocoa.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCF357E0176CEE9F00458AFF /* ReactiveCocoa.framework */; };
 		BCDDB2BE178EF16E00C22E47 /* Haxcessibility.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BC63AB99175701C200016B9E /* Haxcessibility.framework */; };
 		BCF357E9176CEEF200458AFF /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCF357E0176CEE9F00458AFF /* ReactiveCocoa.framework */; };
@@ -229,6 +230,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				BCD48A7B18AB3450002F3ACE /* Sparkle.framework in CopyFiles */,
 				BCCA7AB21807CD2B00CE36E5 /* NNKit.framework in CopyFiles */,
 				BCDDB2BE178EF16E00C22E47 /* Haxcessibility.framework in CopyFiles */,
 				BCDDB2BD178EF16A00C22E47 /* ReactiveCocoa.framework in CopyFiles */,
