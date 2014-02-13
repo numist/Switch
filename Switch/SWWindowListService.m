@@ -93,9 +93,14 @@ static NSMutableSet *loggedWindows;
     
     for (NSInteger i = (NSInteger)rawWindowList.count - 1; i >= 0; --i) {
         // Non-normal windows are filtered out as the accuracy of their ordering in the window list cannot be guaranteed.
-        if ([rawWindowList[(NSUInteger)i][(__bridge NSString *)kCGWindowLayer] longValue] != kCGNormalWindowLevel ||
-            [rawWindowList[(NSUInteger)i][(__bridge NSString *)kCGWindowAlpha] doubleValue] == 0.0)
-        {
+        NSDictionary *windowInfo = rawWindowList[(NSUInteger)i];
+        BOOL normalWindow = ([windowInfo[(__bridge NSString *)kCGWindowLayer] longValue] == kCGNormalWindowLevel);
+        BOOL transparentWindow = ([windowInfo[(__bridge NSString *)kCGWindowAlpha] doubleValue] == 0.0);
+        
+        BOOL msWordWindow = [windowInfo[(__bridge NSString *)kCGWindowOwnerName] isEqualToString:@"Microsoft Word"];
+        BOOL badMSWordWindow = msWordWindow && [windowInfo[(__bridge NSString *)kCGWindowName] isEqualToString:@"Microsoft Word"];
+        
+        if (!normalWindow || transparentWindow || badMSWordWindow) {
             [rawWindowList removeObjectAtIndex:(NSUInteger)i];
         } else {
             [rawWindowList replaceObjectAtIndex:(NSUInteger)i withObject:[SWWindow windowWithDescription:rawWindowList[(NSUInteger)i]]];
