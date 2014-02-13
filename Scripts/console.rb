@@ -1,4 +1,6 @@
 
+$stdout.sync = true
+
 class Console
   @@line_length = 0
   

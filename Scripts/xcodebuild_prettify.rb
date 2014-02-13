@@ -12,52 +12,6 @@ class String
 end
 
 
-$stdout.sync = true
-$line_length = 0
-
-
-# TODO: command object module
-# command object takes line
-# properties:
-#   name
-#   argument
-#   started
-#   barf?
-# new
-#    PhaseScriptExecution checks argument for RunUnitTests to determine type
-# feed
-#   does this command expect this line as a new subcommand?
-#     if so: end current subcommand and start new
-#     otherwise: if current subcommand, feed (recurse)
-#     otherwise: else append to barf
-# 
-# Classes:
-# xcodebuild
-#     feed checks for build or clean commands
-#         if not found, feed into current build command, if exists
-#     if found, wrap up current command and replace
-#
-# build
-#     feed checks for compiler command (which is a class cluster, which includes TestSuite?)
-#         if not found, feed into current compiler command, if exists
-#     if found, wrap up current command and replace
-#
-# testsuite
-#     feed checks for test command (which is a class cluster, including testsuite and testcase)
-#         if not found, feed into current test command, if exists
-#     if found, wrap up current command and replace
-#
-# xcodebuild command expects build commands
-#   build command expects Compile/Ln/Test
-#     Compile (leaf)/Ln (leaf)/Test/etc (leafs) Test command expects Test Suite
-#       Test Suite expects Test Suite/Test
-#         Test Suite expects Test Suite/Test
-#           Test Suite expects Test Suite/Test
-#             Test (leaf)
-#
-# Print indentation increases with each level
-#
-
 $type = nil
 $target = nil
 $project = nil
@@ -90,6 +44,7 @@ COMMANDS = {
   "CodeSign" => "Sign", # First argument is app
   "CompileC" => "Compile", # First argument is file
   "CompileXIB" => "Compile", # First argument is xib
+  "CopyPlistFile" => "Copy", # First argument is plist
   "CopyStringsFile" => "Copy", # First argument is file
   "CpHeader" => "Copy", # First argument is file
   "CpResource" => "Copy", # First argument is file
@@ -103,11 +58,6 @@ COMMANDS = {
   "SetOwnerAndGroup" => "Owner", # First argument is owner:group
   "SymLink" => "Symlink", # First argument is file
   "Touch" => "Touch", # First argument is file
-}
-
-TEST_COMMANDS = {
-  "Test Suite" => "Test Suite",
-  "Test Case" => "Test Case",
 }
 
 MSEC_PER_SEC = 1000
@@ -162,17 +112,13 @@ def parse_command(line)
     return
   end
   
-  if (TEST_COMMANDS.keys.any?{ |command| line.start_with?(command) })
-    Console.print "#{line}"
-    return
-  end
-  
   if $command_barf.nil? and /^[^\s]/.match(line)
     $command_barf = line
   elsif $command_barf
     $command_barf += line
   end
 end
+
 
 STDIN.each do |line|
   parse_target(line)
@@ -183,4 +129,3 @@ STDIN.each do |line|
 end
 
 Console.print ""
-# TODO: when we hit this spot we need to print Finished in # ms all the way back up to stdin

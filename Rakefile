@@ -183,7 +183,7 @@ task DELIVERABLE_ZIP => [DELIVERABLE_APP, File.dirname(DELIVERABLE_ZIP), INTERME
   # grep for "[/]Users/foo/bar" to prevent grep from showing up in the list of processes matching the query.
   match = "[#{unzipped_app[0]}]#{unzipped_app[1..-1]}"
   sh "ps auxwww | grep \"#{match}\" | awk '{ print $2; }' | xargs kill"
-  Console.puts "#{DELIVERABLE_ZIP}: #{Console.green("launched successfully")}"
+  Console.puts "#{unzipped_app}: #{Console.green("launched successfully")}"
   
   # Clean up
   FileUtils.rm_r unzipped_app
