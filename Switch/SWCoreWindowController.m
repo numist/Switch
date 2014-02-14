@@ -32,7 +32,9 @@ NSString const *SWCoreWindowControllerActivityNotification = @"SWCoreWindowContr
 NSString const *SWCoreWindowControllerActiveKey = @"SWCoreWindowControllerActiveKey";
 
 
-static NSTimeInterval kNNWindowDisplayDelay = 0.15;
+static NSTimeInterval kWindowDisplayDelay = 0.15;
+
+//static int kScrollThreshold = 4;
 
 
 @interface SWCoreWindowController () <SWWindowListSubscriber, SWHUDCollectionViewDataSource, SWHUDCollectionViewDelegate>
@@ -54,6 +56,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
 #pragma mark Selector state
 @property (nonatomic, strong) SWSelector *selector;
+//@property (nonatomic, assign) int scrollOffset;
 @property (nonatomic, assign) BOOL incrementing;
 @property (nonatomic, assign) BOOL decrementing;
 
@@ -148,7 +151,7 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
         if (!Check(!self.displayTimer)) {
             [self.displayTimer invalidate];
         }
-        self.displayTimer = [NSTimer scheduledTimerWithTimeInterval:kNNWindowDisplayDelay target:self selector:@selector(_displayTimerFired:) userInfo:nil repeats:NO];
+        self.displayTimer = [NSTimer scheduledTimerWithTimeInterval:kWindowDisplayDelay target:self selector:@selector(_displayTimerFired:) userInfo:nil repeats:NO];
         
         Check(!self.selector);
         self.selector = [SWSelector new];
@@ -415,7 +418,7 @@ printingSetter(Decrementing, decrementing)
     }
     
     NSTimeInterval elapsed = [[NSDate date] timeIntervalSinceDate:self.invocationTime];
-    SWLog(@"Display timer fired %.3fs %@ (%.3fs elapsed)", fabs(elapsed - kNNWindowDisplayDelay), (elapsed - kNNWindowDisplayDelay) > 0.0 ? @"late" : @"early", elapsed);
+    SWLog(@"Display timer fired %.3fs %@ (%.3fs elapsed)", fabs(elapsed - kWindowDisplayDelay), (elapsed - kWindowDisplayDelay) > 0.0 ? @"late" : @"early", elapsed);
     
     self.displayTimer = nil;
 }
@@ -461,6 +464,8 @@ printingSetter(Decrementing, decrementing)
         NSInteger index = [i integerValue];
         NSUInteger uindex = (NSUInteger)index;
 
+        SWLog(@"Updated selector pointing to index %ld", (long)index);
+        
         if (index < 0 || uindex > [self.windowGroups count]) {
             [self.collectionView deselectCell];
         } else if (uindex != self.collectionView.selectedIndex) {
@@ -501,6 +506,7 @@ printingSetter(Decrementing, decrementing)
                 } else {
                     self.selector = [self.selector increment];
                 }
+//                self.scrollOffset = 0;
             }
             self.incrementing = keyDown;
         });
@@ -518,6 +524,7 @@ printingSetter(Decrementing, decrementing)
                 } else {
                     self.selector = [self.selector decrement];
                 }
+//                self.scrollOffset = 0;
             }
             self.decrementing = keyDown;
         });
@@ -581,15 +588,47 @@ printingSetter(Decrementing, decrementing)
     [eventTap registerForEventsWithType:kCGEventMouseMoved withBlock:^(CGEventRef event) {
         dispatch_async(dispatch_get_main_queue(), ^{
             @strongify(self);
-            if (self.interfaceVisible) {
-                NSPoint windowLocation = [self.window convertScreenToBase:[NSEvent mouseLocation]];
-                if(NSPointInRect([self.collectionView convertPoint:windowLocation fromView:nil], [self.collectionView bounds])) {
-                    NSEvent *mouseEvent = [NSEvent mouseEventWithType:NSMouseMoved location:windowLocation modifierFlags:NSAlternateKeyMask timestamp:(NSTimeInterval)0 windowNumber:self.window.windowNumber context:(NSGraphicsContext *)nil eventNumber:0 clickCount:0 pressure:1.0];
-                    [self.collectionView mouseMoved:mouseEvent];
-                }
+            if (!self.interfaceVisible) { return; }
+            
+            NSPoint windowLocation = [self.window convertScreenToBase:[NSEvent mouseLocation]];
+            if(NSPointInRect([self.collectionView convertPoint:windowLocation fromView:nil], [self.collectionView bounds])) {
+                NSEvent *mouseEvent = [NSEvent mouseEventWithType:NSMouseMoved location:windowLocation modifierFlags:NSAlternateKeyMask timestamp:(NSTimeInterval)0 windowNumber:self.window.windowNumber context:(NSGraphicsContext *)nil eventNumber:0 clickCount:0 pressure:1.0];
+                [self.collectionView mouseMoved:mouseEvent];
             }
         });
     }];
+    
+//    [eventTap registerForEventsWithType:kCGEventScrollWheel withBlock:^(CGEventRef event) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            @strongify(self);
+//            if (!self.interfaceVisible) { return; }
+//            
+//            int delta = (int)CGEventGetIntegerValueField(event, kCGScrollWheelEventPointDeltaAxis1);
+//            if (delta == 0) { return; }
+//            
+//            self.scrollOffset += delta;
+//            
+//            SWLog(@"scrollOffset -> %d", self.scrollOffset);
+//            
+//            int units = (self.scrollOffset / kScrollThreshold);
+//            if (units != 0) {
+//                self.scrollOffset -= (units * kScrollThreshold);
+//                
+//                SWLog(@"Moving selector by %d units", units);
+//                
+//                SWSelector *selector = self.selector;
+//                while (units > 0) {
+//                    selector = selector.increment;
+//                    units--;
+//                }
+//                while (units < 0) {
+//                    selector = selector.decrement;
+//                    units++;
+//                }
+//                self.selector = selector;
+//            }
+//        });
+//    }];
 }
 
 @end

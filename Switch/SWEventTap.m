@@ -133,7 +133,13 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
     self.modifiers = 0;
     
     // Create an event tap. For now the list of event types is limited to mouse & keyboard events.
-    CGEventMask eventMask = (CGEventMaskBit(kCGEventKeyDown) | CGEventMaskBit(kCGEventKeyUp) | CGEventMaskBit(kCGEventFlagsChanged) | CGEventMaskBit(kCGEventMouseMoved) | CGEventMaskBit(kCGEventScrollWheel));
+    CGEventMask eventMask = (
+        CGEventMaskBit(kCGEventKeyDown) |
+        CGEventMaskBit(kCGEventKeyUp) |
+        CGEventMaskBit(kCGEventFlagsChanged) |
+        CGEventMaskBit(kCGEventMouseMoved) |
+//        CGEventMaskBit(kCGEventScrollWheel) |
+    0);
     
     self.eventTap = CGEventTapCreate(kCGSessionEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault, eventMask, eventCallback, (__bridge void *)(self));
     BailUnless(self.eventTap, NO);
@@ -141,7 +147,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
     // Create a run loop source.
     // XXX: why does calling the property setter here tickle the static analyzer the wrong way, but setting the ivar directly doesn't?
     self->_runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, self.eventTap, 0);
-    BailWithBlockUnless(!self.runLoopSource, ^{
+    BailWithBlockUnless(self.runLoopSource, ^{
         [self _removeEventTap];
         return NO;
     });
