@@ -43,12 +43,6 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
 {
     if (!(self = [super init])) { return nil; }
     
-    NSAssert([[NSThread currentThread] isMainThread], @"%@ must be instanciated on the main thread", [self class]);
-    
-    if (![self _insertEventTap]) {
-        return nil;
-    }
-    
     _eventTypeCallbacks = [NSMutableDictionary new];
     _modifierCallbacks = [NSMutableDictionary new];
     _keyFilters = [NSMutableDictionary new];
@@ -59,6 +53,27 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
 - (void)dealloc;
 {
     [self _removeEventTap];
+}
+
+#pragma mark NNService
+
+- (NNServiceType)serviceType;
+{
+    return NNServiceTypePersistent;
+}
+
+- (void)startService;
+{
+    [super startService];
+    
+    [self _insertEventTap];
+}
+
+- (void)stopService;
+{
+    [self _removeEventTap];
+    
+    [super stopService];
 }
 
 #pragma mark SWEventTap
@@ -111,31 +126,30 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
     }
 }
 
-// Called from init, use direct ivar access.
 - (BOOL)_insertEventTap;
 {
-    Assert(!self->_eventTap);
+    Assert(!self.eventTap);
     
-    self->_modifiers = 0;
+    self.modifiers = 0;
     
     // Create an event tap. For now the list of event types is limited to mouse & keyboard events.
     CGEventMask eventMask = (CGEventMaskBit(kCGEventKeyDown) | CGEventMaskBit(kCGEventKeyUp) | CGEventMaskBit(kCGEventFlagsChanged) | CGEventMaskBit(kCGEventMouseMoved) | CGEventMaskBit(kCGEventScrollWheel));
     
-    self->_eventTap = CGEventTapCreate(kCGSessionEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault, eventMask, eventCallback, (__bridge void *)(self));
-    BailUnless(self->_eventTap, NO);
+    self.eventTap = CGEventTapCreate(kCGSessionEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault, eventMask, eventCallback, (__bridge void *)(self));
+    BailUnless(self.eventTap, NO);
     
     // Create a run loop source.
-    self->_runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, self.eventTap, 0);
-    BailWithBlockUnless(self->_runLoopSource, ^{
+    self.runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, self.eventTap, 0);
+    BailWithBlockUnless(self.runLoopSource, ^{
         [self _removeEventTap];
         return NO;
     });
     
     // Add to the current run loop.
-    CFRunLoopAddSource(CFRunLoopGetCurrent(), self->_runLoopSource, kCFRunLoopCommonModes);
+    CFRunLoopAddSource(CFRunLoopGetCurrent(), self.runLoopSource, kCFRunLoopCommonModes);
     
     // Enable the event tap.
-    CGEventTapEnable(self->_eventTap, true);
+    CGEventTapEnable(self.eventTap, true);
     
     return YES;
 }
@@ -187,11 +201,14 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
             // Changes can't affect registrant.
             if (!(flagChanges & registeredModifiers)) continue;
             
+            // Changes didn't affect registrant
             BOOL matched = (eventTap.modifiers & registeredModifiers) == registeredModifiers;
             BOOL matches = (key.modifiers & registeredModifiers) == registeredModifiers;
             if (matched == matches) continue;
             
-            ((SWEventTapModifierCallback)eventTap.modifierCallbacks)(matches);
+            for (SWEventTapModifierCallback callback in eventTap.modifierCallbacks[boxedRegisteredModifiers]) {
+                callback(matches);
+            }
         }
         
         eventTap.modifiers = key.modifiers;

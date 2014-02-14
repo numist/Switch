@@ -46,7 +46,6 @@
 		BCA7352216DAC6A900CD4C74 /* SWWindowWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7352116DAC6A900CD4C74 /* SWWindowWorker.m */; };
 		BCA7352516DAC93C00CD4C74 /* SWApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7352416DAC93C00CD4C74 /* SWApplication.m */; };
 		BCA7352F16DB239900CD4C74 /* SWWindowThumbnailView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7352E16DB239900CD4C74 /* SWWindowThumbnailView.m */; };
-		BCA7353316DB2C0100CD4C74 /* SWEventManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7353216DB2C0100CD4C74 /* SWEventManager.m */; };
 		BCA7353816E148EF00CD4C74 /* SWRoundedRectView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7353716E148EF00CD4C74 /* SWRoundedRectView.m */; };
 		BCA7353A16E14EF000CD4C74 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCA7353916E14EF000CD4C74 /* QuartzCore.framework */; };
 		BCA7354316E1621400CD4C74 /* constants.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354216E1621400CD4C74 /* constants.m */; };
@@ -307,8 +306,6 @@
 		BCA7352416DAC93C00CD4C74 /* SWApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWApplication.m; sourceTree = "<group>"; };
 		BCA7352D16DB239900CD4C74 /* SWWindowThumbnailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWWindowThumbnailView.h; sourceTree = "<group>"; };
 		BCA7352E16DB239900CD4C74 /* SWWindowThumbnailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWWindowThumbnailView.m; sourceTree = "<group>"; };
-		BCA7353116DB2C0100CD4C74 /* SWEventManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWEventManager.h; sourceTree = "<group>"; };
-		BCA7353216DB2C0100CD4C74 /* SWEventManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWEventManager.m; sourceTree = "<group>"; };
 		BCA7353616E148EF00CD4C74 /* SWRoundedRectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRoundedRectView.h; sourceTree = "<group>"; };
 		BCA7353716E148EF00CD4C74 /* SWRoundedRectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRoundedRectView.m; sourceTree = "<group>"; };
 		BCA7353916E14EF000CD4C74 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -381,8 +378,6 @@
 				BC19D3DC18143AB1009CEC1F /* SWAccessibilityService.m */,
 				BC82B3EF183C48EE00FDD3B9 /* SWCoreWindowService.h */,
 				BC82B3F0183C48EE00FDD3B9 /* SWCoreWindowService.m */,
-				BCA7353116DB2C0100CD4C74 /* SWEventManager.h */,
-				BCA7353216DB2C0100CD4C74 /* SWEventManager.m */,
 				BCA8AD6818AD61A00059F253 /* SWEventTap.h */,
 				BCA8AD6918AD61A00059F253 /* SWEventTap.m */,
 				BC5A9799180E6949002ECD56 /* SWLoggingService.h */,
@@ -988,7 +983,6 @@
 				BCA7352F16DB239900CD4C74 /* SWWindowThumbnailView.m in Sources */,
 				BC5A9798180E5A6F002ECD56 /* SWStatusBarMenuService.m in Sources */,
 				BC6B6D13178DDBDA001D691D /* SWCoreWindowController.m in Sources */,
-				BCA7353316DB2C0100CD4C74 /* SWEventManager.m in Sources */,
 				BC6B6D00178B711E001D691D /* NNMainThreadGuard.m in Sources */,
 				BCBC848F1882138B00E5B52E /* SWWindow+TweetbotQuirks.m in Sources */,
 				BCCA7A631807894A00CE36E5 /* SWPreferencesWindowController.m in Sources */,

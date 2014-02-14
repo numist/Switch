@@ -17,15 +17,13 @@
 #import <NNKit/NNService+Protected.h>
 
 #import "SWAPIEnabledWorker.h"
-#import "SWEventManager.h"
-#import "SWHotKey.h"
 #import "SWPreferencesWindowController.h"
 
 
 static NSString *kNNFirstLaunchKey = @"firstLaunch";
 
 
-@interface SWPreferencesService () <SWEventManagerSubscriber>
+@interface SWPreferencesService ()
 
 @property (nonatomic, strong) SWPreferencesWindowController *preferencesWindowController;
 
@@ -44,11 +42,6 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
 - (Protocol *)subscriberProtocol;
 {
     return @protocol(SWPreferencesServiceDelegate);
-}
-
-- (NSSet *)dependencies;
-{
-    return [NSSet setWithArray:@[[SWEventManager class]]];
 }
 
 - (void)startService;
@@ -70,14 +63,6 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
     }
 #   endif
     
-    // TODO: When these become customizable, they will become fields in the app's preferences.
-    SWEventManager *keyManager = [SWEventManager sharedService];
-    [keyManager registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:SWHotKeyModifierOption] forEvent:SWEventManagerEventTypeInvoke];
-    [keyManager registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:(SWHotKeyModifierOption | SWHotKeyModifierShift)] forEvent:SWEventManagerEventTypeDecrement];
-    [keyManager registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_ANSI_W modifiers:SWHotKeyModifierOption] forEvent:SWEventManagerEventTypeCloseWindow];
-    [keyManager registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Escape modifiers:SWHotKeyModifierOption] forEvent:SWEventManagerEventTypeCancel];
-    [keyManager registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_ANSI_Comma modifiers:SWHotKeyModifierOption] forEvent:SWEventManagerEventTypeShowPreferences];
-   
     self.preferencesWindowController = [[SWPreferencesWindowController alloc] initWithWindowNibName:@"SWPreferencesWindowController"];
     if ([[NSUserDefaults standardUserDefaults] boolForKey:kNNFirstLaunchKey] && [SWAPIEnabledWorker isAPIEnabled]) {
         [self setObject:@NO forKey:kNNFirstLaunchKey];
@@ -87,24 +72,6 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
     }
 
     [defaults synchronize];
-    
-    [[NNServiceManager sharedManager] addObserver:self forService:[SWEventManager class]];
-}
-
-- (void)stopService;
-{
-    [[NNServiceManager sharedManager] removeObserver:self forService:[SWEventManager class]];
-    
-    [super stopService];
-}
-
-#pragma mark SWEventManagerSubscriber
-
-- (oneway void)eventManager:(SWEventManager *)manager didProcessKeyForEventType:(SWEventManagerEventType)eventType;
-{
-    if (eventType == SWEventManagerEventTypeShowPreferences) {
-        [self showPreferencesWindow:manager];
-    }
 }
 
 #pragma mark SWPreferencesService

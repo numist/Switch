@@ -17,11 +17,12 @@
 #import <ReactiveCocoa/EXTScope.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
 
-#import "SWEventManager.h"
+#import "SWEventTap.h"
 #import "SWHUDCollectionView.h"
 #import "SWWindowThumbnailView.h"
 #import "SWAccessibilityService.h"
 #import "SWApplication.h"
+#import "SWPreferencesService.h"
 #import "SWSelector.h"
 #import "SWWindowGroup.h"
 #import "SWWindowListService.h"
@@ -34,20 +35,25 @@ NSString const *SWCoreWindowControllerActiveKey = @"SWCoreWindowControllerActive
 static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
 
-@interface SWCoreWindowController () <SWWindowListSubscriber, SWEventManagerSubscriber, SWHUDCollectionViewDataSource, SWHUDCollectionViewDelegate>
+@interface SWCoreWindowController () <SWWindowListSubscriber, SWHUDCollectionViewDataSource, SWHUDCollectionViewDelegate>
+
+#pragma mark NSWindow state
+@property (nonatomic, assign) BOOL interfaceLoaded;
 
 #pragma mark Core state
-@property (nonatomic, assign) BOOL active;
+@property (nonatomic, assign) BOOL invoked;
 @property (nonatomic, strong) NSTimer *displayTimer;
-@property (nonatomic, assign) BOOL interfaceLoaded;
 @property (nonatomic, assign) BOOL pendingSwitch;
 
 @property (nonatomic, assign) BOOL windowListLoaded;
 @property (nonatomic, strong) NSOrderedSet *windowGroups;
 
+#pragma mark Dependant state
+@property (nonatomic, assign) BOOL active;
+@property (nonatomic, assign) BOOL interfaceVisible;
+
 #pragma mark Selector state
 @property (nonatomic, strong) SWSelector *selector;
-@property (nonatomic, assign) BOOL adjustedIndex;
 @property (nonatomic, assign) BOOL incrementing;
 @property (nonatomic, assign) BOOL decrementing;
 
@@ -72,9 +78,11 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     Check(![self isWindowLoaded]);
     (void)self.window;
     
-    [self _setUpReactions];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self _setUpReactions];
+        [self _registerEvents];
+    });
     
-    [[NNServiceManager sharedManager] addSubscriber:self forService:[SWEventManager class]];
     [[NNServiceManager sharedManager] addObserver:self forService:[SWAccessibilityService class]];
     
     return self;
@@ -121,172 +129,84 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     self.interfaceLoaded = YES;
 }
 
+#pragma mark SWCoreWindowController
+
+- (void)setActive:(BOOL)active;
+{
+    if (active == self.active) { return; }
+    self->_active = active;
+    
+    SWLog(@"active -> %@", @((BOOL)active));
+    
+    if (active) {
+        // This shouldn't ever happen because of pendingSwitch.
+        Check(self.invoked);
+
+        self.invocationTime = [NSDate date];
+        SWLog(@"Switch is active (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+
+        if (!Check(!self.displayTimer)) {
+            [self.displayTimer invalidate];
+        }
+        self.displayTimer = [NSTimer scheduledTimerWithTimeInterval:kNNWindowDisplayDelay target:self selector:@selector(_displayTimerFired:) userInfo:nil repeats:NO];
+        
+        Check(!self.selector);
+        self.selector = [SWSelector new];
+        
+        Check(!self.windowGroups.count);
+        Check(!self.windowListLoaded);
+        [[NNServiceManager sharedManager] addSubscriber:self forService:[SWWindowListService self]];
+        // Update with the service's current set of windows, in case it's already running.
+        [self _updateWindowGroups:[SWWindowListService sharedService].windows];
+    } else {
+        [[NNServiceManager sharedManager] removeSubscriber:self forService:[SWWindowListService self]];
+        [self _updateWindowGroups:nil];
+        Check(!self.windowGroups.count);
+        Check(!self.windowListLoaded);
+        
+        if (self.displayTimer) {
+            [self.displayTimer invalidate];
+            self.displayTimer = nil;
+        }
+        
+        self.selector = nil;
+    }
+}
+
+- (void)setInterfaceVisible:(BOOL)interfaceVisible;
+{
+    if (interfaceVisible == self.interfaceVisible) { return; }
+    self->_interfaceVisible = interfaceVisible;
+    
+    SWLog(@"interfaceVisible -> %@", @((BOOL)interfaceVisible));
+    
+    if (interfaceVisible) {
+        [self _displayInterface];
+    } else {
+        [self _hideInterface];
+    }
+}
+
+#define printingSetter(__CAPPROPNAME, __PROPNAME) \
+- (void)set##__CAPPROPNAME:(BOOL)__PROPNAME; \
+{ \
+if (__PROPNAME == self.__PROPNAME) { return; } \
+self->_##__PROPNAME = __PROPNAME; \
+\
+SWLog(@"%s -> %@", #__PROPNAME, @((BOOL)__PROPNAME)); \
+}
+
+printingSetter(WindowListLoaded, windowListLoaded)
+printingSetter(Invoked, invoked)
+printingSetter(PendingSwitch, pendingSwitch)
+printingSetter(Incrementing, incrementing)
+printingSetter(Decrementing, decrementing)
+
 #pragma mark SWWindowListSubscriber
 
 - (oneway void)windowListService:(SWWindowListService *)service updatedList:(NSOrderedSet *)windows;
 {
-    self.windowGroups = windows;
-    self.selector = [self.selector updateWithWindowGroups:windows];
-    [self.collectionView reloadData];
-    
-    if (self.windowGroups.count) {
-        [self.collectionView selectCellAtIndex:self.selector.selectedUIndex];
-    } else {
-        [self.collectionView deselectCell];
-    }
-    
-    if (!self.windowListLoaded) {
-        SWLog(@"Window list loaded with %lu windows (%.3fs elapsed)", (unsigned long)self.windowGroups.count, [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
-        
-        [self _layoutCollectionView];
-        
-        self.windowListLoaded = YES;
-    } else {
-        SWLog(@"Window list updated with %lu windows (%.3fs elapsed)", (unsigned long)self.windowGroups.count, [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
-    }
-}
-
-#pragma mark SWEventManagerSubscriber
-
-- (oneway void)eventManager:(SWEventManager *)manager didProcessKeyForEventType:(SWEventManagerEventType)eventType;
-{
-    switch (eventType) {
-        case SWEventManagerEventTypeInvoke: {
-            [[SWAccessibilityService sharedService] checkAPI];
-            
-            // If the interface is not being shown, bring it up.
-            if (!self.active) {
-                self.invocationTime = [NSDate date];
-                SWLog(@"Invoked (0s elapsed)");
-                self.active = YES;
-            }
-            break;
-        }
-            
-        case SWEventManagerEventTypeDismiss: {
-            if (self.active) {
-                SWLog(@"Dismissed (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
-                self.pendingSwitch = YES;
-            }
-            break;
-        }
-            
-        case SWEventManagerEventTypeIncrement: {
-            if (self.active) {
-                if (self.incrementing) {
-                    self.selector = [self.selector incrementWithoutWrapping];
-                } else {
-                    self.selector = [self.selector increment];
-                }
-                self.incrementing = YES;
-            }
-            
-            break;
-        }
-            
-        case SWEventManagerEventTypeEndIncrement: {
-            self.incrementing = NO;
-            break;
-        }
-            
-        case SWEventManagerEventTypeDecrement: {
-            if (self.active) {
-                if (self.decrementing) {
-                    self.selector = [self.selector decrementWithoutWrapping];
-                } else {
-                    self.selector = [self.selector decrement];
-                }
-                self.decrementing = YES;
-            }
-            
-            break;
-        }
-            
-        case SWEventManagerEventTypeEndDecrement: {
-            self.decrementing = NO;
-            break;
-        }
-            
-        case SWEventManagerEventTypeCloseWindow: {
-            if (self.active) {
-                SWWindowGroup *selectedWindowGroup = self.selector.selectedWindowGroup;
-                if (!selectedWindowGroup) {
-                    break;
-                }
-                
-                SWWindowThumbnailView *thumb = (SWWindowThumbnailView *)[self.collectionView cellForIndex:self.selector.selectedUIndex];
-                Check(!thumb || [thumb isKindOfClass:[SWWindowThumbnailView class]]);
-                
-                Check(self.windowListLoaded);
-                
-                /** Closing a window will change the window list ordering in unwanted ways if all of the following are true:
-                 *     • The first window is being closed
-                 *     • The first window's application has another window open in the list
-                 *     • The first window and second window belong to different applications
-                 * This can be worked around by first raising the second window.
-                 * This may still result in odd behaviour if firstWindow.close fails, but applications not responding to window close events is incorrect behaviour (performance is a feature!) whereas window list shenanigans are (relatively) expected.
-                 */
-                SWWindowGroup *nextWindow = nil;
-                {
-                    BOOL onlyChild = ([self.windowGroups indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop){
-                        if (idx == self.selector.selectedUIndex) { return NO; }
-                        return [((SWWindowGroup *)obj).application isEqual:selectedWindowGroup.application];
-                    }] == NSNotFound);
-                    
-                    BOOL differentApplications = [self.windowGroups count] > 1 && ![[self.windowGroups[0] application] isEqual:[self.windowGroups[1] application]];
-                    
-                    if (self.selector.selectedIndex == 0 && !onlyChild && differentApplications) {
-                        nextWindow = [self.windowGroups objectAtIndex:1];
-                    }
-                }
-                
-                // If sending events to Switch itself, we have to use the main thread!
-                dispatch_queue_t actionQueue = [selectedWindowGroup.application isCurrentApplication] ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-                
-                [thumb setActive:NO];
-                
-#               pragma clang diagnostic push
-#               pragma clang diagnostic ignored "-Wshadow"
-                __weak __typeof(thumb) weakThumb = thumb;
-                dispatch_async(actionQueue, ^{
-                    [[SWAccessibilityService sharedService] raiseWindow:nextWindow.mainWindow completion:nil];
-                    [[SWAccessibilityService sharedService] closeWindow:selectedWindowGroup.mainWindow completion:^(NSError *error) {
-                        if (error) {
-                            // We *should* re-raise selectedWindow, but if it didn't succeed at -close it will also probably fail to -raise.
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                __typeof(thumb) thumb = weakThumb;
-                                [thumb setActive:YES];
-                            });
-                        }
-                    }];
-                });
-#               pragma clang diagnostic pop
-            }
-            
-            break;
-        }
-            
-        case SWEventManagerEventTypeCancel: {
-            if (Check(self.active)) {
-                self.active = NO;
-            }
-            break;
-        }
-            
-        default:
-            break;
-    }
-}
-
-- (oneway void)eventManagerDidDetectMouseMove:(SWEventManager *)manager;
-{
-    if (self.active) {
-        NSPoint windowLocation = [self.window convertScreenToBase:[NSEvent mouseLocation]];
-        if(NSPointInRect([self.collectionView convertPoint:windowLocation fromView:nil], [self.collectionView bounds])) {
-            NSEvent *event = [NSEvent mouseEventWithType:NSMouseMoved location:windowLocation modifierFlags:NSAlternateKeyMask timestamp:(NSTimeInterval)0 windowNumber:self.window.windowNumber context:(NSGraphicsContext *)nil eventNumber:0 clickCount:0 pressure:1.0];
-            [self.collectionView mouseMoved:event];
-        }
-    }
+    [self _updateWindowGroups:windows];
 }
 
 #pragma mark SWHUDCollectionViewDataSource
@@ -313,50 +233,59 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
 
 - (void)HUDView:(SWHUDCollectionView *)view activateCellAtIndex:(NSUInteger)index;
 {
-    BailUnless(self.active,);
-    
     if (!Check(index == self.selector.selectedUIndex)) {
         self.selector = [self.selector selectIndex:index];
     }
     
     self.pendingSwitch = YES;
+    // Clicking on an item cancels the invocation.
+    self.invoked = NO;
 }
 
 #pragma  mark Internal
 
-- (void)_activate;
+- (void)_updateWindowGroups:(NSOrderedSet *)windowGroups;
 {
-    SWLog(@"Switch is active (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+    // Idempotent, at least as far as setting nil is concerned (equal sets may have different addresses).
+    if (windowGroups == self.windowGroups) { return; }
     
-    if (!Check(!self.displayTimer)) {
-        [self.displayTimer invalidate];
-    }
-    
-    self.displayTimer = [NSTimer scheduledTimerWithTimeInterval:kNNWindowDisplayDelay target:self selector:@selector(_displayTimerFired:) userInfo:nil repeats:NO];
-
-    if (Check(![self.windowGroups count])) {
-        self.adjustedIndex = NO;
+    // A nil update means clean up, we're shutting down until the next invocation.
+    if (!windowGroups) {
+        self.windowGroups = nil;
         self.windowListLoaded = NO;
-        self.selector = [SWSelector new];
+        // To save on CPU, dispose of all views, which will disable their content updating mechanisms.
+        [self.collectionView reloadData];
+        [self.collectionView deselectCell];
+        return;
     }
     
-    [[NNServiceManager sharedManager] addSubscriber:self forService:[SWWindowListService self]];
-}
-
-- (void)_deactivate;
-{
-    SWLog(@"Deactivating Switch (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
-
-    [[NNServiceManager sharedManager] removeSubscriber:self forService:[SWWindowListService self]];
-    
-    [self.displayTimer invalidate];
-    self.displayTimer = nil;
-    self.pendingSwitch = NO;
-    
-    // To save on CPU, we dispose of all views, whch will disable their content updating mechanisms.
-    self.windowGroups = nil;
+    self.windowGroups = windowGroups;
     [self.collectionView reloadData];
-    [self.collectionView deselectCell];
+    
+    self.selector = [self.selector updateWithWindowGroups:windowGroups];
+    
+    if (self.windowGroups.count) {
+        [self.collectionView selectCellAtIndex:self.selector.selectedUIndex];
+    } else {
+        [self.collectionView deselectCell];
+    }
+    
+    if (!self.windowListLoaded) {
+        SWLog(@"Window list loaded with %lu windows (%.3fs elapsed)", (unsigned long)self.windowGroups.count, [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+        
+        [self _layoutCollectionView];
+        
+        if (self.selector.selectedIndex == 1 && [self.windowGroups count] > 1 && !((SWWindowGroup *)[self.windowGroups objectAtIndex:0]).mainWindow.application.runningApplication.active) {
+            SWLog(@"Adjusted index to select first window (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+            self.selector = [[SWSelector new] updateWithWindowGroups:self.windowGroups];
+        } else {
+            SWLog(@"Index does not need adjustment (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+        }
+        
+        self.windowListLoaded = YES;
+    } else {
+        SWLog(@"Window list updated with %lu windows (%.3fs elapsed)", (unsigned long)self.windowGroups.count, [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+    }
 }
 
 - (void)_displayInterface;
@@ -371,30 +300,14 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     [self.window orderOut:self];
 }
 
-- (void)_adjustIndex;
-{
-    BailUnless(!self.adjustedIndex,);
-    
-    if (self.selector.selectedIndex == 1 && [self.windowGroups count] > 1 && !((SWWindowGroup *)[self.windowGroups objectAtIndex:0]).mainWindow.application.runningApplication.active) {
-        SWLog(@"Adjusted index to select first window (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
-        self.selector = [[SWSelector new] updateWithWindowGroups:self.windowGroups];
-    } else {
-        SWLog(@"Index does not need adjustment (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
-    }
-    self.adjustedIndex = YES;
-}
-
 - (void)_raiseSelectedWindow;
 {
-
     BailUnless(self.pendingSwitch && self.windowListLoaded,);
-    
-    self.pendingSwitch = NO;
     
     SWWindowGroup *selectedWindow = self.selector.selectedWindowGroup;
     if (!selectedWindow) {
         SWLog(@"No windows to raise! (Selection index: %lu)", self.selector.selectedUIndex);
-        self.active = NO;
+        self.pendingSwitch = NO;
         return;
     }
     
@@ -403,99 +316,71 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     
     thumb.active = NO;
     
-#   pragma clang diagnostic push
-#   pragma clang diagnostic ignored "-Wshadow"
-    __weak __typeof(thumb) weakThumb = thumb;
+    @weakify(thumb);
     [[SWAccessibilityService sharedService] raiseWindow:selectedWindow.mainWindow completion:^(NSError *error) {
-        SWWindowThumbnailView *thumb = weakThumb;
+        @strongify(thumb);
         
         if (!error) {
-            if (!self.active) {
-                SWLog(@"Switcher already inactive after successful -raise");
-            }
-            self.active = NO;
+            self.pendingSwitch = NO;
         }
         
         thumb.active = YES;
     }];
-#   pragma clang diagnostic pop
 }
 
-- (void)_setUpReactions;
+- (void)_closeSelectedWindow;
 {
-    // Interface is only visible when Switch is active, the window list has loaded, and the display timer has timed out.
-    [[[[RACSignal
-        combineLatest:@[RACObserve(self, windowListLoaded), RACObserve(self, displayTimer)]
-        reduce:^(NSNumber *windowListLoaded, NSTimer *displayTimer) {
-            return @(self.active && [windowListLoaded boolValue] && !displayTimer);
-        }]
-       distinctUntilChanged]
-      skip:1]
-     subscribeNext:^(NSNumber *shouldDisplayInterface) {
-         if ([shouldDisplayInterface boolValue]) {
-             [self _displayInterface];
-         } else {
-             [self _hideInterface];
-         }
-     }];
+    Check(self.interfaceVisible);
+
+    SWWindowGroup *selectedWindowGroup = self.selector.selectedWindowGroup;
+    if (!selectedWindowGroup) { return; }
     
-    // Adjust the selected index by 1 if the first window's application is not already frontmost, but do this as late as possible.
-    [[[[RACSignal
-        combineLatest:@[RACObserve(self, pendingSwitch), RACObserve(self, displayTimer)]
-        reduce:^(NSNumber *pendingSwitch, NSTimer *displayTimer){
-            return @([pendingSwitch boolValue] || displayTimer == nil);
-        }]
-       distinctUntilChanged]
-      skip:1]
-     subscribeNext:^(NSNumber *adjustIndex) {
-         if (!self.adjustedIndex && [adjustIndex boolValue]) {
-             [self _adjustIndex];
-         }
-     }];
+    SWWindowThumbnailView *thumb = (SWWindowThumbnailView *)[self.collectionView cellForIndex:self.selector.selectedUIndex];
+    Check(!thumb || [thumb isKindOfClass:[SWWindowThumbnailView class]]);
     
-    // Clean up all that crazy state when the activation state changes.
-    [[[RACObserve(self, active)
-       distinctUntilChanged]
-      skip:1]
-     subscribeNext:^(NSNumber *active) {
-         if ([active boolValue]) {
-             [self _activate];
-         } else {
-             [self _deactivate];
-         }
-         
-         [[NSNotificationCenter defaultCenter] postNotificationName:(NSString *)SWCoreWindowControllerActivityNotification object:self userInfo:@{SWCoreWindowControllerActiveKey : active}];
-     }];
+    /** Closing a window will change the window list ordering in unwanted ways if all of the following are true:
+     *     • The first window is being closed
+     *     • The first window's application has another window open in the list
+     *     • The first window and second window belong to different applications
+     * This can be worked around by first raising the second window.
+     * This may still result in odd behaviour if firstWindow.close fails, but applications not responding to window close events is incorrect behaviour (performance is a feature!) whereas window list shenanigans are (relatively) expected.
+     */
+    SWWindowGroup *nextWindow = nil;
+    {
+        BOOL onlyChild = ([self.windowGroups indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop){
+            if (idx == self.selector.selectedUIndex) { return NO; }
+            return [((SWWindowGroup *)obj).application isEqual:selectedWindowGroup.application];
+        }] == NSNotFound);
+        
+        BOOL differentApplications = [self.windowGroups count] > 1 && ![[self.windowGroups[0] application] isEqual:[self.windowGroups[1] application]];
+        
+        if (self.selector.selectedIndex == 0 && !onlyChild && differentApplications) {
+            nextWindow = [self.windowGroups objectAtIndex:1];
+        }
+    }
     
-    [[[RACSignal
-       combineLatest:@[RACObserve(self, pendingSwitch), RACObserve(self, windowListLoaded)] reduce:^(NSNumber *pendingSwitch, NSNumber *windowListLoaded){
-           return @([pendingSwitch boolValue] && [windowListLoaded boolValue]);
-       }]
-      distinctUntilChanged]
-     subscribeNext:^(id x) {
-         if ([x boolValue]) {
-             dispatch_async(dispatch_get_main_queue(), ^{
-                 [self _raiseSelectedWindow];
-             });
-         }
-     }];
+    // If sending events to Switch itself, we have to use the main thread!
+    dispatch_queue_t actionQueue = [selectedWindowGroup.application isCurrentApplication] ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     
-    [[RACObserve(self, selector.selectedIndex)
-      distinctUntilChanged]
-     subscribeNext:^(id x) {
-         if (!self.windowGroups.count) { return; }
-         
-         NSInteger index = [x integerValue];
-         NSUInteger uindex = (NSUInteger)index;
-         
-         if (uindex == self.collectionView.selectedIndex) { return; }
-         
-         if (index >= 0 && uindex < [self.windowGroups count]) {
-             [self.collectionView selectCellAtIndex:uindex];
-         } else {
-             [self.collectionView deselectCell];
-         }
-     }];
+    [thumb setActive:NO];
+    
+    @weakify(thumb);
+    // TODO: ASCII art leo_inception_reaction.jpg
+    dispatch_async(actionQueue, ^{
+        [[SWAccessibilityService sharedService] raiseWindow:nextWindow.mainWindow completion:^(NSError *raiseError){
+            dispatch_async(actionQueue, ^{
+                [[SWAccessibilityService sharedService] closeWindow:selectedWindowGroup.mainWindow completion:^(NSError *closeError) {
+                    if (closeError) {
+                        // We *should* re-raise selectedWindow, but if it didn't succeed at -close it will also probably fail to -raise.
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            @strongify(thumb);
+                            [thumb setActive:YES];
+                        });
+                    }
+                }];
+            });
+        }];
+    });
 }
 
 - (void)_layoutCollectionView;
@@ -525,6 +410,180 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     SWLog(@"Display timer fired %.3fs %@ (%.3fs elapsed)", fabs(elapsed - kNNWindowDisplayDelay), (elapsed - kNNWindowDisplayDelay) > 0.0 ? @"late" : @"early", elapsed);
     
     self.displayTimer = nil;
+}
+
+#pragma mark Internal Initialization
+
+- (void)_setUpReactions;
+{
+    @weakify(self);
+    
+    // interfaceVisible = (((invoked && displayTimer == nil) || pendingSwitch) && windowListLoaded)
+    RAC(self, interfaceVisible) = [[RACSignal
+    combineLatest:@[RACObserve(self, invoked), RACObserve(self, displayTimer), RACObserve(self, pendingSwitch), RACObserve(self, windowListLoaded)]
+    reduce:^(NSNumber *invoked, NSTimer *displayTimer, NSNumber *pendingSwitch, NSNumber *windowListLoaded){
+        return @(((invoked.boolValue && displayTimer == nil) || pendingSwitch.boolValue) && windowListLoaded.boolValue);
+    }]
+    distinctUntilChanged];
+
+    // Initial setup and final teardown of the switcher.
+    RAC(self, active) = [[RACSignal
+    combineLatest:@[RACObserve(self, invoked), RACObserve(self, pendingSwitch)]
+    reduce:^(NSNumber *invoked, NSNumber *pendingSwitch){
+        return @(invoked.boolValue || pendingSwitch.boolValue);
+    }]
+    distinctUntilChanged];
+    
+    // When invoked is set to YES, reset pendingSwitch to NO.
+    RAC(self, pendingSwitch) = [[[RACObserve(self, invoked)
+    distinctUntilChanged]
+    filter:^(NSNumber *invoked){
+        return invoked.boolValue;
+    }]
+    map:^(NSNumber *invoked){
+        return @(!invoked.boolValue);
+    }];
+    
+    // Update the selected cell in the collection view when the selector is updated.
+    [[RACObserve(self, selector.selectedIndex)
+    distinctUntilChanged]
+    subscribeNext:^(id i) {
+        if (!self.windowGroups.count) { return; }
+        
+        NSInteger index = [i integerValue];
+        NSUInteger uindex = (NSUInteger)index;
+
+        if (index < 0 || uindex > [self.windowGroups count]) {
+            [self.collectionView deselectCell];
+        } else if (uindex != self.collectionView.selectedIndex) {
+            [self.collectionView selectCellAtIndex:uindex];
+        }
+    }];
+    
+    // raise when (pendingSwitch && windowListLoaded)
+    [[[[RACSignal
+    combineLatest:@[RACObserve(self, pendingSwitch), RACObserve(self, windowListLoaded)]
+    reduce:^(NSNumber *pendingSwitch, NSNumber *windowListLoaded){
+        return @(pendingSwitch.boolValue && windowListLoaded.boolValue);
+    }]
+    distinctUntilChanged]
+    filter:^(NSNumber *shouldRaise) {
+         return shouldRaise.boolValue;
+    }]
+    subscribeNext:^(NSNumber *shouldRaise) {
+        @strongify(self);
+        Assert(shouldRaise.boolValue);
+        [self _raiseSelectedWindow];
+    }];
+}
+
+- (void)_registerEvents;
+{
+    @weakify(self);
+    SWEventTap *eventTap = [SWEventTap sharedService];
+    
+    // Incrementing/invoking is bound to option-tab by default.
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:SWHotKeyModifierOption] withBlock:^BOOL(BOOL keyDown) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @strongify(self);
+            if (keyDown) {
+                self.invoked = YES;
+                if (self.incrementing) {
+                    self.selector = [self.selector incrementWithoutWrapping];
+                } else {
+                    self.selector = [self.selector increment];
+                }
+            }
+            self.incrementing = keyDown;
+        });
+        return NO;
+    }];
+    
+    // Decrementing/invoking is bound to option-shift-tab by default.
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:(SWHotKeyModifierOption|SWHotKeyModifierShift)] withBlock:^BOOL(BOOL keyDown) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @strongify(self);
+            if (keyDown) {
+                self.invoked = YES;
+                if (self.decrementing) {
+                    self.selector = [self.selector decrementWithoutWrapping];
+                } else {
+                    self.selector = [self.selector decrement];
+                }
+            }
+            self.decrementing = keyDown;
+        });
+        return NO;
+    }];
+    
+    // Closing a window is bound to option-W when the interface is open.
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_ANSI_W modifiers:SWHotKeyModifierOption] withBlock:^BOOL(BOOL keyDown) {
+        @strongify(self);
+        if (keyDown && self.interfaceVisible) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                @strongify(self);
+                [self _closeSelectedWindow];
+            });
+            return NO;
+        }
+        return YES;
+    }];
+    
+    // Showing the preferences is bound to option-, when the interface is open. This action closes the interface.
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_ANSI_Comma modifiers:SWHotKeyModifierOption] withBlock:^BOOL(BOOL keyDown) {
+        if (keyDown && self.interfaceVisible) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                @strongify(self);
+                self.invoked = NO;
+                [[SWPreferencesService sharedService] showPreferencesWindow:self];
+            });
+            return NO;
+        }
+        return YES;
+    }];
+    
+    // Cancelling the switcher is bound to option-escape. This action closes the interface.
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Escape modifiers:SWHotKeyModifierOption] withBlock:^(BOOL keyDown){
+        @strongify(self);
+        if (keyDown && self.invoked) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.invoked = NO;
+            });
+            return NO;
+        }
+        return YES;
+    }];
+    
+    // Releasing the option key when the interface is open raises the selected window. If that action is successful, it will close the interface.
+    [eventTap registerModifier:SWHotKeyModifierOption withBlock:^(BOOL matched) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @strongify(self);
+            if (!matched) {
+                if (self.invoked) {
+                    SWLog(@"Dismissed (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+
+                    self.pendingSwitch = YES;
+                    self.invoked = NO;
+                }
+            }
+        });
+    }];
+    
+    #pragma message "This will no longer suppress keyboard events while the switcher is active. That's not really ok."
+    
+    // Mouse moved events get captured when the interface is visible in order to update the selected item.
+    [eventTap registerForEventsWithType:kCGEventMouseMoved withBlock:^(CGEventRef event) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @strongify(self);
+            if (self.interfaceVisible) {
+                NSPoint windowLocation = [self.window convertScreenToBase:[NSEvent mouseLocation]];
+                if(NSPointInRect([self.collectionView convertPoint:windowLocation fromView:nil], [self.collectionView bounds])) {
+                    NSEvent *mouseEvent = [NSEvent mouseEventWithType:NSMouseMoved location:windowLocation modifierFlags:NSAlternateKeyMask timestamp:(NSTimeInterval)0 windowNumber:self.window.windowNumber context:(NSGraphicsContext *)nil eventNumber:0 clickCount:0 pressure:1.0];
+                    [self.collectionView mouseMoved:mouseEvent];
+                }
+            }
+        });
+    }];
 }
 
 @end

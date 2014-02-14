@@ -9,7 +9,7 @@
 #import "SWCoreWindowService.h"
 
 #import "SWCoreWindowController.h"
-#import "SWEventManager.h"
+#import "SWEventTap.h"
 
 
 @interface SWCoreWindowService ()
