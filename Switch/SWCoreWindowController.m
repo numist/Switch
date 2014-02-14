@@ -34,8 +34,6 @@ NSString const *SWCoreWindowControllerActiveKey = @"SWCoreWindowControllerActive
 
 static NSTimeInterval kWindowDisplayDelay = 0.15;
 
-//static int kScrollThreshold = 4;
-
 
 @interface SWCoreWindowController () <SWWindowListSubscriber, SWHUDCollectionViewDataSource, SWHUDCollectionViewDelegate>
 
@@ -56,7 +54,6 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
 
 #pragma mark Selector state
 @property (nonatomic, strong) SWSelector *selector;
-//@property (nonatomic, assign) int scrollOffset;
 @property (nonatomic, assign) BOOL incrementing;
 @property (nonatomic, assign) BOOL decrementing;
 
@@ -485,7 +482,6 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
                 } else {
                     self.selector = [self.selector increment];
                 }
-//                self.scrollOffset = 0;
             }
             self.incrementing = keyDown;
         });
@@ -503,7 +499,6 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
                 } else {
                     self.selector = [self.selector decrement];
                 }
-//                self.scrollOffset = 0;
             }
             self.decrementing = keyDown;
         });
@@ -576,38 +571,6 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
             }
         });
     }];
-    
-//    [eventTap registerForEventsWithType:kCGEventScrollWheel withBlock:^(CGEventRef event) {
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            @strongify(self);
-//            if (!self.interfaceVisible) { return; }
-//            
-//            int delta = (int)CGEventGetIntegerValueField(event, kCGScrollWheelEventPointDeltaAxis1);
-//            if (delta == 0) { return; }
-//            
-//            self.scrollOffset += delta;
-//            
-//            SWLog(@"scrollOffset -> %d", self.scrollOffset);
-//            
-//            int units = (self.scrollOffset / kScrollThreshold);
-//            if (units != 0) {
-//                self.scrollOffset -= (units * kScrollThreshold);
-//                
-//                SWLog(@"Moving selector by %d units", units);
-//                
-//                SWSelector *selector = self.selector;
-//                while (units > 0) {
-//                    selector = selector.increment;
-//                    units--;
-//                }
-//                while (units < 0) {
-//                    selector = selector.decrement;
-//                    units++;
-//                }
-//                self.selector = selector;
-//            }
-//        });
-//    }];
 }
 
 @end
