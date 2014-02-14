@@ -53,6 +53,7 @@
 		BCA7354916E1F14D00CD4C74 /* SWSelectionBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354816E1F14D00CD4C74 /* SWSelectionBoxView.m */; };
 		BCA7354D16E2ED5000CD4C74 /* SWHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7354C16E2ED5000CD4C74 /* SWHUDView.m */; };
 		BCA8AD5B18AC5E3F0059F253 /* SWWordTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA8AD5A18AC5E3F0059F253 /* SWWordTests.m */; };
+		BCA8AD6A18AD61A00059F253 /* SWEventTap.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA8AD6918AD61A00059F253 /* SWEventTap.m */; };
 		BCBC848F1882138B00E5B52E /* SWWindow+TweetbotQuirks.m in Sources */ = {isa = PBXBuildFile; fileRef = BCBC848E1882138B00E5B52E /* SWWindow+TweetbotQuirks.m */; };
 		BCBF525017B079FA00716200 /* SWHotKey.m in Sources */ = {isa = PBXBuildFile; fileRef = BCBF524D17B079FA00716200 /* SWHotKey.m */; };
 		BCCA7A5F18076AF500CE36E5 /* NNKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCCA7A5618076ADB00CE36E5 /* NNKit.framework */; };
@@ -319,6 +320,8 @@
 		BCA7354B16E2ED5000CD4C74 /* SWHUDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWHUDView.h; sourceTree = "<group>"; };
 		BCA7354C16E2ED5000CD4C74 /* SWHUDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWHUDView.m; sourceTree = "<group>"; };
 		BCA8AD5A18AC5E3F0059F253 /* SWWordTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWWordTests.m; sourceTree = "<group>"; };
+		BCA8AD6818AD61A00059F253 /* SWEventTap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWEventTap.h; sourceTree = "<group>"; };
+		BCA8AD6918AD61A00059F253 /* SWEventTap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWEventTap.m; sourceTree = "<group>"; };
 		BCBC848D1882138B00E5B52E /* SWWindow+TweetbotQuirks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SWWindow+TweetbotQuirks.h"; sourceTree = "<group>"; };
 		BCBC848E1882138B00E5B52E /* SWWindow+TweetbotQuirks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SWWindow+TweetbotQuirks.m"; sourceTree = "<group>"; };
 		BCBF524C17B079FA00716200 /* SWHotKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWHotKey.h; sourceTree = "<group>"; };
@@ -380,6 +383,8 @@
 				BC82B3F0183C48EE00FDD3B9 /* SWCoreWindowService.m */,
 				BCA7353116DB2C0100CD4C74 /* SWEventManager.h */,
 				BCA7353216DB2C0100CD4C74 /* SWEventManager.m */,
+				BCA8AD6818AD61A00059F253 /* SWEventTap.h */,
+				BCA8AD6918AD61A00059F253 /* SWEventTap.m */,
 				BC5A9799180E6949002ECD56 /* SWLoggingService.h */,
 				BC5A979A180E6949002ECD56 /* SWLoggingService.m */,
 				BC19D3D8181436FB009CEC1F /* SWPreferencesService.h */,
@@ -995,6 +1000,7 @@
 				BCBF525017B079FA00716200 /* SWHotKey.m in Sources */,
 				BCA7354316E1621400CD4C74 /* constants.m in Sources */,
 				BC5A979B180E6949002ECD56 /* SWLoggingService.m in Sources */,
+				BCA8AD6A18AD61A00059F253 /* SWEventTap.m in Sources */,
 				BCA7354916E1F14D00CD4C74 /* SWSelectionBoxView.m in Sources */,
 				BC82B3F1183C48EE00FDD3B9 /* SWCoreWindowService.m in Sources */,
 				BCA7354D16E2ED5000CD4C74 /* SWHUDView.m in Sources */,

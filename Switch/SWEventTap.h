@@ -1,9 +1,9 @@
 //
-//  SWHotKey.h
+//  SWEventTap.h
 //  Switch
 //
-//  Created by Scott Perry on 07/16/13.
-//  Copyright © 2013 Scott Perry.
+//  Created by Scott Perry on 02/13/14.
+//  Copyright © 2014 Scott Perry.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 //
@@ -12,26 +12,25 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
-#import <Carbon/Carbon.h>
+#import <NNKit/NNKit.h>
+
+#import "SWHotKey.h"
 
 
-typedef NS_OPTIONS(unsigned, SWHotKeyModifierKey) {
-    SWHotKeyModifierShift    = controlKey,
-    SWHotKeyModifierOption   = optionKey,
-    SWHotKeyModifierControl  = shiftKey,
-    SWHotKeyModifierCmd      = cmdKey,
-};
+typedef BOOL (^SWEventTapKeyFilter)(BOOL keyDown);
+typedef void (^SWEventTapModifierCallback)(BOOL matched);
+typedef void (^SWEventTapCallback)(CGEventRef event);
 
 
-@interface SWHotKey : NSObject <NSCopying>
+@interface SWEventTap : NNService
 
-@property (nonatomic, readonly) CGKeyCode code;
-@property (nonatomic, readonly) SWHotKeyModifierKey modifiers;
+// For key bindings. Block can return NO to stop the event's further propagation.
+- (void)registerHotKey:(SWHotKey *)hotKey withBlock:(SWEventTapKeyFilter)eventFilter;
 
-+ (SWHotKey *)hotKeyWithKeycode:(CGKeyCode)code modifiers:(SWHotKeyModifierKey)modifiers;
-+ (SWHotKey *)hotKeyFromEvent:(CGEventRef)event;
+// For modifier key state updates. Used to dismiss the interface.
+- (void)registerModifier:(SWHotKeyModifierKey)modifiers withBlock:(SWEventTapModifierCallback)eventCallback;
 
-- (NSString *)modifierDescription;
+// Primarily for mouse move and scroll events. Used for selector updates..
+- (void)registerForEventsWithType:(CGEventType)eventType withBlock:(SWEventTapCallback)eventCallback;
 
 @end
