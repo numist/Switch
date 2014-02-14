@@ -17,15 +17,15 @@
 #import <ReactiveCocoa/EXTScope.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
 
-#import "SWEventTap.h"
-#import "SWHUDCollectionView.h"
-#import "SWWindowThumbnailView.h"
 #import "SWAccessibilityService.h"
 #import "SWApplication.h"
+#import "SWEventTap.h"
+#import "SWHUDCollectionView.h"
 #import "SWPreferencesService.h"
 #import "SWSelector.h"
 #import "SWWindowGroup.h"
 #import "SWWindowListService.h"
+#import "SWWindowThumbnailView.h"
 
 
 NSString const *SWCoreWindowControllerActivityNotification = @"SWCoreWindowControllerActivityNotification";
@@ -91,7 +91,7 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
     return self;
 }
 
-#pragma mark NSWindowController
+#pragma mark - NSWindowController
 
 - (BOOL)isWindowLoaded;
 {
@@ -139,8 +139,6 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
     if (active == self.active) { return; }
     self->_active = active;
     
-    SWLog(@"active -> %@", @((BOOL)active));
-    
     if (active) {
         // This shouldn't ever happen because of pendingSwitch.
         Check(self.invoked);
@@ -181,8 +179,6 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
     if (interfaceVisible == self.interfaceVisible) { return; }
     self->_interfaceVisible = interfaceVisible;
     
-    SWLog(@"interfaceVisible -> %@", @((BOOL)interfaceVisible));
-    
     if (interfaceVisible) {
         [self _displayInterface];
     } else {
@@ -198,22 +194,7 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
     [SWEventTap sharedService].suppressKeyEvents = invoked;
 }
 
-#define printingSetter(__CAPPROPNAME, __PROPNAME) \
-- (void)set##__CAPPROPNAME:(BOOL)__PROPNAME; \
-{ \
-if (__PROPNAME == self.__PROPNAME) { return; } \
-self->_##__PROPNAME = __PROPNAME; \
-\
-SWLog(@"%s -> %@", #__PROPNAME, @((BOOL)__PROPNAME)); \
-}
-
-printingSetter(WindowListLoaded, windowListLoaded)
-//printingSetter(Invoked, invoked)
-printingSetter(PendingSwitch, pendingSwitch)
-printingSetter(Incrementing, incrementing)
-printingSetter(Decrementing, decrementing)
-
-#pragma mark SWWindowListSubscriber
+#pragma mark - SWWindowListSubscriber
 
 - (oneway void)windowListService:(SWWindowListService *)service updatedList:(NSOrderedSet *)windows;
 {
@@ -249,11 +230,11 @@ printingSetter(Decrementing, decrementing)
     }
     
     self.pendingSwitch = YES;
-    // Clicking on an item cancels the invocation.
+    // Clicking on an item cancels the keyboard invocation.
     self.invoked = NO;
 }
 
-#pragma  mark Internal
+#pragma  mark - Internal
 
 - (void)_updateWindowGroups:(NSOrderedSet *)windowGroups;
 {
@@ -323,7 +304,7 @@ printingSetter(Decrementing, decrementing)
     }
     
     SWWindowThumbnailView *thumb = (SWWindowThumbnailView *)[self.collectionView cellForIndex:self.selector.selectedUIndex];
-    Check(!thumb || [thumb isKindOfClass:[SWWindowThumbnailView class]]);
+    Check([thumb isKindOfClass:[SWWindowThumbnailView class]]);
     
     thumb.active = NO;
     
@@ -331,6 +312,7 @@ printingSetter(Decrementing, decrementing)
     [[SWAccessibilityService sharedService] raiseWindow:selectedWindow.mainWindow completion:^(NSError *error) {
         @strongify(thumb);
         
+        // TODO: This does not always mean that the window has been raised, just that it was told to!
         if (!error) {
             self.pendingSwitch = NO;
         }
@@ -463,8 +445,6 @@ printingSetter(Decrementing, decrementing)
         
         NSInteger index = [i integerValue];
         NSUInteger uindex = (NSUInteger)index;
-
-        SWLog(@"Updated selector pointing to index %ld", (long)index);
         
         if (index < 0 || uindex > [self.windowGroups count]) {
             [self.collectionView deselectCell];
@@ -485,7 +465,6 @@ printingSetter(Decrementing, decrementing)
     }]
     subscribeNext:^(NSNumber *shouldRaise) {
         @strongify(self);
-        Assert(shouldRaise.boolValue);
         [self _raiseSelectedWindow];
     }];
 }
