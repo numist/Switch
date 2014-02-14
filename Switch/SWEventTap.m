@@ -139,8 +139,9 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
     BailUnless(self.eventTap, NO);
     
     // Create a run loop source.
-    self.runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, self.eventTap, 0);
-    BailWithBlockUnless(self.runLoopSource, ^{
+    // XXX: why does calling the property setter here tickle the static analyzer the wrong way, but setting the ivar directly doesn't?
+    self->_runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, self.eventTap, 0);
+    BailWithBlockUnless(!self.runLoopSource, ^{
         [self _removeEventTap];
         return NO;
     });
@@ -227,7 +228,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
         }
     }
 
-    return event;
+    return eventTap.suppressKeyEvents ? NULL : event;
 }
 
 

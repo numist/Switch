@@ -24,6 +24,8 @@ typedef void (^SWEventTapCallback)(CGEventRef event);
 
 @interface SWEventTap : NNService
 
+@property (nonatomic, assign, readwrite) BOOL suppressKeyEvents;
+
 // For key bindings. Block can return NO to stop the event's further propagation.
 - (void)registerHotKey:(SWHotKey *)hotKey withBlock:(SWEventTapKeyFilter)eventFilter;
 

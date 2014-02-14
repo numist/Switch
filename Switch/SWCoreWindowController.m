@@ -187,6 +187,14 @@ static NSTimeInterval kNNWindowDisplayDelay = 0.15;
     }
 }
 
+- (void)setInvoked:(BOOL)invoked;
+{
+    if (invoked == self.invoked) { return; }
+    self->_invoked = invoked;
+    
+    [SWEventTap sharedService].suppressKeyEvents = invoked;
+}
+
 #define printingSetter(__CAPPROPNAME, __PROPNAME) \
 - (void)set##__CAPPROPNAME:(BOOL)__PROPNAME; \
 { \
@@ -197,7 +205,7 @@ SWLog(@"%s -> %@", #__PROPNAME, @((BOOL)__PROPNAME)); \
 }
 
 printingSetter(WindowListLoaded, windowListLoaded)
-printingSetter(Invoked, invoked)
+//printingSetter(Invoked, invoked)
 printingSetter(PendingSwitch, pendingSwitch)
 printingSetter(Incrementing, incrementing)
 printingSetter(Decrementing, decrementing)
@@ -568,8 +576,6 @@ printingSetter(Decrementing, decrementing)
             }
         });
     }];
-    
-    #pragma message "This will no longer suppress keyboard events while the switcher is active. That's not really ok."
     
     // Mouse moved events get captured when the interface is visible in order to update the selected item.
     [eventTap registerForEventsWithType:kCGEventMouseMoved withBlock:^(CGEventRef event) {
