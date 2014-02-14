@@ -34,6 +34,8 @@ NSString const *SWCoreWindowControllerActiveKey = @"SWCoreWindowControllerActive
 
 static NSTimeInterval kWindowDisplayDelay = 0.15;
 
+static int kScrollThreshold = 4;
+
 
 @interface SWCoreWindowController () <SWWindowListSubscriber, SWHUDCollectionViewDataSource, SWHUDCollectionViewDelegate>
 
@@ -54,6 +56,7 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
 
 #pragma mark Selector state
 @property (nonatomic, strong) SWSelector *selector;
+@property (nonatomic, assign) int scrollOffset;
 @property (nonatomic, assign) BOOL incrementing;
 @property (nonatomic, assign) BOOL decrementing;
 
@@ -217,7 +220,10 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
 
 - (void)HUDView:(SWHUDCollectionView *)view willSelectCellAtIndex:(NSUInteger)index;
 {
+    if (index == self.selector.selectedUIndex) { return; }
+    
     self.selector = [self.selector selectIndex:index];
+    self.scrollOffset = 0;
 }
 
 - (void)HUDView:(SWHUDCollectionView *)view activateCellAtIndex:(NSUInteger)index;
@@ -482,6 +488,7 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
                 } else {
                     self.selector = [self.selector increment];
                 }
+                self.scrollOffset = 0;
             }
             self.incrementing = keyDown;
         });
@@ -499,6 +506,7 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
                 } else {
                     self.selector = [self.selector decrement];
                 }
+                self.scrollOffset = 0;
             }
             self.decrementing = keyDown;
         });
@@ -568,6 +576,38 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
             if(NSPointInRect([self.collectionView convertPoint:windowLocation fromView:nil], [self.collectionView bounds])) {
                 NSEvent *mouseEvent = [NSEvent mouseEventWithType:NSMouseMoved location:windowLocation modifierFlags:NSAlternateKeyMask timestamp:(NSTimeInterval)0 windowNumber:self.window.windowNumber context:(NSGraphicsContext *)nil eventNumber:0 clickCount:0 pressure:1.0];
                 [self.collectionView mouseMoved:mouseEvent];
+            }
+        });
+    }];
+    
+    [eventTap registerForEventsWithType:kCGEventScrollWheel withBlock:^(CGEventRef event) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @strongify(self);
+            if (!self.interfaceVisible) { return; }
+            
+            int delta = (int)CGEventGetIntegerValueField(event, kCGScrollWheelEventPointDeltaAxis1);
+            if (delta == 0) { return; }
+            
+            self.scrollOffset += delta;
+            
+            SWLog(@"scrollOffset -> %d", self.scrollOffset);
+            
+            int units = (self.scrollOffset / kScrollThreshold);
+            if (units != 0) {
+                self.scrollOffset -= (units * kScrollThreshold);
+                
+                SWLog(@"Moving selector by %d units", units);
+                
+                SWSelector *selector = self.selector;
+                while (units > 0) {
+                    selector = selector.increment;
+                    units--;
+                }
+                while (units < 0) {
+                    selector = selector.decrement;
+                    units++;
+                }
+                self.selector = selector;
             }
         });
     }];
