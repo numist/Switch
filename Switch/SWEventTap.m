@@ -113,7 +113,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
 
 - (void)removeBlockForEventsWithType:(CGEventType)eventType object:(id)owner;
 {
-    
+    [self.eventTypeCallbacks[@(eventType)] removeObjectForKey:@((uintptr_t)owner)];
 }
 
 #pragma mark Internal

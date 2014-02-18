@@ -175,10 +175,27 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
 {
     if (interfaceVisible == self.interfaceVisible) { return; }
     self->_interfaceVisible = interfaceVisible;
-    
+
     if (interfaceVisible) {
         [self _displayInterface];
+
+        // Mouse moved events get captured when the interface is visible in order to update the selected item.
+        @weakify(self);
+        [[SWEventTap sharedService] registerForEventsWithType:kCGEventMouseMoved object:self block:^(CGEventRef event) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                @strongify(self);
+                if (!self.interfaceVisible) { return; }
+
+                NSPoint windowLocation = [self.window convertScreenToBase:[NSEvent mouseLocation]];
+                if(NSPointInRect([self.collectionView convertPoint:windowLocation fromView:nil], [self.collectionView bounds])) {
+                    NSEvent *mouseEvent = [NSEvent mouseEventWithType:NSMouseMoved location:windowLocation modifierFlags:NSAlternateKeyMask timestamp:(NSTimeInterval)0 windowNumber:self.window.windowNumber context:(NSGraphicsContext *)nil eventNumber:0 clickCount:0 pressure:1.0];
+                    [self.collectionView mouseMoved:mouseEvent];
+                }
+            });
+        }];
     } else {
+        [[SWEventTap sharedService] removeBlockForEventsWithType:kCGEventMouseMoved object:self];
+
         [self _hideInterface];
     }
 }
@@ -554,20 +571,6 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
                     self.pendingSwitch = YES;
                     self.invoked = NO;
                 }
-            }
-        });
-    }];
-    
-    // Mouse moved events get captured when the interface is visible in order to update the selected item.
-    [eventTap registerForEventsWithType:kCGEventMouseMoved object:self block:^(CGEventRef event) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            @strongify(self);
-            if (!self.interfaceVisible) { return; }
-            
-            NSPoint windowLocation = [self.window convertScreenToBase:[NSEvent mouseLocation]];
-            if(NSPointInRect([self.collectionView convertPoint:windowLocation fromView:nil], [self.collectionView bounds])) {
-                NSEvent *mouseEvent = [NSEvent mouseEventWithType:NSMouseMoved location:windowLocation modifierFlags:NSAlternateKeyMask timestamp:(NSTimeInterval)0 windowNumber:self.window.windowNumber context:(NSGraphicsContext *)nil eventNumber:0 clickCount:0 pressure:1.0];
-                [self.collectionView mouseMoved:mouseEvent];
             }
         });
     }];
