@@ -559,7 +559,7 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
     }];
     
     // Mouse moved events get captured when the interface is visible in order to update the selected item.
-    [eventTap registerForEventsWithType:kCGEventMouseMoved withBlock:^(CGEventRef event) {
+    [eventTap registerForEventsWithType:kCGEventMouseMoved object:self block:^(CGEventRef event) {
         dispatch_async(dispatch_get_main_queue(), ^{
             @strongify(self);
             if (!self.interfaceVisible) { return; }

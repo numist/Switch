@@ -100,15 +100,20 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
     [self.modifierCallbacks[@(modifiers)] addObject:eventCallback];
 }
 
-- (void)registerForEventsWithType:(CGEventType)eventType withBlock:(SWEventTapCallback)eventCallback;
+- (void)registerForEventsWithType:(CGEventType)eventType object:(id)owner block:(SWEventTapCallback)eventCallback;
 {
     NSAssert([[NSThread currentThread] isMainThread], @"%@ must be called from the main thread", [self class]);
 
     if (!self.eventTypeCallbacks[@(eventType)]) {
-        self.eventTypeCallbacks[@(eventType)] = [NSMutableArray new];
+        self.eventTypeCallbacks[@(eventType)] = [NSMutableDictionary new];
     }
     
-    [self.eventTypeCallbacks[@(eventType)] addObject:eventCallback];
+    [self.eventTypeCallbacks[@(eventType)] setObject:eventCallback forKey:@((uintptr_t)owner)];
+}
+
+- (void)removeBlockForEventsWithType:(CGEventType)eventType object:(id)owner;
+{
+    
 }
 
 #pragma mark Internal
@@ -187,7 +192,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
     //
     // Event type callbacks.
     //
-    for (SWEventTapCallback callback in eventTap.eventTypeCallbacks[@(type)]) {
+    for (SWEventTapCallback callback in [eventTap.eventTypeCallbacks[@(type)] allValues]) {
         callback(event);
     }
     

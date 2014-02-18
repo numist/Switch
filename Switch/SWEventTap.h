@@ -33,6 +33,7 @@ typedef void (^SWEventTapCallback)(CGEventRef event);
 - (void)registerModifier:(SWHotKeyModifierKey)modifiers withBlock:(SWEventTapModifierCallback)eventCallback;
 
 // Primarily for mouse move and scroll events. Used for selector updates..
-- (void)registerForEventsWithType:(CGEventType)eventType withBlock:(SWEventTapCallback)eventCallback;
+- (void)registerForEventsWithType:(CGEventType)eventType object:(id)owner block:(SWEventTapCallback)eventCallback;
+- (void)removeBlockForEventsWithType:(CGEventType)eventType object:(id)owner;
 
 @end
