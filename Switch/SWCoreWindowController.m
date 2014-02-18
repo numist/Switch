@@ -253,9 +253,7 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
     
     self.selector = [self.selector updateWithWindowGroups:windowGroups];
     
-    if (self.windowGroups.count) {
-        [self.collectionView selectCellAtIndex:self.selector.selectedUIndex];
-    } else {
+    if (!self.windowGroups.count) {
         [self.collectionView deselectCell];
     }
     
@@ -435,15 +433,15 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
     }];
     
     // Update the selected cell in the collection view when the selector is updated.
-    [[RACObserve(self, selector.selectedIndex)
+    [[RACObserve(self, selector)
     distinctUntilChanged]
-    subscribeNext:^(id i) {
+    subscribeNext:^(SWSelector *selector) {
         if (!self.windowGroups.count) { return; }
         
-        NSInteger index = [i integerValue];
-        NSUInteger uindex = (NSUInteger)index;
+        NSInteger index = selector.selectedIndex;
+        NSUInteger uindex = selector.selectedUIndex;
         
-        if (index < 0 || uindex > [self.windowGroups count]) {
+        if (!selector || index < 0 || uindex > [self.windowGroups count]) {
             [self.collectionView deselectCell];
         } else if (uindex != self.collectionView.selectedIndex) {
             [self.collectionView selectCellAtIndex:uindex];
