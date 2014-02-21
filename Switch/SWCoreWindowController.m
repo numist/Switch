@@ -486,6 +486,26 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
         return NO;
     }];
     
+    // Option-arrow can be used to change the selection when Switch has been invoked.
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_RightArrow modifiers:SWHotKeyModifierOption] withBlock:^BOOL(BOOL keyDown) {
+        @strongify(self);
+        if (self.invoked) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                @strongify(self);
+                if (keyDown) {
+                    if (self.incrementing) {
+                        self.selector = [self.selector incrementWithoutWrapping];
+                    } else {
+                        self.selector = [self.selector increment];
+                    }
+                }
+                self.incrementing = keyDown;
+            });
+            return NO;
+        }
+        return YES;
+    }];
+    
     // Decrementing/invoking is bound to option-shift-tab by default.
     [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:(SWHotKeyModifierOption|SWHotKeyModifierShift)] withBlock:^BOOL(BOOL keyDown) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -501,6 +521,26 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
             self.decrementing = keyDown;
         });
         return NO;
+    }];
+    
+    // Option-arrow can be used to change the selection when Switch has been invoked.
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_LeftArrow modifiers:SWHotKeyModifierOption] withBlock:^BOOL(BOOL keyDown) {
+        @strongify(self);
+        if (self.invoked) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                @strongify(self);
+                if (keyDown) {
+                    if (self.decrementing) {
+                        self.selector = [self.selector decrementWithoutWrapping];
+                    } else {
+                        self.selector = [self.selector decrement];
+                    }
+                }
+                self.decrementing = keyDown;
+            });
+            return NO;
+        }
+        return YES;
     }];
     
     // Closing a window is bound to option-W when the interface is open.
