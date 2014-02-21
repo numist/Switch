@@ -489,7 +489,7 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
     SWEventTap *eventTap = [SWEventTap sharedService];
     
     // Incrementing/invoking is bound to option-tab by default.
-    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:SWHotKeyModifierOption] withBlock:^BOOL(BOOL keyDown) {
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:SWHotKeyModifierOption] object:self block:^BOOL(BOOL keyDown) {
         dispatch_async(dispatch_get_main_queue(), ^{
             @strongify(self);
             if (keyDown) {
@@ -506,7 +506,7 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
     }];
     
     // Decrementing/invoking is bound to option-shift-tab by default.
-    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:(SWHotKeyModifierOption|SWHotKeyModifierShift)] withBlock:^BOOL(BOOL keyDown) {
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:(SWHotKeyModifierOption|SWHotKeyModifierShift)] object:self block:^BOOL(BOOL keyDown) {
         dispatch_async(dispatch_get_main_queue(), ^{
             @strongify(self);
             if (keyDown) {
@@ -523,7 +523,7 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
     }];
     
     // Closing a window is bound to option-W when the interface is open.
-    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_ANSI_W modifiers:SWHotKeyModifierOption] withBlock:^BOOL(BOOL keyDown) {
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_ANSI_W modifiers:SWHotKeyModifierOption] object:self block:^BOOL(BOOL keyDown) {
         @strongify(self);
         if (keyDown && self.interfaceVisible) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -536,7 +536,7 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
     }];
     
     // Showing the preferences is bound to option-, when the interface is open. This action closes the interface.
-    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_ANSI_Comma modifiers:SWHotKeyModifierOption] withBlock:^BOOL(BOOL keyDown) {
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_ANSI_Comma modifiers:SWHotKeyModifierOption] object:self block:^BOOL(BOOL keyDown) {
         if (keyDown && self.interfaceVisible) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 @strongify(self);
@@ -549,7 +549,7 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
     }];
     
     // Cancelling the switcher is bound to option-escape. This action closes the interface.
-    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Escape modifiers:SWHotKeyModifierOption] withBlock:^(BOOL keyDown){
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Escape modifiers:SWHotKeyModifierOption] object:self block:^(BOOL keyDown){
         @strongify(self);
         if (keyDown && self.invoked) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -561,7 +561,7 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
     }];
     
     // Releasing the option key when the interface is open raises the selected window. If that action is successful, it will close the interface.
-    [eventTap registerModifier:SWHotKeyModifierOption withBlock:^(BOOL matched) {
+    [eventTap registerModifier:SWHotKeyModifierOption object:self block:^(BOOL matched) {
         dispatch_async(dispatch_get_main_queue(), ^{
             @strongify(self);
             if (!matched) {
