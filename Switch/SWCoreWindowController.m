@@ -504,7 +504,7 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
     }];
     
     // Option-arrow can be used to change the selection when Switch has been invoked.
-    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_RightArrow modifiers:SWHotKeyModifierOption] withBlock:^BOOL(BOOL keyDown) {
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_RightArrow modifiers:SWHotKeyModifierOption] object:self block:^BOOL(BOOL keyDown) {
         @strongify(self);
         if (self.invoked) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -541,7 +541,7 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
     }];
     
     // Option-arrow can be used to change the selection when Switch has been invoked.
-    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_LeftArrow modifiers:SWHotKeyModifierOption] withBlock:^BOOL(BOOL keyDown) {
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_LeftArrow modifiers:SWHotKeyModifierOption] object:self block:^BOOL(BOOL keyDown) {
         @strongify(self);
         if (self.invoked) {
             dispatch_async(dispatch_get_main_queue(), ^{
