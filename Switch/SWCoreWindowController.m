@@ -292,8 +292,21 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
     }
 }
 
+- (void)_updateSelection;
+{
+    NSInteger index = self.selector.selectedIndex;
+    NSUInteger uindex = self.selector.selectedUIndex;
+
+    if (!self.selector || index < 0 || uindex > [self.windowGroups count]) {
+        [self.collectionView deselectCell];
+    } else if (uindex != self.collectionView.selectedIndex) {
+        [self.collectionView selectCellAtIndex:uindex];
+    }
+}
+
 - (void)_displayInterface;
 {
+    [self _updateSelection];
     [self.window orderFront:self];
     SWLog(@"Showed interface (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
 }
@@ -370,7 +383,7 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
     [thumb setActive:NO];
     
     @weakify(thumb);
-    // TODO: ASCII art leo_inception_reaction.jpg
+    // Yo dawg, I herd you like async blocks…
     dispatch_async(actionQueue, ^{
         [[SWAccessibilityService sharedService] raiseWindow:nextWindow.mainWindow completion:^(NSError *raiseError){
             dispatch_async(actionQueue, ^{
@@ -453,16 +466,7 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
     [[RACObserve(self, selector)
     distinctUntilChanged]
     subscribeNext:^(SWSelector *selector) {
-        if (!self.windowGroups.count) { return; }
-        
-        NSInteger index = selector.selectedIndex;
-        NSUInteger uindex = selector.selectedUIndex;
-        
-        if (!selector || index < 0 || uindex > [self.windowGroups count]) {
-            [self.collectionView deselectCell];
-        } else if (uindex != self.collectionView.selectedIndex) {
-            [self.collectionView selectCellAtIndex:uindex];
-        }
+        [self _updateSelection];
     }];
     
     // raise when (pendingSwitch && windowListLoaded)
