@@ -62,6 +62,10 @@ class Console
   # 47	White background
   # 49	Default background color
 
+  def self.background_white(text)
+    return "\e[47m#{text}\e[49m"
+  end
+
   def self.bold(text)
     return "\e[1m#{text}\e[0m"
   end

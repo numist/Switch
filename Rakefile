@@ -95,14 +95,14 @@ def sparkle_signature(archive)
 end
 
 def verify_codesign(app_path)
-  sh "codesign --verify --verbose --deep \"#{app_path}\""
-  sh "spctl --assess --type execute \"#{app_path}\""
-  puts "#{app_path}: #{Console.green("has a valid code signature")}"
+  shell "codesign --verify --verbose --deep \"#{app_path}\""
+  shell "spctl --assess --type execute \"#{app_path}\""
+  Console.puts "#{app_path}: #{Console.green("has a valid code signature")}"
 end
 
 def verify_deliverable(deliverable_path)
   fail "💩  #{deliverable_path} wasn't produced!" unless File.exists? deliverable_path
-  puts "#{deliverable_path}: #{Console.green("exists")}"
+  Console.puts "#{deliverable_path}: #{Console.green("exists")}"
 end
 
 directory BUILDDIR
@@ -113,7 +113,16 @@ task :default => [:analyze, :test]
 
 def xcode(action)
   run_task DERIVEDDATA
-  sh "set -e; set -o pipefail; xcodebuild #{XCODEFLAGS} #{action} 2>&1 | Scripts/xcodebuild_prettify.rb"
+  shell "set -e; set -o pipefail; xcodebuild #{XCODEFLAGS} #{action} 2>&1 | Scripts/xcodebuild_prettify.rb"
+end
+
+def shell(action)
+  Console.puts(Console.bold(Console.black("#{action}")))
+  fail "💩  Shell command failed: #{action}" unless system(action)
+end
+
+def echo_step(step)
+  Console.puts(Console.bold(Console.black(Console.background_white(step))))
 end
 
 # can these just be tasks dependant on another task with an argument?
@@ -130,17 +139,18 @@ task :clean do
 end
 
 task :test do
-  sh "set -e; set -o pipefail; xcodebuild -scheme \"Switch\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | Scripts/xcodebuild_prettify.rb"
-  sh "set -e; set -o pipefail; xcodebuild -scheme \"ReactiveCocoa\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | Scripts/xcodebuild_prettify.rb"
-  sh "set -e; set -o pipefail; xcodebuild -scheme \"NNKit\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | Scripts/xcodebuild_prettify.rb"
-  sh "set -e; set -o pipefail; xcodebuild -scheme \"Sparkle\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | Scripts/xcodebuild_prettify.rb"
+  echo_step("Testing #{PROJECT}")
+  shell "set -e; set -o pipefail; xcodebuild -scheme \"Switch\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | Scripts/xcodebuild_prettify.rb"
+  shell "set -e; set -o pipefail; xcodebuild -scheme \"ReactiveCocoa\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | Scripts/xcodebuild_prettify.rb"
+  shell "set -e; set -o pipefail; xcodebuild -scheme \"NNKit\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | Scripts/xcodebuild_prettify.rb"
+  shell "set -e; set -o pipefail; xcodebuild -scheme \"Sparkle\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | Scripts/xcodebuild_prettify.rb"
 end
 
 
  # :archive "Builds #{PRODUCT}.xcarchive in #{BUILDDIR}"
 task :archive => [DELIVERABLE_ARCHIVE]
 task DELIVERABLE_ARCHIVE => [File.dirname(DELIVERABLE_ARCHIVE)] do
-  Console.puts(Console.bold(Console.black("Building archive bundle: #{File.basename(DELIVERABLE_ARCHIVE)}")))
+  echo_step("Building archive bundle: #{File.basename(DELIVERABLE_ARCHIVE)}")
 
   archive_path = DELIVERABLE_ARCHIVE.slice(0..(DELIVERABLE_ARCHIVE.rindex('.') - 1))
   xcode "-archivePath \"#{archive_path}\" archive"
@@ -150,18 +160,18 @@ end
 
 task :app => [DELIVERABLE_APP]
 task DELIVERABLE_APP => [DELIVERABLE_ARCHIVE, File.dirname(DELIVERABLE_APP)] do
-  Console.puts(Console.bold(Console.black("Building application bundle: #{File.basename(DELIVERABLE_APP)}")))
+  echo_step("Building application bundle: #{File.basename(DELIVERABLE_APP)}")
   
   FileUtils.rm_r DELIVERABLE_APP if File.exist? DELIVERABLE_APP
   
   app_path = DELIVERABLE_APP.slice(0..(DELIVERABLE_APP.rindex('.') - 1))
-  sh "xcodebuild -exportArchive -exportFormat APP -archivePath \"#{DELIVERABLE_ARCHIVE}\" -exportPath \"#{app_path}\""
+  shell "xcodebuild -exportArchive -exportFormat APP -archivePath \"#{DELIVERABLE_ARCHIVE}\" -exportPath \"#{app_path}\""
   
   verify_deliverable DELIVERABLE_APP
 
   # TODO: if you're not numist and you want to sign an app for distribution you're gonna wanna change this.
   if `whoami`.trim == "numist"
-    sh "codesign --force --deep --sign \"Developer ID Application: Scott Perry\" \"#{DELIVERABLE_APP}\""
+    shell "codesign --force --deep --sign \"Developer ID Application: Scott Perry\" \"#{DELIVERABLE_APP}\""
     verify_codesign DELIVERABLE_APP
   else
     puts ' _____________________________________ '
@@ -180,30 +190,29 @@ end
 
 task :zip => [DELIVERABLE_ZIP]
 task DELIVERABLE_ZIP => [DELIVERABLE_APP, File.dirname(DELIVERABLE_ZIP), INTERMEDIATESDIR] do
-  Console.puts(Console.bold(Console.black("Building zip archive: #{File.basename(DELIVERABLE_ZIP)}")))
+  echo_step("Building zip archive: #{File.basename(DELIVERABLE_ZIP)}")
   
   FileUtils.rm DELIVERABLE_ZIP if File.exist? DELIVERABLE_ZIP
-  sh "cd \"#{File.dirname(DELIVERABLE_APP)}\" && zip --symlinks -rq9o \"#{DELIVERABLE_ZIP}\" \"#{File.basename(DELIVERABLE_APP)}\""
+  shell "cd \"#{File.dirname(DELIVERABLE_APP)}\" && zip --symlinks -rq9o \"#{DELIVERABLE_ZIP}\" \"#{File.basename(DELIVERABLE_APP)}\""
   verify_deliverable DELIVERABLE_ZIP
   
   # Verify that zip didn't ruin code signing (this happened to Switch 0.0.6)
-  Console.puts(Console.bold(Console.black("Verifying contents of zip archive...")))
   unzipped_app = "#{INTERMEDIATESDIR}/#{File.basename(DELIVERABLE_APP)}"
   FileUtils.rm_r unzipped_app if File.exist? unzipped_app
-  sh "cd \"#{INTERMEDIATESDIR}\" && unzip -q \"#{DELIVERABLE_ZIP}\""
+  shell "cd \"#{INTERMEDIATESDIR}\" && unzip -q \"#{DELIVERABLE_ZIP}\""
   verify_deliverable unzipped_app
   
   # The app deliverable should have had its code signature checked, but double check just in case.
   verify_codesign unzipped_app
   # Verify that unzipped app and app deliverable do not differ.
-  sh "diff -r \"#{unzipped_app}\" \"#{DELIVERABLE_APP}\""
+  shell "diff -r \"#{unzipped_app}\" \"#{DELIVERABLE_APP}\""
   Console.puts "#{DELIVERABLE_ZIP}: #{Console.green("properly represents #{File.basename(DELIVERABLE_APP)}")}"
   
   # Verify unzipped application launches successfully.
-  sh "open \"#{unzipped_app}\""
+  shell "open \"#{unzipped_app}\""
   # grep for "[/]Users/foo/bar" to prevent grep from showing up in the list of processes matching the query.
   match = "[#{unzipped_app[0]}]#{unzipped_app[1..-1]}"
-  sh "ps auxwww | grep \"#{match}\" | awk '{ print $2; }' | xargs kill"
+  shell "ps auxwww | grep \"#{match}\" | awk '{ print $2; }' | xargs kill"
   Console.puts "#{unzipped_app}: #{Console.green("launched successfully")}"
   
   # Clean up
