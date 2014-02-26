@@ -16,6 +16,7 @@ class Buildphase < Command
     "CpResource" => "Copy", # First argument is file
     "GenerateDSYMFile" => "Generate", # First argument is file
     "Ld" => "Link", # First argument is file
+    "Libtool" => "Link", # First argument is file
     "PhaseScriptExecution" => "Run Build Script", # Second argument is script
     "PBXCp" => "Copy", # First argument is file
     "ProcessInfoPlistFile" => "Process", # First argument is file
@@ -52,13 +53,13 @@ class Buildphase < Command
   end
   
   def start
-    Console.print "    #{@command} #{@command_argument}"
+    Console.print "#{@indentation}#{@command} #{@command_argument}"
   end
   
   def finish
     super
     
-    Console.print "    #{$command} #{$command_argument}(#{self.duration} ms)"
+    Console.print "#{@indentation}#{@command} #{@command_argument} (#{self.duration} ms)"
 
     while @output.count > 0 and /^[\s]/.match(@output[0])
       @output.shift
@@ -73,6 +74,6 @@ class Buildphase < Command
   end
   
   def command_is_compile?
-    return ["Compile", "Link", "Analyze (deep)", "Analyze (shallow)", "Sign"].include?(@command)
+    return ["Precompile", "Compile", "Link", "Analyze (deep)", "Analyze (shallow)", "Sign"].include?(@command)
   end
 end

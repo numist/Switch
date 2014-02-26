@@ -113,7 +113,7 @@ task :default => [:analyze, :test]
 
 def xcode(action)
   run_task DERIVEDDATA
-  sh "set -e; set -o pipefail; xcodebuild #{XCODEFLAGS} #{action} | Scripts/xcodebuild_prettify.rb"
+  sh "set -e; set -o pipefail; xcodebuild #{XCODEFLAGS} #{action} 2>&1 | Scripts/xcodebuild_prettify.rb"
 end
 
 # can these just be tasks dependant on another task with an argument?
@@ -130,10 +130,10 @@ task :clean do
 end
 
 task :test do
-  sh "set -e; set -o pipefail; xcodebuild -scheme \"Switch\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test # | Scripts/xcodebuild_prettify.rb"
-  sh "set -e; set -o pipefail; xcodebuild -scheme \"ReactiveCocoa\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test # | Scripts/xcodebuild_prettify.rb"
-  sh "set -e; set -o pipefail; xcodebuild -scheme \"NNKit\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test # | Scripts/xcodebuild_prettify.rb"
-  sh "set -e; set -o pipefail; xcodebuild -scheme \"Sparkle\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test # | Scripts/xcodebuild_prettify.rb"
+  sh "set -e; set -o pipefail; xcodebuild -scheme \"Switch\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | Scripts/xcodebuild_prettify.rb"
+  sh "set -e; set -o pipefail; xcodebuild -scheme \"ReactiveCocoa\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | Scripts/xcodebuild_prettify.rb"
+  sh "set -e; set -o pipefail; xcodebuild -scheme \"NNKit\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | Scripts/xcodebuild_prettify.rb"
+  sh "set -e; set -o pipefail; xcodebuild -scheme \"Sparkle\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | Scripts/xcodebuild_prettify.rb"
 end
 
 

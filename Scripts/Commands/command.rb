@@ -1,6 +1,7 @@
 MSEC_PER_SEC = 1000
 
 class Command
+  @@level = 0
   
   # Stubs to be overridden by subclasses:
   def self.create(line)
@@ -28,31 +29,50 @@ class Command
     @started = Time.now
     # Subclasses should override this ivar with a list of valid subcommand types.
     @subcommand_classes = [Command]
+    
+    @indentation = ""
+    @@level.times { @indentation = "#{@indentation}  " }
   end
   
   #
   # Implementation details follow. Do not override any of these methods.
   #
   
+  attr_reader :indentation
+  attr_accessor :subcommand
+  attr_reader :subcommand_classes
+  attr_reader :output
+  
   def duration
     return ((Time.now - @started) * MSEC_PER_SEC).round
   end
   
   def feed(line)
-    # Does this line mark the start of a new command?
-    new_command = @subcommand_classes.map{|subclass| subclass.create(line)}.detect{|command| !command.nil?}
-    if !new_command.nil?
-      # If there's a subcommand, wrap it up.
-      unless @subcommand.nil?
-        @subcommand.finish
+    # Build a stack of current unfinished commands:
+    commands = [self]
+    while commands.last.subcommand
+      commands.push(commands.last.subcommand)
+    end
+    commands = commands.reject{|command| command.respond_to?(:finished?) and command.finished?}
+    
+    # Get all the possible new commands that this line may represent.
+    new_commands = commands.map do |command|
+      @@level = commands.index(command)
+      command.subcommand_classes.map{|subclass| subclass.create(line)}.detect{|command| !command.nil?}
+    end
+    
+    # The last new command is the one we want to assign to its corresponding parent.
+    last_new_command_index = new_commands.rindex{|command| !command.nil?}
+    
+    if !last_new_command_index.nil?
+      unless commands[last_new_command_index].subcommand.nil?
+        commands[last_new_command_index].subcommand.finish
       end
-      @subcommand = new_command
-      @subcommand.start
-    elsif @subcommand.nil?
-      @output.push line
-      self.handle_new_output
-    else
-      @subcommand.feed line
+      commands[last_new_command_index].subcommand = new_commands[last_new_command_index]
+      commands[last_new_command_index].subcommand.start
+    elsif !commands.last.respond_to?(:finished) or !commands.last.finished?
+      commands.last.output.push(line)
+      commands.last.handle_new_output
     end
   end
 end
