@@ -513,7 +513,6 @@
 				BC63AB93175701BA00016B9E /* Haxcessibility */,
 				BCCA7A4D18076AD700CE36E5 /* NNKit */,
 				BCF357D5176CEE0200458AFF /* ReactiveCocoa */,
-				BCEF6C44189DF3E30080ABAB /* Foundation.framework */,
 				BCA734E216DAC53F00CD4C74 /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -525,6 +524,7 @@
 				BCA734E316DAC53F00CD4C74 /* AppKit.framework */,
 				BC63AB911756FBE300016B9E /* Carbon.framework */,
 				BCA734E016DAC53F00CD4C74 /* Cocoa.framework */,
+				BCEF6C44189DF3E30080ABAB /* Foundation.framework */,
 				BCA734E516DAC53F00CD4C74 /* Foundation.framework */,
 				BCA7353916E14EF000CD4C74 /* QuartzCore.framework */,
 			);
