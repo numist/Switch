@@ -1,40 +1,7 @@
 #!/usr/bin/env ruby
 
 require_relative 'console'
-
-class String
-  # Returns a new string that has the leading and trailing whitespace trimmed.
-  def trim
-    tmp = self
-    tmp.strip!
-    return tmp
-  end
-end
-
-
-$type = nil
-$target = nil
-$project = nil
-$configuration = nil
-$target_started = nil
-TARGET = /=== ([A-Z]*) TARGET (.*) OF PROJECT (.*) WITH CONFIGURATION (.*) ===/
-def parse_target(line)
-  TARGET.match(line) do |matches|
-    unless $target_started.nil?
-      duration = ((Time.now - $target_started) * MSEC_PER_SEC).round
-      Console.print "    Finished in #{duration} ms\n"
-    end
-    
-    $type = matches[1].capitalize
-    $target = matches[2]
-    $project = matches[3]
-    $configuration = matches[4]
-    $target_started = Time.now
-    
-    Console.print "#{$type}: #{$target} / #{$project} (#{$configuration})\n"
-  end
-end
-
+require_relative 'commands/prettify'
 
 COMMANDS = {
   "Check dependencies" => "Check dependencies", # No arguments
@@ -60,8 +27,6 @@ COMMANDS = {
   "Touch" => "Touch", # First argument is file
 }
 
-MSEC_PER_SEC = 1000
-
 $command = nil
 $command_argument = nil
 $command_start = nil
@@ -72,21 +37,21 @@ def command_is_compile(command)
 end
 
 def print_command
-  duration = ""
-  unless $command_start.nil?
-    duration = "(#{((Time.now - $command_start) * MSEC_PER_SEC).round} ms)"
-  end
-  
-  Console.print "    #{$command} #{$command_argument}#{duration}"
-  
-  if command_is_compile($command) and $command_barf
-    line = ""
-    80.times { line = "#{line}━" }
-    block = Console.bold(Console.black("#{line}\n#{$command_barf.strip}\n#{line}"))
-    Console.append ":\n#{block}\n"
-  end
-  
-  $command_barf = nil
+  # duration = ""
+  # unless $command_start.nil?
+  #   duration = "(#{((Time.now - $command_start) * MSEC_PER_SEC).round} ms)"
+  # end
+  # 
+  # Console.print "    #{$command} #{$command_argument}#{duration}"
+  # 
+  # if command_is_compile($command) and $command_barf
+  #   line = ""
+  #   80.times { line = "#{line}━" }
+  #   block = Console.bold(Console.black("#{line}\n#{$command_barf.strip}\n#{line}"))
+  #   Console.append ":\n#{block}\n"
+  # end
+  # 
+  # $command_barf = nil
 end
 
 COMMAND = /^([A-Za-z]+[\s]+)+/
@@ -98,11 +63,11 @@ def parse_command(line)
     end
     
     matches = COMMAND.match(line)
-    $command = COMMANDS[matches[0].trim] ? COMMANDS[matches[0].trim] : matches[0].trim
+    $command = COMMANDS[matches[0].strip] ? COMMANDS[matches[0].strip] : matches[0].strip
     rest_of_line = line[(matches[0].length)..-1]
     $command_argument = ""
     PATH.match(rest_of_line) do |matches|
-      $command_argument = "#{File.basename(matches[0]).trim} "
+      $command_argument = "#{File.basename(matches[0]).strip} "
     end
     
     $command_start = nil
@@ -120,12 +85,15 @@ def parse_command(line)
 end
 
 
+prettify = Prettify.new
+
 STDIN.each do |line|
-  parse_target(line)
-  next if ($target.nil? or $project.nil? or $configuration.nil?)
+  prettify.feed line
   
   parse_command(line)
   next if $command.nil?
 end
+
+prettify.finish
 
 Console.print ""

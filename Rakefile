@@ -78,7 +78,16 @@ def sparkle_signature(archive)
   # TODO: Sorry.
   private_key = "Secrets-local/Sparkle.dsa_priv.pem"
   unless File.exist?(private_key)
-    sh 'echo -e "WARNING: not able to sign app deliverable for appcast!\nFind this message in the Rakefile." | cowsay'
+    puts ' ____________________________________ '
+    puts '/ WARNING: not able to sign app      \\'
+    puts '| deliverable for appcast! Find this |'
+    puts '\\ message in the Rakefile.           /'
+    puts ' ------------------------------------ '
+    puts '        \\   ^__^                      '
+    puts '         \\  (oo)\\_______              '
+    puts '            (__)\\       )\\/\\          '
+    puts '                ||----w |             '
+    puts '                ||     ||             '
     sleep 5
   else
     return `Scripts/sign_update.rb \"#{archive}\" \"#{private_key}\"`.trim
@@ -155,7 +164,16 @@ task DELIVERABLE_APP => [DELIVERABLE_ARCHIVE, File.dirname(DELIVERABLE_APP)] do
     sh "codesign --force --deep --sign \"Developer ID Application: Scott Perry\" \"#{DELIVERABLE_APP}\""
     verify_codesign DELIVERABLE_APP
   else
-    sh 'echo -e "WARNING: not able to sign app deliverable with Developer ID!\nFind this message in the Rakefile." | cowsay'
+    puts ' _____________________________________ '
+    puts '/ WARNING: not able to sign app       \\'
+    puts '| deliverable with Developer ID! Find |'
+    puts '\\ this message in the Rakefile.       /'
+    puts ' ------------------------------------- '
+    puts '        \\   ^__^                       '
+    puts '         \\  (oo)\\_______               '
+    puts '            (__)\\       )\\/\\           '
+    puts '                ||----w |              '
+    puts '                ||     ||              '
     sleep 5
   end
 end
