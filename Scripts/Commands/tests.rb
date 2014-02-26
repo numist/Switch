@@ -33,15 +33,6 @@ class TestSuite < Command
   def finished?
     return @finished
   end
-
-  def finish
-    super
-    pass_rate = ""
-    if @tests_failed > 0
-      pass_rate = ", #{@tests_failed} failures"
-    end
-    Console.print "#{@indentation}finished in #{self.duration} ms (#{@tests_total} tests#{pass_rate})\n"
-  end
 end
 
 class TestCase < Command
@@ -78,20 +69,21 @@ class TestCase < Command
 
   def finish
     super
-    Console.print "#{@indentation}Test case #{@case_name} (#{self.duration} ms)"
-    
-    while @output.count > 0 and /^[\s]/.match(@output[0])
-      @output.shift
-    end
     
     if @status == "failed"
+      Console.print "#{@indentation}Test case #{@case_name} #{@status}"
+    
+      while @output.count > 0 and /^[\s]/.match(@output[0])
+        @output.shift
+      end
+    
       if @output.count > 0
         line = ""
         80.times { line = "#{line}━" }
         block = Console.bold(Console.black("#{line}\n#{@output.join.strip}\n#{line}"))
         Console.append ":\n#{block}\n"
       else
-        Console.append " failed.\n"
+        Console.append "\n"
       end
     end
   end

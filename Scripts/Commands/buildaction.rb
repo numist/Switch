@@ -27,9 +27,4 @@ class Buildaction < Command
   def start
     Console.print "#{@indentation}#{@type}: #{@target} / #{@project} (#{@configuration})\n"
   end
-  
-  def finish
-    super
-    Console.print "#{@indentation}finished in #{self.duration} ms\n"
-  end
 end
