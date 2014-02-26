@@ -78,7 +78,16 @@ def sparkle_signature(archive)
   # TODO: Sorry.
   private_key = "Secrets-local/Sparkle.dsa_priv.pem"
   unless File.exist?(private_key)
-    sh 'echo -e "WARNING: not able to sign app deliverable for appcast!\nFind this message in the Rakefile." | cowsay'
+    puts ' ____________________________________ '
+    puts '/ WARNING: not able to sign app      \\'
+    puts '| deliverable for appcast! Find this |'
+    puts '\\ message in the Rakefile.           /'
+    puts ' ------------------------------------ '
+    puts '        \\   ^__^                      '
+    puts '         \\  (oo)\\_______              '
+    puts '            (__)\\       )\\/\\          '
+    puts '                ||----w |             '
+    puts '                ||     ||             '
     sleep 5
   else
     return `Scripts/sign_update.rb \"#{archive}\" \"#{private_key}\"`.trim
@@ -104,7 +113,7 @@ task :default => [:analyze, :test]
 
 def xcode(action)
   run_task DERIVEDDATA
-  sh "set -e; set -o pipefail; xcodebuild #{XCODEFLAGS} #{action} | Scripts/xcodebuild_prettify.rb"
+  sh "set -e; set -o pipefail; xcodebuild #{XCODEFLAGS} #{action} 2>&1 | Scripts/xcodebuild_prettify.rb"
 end
 
 # can these just be tasks dependant on another task with an argument?
@@ -121,10 +130,10 @@ task :clean do
 end
 
 task :test do
-  sh "set -e; set -o pipefail; xcodebuild -scheme \"Switch\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test # | Scripts/xcodebuild_prettify.rb"
-  sh "set -e; set -o pipefail; xcodebuild -scheme \"ReactiveCocoa\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test # | Scripts/xcodebuild_prettify.rb"
-  sh "set -e; set -o pipefail; xcodebuild -scheme \"NNKit\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test # | Scripts/xcodebuild_prettify.rb"
-  sh "set -e; set -o pipefail; xcodebuild -scheme \"Sparkle\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test # | Scripts/xcodebuild_prettify.rb"
+  sh "set -e; set -o pipefail; xcodebuild -scheme \"Switch\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | Scripts/xcodebuild_prettify.rb"
+  sh "set -e; set -o pipefail; xcodebuild -scheme \"ReactiveCocoa\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | Scripts/xcodebuild_prettify.rb"
+  sh "set -e; set -o pipefail; xcodebuild -scheme \"NNKit\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | Scripts/xcodebuild_prettify.rb"
+  sh "set -e; set -o pipefail; xcodebuild -scheme \"Sparkle\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | Scripts/xcodebuild_prettify.rb"
 end
 
 
@@ -155,7 +164,16 @@ task DELIVERABLE_APP => [DELIVERABLE_ARCHIVE, File.dirname(DELIVERABLE_APP)] do
     sh "codesign --force --deep --sign \"Developer ID Application: Scott Perry\" \"#{DELIVERABLE_APP}\""
     verify_codesign DELIVERABLE_APP
   else
-    sh 'echo -e "WARNING: not able to sign app deliverable with Developer ID!\nFind this message in the Rakefile." | cowsay'
+    puts ' _____________________________________ '
+    puts '/ WARNING: not able to sign app       \\'
+    puts '| deliverable with Developer ID! Find |'
+    puts '\\ this message in the Rakefile.       /'
+    puts ' ------------------------------------- '
+    puts '        \\   ^__^                       '
+    puts '         \\  (oo)\\_______               '
+    puts '            (__)\\       )\\/\\           '
+    puts '                ||----w |              '
+    puts '                ||     ||              '
     sleep 5
   end
 end
