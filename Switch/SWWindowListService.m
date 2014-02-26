@@ -43,7 +43,7 @@ static NSMutableSet *loggedWindows;
 
     if (!(self = [super init])) { return nil; }
     
-    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(_workerUpdatedWindowList:) name:[SWWindowListWorker notificationName] object:nil];
+    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:NNSelfSelector1(_workerUpdatedWindowList:) name:[SWWindowListWorker notificationName] object:nil];
     
     return self;
 }

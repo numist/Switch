@@ -62,7 +62,7 @@
     _contentContainers = [NSMutableDictionary new];
     _queue = dispatch_queue_create([[NSString stringWithFormat:@""] UTF8String], DISPATCH_QUEUE_SERIAL);
     
-    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:@selector(_windowUpdateNotification:) name:[SWWindowWorker notificationName] object:nil];
+    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:NNSelfSelector1(_windowUpdateNotification:) name:[SWWindowWorker notificationName] object:nil];
     
     return self;
 }

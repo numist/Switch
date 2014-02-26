@@ -72,7 +72,7 @@
         [[NSNotificationCenter defaultCenter] removeObserver:self name:SWAPIEnabledWorker.notificationName object:_worker];
     }
     if (worker) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_accessibilityAPIAvailabilityChangedNotification:) name:SWAPIEnabledWorker.notificationName object:self.worker];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:NNSelfSelector1(_accessibilityAPIAvailabilityChangedNotification:) name:SWAPIEnabledWorker.notificationName object:self.worker];
     }
     _worker = worker;
 }

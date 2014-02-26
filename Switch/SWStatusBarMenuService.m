@@ -46,7 +46,7 @@
     
 #   pragma clang diagnostic push
 #   pragma clang diagnostic ignored "-Wselector"
-    menuItem = [[NSMenuItem alloc] initWithTitle:@"Preferences…" action:@selector(showPreferences:) keyEquivalent:@""];
+    menuItem = [[NSMenuItem alloc] initWithTitle:@"Preferences…" action:NNTypedSelector1(SWAppDelegate, showPreferences:) keyEquivalent:@""];
 #   pragma clang diagnostic pop
     menuItem.target = [NSApplication sharedApplication].delegate;
     [menu addItem:menuItem];
@@ -61,12 +61,12 @@
         [menu addItem:menuItem];
         [debugItems addObject:menuItem];
         
-        menuItem = [[NSMenuItem alloc] initWithTitle:@"Take Snapshot…" action:@selector(snapshot:) keyEquivalent:@""];
+        menuItem = [[NSMenuItem alloc] initWithTitle:@"Take Snapshot…" action:NNSelfSelector1(snapshot:) keyEquivalent:@""];
         menuItem.target = self;
         [menu addItem:menuItem];
         [debugItems addObject:menuItem];
         
-        menuItem = [[NSMenuItem alloc] initWithTitle:@"Open Log Folder…" action:@selector(openLogFolder:) keyEquivalent:@""];
+        menuItem = [[NSMenuItem alloc] initWithTitle:@"Open Log Folder…" action:NNSelfSelector1(openLogFolder:) keyEquivalent:@""];
         menuItem.target = self;
         [menu addItem:menuItem];
         [debugItems addObject:menuItem];
@@ -80,7 +80,7 @@
     
 #   pragma clang diagnostic push
 #   pragma clang diagnostic ignored "-Wselector"
-    menuItem = [[NSMenuItem alloc] initWithTitle:@"Quit" action:@selector(terminate:) keyEquivalent:@""];
+    menuItem = [[NSMenuItem alloc] initWithTitle:@"Quit" action:NNTypedSelector1(NSApplication, terminate:) keyEquivalent:@""];
 #   pragma clang diagnostic pop
     menuItem.target = [NSApplication sharedApplication];
     [menu addItem:menuItem];

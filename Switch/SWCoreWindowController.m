@@ -146,7 +146,7 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
         if (!Check(!self.displayTimer)) {
             [self.displayTimer invalidate];
         }
-        self.displayTimer = [NSTimer scheduledTimerWithTimeInterval:kWindowDisplayDelay target:self selector:@selector(_displayTimerFired:) userInfo:nil repeats:NO];
+        self.displayTimer = [NSTimer scheduledTimerWithTimeInterval:kWindowDisplayDelay target:self selector:NNSelfSelector1(_displayTimerFired:) userInfo:nil repeats:NO];
         
         Check(!self.selector);
         self.selector = [SWSelector new];
