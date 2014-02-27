@@ -62,6 +62,10 @@ class Console
   # 47	White background
   # 49	Default background color
 
+  def self.background_red(text)
+    return "\e[41m#{text}\e[49m"
+  end
+
   def self.background_white(text)
     return "\e[47m#{text}\e[49m"
   end
@@ -80,5 +84,9 @@ class Console
   
   def self.green(text)
     return "\e[32m#{text}\e[39m"
+  end
+
+  def self.white(text)
+    return "\e[37m#{text}\e[39m"
   end
 end

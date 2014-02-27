@@ -3,18 +3,11 @@ require 'rake/packagetask'
 
 require_relative 'Scripts/console'
 
-class String
-  # Returns a new string that has the leading and trailing whitespace trimmed.
-  def trim
-    tmp = self
-    tmp.strip!
-    return tmp
-  end
-end
-
 #
 # Constants
 #
+
+DEVELOPER_ID = "Scott Perry"
 
 RELEASE_BRANCHES = ["develop", "master"]
 
@@ -34,7 +27,7 @@ PROJECT = FileList['*.xcodeproj'][0]
 # Switch
 PRODUCT = PROJECT.slice(0..(PROJECT.index('.') - 1))
 
-BRANCH = `git symbolic-ref HEAD | sed -e 's|^refs/heads/||'`.trim
+BRANCH = `git symbolic-ref HEAD | sed -e 's|^refs/heads/||'`.strip
 
 #
 # Synthesized
@@ -51,7 +44,7 @@ DELIVERABLE_APP = File.absolute_path("#{BUILDDIR}/#{PRODUCT}.app")
 DELIVERABLE_ZIP = File.absolute_path("#{BUILDDIR}/#{PRODUCT}.zip")
 
 # TODO: better way to get homedir here.
-CLOBBER.include(FileList["/Users/#{`whoami`.trim}/Library/Developer/Xcode/DerivedData/#{PRODUCT}-*"])
+CLOBBER.include(FileList["/Users/#{`whoami`.strip}/Library/Developer/Xcode/DerivedData/#{PRODUCT}-*"])
 CLOBBER.include(DERIVEDDATA)
 
 CLEAN.include(FileList[BUILDDIR])
@@ -78,31 +71,29 @@ def sparkle_signature(archive)
   # TODO: Sorry.
   private_key = "Secrets-local/Sparkle.dsa_priv.pem"
   unless File.exist?(private_key)
-    puts ' ____________________________________ '
-    puts '/ WARNING: not able to sign app      \\'
-    puts '| deliverable for appcast! Find this |'
-    puts '\\ message in the Rakefile.           /'
-    puts ' ------------------------------------ '
-    puts '        \\   ^__^                      '
-    puts '         \\  (oo)\\_______              '
-    puts '            (__)\\       )\\/\\          '
-    puts '                ||----w |             '
-    puts '                ||     ||             '
+    Console.puts ' ____________________________________ '
+    Console.puts '/ WARNING: not able to sign app      \\'
+    Console.puts '| deliverable for appcast! Find this |'
+    Console.puts '\\ message in the Rakefile.           /'
+    Console.puts ' ------------------------------------ '
+    Console.puts '        \\   ^__^                      '
+    Console.puts '         \\  (oo)\\_______              '
+    Console.puts '            (__)\\       )\\/\\          '
+    Console.puts '                ||----w |             '
+    Console.puts '                ||     ||             '
     sleep 5
   else
-    return `Scripts/sign_update.rb \"#{archive}\" \"#{private_key}\"`.trim
+    return `Scripts/sign_update.rb \"#{archive}\" \"#{private_key}\"`.strip
   end
 end
 
 def verify_codesign(app_path)
   shell "codesign --verify --verbose --deep \"#{app_path}\""
-  shell "spctl --assess --type execute \"#{app_path}\""
-  Console.puts "#{app_path}: #{Console.green("has a valid code signature")}"
+  shell "spctl --assess --verbose=4 --type execute \"#{app_path}\""
 end
 
 def verify_deliverable(deliverable_path)
   fail "💩  #{deliverable_path} wasn't produced!" unless File.exists? deliverable_path
-  Console.puts "#{deliverable_path}: #{Console.green("exists")}"
 end
 
 directory BUILDDIR
@@ -119,6 +110,11 @@ end
 def shell(action)
   Console.puts(Console.bold(Console.black("#{action}")))
   fail "💩  Shell command failed: #{action}" unless system(action)
+end
+
+def shell_non_fatal(action)
+  Console.puts(Console.bold(Console.black("#{action}")))
+  return system(action)
 end
 
 def echo_step(step)
@@ -154,8 +150,9 @@ task DELIVERABLE_ARCHIVE => [File.dirname(DELIVERABLE_ARCHIVE)] do
 
   archive_path = DELIVERABLE_ARCHIVE.slice(0..(DELIVERABLE_ARCHIVE.rindex('.') - 1))
   xcode "-archivePath \"#{archive_path}\" archive"
-  
   verify_deliverable DELIVERABLE_ARCHIVE
+  
+  Console.puts "Finished: #{Console.green(DELIVERABLE_ARCHIVE)}\n"
 end
 
 task :app => [DELIVERABLE_APP]
@@ -169,23 +166,23 @@ task DELIVERABLE_APP => [DELIVERABLE_ARCHIVE, File.dirname(DELIVERABLE_APP)] do
   
   verify_deliverable DELIVERABLE_APP
 
-  # TODO: if you're not numist and you want to sign an app for distribution you're gonna wanna change this.
-  if `whoami`.trim == "numist"
-    shell "codesign --force --deep --sign \"Developer ID Application: Scott Perry\" \"#{DELIVERABLE_APP}\""
+  if shell_non_fatal "codesign --force --deep --sign \"Developer ID Application: #{DEVELOPER_ID}\" \"#{DELIVERABLE_APP}\""
     verify_codesign DELIVERABLE_APP
   else
-    puts ' _____________________________________ '
-    puts '/ WARNING: not able to sign app       \\'
-    puts '| deliverable with Developer ID! Find |'
-    puts '\\ this message in the Rakefile.       /'
-    puts ' ------------------------------------- '
-    puts '        \\   ^__^                       '
-    puts '         \\  (oo)\\_______               '
-    puts '            (__)\\       )\\/\\           '
-    puts '                ||----w |              '
-    puts '                ||     ||              '
-    sleep 5
+    # If you're here, chances are DEVELOPER_ID isn't set correctly. It's at the top of this file, and should be set to the company name of your Developer ID certificate.
+    Console.puts ' _____________________________________ '
+    Console.puts '/ WARNING: unable to sign app         \\'
+    Console.puts '| deliverable with Developer ID!       |'
+    Console.puts '\\ Find this message in the Rakefile.  /'
+    Console.puts ' ------------------------------------- '
+    Console.puts '        \\   ^__^                       '
+    Console.puts '         \\  (oo)\\_______               '
+    Console.puts '            (__)\\       )\\/\\           '
+    Console.puts '                ||----w |              '
+    Console.puts '                ||     ||              '
   end
+  
+  Console.puts "Finished: #{Console.green(DELIVERABLE_APP)}\n"
 end
 
 task :zip => [DELIVERABLE_ZIP]
@@ -202,22 +199,22 @@ task DELIVERABLE_ZIP => [DELIVERABLE_APP, File.dirname(DELIVERABLE_ZIP), INTERME
   shell "cd \"#{INTERMEDIATESDIR}\" && unzip -q \"#{DELIVERABLE_ZIP}\""
   verify_deliverable unzipped_app
   
-  # The app deliverable should have had its code signature checked, but double check just in case.
-  verify_codesign unzipped_app
   # Verify that unzipped app and app deliverable do not differ.
   shell "diff -r \"#{unzipped_app}\" \"#{DELIVERABLE_APP}\""
-  Console.puts "#{DELIVERABLE_ZIP}: #{Console.green("properly represents #{File.basename(DELIVERABLE_APP)}")}"
-  
   # Verify unzipped application launches successfully.
   shell "open \"#{unzipped_app}\""
   # grep for "[/]Users/foo/bar" to prevent grep from showing up in the list of processes matching the query.
   match = "[#{unzipped_app[0]}]#{unzipped_app[1..-1]}"
   shell "ps auxwww | grep \"#{match}\" | awk '{ print $2; }' | xargs kill"
-  Console.puts "#{unzipped_app}: #{Console.green("launched successfully")}"
+  
+  unless shell_non_fatal "spctl --assess --verbose=4 --type execute \"#{unzipped_app}\""
+    Console.puts Console.background_red(Console.white("WARNING: The application bundle inside #{File.basename(DELIVERABLE_ZIP)} is not properly code signed and is not suitable for distribution!"))
+  end
   
   # Clean up
   FileUtils.rm_r unzipped_app
   
+  Console.puts "Finished: #{Console.green(DELIVERABLE_ZIP)}\n"
 end
 
 task :release => [:analyze, :test] do
@@ -225,10 +222,10 @@ task :release => [:analyze, :test] do
   # fail "💩  Releases can only be made from branches: #{RELEASE_BRANCHES.inspect}" unless BRANCH_IS_RELEASE
 
   gst = 'git status -uno --ignore-submodules=untracked'
-  fail "💩  Uncommitted files detected!\n#{`#{gst} --short`}" unless `#{gst} --porcelain | wc -l`.trim == "0"
+  fail "💩  Uncommitted files detected!\n#{`#{gst} --short`}" unless `#{gst} --porcelain | wc -l`.strip == "0"
   
   run_task DELIVERABLE_ZIP
+  # The zip's contents can be unsigned, but a release must be signed!
+  verify_codesign DELIVERABLE_APP
   
 end
-
-task :noop
