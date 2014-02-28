@@ -4,6 +4,10 @@ require 'rake/packagetask'
 require_relative 'Scripts/console'
 
 #
+# TODO: deliverables should live in INTERMEDIATESDIR until the very last possible moment, when they have been fully verified.
+#
+
+#
 # Constants
 #
 
@@ -42,6 +46,24 @@ DELIVERABLE_ARCHIVE = File.absolute_path("#{BUILDDIR}/#{PRODUCT}.xcarchive")
 DELIVERABLE_APP = File.absolute_path("#{BUILDDIR}/#{PRODUCT}.app")
 
 DELIVERABLE_ZIP = File.absolute_path("#{BUILDDIR}/#{PRODUCT}.zip")
+
+def formatted_fail(message)
+  fail Console.background_red(Console.white(message))
+end
+
+def check_ruby_version
+  ruby_version = RUBY_VERSION.split('.')
+  required_version = '2.0.0'.split('.')
+  formatted_fail "#{deliverable_path} wasn't produced!" if ruby_version.count > 3
+  (0..ruby_version.count).each do |index|
+    if ruby_version[index] < required_version[index]
+      formatted_fail "Sorry, this Rakefile requires Ruby #{required_version.join('.')} or newer."
+    elsif ruby_version[index] > required_version[index]
+      break
+    end
+  end
+end
+check_ruby_version
 
 # TODO: better way to get homedir here.
 CLOBBER.include(FileList["/Users/#{`whoami`.strip}/Library/Developer/Xcode/DerivedData/#{PRODUCT}-*"])
@@ -93,7 +115,7 @@ def verify_codesign(app_path)
 end
 
 def verify_deliverable(deliverable_path)
-  fail "💩  #{deliverable_path} wasn't produced!" unless File.exists? deliverable_path
+  formatted_fail "#{deliverable_path} wasn't produced!" unless File.exists? deliverable_path
 end
 
 directory BUILDDIR
@@ -109,7 +131,7 @@ end
 
 def shell(action)
   Console.puts(Console.bold(Console.black("#{action}")))
-  fail "💩  Shell command failed: #{action}" unless system(action)
+  formatted_fail "Shell command failed: #{action}" unless system(action)
 end
 
 def shell_non_fatal(action)
@@ -219,10 +241,10 @@ end
 
 task :release => [:analyze, :test] do
   # TODO
-  # fail "💩  Releases can only be made from branches: #{RELEASE_BRANCHES.inspect}" unless BRANCH_IS_RELEASE
+  # formatted_fail "Releases can only be made from branches: #{RELEASE_BRANCHES.inspect}" unless BRANCH_IS_RELEASE
 
   gst = 'git status -uno --ignore-submodules=untracked'
-  fail "💩  Uncommitted files detected!\n#{`#{gst} --short`}" unless `#{gst} --porcelain | wc -l`.strip == "0"
+  formatted_fail "Uncommitted files detected!\n#{`#{gst} --short`}" unless `#{gst} --porcelain | wc -l`.strip == "0"
   
   run_task DELIVERABLE_ZIP
   # The zip's contents can be unsigned, but a release must be signed!
