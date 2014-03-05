@@ -111,19 +111,14 @@
 - (NSView *)cellForIndex:(NSUInteger)index;
 {
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
+    
+    // Flush pending reloadData
+    [self _reloadDataIfNeeded];
 
     if (index < [self.cells count]) {
         return [self.cells objectAtIndex:index];
     }
     return nil;
-}
-
-- (NSUInteger)indexForSelectedCell;
-{
-    NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
-    abort();
-
-    return NSNotFound;
 }
 
 - (void)selectCellAtIndex:(NSUInteger)index;
@@ -157,41 +152,7 @@
         self.reloading = YES;
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.reloading = NO;
-
-            __strong __typeof__(self.dataSource) dataSource = self.dataSource;
-
-            [self.cells removeAllObjects];
-            self.subviews = @[];
-            
-            self.numberOfCells = [dataSource HUDViewNumberOfCells:self];
-            // dataSource side effect may have called reloadData, in which case it's not safe to continue anymore.
-            if (self.reloading) {
-                SWLog(@"reloadData called while reloading data!");
-                return;
-            }
-            
-            [self _setSize:[self _computeCollectionViewSize]];
-            
-            for (NSUInteger i = 0; i < self.numberOfCells; i++) {
-                NSView *cell = [dataSource HUDView:self viewForCellAtIndex:i];
-                // dataSource side effect may have called reloadData, in which case it's not safe to continue anymore.
-                if (self.reloading) {
-                    SWLog(@"reloadData called while reloading data!");
-                    return;
-                }
-                
-                [self.cells insertObject:cell atIndex:i];
-                cell.frame = [self _computeFrameForCellAtIndex:i];
-                [self addSubview:cell];
-            }
-            
-            if (self.selectionBox) {
-                self.selectionBox.frame = nnItemRect((self.frame.size.height - kNNWindowToThumbInset * 2.0), self.selectedIndex);
-                [self addSubview:self.selectionBox positioned:NSWindowBelow relativeTo:nil];
-            }
-            
-            [self setNeedsDisplay:YES];
+            [self _reloadDataIfNeeded];
         });
     }
 }
@@ -256,6 +217,47 @@
     }
     
     return i < [self.cells count] ? i : NSNotFound;
+}
+
+- (void)_reloadDataIfNeeded;
+{
+    if (!self.reloading) { return; }
+    
+    self.reloading = NO;
+    
+    __strong __typeof__(self.dataSource) dataSource = self.dataSource;
+    
+    [self.cells removeAllObjects];
+    self.subviews = @[];
+    
+    self.numberOfCells = [dataSource HUDViewNumberOfCells:self];
+    // dataSource side effect may have called reloadData, in which case it's not safe to continue anymore.
+    if (self.reloading) {
+        SWLog(@"reloadData called while reloading data!");
+        return;
+    }
+    
+    [self _setSize:[self _computeCollectionViewSize]];
+    
+    for (NSUInteger i = 0; i < self.numberOfCells; i++) {
+        NSView *cell = [dataSource HUDView:self viewForCellAtIndex:i];
+        // dataSource side effect may have called reloadData, in which case it's not safe to continue anymore.
+        if (self.reloading) {
+            SWLog(@"reloadData called while reloading data!");
+            return;
+        }
+        
+        [self.cells insertObject:cell atIndex:i];
+        cell.frame = [self _computeFrameForCellAtIndex:i];
+        [self addSubview:cell];
+    }
+    
+    if (self.selectionBox) {
+        self.selectionBox.frame = nnItemRect((self.frame.size.height - kNNWindowToThumbInset * 2.0), self.selectedIndex);
+        [self addSubview:self.selectionBox positioned:NSWindowBelow relativeTo:nil];
+    }
+    
+    [self setNeedsDisplay:YES];
 }
 
 @end
