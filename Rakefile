@@ -55,7 +55,7 @@ def check_ruby_version
   ruby_version = RUBY_VERSION.split('.')
   required_version = '2.0.0'.split('.')
   formatted_fail "#{deliverable_path} wasn't produced!" if ruby_version.count > 3
-  (0..ruby_version.count).each do |index|
+  (0..(ruby_version.count - 1)).each do |index|
     if ruby_version[index] < required_version[index]
       formatted_fail "Sorry, this Rakefile requires Ruby #{required_version.join('.')} or newer."
     elsif ruby_version[index] > required_version[index]
