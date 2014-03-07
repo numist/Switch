@@ -83,8 +83,6 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
         [self _registerEvents];
     });
     
-    [[NNServiceManager sharedManager] addObserver:self forService:[SWAccessibilityService class]];
-    
     return self;
 }
 
