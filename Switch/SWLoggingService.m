@@ -46,6 +46,7 @@
 {
     if (![self _dayChanged]) { return; }
     
+    // In theory this code is running a race against other invocations of -rotateLogIfNecessary, but -_dayChanged returns YES so infrequently that it's not worth worrying about. The worst possible race condition is if the first time this is called in the program's lifetime is at 23:59:59.9999 and then again at 00:00:00.
     NSString *logDir = [self logDirectoryPath];
     BailUnless([self _createDirectory:logDir],);
     
@@ -146,22 +147,24 @@
 
 - (BOOL)_dayChanged;
 {
-    NSDateComponents *todaysComponents = ^{
-        NSDate *today = [NSDate date];
-        static NSCalendar *gregorian;
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-            gregorian.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
-        });
-        return [gregorian components:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit) fromDate:today];
-    }();
-    
-    if (![todaysComponents isEqual:self.logDate]) {
-        self.logDate = todaysComponents;
-        return YES;
+    @synchronized(self) {
+        NSDateComponents *todaysComponents = ^{
+            NSDate *today = [NSDate date];
+            static NSCalendar *gregorian;
+            static dispatch_once_t onceToken;
+            dispatch_once(&onceToken, ^{
+                gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+                gregorian.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
+            });
+            return [gregorian components:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit) fromDate:today];
+        }();
+        
+        if (![todaysComponents isEqual:self.logDate]) {
+            self.logDate = todaysComponents;
+            return YES;
+        }
+        return NO;
     }
-    return NO;
 }
 
 - (BOOL)_createDirectory:(NSString *)path;
