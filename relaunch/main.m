@@ -19,7 +19,7 @@
 
 int main (int argc, const char * argv[])
 {
-	if (argc != 3) return EXIT_FAILURE;
+    if (argc != 3) return EXIT_FAILURE;
 
     @autoreleasepool {
         [NSApplication sharedApplication];
@@ -27,7 +27,7 @@ int main (int argc, const char * argv[])
         static TerminationListener *listener;
         listener = [[TerminationListener alloc] initWithExecutablePath:argv[1] parentProcessId:atoi(argv[2])];
         [[NSApplication sharedApplication] run];
-	}
+    }
 
-	return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }

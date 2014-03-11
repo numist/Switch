@@ -29,31 +29,31 @@
 
 - (id)initWithExecutablePath:(const char *)execPath parentProcessId:(pid_t)ppid;
 {
-	self = [super init];
-	if (self != nil)
-	{
-		_executablePath = execPath;
-		_parentProcessId = ppid;
-		if (getppid() == 1) {
+    self = [super init];
+    if (self != nil)
+    {
+        _executablePath = execPath;
+        _parentProcessId = ppid;
+        if (getppid() == 1) {
             // ppid is launchd (1) => parent terminated already
-			[self relaunch];
+            [self relaunch];
         }
-		[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(watchdog:) userInfo:nil repeats:YES];
-	}
-	return self;
+        [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(watchdog:) userInfo:nil repeats:YES];
+    }
+    return self;
 }
 
 - (void)watchdog:(NSTimer *)timer;
 {
-	if (![NSRunningApplication runningApplicationWithProcessIdentifier:self.parentProcessId]) {
-		[self relaunch];
+    if (![NSRunningApplication runningApplicationWithProcessIdentifier:self.parentProcessId]) {
+        [self relaunch];
     }
 }
 
 - (void)relaunch;
 {
-	[[NSWorkspace sharedWorkspace] openFile:[[NSFileManager defaultManager] stringWithFileSystemRepresentation:self.executablePath length:strlen(self.executablePath)]];
-	[[NSApplication sharedApplication] terminate:self];
+    [[NSWorkspace sharedWorkspace] openFile:[[NSFileManager defaultManager] stringWithFileSystemRepresentation:self.executablePath length:strlen(self.executablePath)]];
+    [[NSApplication sharedApplication] terminate:self];
 }
 
 @end
