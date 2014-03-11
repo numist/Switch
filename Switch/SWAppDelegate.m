@@ -33,7 +33,7 @@
 
 - (void)relaunch:(id)sender;
 {
-    NSString *launcherSource = [[NSBundle bundleForClass:[SUUpdater class]]  pathForResource:@"relaunch" ofType:@""];
+    NSString *launcherSource = [[NSBundle bundleForClass:[self class]]  pathForResource:@"relaunch" ofType:nil];
     Check(launcherSource);
     NSString *launcherTarget = [NSTemporaryDirectory() stringByAppendingPathComponent:[launcherSource lastPathComponent]];
     NSString *appPath = [[NSBundle mainBundle] bundlePath];
