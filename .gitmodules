@@ -12,4 +12,4 @@
 	url = git://github.com/numist/NNKit.git
 [submodule "Frameworks/Sparkle"]
 	path = Frameworks/Sparkle
-	url = git://github.com:numist/Sparkle.git
+	url = git://github.com/numist/Sparkle.git
