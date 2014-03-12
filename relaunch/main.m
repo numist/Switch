@@ -14,18 +14,19 @@
 //  Inspiration from relaunch.m: https://github.com/andymatuschak/Sparkle/blob/7316a00e9c92f54c552076a44c38241c0f1bf975/relaunch.m
 //
 
-#import "TerminationListener.h"
+#import "SWTerminationListener.h"
 
 
 int main (int argc, const char * argv[])
 {
-    if (argc != 3) return EXIT_FAILURE;
+    if (argc != 3) { return EXIT_FAILURE; }
 
     @autoreleasepool {
         [NSApplication sharedApplication];
 
-        static TerminationListener *listener;
-        listener = [[TerminationListener alloc] initWithExecutablePath:argv[1] parentProcessId:atoi(argv[2])];
+        static SWTerminationListener *listener;
+        listener = [[SWTerminationListener alloc] initWithExecutablePath:argv[1] parentProcessId:atoi(argv[2])];
+        
         [[NSApplication sharedApplication] run];
     }
 

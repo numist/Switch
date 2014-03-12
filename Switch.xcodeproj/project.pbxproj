@@ -12,7 +12,7 @@
 		BC275C1218CFD3C900761247 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC275C1118CFD3C900761247 /* Foundation.framework */; };
 		BC275C1518CFD3CA00761247 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BC275C1418CFD3CA00761247 /* main.m */; };
 		BC275C2918CFD55000761247 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCA734E316DAC53F00CD4C74 /* AppKit.framework */; };
-		BC275C2C18CFD5AA00761247 /* TerminationListener.m in Sources */ = {isa = PBXBuildFile; fileRef = BC275C2B18CFD5AA00761247 /* TerminationListener.m */; };
+		BC275C2C18CFD5AA00761247 /* SWTerminationListener.m in Sources */ = {isa = PBXBuildFile; fileRef = BC275C2B18CFD5AA00761247 /* SWTerminationListener.m */; };
 		BC275C3218CFD84000761247 /* relaunch in Resources */ = {isa = PBXBuildFile; fileRef = BC275C1018CFD3C900761247 /* relaunch */; };
 		BC3C78C4188262EB0021C244 /* SWMacVimTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC3C78C3188262EB0021C244 /* SWMacVimTests.m */; };
 		BC5A9798180E5A6F002ECD56 /* SWStatusBarMenuService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5A9797180E5A6F002ECD56 /* SWStatusBarMenuService.m */; };
@@ -270,8 +270,8 @@
 		BC275C1118CFD3C900761247 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BC275C1418CFD3CA00761247 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		BC275C1718CFD3CA00761247 /* relaunch-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "relaunch-Prefix.pch"; sourceTree = "<group>"; };
-		BC275C2A18CFD5AA00761247 /* TerminationListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TerminationListener.h; sourceTree = "<group>"; };
-		BC275C2B18CFD5AA00761247 /* TerminationListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TerminationListener.m; sourceTree = "<group>"; };
+		BC275C2A18CFD5AA00761247 /* SWTerminationListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWTerminationListener.h; sourceTree = "<group>"; };
+		BC275C2B18CFD5AA00761247 /* SWTerminationListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWTerminationListener.m; sourceTree = "<group>"; };
 		BC3C78C3188262EB0021C244 /* SWMacVimTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWMacVimTests.m; sourceTree = "<group>"; };
 		BC5A9796180E5A6F002ECD56 /* SWStatusBarMenuService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWStatusBarMenuService.h; sourceTree = "<group>"; };
 		BC5A9797180E5A6F002ECD56 /* SWStatusBarMenuService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWStatusBarMenuService.m; sourceTree = "<group>"; };
@@ -410,8 +410,8 @@
 		BC275C1318CFD3C900761247 /* relaunch */ = {
 			isa = PBXGroup;
 			children = (
-				BC275C2A18CFD5AA00761247 /* TerminationListener.h */,
-				BC275C2B18CFD5AA00761247 /* TerminationListener.m */,
+				BC275C2A18CFD5AA00761247 /* SWTerminationListener.h */,
+				BC275C2B18CFD5AA00761247 /* SWTerminationListener.m */,
 				BC275C1418CFD3CA00761247 /* main.m */,
 				BC275C1618CFD3CA00761247 /* Supporting Files */,
 			);
@@ -1049,7 +1049,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BC275C2C18CFD5AA00761247 /* TerminationListener.m in Sources */,
+				BC275C2C18CFD5AA00761247 /* SWTerminationListener.m in Sources */,
 				BC275C1518CFD3CA00761247 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
