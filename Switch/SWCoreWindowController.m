@@ -581,8 +581,11 @@ static int kScrollThreshold = 4;
     }];
     
     [eventTap registerForEventsWithType:kCGEventScrollWheel withBlock:^(CGEventRef event) {
+        CFRetain(event);
         dispatch_async(dispatch_get_main_queue(), ^{
+            NNCFAutorelease(event);
             @strongify(self);
+
             if (!self.interfaceVisible) { return; }
             
             int delta = (int)CGEventGetIntegerValueField(event, kCGScrollWheelEventPointDeltaAxis1);

@@ -138,7 +138,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
         CGEventMaskBit(kCGEventKeyUp) |
         CGEventMaskBit(kCGEventFlagsChanged) |
         CGEventMaskBit(kCGEventMouseMoved) |
-//        CGEventMaskBit(kCGEventScrollWheel) |
+        CGEventMaskBit(kCGEventScrollWheel) |
     0);
     
     self.eventTap = CGEventTapCreate(kCGSessionEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault, eventMask, eventCallback, (__bridge void *)(self));
