@@ -126,6 +126,11 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
     return NNServiceTypePersistent;
 }
 
+- (NSSet *)dependencies;
+{
+    return [NSSet setWithArray:@[[SWEventTap class], [SWPreferencesService class], [SWAccessibilityService class]]];
+}
+
 - (void)startService;
 {
     [super startService];
