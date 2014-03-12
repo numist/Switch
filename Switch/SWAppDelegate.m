@@ -24,7 +24,7 @@
 
 #pragma mark NSApplicationDelegate
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification;
 {
     [[NNServiceManager sharedManager] registerAllPossibleServices];
     
@@ -57,7 +57,8 @@
 
 #pragma mark IBAction
 
-- (IBAction)showPreferences:(id)sender {
+- (IBAction)showPreferences:(id)sender;
+{
     [[SWPreferencesService sharedService] showPreferencesWindow:sender];
 }
 
