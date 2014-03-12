@@ -191,6 +191,11 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
         callback(event);
     }
     
+    // Prevent other applications from receiving scroll events when the application is consuming keyboard events.
+    if (type == kCGEventScrollWheel) {
+        return eventTap.suppressKeyEvents ? NULL : event;
+    }
+    
     // Escape if the event is not a key/modifier change event.
     if ((type != kCGEventKeyDown) && (type != kCGEventKeyUp) && (type != kCGEventFlagsChanged)) {
         return event;
