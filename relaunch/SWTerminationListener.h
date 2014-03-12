@@ -16,7 +16,7 @@
 
 @interface SWTerminationListener : NSObject
 
-- (id) initWithExecutablePath:(const char *)execPath parentProcessId:(pid_t)ppid;
-- (void) relaunch;
+- (id)initWithExecutablePath:(const char *)execPath parentProcessId:(pid_t)ppid;
+- (void)relaunch;
 
 @end

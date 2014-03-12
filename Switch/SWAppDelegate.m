@@ -40,10 +40,16 @@
     NSString *processID = [NSString stringWithFormat:@"%d", [[NSProcessInfo processInfo] processIdentifier]];
     
     NSError *error = NULL;
-    [[NSFileManager defaultManager] removeItemAtPath:launcherTarget error:&error];
-    Check(error);
-    [[NSFileManager defaultManager] copyItemAtPath:launcherSource toPath:launcherTarget error:&error];
-    Check(error);
+    BOOL success = YES;
+    
+    success = [[NSFileManager defaultManager] removeItemAtPath:launcherTarget error:&error];
+    if (!success) {
+        // Code 4: "The operation couldn’t be completed. No such file or directory"
+        Check(error.code == 4);
+    }
+    
+    success = [[NSFileManager defaultManager] copyItemAtPath:launcherSource toPath:launcherTarget error:&error];
+    Check(success);
 	
     [NSTask launchedTaskWithLaunchPath:launcherTarget arguments:@[appPath, processID]];
     [NSApp terminate:sender];
