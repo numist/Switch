@@ -34,7 +34,7 @@ NSString const *SWCoreWindowControllerActiveKey = @"SWCoreWindowControllerActive
 
 static NSTimeInterval kWindowDisplayDelay = 0.15;
 
-static int kScrollThreshold = 4;
+static int kScrollThreshold = 50;
 
 
 @interface SWCoreWindowController () <SWWindowListSubscriber, SWHUDCollectionViewDataSource, SWHUDCollectionViewDelegate>
