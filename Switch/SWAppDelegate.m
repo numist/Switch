@@ -33,23 +33,26 @@
 
 - (void)relaunch:(id)sender;
 {
+    // TODO: This should pop up a "please restart Switch" dialog. It sucks, but it's the best we can do in this situation.
+    void (^failureBlock)() = ^{};
+    
     NSString *launcherSource = [[NSBundle bundleForClass:[self class]]  pathForResource:@"relaunch" ofType:nil];
-    Check(launcherSource);
+    BailWithBlockUnless(launcherSource, failureBlock);
+    
     NSString *launcherTarget = [NSTemporaryDirectory() stringByAppendingPathComponent:[launcherSource lastPathComponent]];
     NSString *appPath = [[NSBundle mainBundle] bundlePath];
     NSString *processID = [NSString stringWithFormat:@"%d", [[NSProcessInfo processInfo] processIdentifier]];
     
     NSError *error = NULL;
     BOOL success = YES;
-    
     success = [[NSFileManager defaultManager] removeItemAtPath:launcherTarget error:&error];
     if (!success) {
         // Code 4: "The operation couldn’t be completed. No such file or directory"
-        Check(error.code == 4);
+        BailWithBlockUnless(error.code == 4, failureBlock);
     }
     
     success = [[NSFileManager defaultManager] copyItemAtPath:launcherSource toPath:launcherTarget error:&error];
-    Check(success);
+    BailWithBlockUnless(success, failureBlock);
 	
     [NSTask launchedTaskWithLaunchPath:launcherTarget arguments:@[appPath, processID]];
     [NSApp terminate:sender];
