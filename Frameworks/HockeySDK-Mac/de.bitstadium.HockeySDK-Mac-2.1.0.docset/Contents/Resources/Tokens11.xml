@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/BITCrashManager.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/BITCrashManager</TokenIdentifier>
+			<Abstract type="html">The crash reporting module.</Abstract>
+			<DeclaredIn>BITCrashManager.h</DeclaredIn>
+            
+			
+			<NodeRef refid="11"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/BITCrashManager/setAskUserDetails:</TokenIdentifier>
+			<Abstract type="html">Defines if the user interface should ask for name and email</Abstract>
+			<DeclaredIn>BITCrashManager.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign) BOOL askUserDetails</Declaration>
+			
+			
+			<Anchor>//api/name/askUserDetails</Anchor>
+            <NodeRef refid="11"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/BITCrashManager/askUserDetails</TokenIdentifier>
+			<Abstract type="html">Defines if the user interface should ask for name and email</Abstract>
+			<DeclaredIn>BITCrashManager.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign) BOOL askUserDetails</Declaration>
+			
+			
+			<Anchor>//api/name/askUserDetails</Anchor>
+            <NodeRef refid="11"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/BITCrashManager/askUserDetails</TokenIdentifier>
+			<Abstract type="html">Defines if the user interface should ask for name and email</Abstract>
+			<DeclaredIn>BITCrashManager.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign) BOOL askUserDetails</Declaration>
+			
+			
+			<Anchor>//api/name/askUserDetails</Anchor>
+            <NodeRef refid="11"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/BITCrashManager/setEnableMachExceptionHandler:</TokenIdentifier>
+			<Abstract type="html">Trap fatal signals via a Mach exception server.</Abstract>
+			<DeclaredIn>BITCrashManager.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign, getter=isMachExceptionHandlerEnabled) BOOL enableMachExceptionHandler</Declaration>
+			
+			
+			<Anchor>//api/name/enableMachExceptionHandler</Anchor>
+            <NodeRef refid="11"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/BITCrashManager/isMachExceptionHandlerEnabled</TokenIdentifier>
+			<Abstract type="html">Trap fatal signals via a Mach exception server.</Abstract>
+			<DeclaredIn>BITCrashManager.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign, getter=isMachExceptionHandlerEnabled) BOOL enableMachExceptionHandler</Declaration>
+			
+			
+			<Anchor>//api/name/enableMachExceptionHandler</Anchor>
+            <NodeRef refid="11"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/BITCrashManager/enableMachExceptionHandler</TokenIdentifier>
+			<Abstract type="html">Trap fatal signals via a Mach exception server.</Abstract>
+			<DeclaredIn>BITCrashManager.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign, getter=isMachExceptionHandlerEnabled) BOOL enableMachExceptionHandler</Declaration>
+			
+			
+			<Anchor>//api/name/enableMachExceptionHandler</Anchor>
+            <NodeRef refid="11"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/BITCrashManager/setAutoSubmitCrashReport:</TokenIdentifier>
+			<Abstract type="html">Submit crash reports without asking the user</Abstract>
+			<DeclaredIn>BITCrashManager.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign, getter=isAutoSubmitCrashReport) BOOL autoSubmitCrashReport</Declaration>
+			
+			
+			<Anchor>//api/name/autoSubmitCrashReport</Anchor>
+            <NodeRef refid="11"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/BITCrashManager/isAutoSubmitCrashReport</TokenIdentifier>
+			<Abstract type="html">Submit crash reports without asking the user</Abstract>
+			<DeclaredIn>BITCrashManager.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign, getter=isAutoSubmitCrashReport) BOOL autoSubmitCrashReport</Declaration>
+			
+			
+			<Anchor>//api/name/autoSubmitCrashReport</Anchor>
+            <NodeRef refid="11"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/BITCrashManager/autoSubmitCrashReport</TokenIdentifier>
+			<Abstract type="html">Submit crash reports without asking the user</Abstract>
+			<DeclaredIn>BITCrashManager.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign, getter=isAutoSubmitCrashReport) BOOL autoSubmitCrashReport</Declaration>
+			
+			
+			<Anchor>//api/name/autoSubmitCrashReport</Anchor>
+            <NodeRef refid="11"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/BITCrashManager/setMaxTimeIntervalOfCrashForReturnMainApplicationDelay:</TokenIdentifier>
+			<Abstract type="html">Time between startup and a crash within which sending a crash will be send synchronously</Abstract>
+			<DeclaredIn>BITCrashManager.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readwrite) NSTimeInterval maxTimeIntervalOfCrashForReturnMainApplicationDelay</Declaration>
+			
+			
+			<Anchor>//api/name/maxTimeIntervalOfCrashForReturnMainApplicationDelay</Anchor>
+            <NodeRef refid="11"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/BITCrashManager/maxTimeIntervalOfCrashForReturnMainApplicationDelay</TokenIdentifier>
+			<Abstract type="html">Time between startup and a crash within which sending a crash will be send synchronously</Abstract>
+			<DeclaredIn>BITCrashManager.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readwrite) NSTimeInterval maxTimeIntervalOfCrashForReturnMainApplicationDelay</Declaration>
+			
+			
+			<Anchor>//api/name/maxTimeIntervalOfCrashForReturnMainApplicationDelay</Anchor>
+            <NodeRef refid="11"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/BITCrashManager/maxTimeIntervalOfCrashForReturnMainApplicationDelay</TokenIdentifier>
+			<Abstract type="html">Time between startup and a crash within which sending a crash will be send synchronously</Abstract>
+			<DeclaredIn>BITCrashManager.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readwrite) NSTimeInterval maxTimeIntervalOfCrashForReturnMainApplicationDelay</Declaration>
+			
+			
+			<Anchor>//api/name/maxTimeIntervalOfCrashForReturnMainApplicationDelay</Anchor>
+            <NodeRef refid="11"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/BITCrashManager/setDidCrashInLastSession:</TokenIdentifier>
+			<Abstract type="html">Indicates if the app crash in the previous session</Abstract>
+			<DeclaredIn>BITCrashManager.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly) BOOL didCrashInLastSession</Declaration>
+			
+			
+			<Anchor>//api/name/didCrashInLastSession</Anchor>
+            <NodeRef refid="11"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/BITCrashManager/didCrashInLastSession</TokenIdentifier>
+			<Abstract type="html">Indicates if the app crash in the previous session</Abstract>
+			<DeclaredIn>BITCrashManager.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly) BOOL didCrashInLastSession</Declaration>
+			
+			
+			<Anchor>//api/name/didCrashInLastSession</Anchor>
+            <NodeRef refid="11"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/BITCrashManager/didCrashInLastSession</TokenIdentifier>
+			<Abstract type="html">Indicates if the app crash in the previous session</Abstract>
+			<DeclaredIn>BITCrashManager.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly) BOOL didCrashInLastSession</Declaration>
+			
+			
+			<Anchor>//api/name/didCrashInLastSession</Anchor>
+            <NodeRef refid="11"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/BITCrashManager/setTimeintervalCrashInLastSessionOccured:</TokenIdentifier>
+			<Abstract type="html">Provides the time between startup and crash in seconds</Abstract>
+			<DeclaredIn>BITCrashManager.h</DeclaredIn>
+			
+	<RelatedTokens>
+		<TokenIdentifier>//apple_ref/occ/instp/BITCrashManager/didCrashInLastSession</TokenIdentifier>
+		<TokenIdentifier>//apple_ref/occ/intf/BITCrashManagerDelegate</TokenIdentifier>
+		
+	</RelatedTokens>
+	
+			<Declaration>@property (nonatomic, readonly) NSTimeInterval timeintervalCrashInLastSessionOccured</Declaration>
+			
+			
+			<Anchor>//api/name/timeintervalCrashInLastSessionOccured</Anchor>
+            <NodeRef refid="11"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/BITCrashManager/timeintervalCrashInLastSessionOccured</TokenIdentifier>
+			<Abstract type="html">Provides the time between startup and crash in seconds</Abstract>
+			<DeclaredIn>BITCrashManager.h</DeclaredIn>
+			
+	<RelatedTokens>
+		<TokenIdentifier>//apple_ref/occ/instp/BITCrashManager/didCrashInLastSession</TokenIdentifier>
+		<TokenIdentifier>//apple_ref/occ/intf/BITCrashManagerDelegate</TokenIdentifier>
+		
+	</RelatedTokens>
+	
+			<Declaration>@property (nonatomic, readonly) NSTimeInterval timeintervalCrashInLastSessionOccured</Declaration>
+			
+			
+			<Anchor>//api/name/timeintervalCrashInLastSessionOccured</Anchor>
+            <NodeRef refid="11"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/BITCrashManager/timeintervalCrashInLastSessionOccured</TokenIdentifier>
+			<Abstract type="html">Provides the time between startup and crash in seconds</Abstract>
+			<DeclaredIn>BITCrashManager.h</DeclaredIn>
+			
+	<RelatedTokens>
+		<TokenIdentifier>//apple_ref/occ/instp/BITCrashManager/didCrashInLastSession</TokenIdentifier>
+		<TokenIdentifier>//apple_ref/occ/intf/BITCrashManagerDelegate</TokenIdentifier>
+		
+	</RelatedTokens>
+	
+			<Declaration>@property (nonatomic, readonly) NSTimeInterval timeintervalCrashInLastSessionOccured</Declaration>
+			
+			
+			<Anchor>//api/name/timeintervalCrashInLastSessionOccured</Anchor>
+            <NodeRef refid="11"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/BITCrashManager/isDebuggerAttached</TokenIdentifier>
+			<Abstract type="html">Detect if a debugger is attached to the app process</Abstract>
+			<DeclaredIn>BITCrashManager.h</DeclaredIn>
+			
+			<Declaration>- (BOOL)isDebuggerAttached</Declaration>
+			
+			<ReturnValue><Abstract type="html">BOOL if the debugger is attached on app startup</Abstract></ReturnValue>
+			<Anchor>//api/name/isDebuggerAttached</Anchor>
+            <NodeRef refid="11"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/BITCrashManager/generateTestCrash</TokenIdentifier>
+			<Abstract type="html">Lets the app crash for easy testing of the SDK</Abstract>
+			<DeclaredIn>BITCrashManager.h</DeclaredIn>
+			
+			<Declaration>- (void)generateTestCrash</Declaration>
+			
+			
+			<Anchor>//api/name/generateTestCrash</Anchor>
+            <NodeRef refid="11"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/BITCrashManager/startManager</TokenIdentifier>
+			<Abstract type="html">Initialize the crash reporter and check if there are any pending crash reports</Abstract>
+			<DeclaredIn>BITCrashManagerPrivate.h</DeclaredIn>
+			
+			<Declaration>- (void)startManager</Declaration>
+			
+			
+			<Anchor>//api/name/startManager</Anchor>
+            <NodeRef refid="11"/>
+		</Token>
+		
+        
+	</File>
+</Tokens>

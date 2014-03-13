@@ -15,6 +15,8 @@
 		BC275C2C18CFD5AA00761247 /* SWTerminationListener.m in Sources */ = {isa = PBXBuildFile; fileRef = BC275C2B18CFD5AA00761247 /* SWTerminationListener.m */; };
 		BC275C3218CFD84000761247 /* relaunch in Resources */ = {isa = PBXBuildFile; fileRef = BC275C1018CFD3C900761247 /* relaunch */; };
 		BC3C78C4188262EB0021C244 /* SWMacVimTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC3C78C3188262EB0021C244 /* SWMacVimTests.m */; };
+		BC48AB2C18D0233C00D3492C /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC48AB2B18D0233C00D3492C /* HockeySDK.framework */; };
+		BC48AB2D18D0243B00D3492C /* HockeySDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BC48AB2B18D0233C00D3492C /* HockeySDK.framework */; };
 		BC5A9798180E5A6F002ECD56 /* SWStatusBarMenuService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5A9797180E5A6F002ECD56 /* SWStatusBarMenuService.m */; };
 		BC5A979B180E6949002ECD56 /* SWLoggingService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5A979A180E6949002ECD56 /* SWLoggingService.m */; };
 		BC63AB8F1755907D00016B9E /* SWHUDCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC63AB8E1755907D00016B9E /* SWHUDCollectionView.m */; };
@@ -256,6 +258,7 @@
 				BCCA7AB21807CD2B00CE36E5 /* NNKit.framework in CopyFiles */,
 				BCDDB2BE178EF16E00C22E47 /* Haxcessibility.framework in CopyFiles */,
 				BCDDB2BD178EF16A00C22E47 /* ReactiveCocoa.framework in CopyFiles */,
+				BC48AB2D18D0243B00D3492C /* HockeySDK.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,6 +276,7 @@
 		BC275C2A18CFD5AA00761247 /* SWTerminationListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWTerminationListener.h; sourceTree = "<group>"; };
 		BC275C2B18CFD5AA00761247 /* SWTerminationListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWTerminationListener.m; sourceTree = "<group>"; };
 		BC3C78C3188262EB0021C244 /* SWMacVimTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWMacVimTests.m; sourceTree = "<group>"; };
+		BC48AB2B18D0233C00D3492C /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = "Frameworks/HockeySDK-Mac/HockeySDK.framework"; sourceTree = "<group>"; };
 		BC5A9796180E5A6F002ECD56 /* SWStatusBarMenuService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWStatusBarMenuService.h; sourceTree = "<group>"; };
 		BC5A9797180E5A6F002ECD56 /* SWStatusBarMenuService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWStatusBarMenuService.m; sourceTree = "<group>"; };
 		BC5A9799180E6949002ECD56 /* SWLoggingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWLoggingService.h; sourceTree = "<group>"; };
@@ -393,6 +397,7 @@
 				BC63AB9A175701D900016B9E /* Haxcessibility.framework in Frameworks */,
 				BCA7353A16E14EF000CD4C74 /* QuartzCore.framework in Frameworks */,
 				BCF357E9176CEEF200458AFF /* ReactiveCocoa.framework in Frameworks */,
+				BC48AB2C18D0233C00D3492C /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,6 +429,14 @@
 				BC275C1718CFD3CA00761247 /* relaunch-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BC48AB2A18D0230E00D3492C /* HockeySDK */ = {
+			isa = PBXGroup;
+			children = (
+				BC48AB2B18D0233C00D3492C /* HockeySDK.framework */,
+			);
+			name = HockeySDK;
 			sourceTree = "<group>";
 		};
 		BC5A978D180E5A66002ECD56 /* Services */ = {
@@ -565,12 +578,12 @@
 		BCA734DF16DAC53F00CD4C74 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				BC79688918A852E300BB1CC5 /* Sparkle */,
 				BC63ABA117598C4100016B9E /* debugger */,
 				BC63AB93175701BA00016B9E /* Haxcessibility */,
+				BC48AB2A18D0230E00D3492C /* HockeySDK */,
 				BCCA7A4D18076AD700CE36E5 /* NNKit */,
 				BCF357D5176CEE0200458AFF /* ReactiveCocoa */,
-				BC275C1118CFD3C900761247 /* Foundation.framework */,
+				BC79688918A852E300BB1CC5 /* Sparkle */,
 				BCA734E216DAC53F00CD4C74 /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -584,6 +597,7 @@
 				BCA734E016DAC53F00CD4C74 /* Cocoa.framework */,
 				BCEF6C44189DF3E30080ABAB /* Foundation.framework */,
 				BCA734E516DAC53F00CD4C74 /* Foundation.framework */,
+				BC275C1118CFD3C900761247 /* Foundation.framework */,
 				BCA7353916E14EF000CD4C74 /* QuartzCore.framework */,
 			);
 			name = "Other Frameworks";
@@ -1313,6 +1327,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Frameworks",
+					"/Users/numist/Code/Switch/Frameworks/HockeySDK-Mac",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Switch/Switch-Prefix.pch";
@@ -1353,6 +1368,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Frameworks",
+					"/Users/numist/Code/Switch/Frameworks/HockeySDK-Mac",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Switch/Switch-Prefix.pch";
