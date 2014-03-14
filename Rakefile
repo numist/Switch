@@ -131,7 +131,7 @@ task :default => [:analyze, :test]
 task :deps do
   echo_step "Installing/updating dependencies"
   # Rakefile deps
-  shell "gem install xcpretty --no-ri --no-rdoc" if SHELL_IS_LOGIN
+  shell "gem install xcpretty --no-ri --no-rdoc"
   
   # Submodules
   shell "git submodule sync"
