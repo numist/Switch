@@ -244,15 +244,14 @@ task DELIVERABLE_ZIP => [DELIVERABLE_APP, File.dirname(DELIVERABLE_ZIP), INTERME
   Console.puts "Finished: #{Console.green(DELIVERABLE_ZIP)}\n"
 end
 
-task :release => [:analyze, :test] do
-  # TODO
-  # formatted_fail "Releases can only be made from branches: #{RELEASE_BRANCHES.inspect}" unless BRANCH_IS_RELEASE
+task :release_ready? do
+  formatted_fail "Releases can only be made from branches: #{RELEASE_BRANCHES.inspect}" unless BRANCH_IS_RELEASE
 
   gst = 'git status -uno --ignore-submodules=untracked'
   formatted_fail "Uncommitted files detected!\n#{`#{gst} --short`}" unless `#{gst} --porcelain | wc -l`.strip == "0"
-  
-  run_task DELIVERABLE_ZIP
-  # The zip's contents can be unsigned, but a release must be signed!
+end
+
+task :release => [:release_ready?, :analyze, :test, :zip] do
+  # The zip build step might succeed without a code signature, but a deliverable for release must be signed!
   verify_codesign DELIVERABLE_APP
-  
 end
