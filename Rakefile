@@ -252,6 +252,8 @@ task DELIVERABLE_ZIP => [DELIVERABLE_APP, File.dirname(DELIVERABLE_ZIP), INTERME
   
   # Verify that unzipped app and app deliverable do not differ.
   shell "diff -r \"#{unzipped_app}\" \"#{DELIVERABLE_APP}\""
+  
+  # XXX: this will fail if the application was not code signed!
   # Verify unzipped application launches successfully.
   shell "open \"#{unzipped_app}\""
   # grep for "[/]Users/foo/bar" to prevent grep from showing up in the list of processes matching the query.
