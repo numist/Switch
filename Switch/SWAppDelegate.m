@@ -15,6 +15,7 @@
 #import "SWAppDelegate.h"
 
 #import <Sparkle/Sparkle.h>
+#import <HockeySDK/HockeySDK.h>
 
 #import "SWPreferencesService.h"
 #import "SWWindowListService.h"
@@ -27,6 +28,9 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification;
 {
     [[NNServiceManager sharedManager] registerAllPossibleServices];
+ 
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"81d830d8a7181d7e0df6eeb805bb9728"];
+    [[BITHockeyManager sharedHockeyManager] startManager];
     
     SWLog(@"Launched %@ %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:(__bridge id)kCFBundleNameKey], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]);
 }
