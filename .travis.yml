@@ -4,11 +4,11 @@ xcode_scheme: Switch
 
 rvm:
     - 2.1.0
-    
+
 before_install:
     - gem install rake
     - rake deps
-  
+
 install:
     - rake analyze
 

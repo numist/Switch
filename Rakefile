@@ -126,9 +126,15 @@ task :default => [:analyze, :test]
 
 task :deps do
   echo_step "Installing/updating dependencies"
-  shell "gem install xcpretty"
+  # Rakefile deps
+  shell "gem install xcpretty --no-ri --no-rdoc"
+  
+  # Submodules
   shell "git submodule sync"
   shell "git submodule update --init --recursive"
+
+  # Pods
+  shell "gem install cocoapods --no-ri --no-rdoc"
   shell "pod install"
 end
 
