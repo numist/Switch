@@ -8,7 +8,7 @@ require_relative 'Scripts/console'
 # TODO: deliverables should live in INTERMEDIATESDIR until the very last possible moment, when they have been fully verified.
 #
 
-# SHELL_IS_LOGIN = STDIN.fcntl(Fcntl::F_GETFL, 0) != 0
+SHELL_IS_LOGIN = false # STDIN.fcntl(Fcntl::F_GETFL, 0) != 0
 # if SHELL_IS_LOGIN
 #   XCODE_BUILD_FILTER = "| xcpretty -c"
 #   XCODE_TEST_FILTER = "| xcpretty -tc"
