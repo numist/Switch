@@ -1,11 +1,22 @@
 require 'rake/clean'
 require 'rake/packagetask'
+require 'fcntl'
 
 require_relative 'Scripts/console'
 
 #
 # TODO: deliverables should live in INTERMEDIATESDIR until the very last possible moment, when they have been fully verified.
 #
+
+SHELL_IS_LOGIN = STDIN.fcntl(Fcntl::F_GETFL, 0) != 0
+if SHELL_IS_LOGIN
+  XCODE_BUILD_FILTER = "| xcpretty -c"
+  XCODE_TEST_FILTER = "| xcpretty -tc"
+else
+  Console.puts "Non-login shell detected, disabling pretty printing"
+  XCODE_BUILD_FILTER = ""
+  XCODE_TEST_FILTER = ""
+end
 
 #
 # Constants
@@ -127,7 +138,7 @@ task :default => [:analyze, :test]
 task :deps do
   echo_step "Installing/updating dependencies"
   # Rakefile deps
-  shell "gem install xcpretty --no-ri --no-rdoc"
+  shell "gem install xcpretty --no-ri --no-rdoc" if SHELL_IS_LOGIN
   
   # Submodules
   shell "git submodule sync"
@@ -140,7 +151,7 @@ end
 
 def xcode(action)
   run_task DERIVEDDATA
-  shell "set -e; set -o pipefail; xcodebuild #{XCODEFLAGS} #{action} 2>&1 | xcpretty -c"
+  shell "set -e; set -o pipefail; xcodebuild #{XCODEFLAGS} #{action} 2>&1 #{XCODE_BUILD_FILTER}"
 end
 
 def shell(action)
@@ -171,11 +182,15 @@ task :clean do
 end
 
 task :test do
-  echo_step("Testing #{PROJECT}")
-  shell "set -e; set -o pipefail; xcodebuild -scheme \"Switch\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | xcpretty -tc"
-  shell "set -e; set -o pipefail; xcodebuild -scheme \"ReactiveCocoa\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | xcpretty -tc"
-  shell "set -e; set -o pipefail; xcodebuild -scheme \"NNKit\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | xcpretty -tc"
-  shell "set -e; set -o pipefail; xcodebuild -scheme \"Sparkle\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | xcpretty -tc"
+  echo_step("Testing #{PRODUCT}.xcworkspace")
+  def test_scheme(scheme)
+    shell "set -e; set -o pipefail; xcodebuild -scheme \"#{scheme}\" -workspace \"#{PRODUCT}.xcworkspace\" -configuration \"Debug\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 #{XCODE_TEST_FILTER}"
+  end
+
+  test_scheme("Switch")
+  test_scheme("ReactiveCocoa")
+  test_scheme("NNKit")
+  test_scheme("Sparkle")
 end
 
 
