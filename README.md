@@ -19,15 +19,18 @@ Switch requires Mac OS X version 10.9 or newer and is still in development. For 
 Contributing
 ------------
 
+[![Stories in Ready](https://badge.waffle.io/numist/switch.png?label=ready&title=Ready)](http://waffle.io/numist/switch) [![Build Status](https://travis-ci.org/numist/Switch.png?branch=develop)](https://travis-ci.org/numist/Switch)
+
 To check out the project, its submodules, and open in Xcode:
 
     git clone git://github.com/numist/Switch.git
     cd Switch/
-    git submodule sync
-    git submodule update --init --recursive
-    open Switch.xcodeproj
+    rake deps
+    open Switch.xcworkspace
 
 At this point, `⌘R` should have you up and running!
+
+The release process uses the project `Rakefile`; if you have a Developer ID certificate installed, you should be able to run `rake release` without any issues. Without a Developer ID, the `analyze`, `test`, and `app` targets (and their dependencies) should succeed.
 
 Thanks!
 -------

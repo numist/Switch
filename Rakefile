@@ -1,6 +1,5 @@
 require 'rake/clean'
 require 'rake/packagetask'
-require 'fcntl'
 
 require_relative 'Scripts/console'
 
@@ -8,21 +7,12 @@ require_relative 'Scripts/console'
 # TODO: deliverables should live in INTERMEDIATESDIR until the very last possible moment, when they have been fully verified.
 #
 
-SHELL_IS_LOGIN = STDIN.fcntl(Fcntl::F_GETFL, 0) != 0
-if SHELL_IS_LOGIN
-  XCODE_BUILD_FILTER = "| xcpretty -c"
-  XCODE_TEST_FILTER = "| xcpretty -tc"
-else
-  Console.puts "Non-login shell detected, disabling pretty printing"
-  XCODE_BUILD_FILTER = ""
-  XCODE_TEST_FILTER = ""
-end
+XCODE_BUILD_FILTER = "| xcpretty -c"
+XCODE_TEST_FILTER = "| xcpretty -tc"
 
 #
 # Constants
 #
-
-DEVELOPER_ID = "Scott Perry"
 
 RELEASE_BRANCHES = ["develop", "master"]
 
@@ -30,7 +20,7 @@ BUILDDIR = File.absolute_path("Build")
 
 INTERMEDIATESDIR = "#{BUILDDIR}/Intermediates"
 
-DERIVEDDATA = File.absolute_path("DerivedData")
+DERIVEDDATA = "#{INTERMEDIATESDIR}/DerivedData"
 
 #
 # Environmental
@@ -100,26 +90,6 @@ def run_task(task, args=nil)
   end
 end
 
-def sparkle_signature(archive)
-  # TODO: Sorry.
-  private_key = "Secrets-local/Sparkle.dsa_priv.pem"
-  unless File.exist?(private_key)
-    Console.puts ' ____________________________________ '
-    Console.puts '/ WARNING: not able to sign app      \\'
-    Console.puts '| deliverable for appcast! Find this |'
-    Console.puts '\\ message in the Rakefile.           /'
-    Console.puts ' ------------------------------------ '
-    Console.puts '        \\   ^__^                      '
-    Console.puts '         \\  (oo)\\_______              '
-    Console.puts '            (__)\\       )\\/\\          '
-    Console.puts '                ||----w |             '
-    Console.puts '                ||     ||             '
-    sleep 5
-  else
-    return `Scripts/sign_update.rb \"#{archive}\" \"#{private_key}\"`.strip
-  end
-end
-
 def verify_codesign(app_path)
   shell "codesign --verify --verbose --deep \"#{app_path}\""
   shell "spctl --assess --verbose=4 --type execute \"#{app_path}\""
@@ -127,26 +97,6 @@ end
 
 def verify_deliverable(deliverable_path)
   formatted_fail "#{deliverable_path} wasn't produced!" unless File.exists? deliverable_path
-end
-
-directory BUILDDIR
-directory DERIVEDDATA
-directory INTERMEDIATESDIR
-
-task :default => [:analyze, :test]
-
-task :deps do
-  echo_step "Installing/updating dependencies"
-  # Rakefile deps
-  shell "gem install xcpretty --no-ri --no-rdoc" if SHELL_IS_LOGIN
-  
-  # Submodules
-  shell "git submodule sync"
-  shell "git submodule update --init --recursive"
-
-  # Pods
-  shell "gem install cocoapods --no-ri --no-rdoc"
-  shell "pod install"
 end
 
 def xcode(action)
@@ -168,7 +118,31 @@ def echo_step(step)
   Console.puts(Console.bold(Console.black(Console.background_white(step))))
 end
 
-# can these just be tasks dependant on another task with an argument?
+#
+# Targets
+#
+
+directory BUILDDIR
+directory DERIVEDDATA
+directory INTERMEDIATESDIR
+
+task :default => [:analyze, :test]
+
+task :deps do
+  echo_step "Installing/updating dependencies"
+  # Rakefile deps
+  shell "gem install xcpretty --no-ri --no-rdoc" if SHELL_IS_LOGIN
+  
+  # Submodules
+  shell "git submodule sync"
+  shell "git submodule update --init --recursive"
+
+  # Pods
+  shell "gem install cocoapods --no-ri --no-rdoc"
+  shell "pod install"
+end
+
+# XXX: can these just be tasks dependant on another task with an argument?
 task :analyze do
   xcode "analyze"
 end
@@ -181,10 +155,10 @@ task :clean do
   xcode "clean"
 end
 
-task :test do
-  echo_step("Testing #{PRODUCT}.xcworkspace")
+task :test => [:build] do
+  echo_step("Testing #{PRODUCT}")
   def test_scheme(scheme)
-    shell "set -e; set -o pipefail; xcodebuild -scheme \"#{scheme}\" -workspace \"#{PRODUCT}.xcworkspace\" -configuration \"Debug\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 #{XCODE_TEST_FILTER}"
+    shell "set -e; set -o pipefail; xcodebuild -scheme \"#{scheme}\" -workspace \"#{PRODUCT}.xcworkspace\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 #{XCODE_TEST_FILTER}"
   end
 
   test_scheme("Switch")
@@ -217,14 +191,14 @@ task DELIVERABLE_APP => [DELIVERABLE_ARCHIVE, File.dirname(DELIVERABLE_APP)] do
   
   verify_deliverable DELIVERABLE_APP
 
-  if shell_non_fatal "codesign --force --deep --sign \"Developer ID Application: #{DEVELOPER_ID}\" \"#{DELIVERABLE_APP}\""
+  if shell_non_fatal "codesign --force --deep --sign \"Developer ID\" \"#{DELIVERABLE_APP}\""
     verify_codesign DELIVERABLE_APP
   else
-    # If you're here, chances are DEVELOPER_ID isn't set correctly. It's at the top of this file, and should be set to the company name of your Developer ID certificate.
+    # If you're reading this message, you probably don't have a Developer ID certificate for signing the app.
+    # This is fine if you want to use your own build, but if you're planning on distributing the deliverables you're going to need to get a Developer ID certificate.
     Console.puts ' _____________________________________ '
     Console.puts '/ WARNING: unable to sign app         \\'
-    Console.puts '| deliverable with Developer ID!       |'
-    Console.puts '\\ Find this message in the Rakefile.  /'
+    Console.puts '\\ deliverable with Developer ID!      /'
     Console.puts ' ------------------------------------- '
     Console.puts '        \\   ^__^                       '
     Console.puts '         \\  (oo)\\_______               '
