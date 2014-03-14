@@ -168,7 +168,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
         CGEventMaskBit(kCGEventKeyUp) |
         CGEventMaskBit(kCGEventFlagsChanged) |
         CGEventMaskBit(kCGEventMouseMoved) |
-//        CGEventMaskBit(kCGEventScrollWheel) |
+        CGEventMaskBit(kCGEventScrollWheel) |
     0);
     
     self.eventTap = CGEventTapCreate(kCGSessionEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault, eventMask, eventCallback, (__bridge void *)(self));
@@ -219,6 +219,11 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
     //
     for (SWEventTapCallback callback in [eventTap.eventTypeCallbacks[@(type)] allValues]) {
         callback(event);
+    }
+    
+    // Prevent other applications from receiving scroll events when the application is consuming keyboard events.
+    if (type == kCGEventScrollWheel) {
+        return eventTap.suppressKeyEvents ? NULL : event;
     }
     
     // Escape if the event is not a key/modifier change event.

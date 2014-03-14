@@ -34,6 +34,8 @@ NSString const *SWCoreWindowControllerActiveKey = @"SWCoreWindowControllerActive
 
 static NSTimeInterval kWindowDisplayDelay = 0.15;
 
+static int kScrollThreshold = 50;
+
 
 @interface SWCoreWindowController () <SWWindowListSubscriber, SWHUDCollectionViewDataSource, SWHUDCollectionViewDelegate>
 
@@ -54,6 +56,7 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
 
 #pragma mark Selector state
 @property (nonatomic, strong) SWSelector *selector;
+@property (nonatomic, assign) int scrollOffset;
 @property (nonatomic, assign) BOOL incrementing;
 @property (nonatomic, assign) BOOL decrementing;
 
@@ -174,12 +177,13 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
     if (interfaceVisible == self.interfaceVisible) { return; }
     self->_interfaceVisible = interfaceVisible;
 
+    SWEventTap *eventTap = [SWEventTap sharedService];
     if (interfaceVisible) {
         [self _displayInterface];
 
         // Mouse moved events get captured when the interface is visible in order to update the selected item.
         @weakify(self);
-        [[SWEventTap sharedService] registerForEventsWithType:kCGEventMouseMoved object:self block:^(CGEventRef event) {
+        [eventTap registerForEventsWithType:kCGEventMouseMoved object:self block:^(CGEventRef event) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 @strongify(self);
                 if (!self.interfaceVisible) { return; }
@@ -191,8 +195,40 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
                 }
             });
         }];
+
+        [eventTap registerForEventsWithType:kCGEventScrollWheel object:self block:^(CGEventRef event) {
+            CFRetain(event);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NNCFAutorelease(event);
+                @strongify(self);
+
+                if (!self.interfaceVisible) { return; }
+
+                int delta = (int)CGEventGetIntegerValueField(event, kCGScrollWheelEventPointDeltaAxis1);
+                if (delta == 0) { return; }
+
+                self.scrollOffset += delta;
+
+                int units = (self.scrollOffset / kScrollThreshold);
+                if (units != 0) {
+                    self.scrollOffset -= (units * kScrollThreshold);
+
+                    SWSelector *selector = self.selector;
+                    while (units > 0) {
+                        selector = selector.incrementWithoutWrapping;
+                        units--;
+                    }
+                    while (units < 0) {
+                        selector = selector.decrementWithoutWrapping;
+                        units++;
+                    }
+                    self.selector = selector;
+                }
+            });
+        }];
     } else {
-        [[SWEventTap sharedService] removeBlockForEventsWithType:kCGEventMouseMoved object:self];
+        [eventTap removeBlockForEventsWithType:kCGEventMouseMoved object:self];
+        [eventTap removeBlockForEventsWithType:kCGEventScrollWheel object:self];
 
         [self _hideInterface];
     }
@@ -232,7 +268,10 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
 
 - (void)HUDView:(SWHUDCollectionView *)view willSelectCellAtIndex:(NSUInteger)index;
 {
+    if (index == self.selector.selectedUIndex) { return; }
+    
     self.selector = [self.selector selectIndex:index];
+    self.scrollOffset = 0;
 }
 
 - (void)HUDView:(SWHUDCollectionView *)view activateCellAtIndex:(NSUInteger)index;
@@ -499,6 +538,7 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
                 } else {
                     self.selector = [self.selector increment];
                 }
+                self.scrollOffset = 0;
             }
             self.incrementing = keyDown;
         });
@@ -536,6 +576,7 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
                 } else {
                     self.selector = [self.selector decrement];
                 }
+                self.scrollOffset = 0;
             }
             self.decrementing = keyDown;
         });
