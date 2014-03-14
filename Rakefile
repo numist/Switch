@@ -8,15 +8,15 @@ require_relative 'Scripts/console'
 # TODO: deliverables should live in INTERMEDIATESDIR until the very last possible moment, when they have been fully verified.
 #
 
-SHELL_IS_LOGIN = false # STDIN.fcntl(Fcntl::F_GETFL, 0) != 0
-# if SHELL_IS_LOGIN
-#   XCODE_BUILD_FILTER = "| xcpretty -c"
-#   XCODE_TEST_FILTER = "| xcpretty -tc"
-# else
-  # Console.puts "Non-login shell detected, disabling pretty printing"
+SHELL_IS_LOGIN = STDIN.fcntl(Fcntl::F_GETFL, 0) != 0
+if SHELL_IS_LOGIN
+  XCODE_BUILD_FILTER = "| xcpretty -c"
+  XCODE_TEST_FILTER = "| xcpretty -tc"
+else
+  Console.puts "Non-login shell detected, disabling pretty printing"
   XCODE_BUILD_FILTER = ""
   XCODE_TEST_FILTER = ""
-# end
+end
 
 #
 # Constants
