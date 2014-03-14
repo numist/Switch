@@ -35,12 +35,4 @@ The release process uses the project `Rakefile`; if you have a Developer ID cert
 Thanks!
 -------
 
-Switch relies on a number of [external frameworks](https://github.com/numist/Switch/tree/develop/Frameworks). Thanks to the people responsible for them, you've saved me time and tears.
-
-Many people have influenced Switch's development without being authors (or perhaps even realizing it). Special thanks goes out to:
-* [@andymatuschak](https://github.com/andymatuschak)
-* [@Catfish_Man](https://twitter.com/Catfish_Man) and the NSCoders in general
-* [@gwynne](https://github.com/gwynne)
-* [@quicklywilliam](https://github.com/quicklywilliam)
-* [@robrix](https://github.com/robrix)
-* [@zadr](https://github.com/zadr)
+Switch relies on a number of external frameworks, either as [submodules](https://github.com/numist/Switch/tree/develop/Frameworks) or [pods](https://github.com/numist/Switch/tree/develop/Podfile). Thanks to the people responsible for them, you've saved me time and tears.
