@@ -177,12 +177,13 @@ static int kScrollThreshold = 50;
     if (interfaceVisible == self.interfaceVisible) { return; }
     self->_interfaceVisible = interfaceVisible;
 
+    SWEventTap *eventTap = [SWEventTap sharedService];
     if (interfaceVisible) {
         [self _displayInterface];
 
         // Mouse moved events get captured when the interface is visible in order to update the selected item.
         @weakify(self);
-        [[SWEventTap sharedService] registerForEventsWithType:kCGEventMouseMoved object:self block:^(CGEventRef event) {
+        [eventTap registerForEventsWithType:kCGEventMouseMoved object:self block:^(CGEventRef event) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 @strongify(self);
                 if (!self.interfaceVisible) { return; }
@@ -194,8 +195,40 @@ static int kScrollThreshold = 50;
                 }
             });
         }];
+
+        [eventTap registerForEventsWithType:kCGEventScrollWheel object:self block:^(CGEventRef event) {
+            CFRetain(event);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NNCFAutorelease(event);
+                @strongify(self);
+
+                if (!self.interfaceVisible) { return; }
+
+                int delta = (int)CGEventGetIntegerValueField(event, kCGScrollWheelEventPointDeltaAxis1);
+                if (delta == 0) { return; }
+
+                self.scrollOffset += delta;
+
+                int units = (self.scrollOffset / kScrollThreshold);
+                if (units != 0) {
+                    self.scrollOffset -= (units * kScrollThreshold);
+
+                    SWSelector *selector = self.selector;
+                    while (units > 0) {
+                        selector = selector.incrementWithoutWrapping;
+                        units--;
+                    }
+                    while (units < 0) {
+                        selector = selector.decrementWithoutWrapping;
+                        units++;
+                    }
+                    self.selector = selector;
+                }
+            });
+        }];
     } else {
-        [[SWEventTap sharedService] removeBlockForEventsWithType:kCGEventMouseMoved object:self];
+        [eventTap removeBlockForEventsWithType:kCGEventMouseMoved object:self];
+        [eventTap removeBlockForEventsWithType:kCGEventScrollWheel object:self];
 
         [self _hideInterface];
     }
@@ -619,41 +652,6 @@ static int kScrollThreshold = 50;
                     self.pendingSwitch = YES;
                     self.invoked = NO;
                 }
-            }
-        });
-    }];
-
-    [eventTap registerForEventsWithType:kCGEventScrollWheel withBlock:^(CGEventRef event) {
-        CFRetain(event);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NNCFAutorelease(event);
-            @strongify(self);
-
-            if (!self.interfaceVisible) { return; }
-            
-            int delta = (int)CGEventGetIntegerValueField(event, kCGScrollWheelEventPointDeltaAxis1);
-            if (delta == 0) { return; }
-            
-            self.scrollOffset += delta;
-            
-            SWLog(@"scrollOffset -> %d", self.scrollOffset);
-            
-            int units = (self.scrollOffset / kScrollThreshold);
-            if (units != 0) {
-                self.scrollOffset -= (units * kScrollThreshold);
-                
-                SWLog(@"Moving selector by %d units", units);
-                
-                SWSelector *selector = self.selector;
-                while (units > 0) {
-                    selector = selector.increment;
-                    units--;
-                }
-                while (units < 0) {
-                    selector = selector.decrement;
-                    units++;
-                }
-                self.selector = selector;
             }
         });
     }];
