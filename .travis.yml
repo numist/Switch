@@ -10,7 +10,4 @@ before_install:
     - rake deps
 
 install:
-    - rake analyze
-
-script:
-    - rake test
+    - rake release
