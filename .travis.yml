@@ -1,0 +1,16 @@
+language: objective-c
+xcode_project: Switch.xcodeproj
+xcode_scheme: Switch
+
+rvm:
+    - ruby-2.0.0-p247
+
+before_install:
+    - gem install rake
+    - rake deps
+
+install:
+    - rake analyze
+
+script:
+    - rake test

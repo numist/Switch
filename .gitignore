@@ -21,7 +21,6 @@
 
 .DS_Store
 *.swp
-*.lock
 profile
 
 
@@ -39,6 +38,7 @@ profile
 # NB: slash on the end, so we only remove the FOLDER, not any files that were badly named "DerivedData"
 
 DerivedData/
+Build/
 
 #####
 # Xcode private settings (window sizes, bookmarks, breakpoints, custom executables, smart groups)

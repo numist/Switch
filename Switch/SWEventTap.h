@@ -12,8 +12,6 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import <NNKit/NNKit.h>
-
 #import "SWHotKey.h"
 
 
@@ -27,12 +25,15 @@ typedef void (^SWEventTapCallback)(CGEventRef event);
 @property (nonatomic, assign, readwrite) BOOL suppressKeyEvents;
 
 // For key bindings. Block can return NO to stop the event's further propagation.
-- (void)registerHotKey:(SWHotKey *)hotKey withBlock:(SWEventTapKeyFilter)eventFilter;
+- (void)registerHotKey:(SWHotKey *)hotKey object:(id)owner block:(SWEventTapKeyFilter)eventFilter;
+- (void)removeBlockForHotKey:(SWHotKey *)hotKey object:(id)owner;
 
 // For modifier key state updates. Used to dismiss the interface.
-- (void)registerModifier:(SWHotKeyModifierKey)modifiers withBlock:(SWEventTapModifierCallback)eventCallback;
+- (void)registerModifier:(SWHotKeyModifierKey)modifiers object:(id)owner block:(SWEventTapModifierCallback)eventCallback;
+- (void)removeBlockForModifier:(SWHotKeyModifierKey)modifiers object:(id)owner;
 
 // Primarily for mouse move and scroll events. Used for selector updates..
-- (void)registerForEventsWithType:(CGEventType)eventType withBlock:(SWEventTapCallback)eventCallback;
+- (void)registerForEventsWithType:(CGEventType)eventType object:(id)owner block:(SWEventTapCallback)eventCallback;
+- (void)removeBlockForEventsWithType:(CGEventType)eventType object:(id)owner;
 
 @end

@@ -1,0 +1,10 @@
+PODS:
+  - HockeySDK-Mac (2.1.0)
+
+DEPENDENCIES:
+  - HockeySDK-Mac
+
+SPEC CHECKSUMS:
+  HockeySDK-Mac: e37f9cb7fc61828f797b061e186a682ed5d1216d
+
+COCOAPODS: 0.29.0

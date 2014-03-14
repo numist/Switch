@@ -72,7 +72,7 @@
         [[NSNotificationCenter defaultCenter] removeObserver:self name:SWAPIEnabledWorker.notificationName object:_worker];
     }
     if (worker) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_accessibilityAPIAvailabilityChangedNotification:) name:SWAPIEnabledWorker.notificationName object:self.worker];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:NNSelfSelector1(_accessibilityAPIAvailabilityChangedNotification:) name:SWAPIEnabledWorker.notificationName object:self.worker];
     }
     _worker = worker;
 }
@@ -239,25 +239,22 @@
     // If window is a group, the frame will be calculated incorrectly, and no accessibility object for the window will be found!
     Check(![window isKindOfClass:[SWWindowGroup class]]);
 
-    HAXWindow *result = nil;
-    
     HAXApplication *haxApplication = [HAXApplication applicationWithPID:window.application.pid];
-    BailUnless(haxApplication, result);
+    BailUnless(haxApplication, nil);
     
-    NSArray *haxWindows = [haxApplication windows];
-    for (HAXWindow *haxWindow in haxWindows) {
+    return [[haxApplication windows] nn_reduce:^id(id accumulator, HAXWindow *haxWindow){
         NSString *haxTitle = haxWindow.title;
         BOOL framesMatch = NNNSRectsEqual(window.frame, haxWindow.frame);
         // AX will return an empty string when CG returns nil/unset!
         BOOL namesMatch = (window.name.length == 0 && haxTitle.length == 0) || [window.name isEqualToString:haxTitle];
         
         // For some reason, the window names for Dash have been seen to differ.
-        if (framesMatch && (!result || namesMatch)) {
-            result = haxWindow;
+        if (framesMatch && (!accumulator || namesMatch)) {
+            return haxWindow;
         }
-    }
-    
-    return result;
+        
+        return accumulator;
+    }];
 }
 
 @end

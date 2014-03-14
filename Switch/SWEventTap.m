@@ -78,37 +78,67 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
 
 #pragma mark SWEventTap
 
-- (void)registerHotKey:(SWHotKey *)hotKey withBlock:(SWEventTapKeyFilter)eventFilter;
+- (void)registerHotKey:(SWHotKey *)hotKey object:(id)owner block:(SWEventTapKeyFilter)eventFilter;
 {
     NSAssert([[NSThread currentThread] isMainThread], @"%@ must be called from the main thread", [self class]);
 
     if (!self.keyFilters[hotKey]) {
-        self.keyFilters[hotKey] = [NSMutableArray new];
+        self.keyFilters[hotKey] = [NSMutableDictionary new];
     }
     
-    [self.keyFilters[hotKey] addObject:eventFilter];
+    NSNumber *ownerKey = @((uintptr_t)owner);
+    
+    // I don't love this limitation, but removing it is complicated and enables questionable functionality anyway.
+    NSAssert(!self.keyFilters[hotKey][ownerKey], @"Tried to register a block for an already-existing keybinding.");
+    
+    [self.keyFilters[hotKey] setObject:eventFilter forKey:ownerKey];
 }
 
-- (void)registerModifier:(SWHotKeyModifierKey)modifiers withBlock:(SWEventTapModifierCallback)eventCallback;
+- (void)removeBlockForHotKey:(SWHotKey *)hotKey object:(id)owner;
+{
+    [self.keyFilters[hotKey] removeObjectForKey:@((uintptr_t)owner)];
+}
+
+- (void)registerModifier:(SWHotKeyModifierKey)modifiers object:(id)owner block:(SWEventTapModifierCallback)eventCallback;
 {
     NSAssert([[NSThread currentThread] isMainThread], @"%@ must be called from the main thread", [self class]);
 
     if (!self.modifierCallbacks[@(modifiers)]) {
-        self.modifierCallbacks[@(modifiers)] = [NSMutableArray new];
+        self.modifierCallbacks[@(modifiers)] = [NSMutableDictionary new];
     }
     
-    [self.modifierCallbacks[@(modifiers)] addObject:eventCallback];
+    NSNumber *ownerKey = @((uintptr_t)owner);
+    
+    // I don't love this limitation, but removing it is complicated and enables questionable functionality anyway.
+    NSAssert(!self.modifierCallbacks[@(modifiers)][ownerKey], @"Tried to register a block for an already-existing keybinding.");
+    
+    [self.modifierCallbacks[@(modifiers)] setObject:eventCallback forKey:@((uintptr_t)owner)];
 }
 
-- (void)registerForEventsWithType:(CGEventType)eventType withBlock:(SWEventTapCallback)eventCallback;
+- (void)removeBlockForModifier:(SWHotKeyModifierKey)modifiers object:(id)owner;
+{
+    [self.modifierCallbacks[@(modifiers)] removeObjectForKey:@((uintptr_t)owner)];
+}
+
+- (void)registerForEventsWithType:(CGEventType)eventType object:(id)owner block:(SWEventTapCallback)eventCallback;
 {
     NSAssert([[NSThread currentThread] isMainThread], @"%@ must be called from the main thread", [self class]);
 
     if (!self.eventTypeCallbacks[@(eventType)]) {
-        self.eventTypeCallbacks[@(eventType)] = [NSMutableArray new];
+        self.eventTypeCallbacks[@(eventType)] = [NSMutableDictionary new];
     }
     
-    [self.eventTypeCallbacks[@(eventType)] addObject:eventCallback];
+    NSNumber *ownerKey = @((uintptr_t)owner);
+    
+    // I don't love this limitation, but removing it is complicated and enables questionable functionality anyway.
+    NSAssert(!self.eventTypeCallbacks[@(eventType)][ownerKey], @"Tried to register a block for an already-existing keybinding.");
+    
+    [self.eventTypeCallbacks[@(eventType)] setObject:eventCallback forKey:@((uintptr_t)owner)];
+}
+
+- (void)removeBlockForEventsWithType:(CGEventType)eventType object:(id)owner;
+{
+    [self.eventTypeCallbacks[@(eventType)] removeObjectForKey:@((uintptr_t)owner)];
 }
 
 #pragma mark Internal
@@ -187,7 +217,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
     //
     // Event type callbacks.
     //
-    for (SWEventTapCallback callback in eventTap.eventTypeCallbacks[@(type)]) {
+    for (SWEventTapCallback callback in [eventTap.eventTypeCallbacks[@(type)] allValues]) {
         callback(event);
     }
     
@@ -207,6 +237,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
     SWHotKey *key = [SWHotKey hotKeyFromEvent:event];
     if (type == kCGEventFlagsChanged) {
         SWHotKeyModifierKey flagChanges = key.modifiers ^ eventTap.modifiers;
+        
         for (NSNumber *boxedRegisteredModifiers in eventTap.modifierCallbacks) {
             SWHotKeyModifierKey registeredModifiers = boxedRegisteredModifiers.unsignedIntValue;
             
@@ -218,7 +249,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
             BOOL matches = (key.modifiers & registeredModifiers) == registeredModifiers;
             if (matched == matches) continue;
             
-            for (SWEventTapModifierCallback callback in eventTap.modifierCallbacks[boxedRegisteredModifiers]) {
+            for (SWEventTapModifierCallback callback in [eventTap.modifierCallbacks[boxedRegisteredModifiers] allValues]) {
                 callback(matches);
             }
         }
@@ -232,7 +263,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
     // Hotkey callbacks.
     //
     
-    for (SWEventTapKeyFilter filter in eventTap.keyFilters[key]) {
+    for (SWEventTapKeyFilter filter in [eventTap.keyFilters[key] allValues]) {
         if (!filter(type == kCGEventKeyDown)) {
             event = NULL;
             break;

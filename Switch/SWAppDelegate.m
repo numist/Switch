@@ -15,6 +15,7 @@
 #import "SWAppDelegate.h"
 
 #import <Sparkle/Sparkle.h>
+#import <HockeySDK/HockeySDK.h>
 
 #import "SWPreferencesService.h"
 #import "SWWindowListService.h"
@@ -24,26 +25,38 @@
 
 #pragma mark NSApplicationDelegate
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification;
 {
     [[NNServiceManager sharedManager] registerAllPossibleServices];
+ 
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"81d830d8a7181d7e0df6eeb805bb9728"];
+    [[BITHockeyManager sharedHockeyManager] startManager];
     
     SWLog(@"Launched %@ %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:(__bridge id)kCFBundleNameKey], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]);
 }
 
 - (void)relaunch:(id)sender;
 {
-    NSString *launcherSource = [[NSBundle bundleForClass:[SUUpdater class]]  pathForResource:@"relaunch" ofType:@""];
-    Check(launcherSource);
+    // TODO: This should pop up a "please restart Switch" dialog. It sucks, but it's the best we can do in this situation.
+    void (^failureBlock)() = ^{};
+    
+    NSString *launcherSource = [[NSBundle bundleForClass:[self class]]  pathForResource:@"relaunch" ofType:nil];
+    BailWithBlockUnless(launcherSource, failureBlock);
+    
     NSString *launcherTarget = [NSTemporaryDirectory() stringByAppendingPathComponent:[launcherSource lastPathComponent]];
     NSString *appPath = [[NSBundle mainBundle] bundlePath];
     NSString *processID = [NSString stringWithFormat:@"%d", [[NSProcessInfo processInfo] processIdentifier]];
     
     NSError *error = NULL;
-    [[NSFileManager defaultManager] removeItemAtPath:launcherTarget error:&error];
-    Check(error);
-    [[NSFileManager defaultManager] copyItemAtPath:launcherSource toPath:launcherTarget error:&error];
-    Check(error);
+    BOOL success = YES;
+    success = [[NSFileManager defaultManager] removeItemAtPath:launcherTarget error:&error];
+    if (!success) {
+        // Code 4: "The operation couldn’t be completed. No such file or directory"
+        BailWithBlockUnless(error.code == 4, failureBlock);
+    }
+    
+    success = [[NSFileManager defaultManager] copyItemAtPath:launcherSource toPath:launcherTarget error:&error];
+    BailWithBlockUnless(success, failureBlock);
 	
     [NSTask launchedTaskWithLaunchPath:launcherTarget arguments:@[appPath, processID]];
     [NSApp terminate:sender];
@@ -51,7 +64,8 @@
 
 #pragma mark IBAction
 
-- (IBAction)showPreferences:(id)sender {
+- (IBAction)showPreferences:(id)sender;
+{
     [[SWPreferencesService sharedService] showPreferencesWindow:sender];
 }
 

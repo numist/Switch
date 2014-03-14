@@ -86,8 +86,6 @@ static int kScrollThreshold = 50;
         [self _registerEvents];
     });
     
-    [[NNServiceManager sharedManager] addObserver:self forService:[SWAccessibilityService class]];
-    
     return self;
 }
 
@@ -149,7 +147,7 @@ static int kScrollThreshold = 50;
         if (!Check(!self.displayTimer)) {
             [self.displayTimer invalidate];
         }
-        self.displayTimer = [NSTimer scheduledTimerWithTimeInterval:kWindowDisplayDelay target:self selector:@selector(_displayTimerFired:) userInfo:nil repeats:NO];
+        self.displayTimer = [NSTimer scheduledTimerWithTimeInterval:kWindowDisplayDelay target:self selector:NNSelfSelector1(_displayTimerFired:) userInfo:nil repeats:NO];
         
         Check(!self.selector);
         self.selector = [SWSelector new];
@@ -178,10 +176,27 @@ static int kScrollThreshold = 50;
 {
     if (interfaceVisible == self.interfaceVisible) { return; }
     self->_interfaceVisible = interfaceVisible;
-    
+
     if (interfaceVisible) {
         [self _displayInterface];
+
+        // Mouse moved events get captured when the interface is visible in order to update the selected item.
+        @weakify(self);
+        [[SWEventTap sharedService] registerForEventsWithType:kCGEventMouseMoved object:self block:^(CGEventRef event) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                @strongify(self);
+                if (!self.interfaceVisible) { return; }
+
+                NSPoint windowLocation = [self.window convertScreenToBase:[NSEvent mouseLocation]];
+                if(NSPointInRect([self.collectionView convertPoint:windowLocation fromView:nil], [self.collectionView bounds])) {
+                    NSEvent *mouseEvent = [NSEvent mouseEventWithType:NSMouseMoved location:windowLocation modifierFlags:NSAlternateKeyMask timestamp:(NSTimeInterval)0 windowNumber:self.window.windowNumber context:(NSGraphicsContext *)nil eventNumber:0 clickCount:0 pressure:1.0];
+                    [self.collectionView mouseMoved:mouseEvent];
+                }
+            });
+        }];
     } else {
+        [[SWEventTap sharedService] removeBlockForEventsWithType:kCGEventMouseMoved object:self];
+
         [self _hideInterface];
     }
 }
@@ -259,9 +274,7 @@ static int kScrollThreshold = 50;
     
     self.selector = [self.selector updateWithWindowGroups:windowGroups];
     
-    if (self.windowGroups.count) {
-        [self.collectionView selectCellAtIndex:self.selector.selectedUIndex];
-    } else {
+    if (!self.windowGroups.count) {
         [self.collectionView deselectCell];
     }
     
@@ -283,8 +296,21 @@ static int kScrollThreshold = 50;
     }
 }
 
+- (void)_updateSelection;
+{
+    NSInteger index = self.selector.selectedIndex;
+    NSUInteger uindex = self.selector.selectedUIndex;
+
+    if (!self.selector || index < 0 || uindex > [self.windowGroups count]) {
+        [self.collectionView deselectCell];
+    } else if (uindex != self.collectionView.selectedIndex) {
+        [self.collectionView selectCellAtIndex:uindex];
+    }
+}
+
 - (void)_displayInterface;
 {
+    [self _updateSelection];
     [self.window orderFront:self];
     SWLog(@"Showed interface (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
 }
@@ -361,7 +387,7 @@ static int kScrollThreshold = 50;
     [thumb setActive:NO];
     
     @weakify(thumb);
-    // TODO: ASCII art leo_inception_reaction.jpg
+    // Yo dawg, I herd you like async blocks…
     dispatch_async(actionQueue, ^{
         [[SWAccessibilityService sharedService] raiseWindow:nextWindow.mainWindow completion:^(NSError *raiseError){
             dispatch_async(actionQueue, ^{
@@ -441,19 +467,10 @@ static int kScrollThreshold = 50;
     }];
     
     // Update the selected cell in the collection view when the selector is updated.
-    [[RACObserve(self, selector.selectedIndex)
+    [[RACObserve(self, selector)
     distinctUntilChanged]
-    subscribeNext:^(id i) {
-        if (!self.windowGroups.count) { return; }
-        
-        NSInteger index = [i integerValue];
-        NSUInteger uindex = (NSUInteger)index;
-        
-        if (index < 0 || uindex > [self.windowGroups count]) {
-            [self.collectionView deselectCell];
-        } else if (uindex != self.collectionView.selectedIndex) {
-            [self.collectionView selectCellAtIndex:uindex];
-        }
+    subscribeNext:^(SWSelector *selector) {
+        [self _updateSelection];
     }];
     
     // raise when (pendingSwitch && windowListLoaded)
@@ -478,7 +495,7 @@ static int kScrollThreshold = 50;
     SWEventTap *eventTap = [SWEventTap sharedService];
     
     // Incrementing/invoking is bound to option-tab by default.
-    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:SWHotKeyModifierOption] withBlock:^BOOL(BOOL keyDown) {
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:SWHotKeyModifierOption] object:self block:^BOOL(BOOL keyDown) {
         dispatch_async(dispatch_get_main_queue(), ^{
             @strongify(self);
             if (keyDown) {
@@ -495,8 +512,28 @@ static int kScrollThreshold = 50;
         return NO;
     }];
     
+    // Option-arrow can be used to change the selection when Switch has been invoked.
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_RightArrow modifiers:SWHotKeyModifierOption] object:self block:^BOOL(BOOL keyDown) {
+        @strongify(self);
+        if (self.invoked) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                @strongify(self);
+                if (keyDown) {
+                    if (self.incrementing) {
+                        self.selector = [self.selector incrementWithoutWrapping];
+                    } else {
+                        self.selector = [self.selector increment];
+                    }
+                }
+                self.incrementing = keyDown;
+            });
+            return NO;
+        }
+        return YES;
+    }];
+    
     // Decrementing/invoking is bound to option-shift-tab by default.
-    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:(SWHotKeyModifierOption|SWHotKeyModifierShift)] withBlock:^BOOL(BOOL keyDown) {
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:(SWHotKeyModifierOption|SWHotKeyModifierShift)] object:self block:^BOOL(BOOL keyDown) {
         dispatch_async(dispatch_get_main_queue(), ^{
             @strongify(self);
             if (keyDown) {
@@ -513,8 +550,28 @@ static int kScrollThreshold = 50;
         return NO;
     }];
     
+    // Option-arrow can be used to change the selection when Switch has been invoked.
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_LeftArrow modifiers:SWHotKeyModifierOption] object:self block:^BOOL(BOOL keyDown) {
+        @strongify(self);
+        if (self.invoked) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                @strongify(self);
+                if (keyDown) {
+                    if (self.decrementing) {
+                        self.selector = [self.selector decrementWithoutWrapping];
+                    } else {
+                        self.selector = [self.selector decrement];
+                    }
+                }
+                self.decrementing = keyDown;
+            });
+            return NO;
+        }
+        return YES;
+    }];
+    
     // Closing a window is bound to option-W when the interface is open.
-    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_ANSI_W modifiers:SWHotKeyModifierOption] withBlock:^BOOL(BOOL keyDown) {
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_ANSI_W modifiers:SWHotKeyModifierOption] object:self block:^BOOL(BOOL keyDown) {
         @strongify(self);
         if (keyDown && self.interfaceVisible) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -527,7 +584,7 @@ static int kScrollThreshold = 50;
     }];
     
     // Showing the preferences is bound to option-, when the interface is open. This action closes the interface.
-    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_ANSI_Comma modifiers:SWHotKeyModifierOption] withBlock:^BOOL(BOOL keyDown) {
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_ANSI_Comma modifiers:SWHotKeyModifierOption] object:self block:^BOOL(BOOL keyDown) {
         if (keyDown && self.interfaceVisible) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 @strongify(self);
@@ -540,7 +597,7 @@ static int kScrollThreshold = 50;
     }];
     
     // Cancelling the switcher is bound to option-escape. This action closes the interface.
-    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Escape modifiers:SWHotKeyModifierOption] withBlock:^(BOOL keyDown){
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Escape modifiers:SWHotKeyModifierOption] object:self block:^(BOOL keyDown){
         @strongify(self);
         if (keyDown && self.invoked) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -552,7 +609,7 @@ static int kScrollThreshold = 50;
     }];
     
     // Releasing the option key when the interface is open raises the selected window. If that action is successful, it will close the interface.
-    [eventTap registerModifier:SWHotKeyModifierOption withBlock:^(BOOL matched) {
+    [eventTap registerModifier:SWHotKeyModifierOption object:self block:^(BOOL matched) {
         dispatch_async(dispatch_get_main_queue(), ^{
             @strongify(self);
             if (!matched) {
@@ -565,21 +622,7 @@ static int kScrollThreshold = 50;
             }
         });
     }];
-    
-    // Mouse moved events get captured when the interface is visible in order to update the selected item.
-    [eventTap registerForEventsWithType:kCGEventMouseMoved withBlock:^(CGEventRef event) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            @strongify(self);
-            if (!self.interfaceVisible) { return; }
-            
-            NSPoint windowLocation = [self.window convertScreenToBase:[NSEvent mouseLocation]];
-            if(NSPointInRect([self.collectionView convertPoint:windowLocation fromView:nil], [self.collectionView bounds])) {
-                NSEvent *mouseEvent = [NSEvent mouseEventWithType:NSMouseMoved location:windowLocation modifierFlags:NSAlternateKeyMask timestamp:(NSTimeInterval)0 windowNumber:self.window.windowNumber context:(NSGraphicsContext *)nil eventNumber:0 clickCount:0 pressure:1.0];
-                [self.collectionView mouseMoved:mouseEvent];
-            }
-        });
-    }];
-    
+
     [eventTap registerForEventsWithType:kCGEventScrollWheel withBlock:^(CGEventRef event) {
         CFRetain(event);
         dispatch_async(dispatch_get_main_queue(), ^{
