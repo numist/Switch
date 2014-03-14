@@ -72,7 +72,7 @@ CLOBBER.include(DERIVEDDATA)
 CLEAN.include(FileList[BUILDDIR])
 
 XCODEFLAGS = [
-  "-project \"#{PROJECT}\"",
+  "-workspace \"#{PRODUCT}.xcworkspace\"",
   "-scheme \"#{PRODUCT}\"",
   "-derivedDataPath \"#{DERIVEDDATA}\"",
 ].join(' ')
@@ -124,9 +124,17 @@ directory INTERMEDIATESDIR
 
 task :default => [:analyze, :test]
 
+task :deps do
+  echo_step "Installing/updating dependencies"
+  shell "gem install xcpretty"
+  shell "git submodule sync"
+  shell "git submodule update --init --recursive"
+  shell "pod install"
+end
+
 def xcode(action)
   run_task DERIVEDDATA
-  shell "set -e; set -o pipefail; xcodebuild #{XCODEFLAGS} #{action} 2>&1 | Scripts/xcodebuild_prettify.rb"
+  shell "set -e; set -o pipefail; xcodebuild #{XCODEFLAGS} #{action} 2>&1 | xcpretty -c"
 end
 
 def shell(action)
@@ -158,10 +166,10 @@ end
 
 task :test do
   echo_step("Testing #{PROJECT}")
-  shell "set -e; set -o pipefail; xcodebuild -scheme \"Switch\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | Scripts/xcodebuild_prettify.rb"
-  shell "set -e; set -o pipefail; xcodebuild -scheme \"ReactiveCocoa\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | Scripts/xcodebuild_prettify.rb"
-  shell "set -e; set -o pipefail; xcodebuild -scheme \"NNKit\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | Scripts/xcodebuild_prettify.rb"
-  shell "set -e; set -o pipefail; xcodebuild -scheme \"Sparkle\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | Scripts/xcodebuild_prettify.rb"
+  shell "set -e; set -o pipefail; xcodebuild -scheme \"Switch\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | xcpretty -tc"
+  shell "set -e; set -o pipefail; xcodebuild -scheme \"ReactiveCocoa\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | xcpretty -tc"
+  shell "set -e; set -o pipefail; xcodebuild -scheme \"NNKit\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | xcpretty -tc"
+  shell "set -e; set -o pipefail; xcodebuild -scheme \"Sparkle\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | xcpretty -tc"
 end
 
 
