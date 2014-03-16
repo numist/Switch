@@ -403,19 +403,36 @@ static NSUInteger kScrollThreshold = 50;
     @weakify(self);
     SWEventTap *eventTap = [SWEventTap sharedService];
 
+    void (^selectorChange)(BOOL, BOOL, BOOL) = ^(BOOL keyDown, BOOL invokesInterface, BOOL incrementing) {
+        @strongify(self);
+        
+        if (keyDown) {
+            if (invokesInterface) {
+                self.invoked = YES;
+            }
+            
+            if (incrementing ? self.incrementing : self.decrementing) {
+                self.selector = incrementing ? self.selector.incrementWithoutWrapping : self.selector.decrementWithoutWrapping;
+            } else {
+                self.selector = incrementing ? self.selector.increment : self.selector.decrement;
+            }
+            
+            self.scrollOffset = 0;
+        }
+        
+        // I wish I could just use (incrementing ? self.incrementing : self.decrementing) = keyDown
+        if (incrementing) {
+            self.incrementing = keyDown;
+        } else {
+            self.decrementing = keyDown;
+        }
+    };
+    
     // Incrementing/invoking is bound to option-tab by default.
     [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:SWHotKeyModifierOption] object:self block:^BOOL(BOOL keyDown) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            @strongify(self);
-            if (keyDown) {
-                self.invoked = YES;
-                if (self.incrementing) {
-                    self.selector = [self.selector incrementWithoutWrapping];
-                } else {
-                    self.selector = [self.selector increment];
-                }
-            }
-            self.incrementing = keyDown;
+            // Invokes, incrementing.
+            selectorChange(keyDown, YES, YES);
         });
         return NO;
     }];
@@ -425,15 +442,8 @@ static NSUInteger kScrollThreshold = 50;
         @strongify(self);
         if (self.invoked) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                @strongify(self);
-                if (keyDown) {
-                    if (self.incrementing) {
-                        self.selector = [self.selector incrementWithoutWrapping];
-                    } else {
-                        self.selector = [self.selector increment];
-                    }
-                }
-                self.incrementing = keyDown;
+                // Does not invoke, incrementing.
+                selectorChange(keyDown, NO, YES);
             });
             return NO;
         }
@@ -443,16 +453,8 @@ static NSUInteger kScrollThreshold = 50;
     // Decrementing/invoking is bound to option-shift-tab by default.
     [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:(SWHotKeyModifierOption|SWHotKeyModifierShift)] object:self block:^BOOL(BOOL keyDown) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            @strongify(self);
-            if (keyDown) {
-                self.invoked = YES;
-                if (self.decrementing) {
-                    self.selector = [self.selector decrementWithoutWrapping];
-                } else {
-                    self.selector = [self.selector decrement];
-                }
-            }
-            self.decrementing = keyDown;
+            // Invokes, decrementing.
+            selectorChange(keyDown, YES, NO);
         });
         return NO;
     }];
@@ -462,15 +464,8 @@ static NSUInteger kScrollThreshold = 50;
         @strongify(self);
         if (self.invoked) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                @strongify(self);
-                if (keyDown) {
-                    if (self.decrementing) {
-                        self.selector = [self.selector decrementWithoutWrapping];
-                    } else {
-                        self.selector = [self.selector decrement];
-                    }
-                }
-                self.decrementing = keyDown;
+                // Does not invoke, decrementing.
+                selectorChange(keyDown, NO, NO);
             });
             return NO;
         }
