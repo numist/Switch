@@ -15,10 +15,25 @@
 #import <Cocoa/Cocoa.h>
 
 
-extern NSString const *SWCoreWindowControllerActivityNotification;
-extern NSString const *SWCoreWindowControllerActiveKey;
+@class SWCoreWindowController;
+@class SWWindowGroup;
+
+
+@protocol SWCoreWindowControllerDelegate <NSObject>
+
+- (void)coreWindowController:(SWCoreWindowController *)controller didSelectWindowGroup:(SWWindowGroup *)windowGroup;
+- (void)coreWindowController:(SWCoreWindowController *)controller didActivateWindowGroup:(SWWindowGroup *)windowGroup;
+
+@end
 
 
 @interface SWCoreWindowController : NSWindowController
+
+@property (nonatomic, strong) NSOrderedSet *windowGroups;
+@property (nonatomic, weak) id<SWCoreWindowControllerDelegate> delegate;
+
+- (void)selectWindowGroup:(SWWindowGroup *)windowGroup;
+- (void)disableWindowGroup:(SWWindowGroup *)windowGroup;
+- (void)enableWindowGroup:(SWWindowGroup *)windowGroup;
 
 @end

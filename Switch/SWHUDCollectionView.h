@@ -45,8 +45,8 @@
 
 @protocol SWHUDCollectionViewDataSource <NSObject>
 
-- (NSView *)HUDView:(SWHUDCollectionView *)view viewForCellAtIndex:(NSUInteger)index;
 - (NSUInteger)HUDViewNumberOfCells:(SWHUDCollectionView *)view;
+- (NSView *)HUDView:(SWHUDCollectionView *)view viewForCellAtIndex:(NSUInteger)index;
 
 @end
 
