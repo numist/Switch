@@ -14,6 +14,4 @@
 
 @interface SWCoreWindowService : NNService
 
-
-
 @end
