@@ -28,6 +28,7 @@
 
 
 static NSTimeInterval kWindowDisplayDelay = 0.15;
+static NSUInteger kScrollThreshold = 50;
 
 
 @interface SWCoreWindowService () <SWCoreWindowControllerDelegate, SWWindowListSubscriber>
@@ -45,6 +46,7 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
 
 #pragma mark Selector state
 @property (nonatomic, strong) SWSelector *selector;
+@property (nonatomic, assign) int scrollOffset;
 @property (nonatomic, assign) BOOL incrementing;
 @property (nonatomic, assign) BOOL decrementing;
 
@@ -192,13 +194,47 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
     if (interfaceVisible == self.interfaceVisible) { return; }
     self->_interfaceVisible = interfaceVisible;
     
+    SWEventTap *eventTap = [SWEventTap sharedService];
     if (interfaceVisible) {
         Check(!self.coreWindowController);
         self.coreWindowController = [[SWCoreWindowController alloc] initWithWindow:nil];
         self.coreWindowController.delegate = self;
         self.coreWindowController.windowGroups = self.windowGroups;
         [self _updateSelection];
+        
+        @weakify(self);
+        [eventTap registerForEventsWithType:kCGEventScrollWheel object:self block:^(CGEventRef event) {
+            CFRetain(event);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NNCFAutorelease(event);
+                @strongify(self);
+
+                if (!self.interfaceVisible) { return; }
+
+                int delta = (int)CGEventGetIntegerValueField(event, kCGScrollWheelEventPointDeltaAxis1);
+                if (delta == 0) { return; }
+
+                self.scrollOffset += delta;
+
+                int units = (self.scrollOffset / (NSInteger)kScrollThreshold);
+                if (units != 0) {
+                    self.scrollOffset -= (units * kScrollThreshold);
+
+                    SWSelector *selector = self.selector;
+                    while (units > 0) {
+                        selector = selector.incrementWithoutWrapping;
+                        units--;
+                    }
+                    while (units < 0) {
+                        selector = selector.decrementWithoutWrapping;
+                        units++;
+                    }
+                    self.selector = selector;
+                }
+            });
+        }];
     } else {
+        [eventTap removeBlockForEventsWithType:kCGEventScrollWheel object:self];
         self.coreWindowController = nil;
     }
 }
@@ -215,7 +251,9 @@ static NSTimeInterval kWindowDisplayDelay = 0.15;
 
 - (void)coreWindowController:(SWCoreWindowController *)controller didSelectWindowGroup:(SWWindowGroup *)windowGroup;
 {
+    if (windowGroup == self.selector.selectedWindowGroup) { return; }
     self.selector = [self.selector selectIndex:[self.windowGroups indexOfObject:windowGroup]];
+    self.scrollOffset = 0;
 }
 
 - (void)coreWindowController:(SWCoreWindowController *)controller didActivateWindowGroup:(SWWindowGroup *)windowGroup;

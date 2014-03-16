@@ -117,7 +117,7 @@
 - (void)selectWindowGroup:(SWWindowGroup *)windowGroup;
 {
     NSUInteger index = [self.windowGroups indexOfObject:windowGroup];
-    
+
     if (index < self.windowGroups.count) {
         [self.collectionView selectCellAtIndex:index];
     } else {
