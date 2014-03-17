@@ -298,7 +298,7 @@ static NSUInteger kScrollThreshold = 50;
     if (!self.windowListLoaded) {
         SWLog(@"Window list loaded with %lu windows (%.3fs elapsed)", (unsigned long)self.windowGroups.count, [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
 
-        if (self.selector.selectedIndex == 1 && [self.windowGroups count] > 1 && !((SWWindowGroup *)[self.windowGroups objectAtIndex:0]).mainWindow.application.runningApplication.active) {
+        if (self.selector.selectedIndex == 1 && [self.windowGroups count] > 1 && !CLASS_CAST(SWWindowGroup, [self.windowGroups objectAtIndex:0]).mainWindow.application.runningApplication.active) {
             SWLog(@"Adjusted index to select first window (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
             self.selector = [[SWSelector new] updateWithWindowGroups:self.windowGroups];
         } else {
@@ -352,7 +352,7 @@ static NSUInteger kScrollThreshold = 50;
     {
         BOOL onlyChild = ([self.windowGroups indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop){
             if (idx == self.selector.selectedUIndex) { return NO; }
-            return [((SWWindowGroup *)obj).application isEqual:selectedWindowGroup.application];
+            return [CLASS_CAST(SWWindowGroup, obj).application isEqual:selectedWindowGroup.application];
         }] == NSNotFound);
 
         BOOL differentApplications = [self.windowGroups count] > 1 && ![[self.windowGroups[0] application] isEqual:[self.windowGroups[1] application]];
