@@ -241,10 +241,8 @@ static NSUInteger kScrollThreshold = 50;
 
 - (void)setInvoked:(BOOL)invoked;
 {
-    if (invoked == self.invoked) { return; }
-    self->_invoked = invoked;
-    
     [SWEventTap sharedService].suppressKeyEvents = invoked;
+    self->_invoked = invoked;
 }
 
 #pragma mark SWCoreWindowControllerDelegate

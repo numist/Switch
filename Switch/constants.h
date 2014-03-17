@@ -37,3 +37,7 @@ CGFloat nnTotalWidth(CGFloat thumbSize, NSUInteger numWindows);
 
 // Enum stringification
 NSString *NNStringFromCGWindowLevel(long level);
+
+// Helper macros
+#define CLASS_CAST(Classname, value) ((Classname *)_CLASS_CAST([Classname class], (value)))
+id _CLASS_CAST(Class class, id value);
