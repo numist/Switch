@@ -123,12 +123,12 @@ static NSUInteger kScrollThreshold = 50;
 
 #pragma mark NNService
 
-- (NNServiceType)serviceType;
++ (NNServiceType)serviceType;
 {
     return NNServiceTypePersistent;
 }
 
-- (NSSet *)dependencies;
++ (NSSet *)dependencies;
 {
     return [NSSet setWithArray:@[[SWEventTap class], [SWPreferencesService class], [SWAccessibilityService class]]];
 }

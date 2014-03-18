@@ -29,7 +29,7 @@
 
 #pragma mark NNService
 
-- (NNServiceType)serviceType;
++ (NNServiceType)serviceType;
 {
     return NNServiceTypePersistent;
 }

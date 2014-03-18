@@ -50,12 +50,12 @@ static NSMutableSet *loggedWindows;
 
 #pragma mark NNService
 
-- (NNServiceType)serviceType;
++ (NNServiceType)serviceType;
 {
     return NNServiceTypeOnDemand;
 }
 
-- (Protocol *)subscriberProtocol;
++ (Protocol *)subscriberProtocol;
 {
     return @protocol(SWWindowListSubscriber);
 }

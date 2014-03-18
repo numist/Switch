@@ -34,12 +34,12 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
 
 #pragma mark NNService
 
-- (NNServiceType)serviceType;
++ (NNServiceType)serviceType;
 {
     return NNServiceTypePersistent;
 }
 
-- (Protocol *)subscriberProtocol;
++ (Protocol *)subscriberProtocol;
 {
     return @protocol(SWPreferencesServiceDelegate);
 }

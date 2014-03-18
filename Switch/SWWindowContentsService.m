@@ -69,17 +69,17 @@
 
 #pragma mark NNService
 
-- (NNServiceType)serviceType;
++ (NNServiceType)serviceType;
 {
     return NNServiceTypeOnDemand;
 }
 
-- (NSSet *)dependencies;
++ (NSSet *)dependencies;
 {
     return [NSSet setWithArray:@[[SWWindowListService class]]];
 }
 
-- (Protocol *)subscriberProtocol;
++ (Protocol *)subscriberProtocol;
 {
     return @protocol(SWWindowContentsSubscriber);
 }
