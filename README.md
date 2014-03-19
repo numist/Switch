@@ -19,25 +19,20 @@ Switch requires Mac OS X version 10.9 or newer and is still in development. For 
 Contributing
 ------------
 
+[![Stories in Ready](https://badge.waffle.io/numist/switch.png?label=ready&title=Ready)](http://waffle.io/numist/switch) [![Build Status](https://travis-ci.org/numist/Switch.png?branch=develop)](https://travis-ci.org/numist/Switch)
+
 To check out the project, its submodules, and open in Xcode:
 
     git clone git://github.com/numist/Switch.git
     cd Switch/
-    git submodule sync
-    git submodule update --init --recursive
-    open Switch.xcodeproj
+    rake deps
+    open Switch.xcworkspace
 
 At this point, `⌘R` should have you up and running!
+
+The release process uses the project `Rakefile`; if you have a Developer ID certificate installed, you should be able to run `rake release` without any issues. Without a Developer ID, the `analyze`, `test`, and `app` targets (and their dependencies) should succeed.
 
 Thanks!
 -------
 
-Switch relies on a number of [external frameworks](https://github.com/numist/Switch/tree/develop/Frameworks). Thanks to the people responsible for them, you've saved me time and tears.
-
-Many people have influenced Switch's development without being authors (or perhaps even realizing it). Special thanks goes out to:
-* [@andymatuschak](https://github.com/andymatuschak)
-* [@Catfish_Man](https://twitter.com/Catfish_Man) and the NSCoders in general
-* [@gwynne](https://github.com/gwynne)
-* [@quicklywilliam](https://github.com/quicklywilliam)
-* [@robrix](https://github.com/robrix)
-* [@zadr](https://github.com/zadr)
+Switch relies on a number of external frameworks, either as [submodules](https://github.com/numist/Switch/tree/develop/Frameworks) or [pods](https://github.com/numist/Switch/tree/develop/Podfile). Thanks to the people responsible for them, you've saved me time and tears.
