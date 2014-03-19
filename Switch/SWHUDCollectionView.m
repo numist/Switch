@@ -20,14 +20,15 @@
 
 @interface SWHUDCollectionView ()
 
+@property (nonatomic, assign) CGFloat maxCellSize;
 @property (nonatomic, assign, readwrite) NSUInteger numberOfCells;
 @property (nonatomic, strong, readonly) NSMutableArray *cells;
-@property (nonatomic, assign, readwrite) BOOL reloading;
-
 @property (nonatomic, strong, readonly) SWHUDView *hud;
 
-@property (nonatomic, strong) SWSelectionBoxView *selectionBox;
-@property (nonatomic, assign) NSUInteger selectedIndex;
+@property (nonatomic, strong, readwrite) SWSelectionBoxView *selectionBox;
+
+@property (nonatomic, assign, readwrite) BOOL reloading;
+@property (nonatomic, assign, readwrite) NSUInteger selectedIndex;
 
 @end
 
@@ -63,14 +64,14 @@
         
         self.selectedIndex = i;
         
-        if ([delegate respondsToSelector:@selector(HUDView:willSelectCellAtIndex:)]) {
-            [delegate HUDView:self willSelectCellAtIndex:i];
+        if ([delegate respondsToSelector:@selector(HUDCollectionView:willSelectCellAtIndex:)]) {
+            [delegate HUDCollectionView:self willSelectCellAtIndex:i];
         }
         
         [self selectCellAtIndex:self.selectedIndex];
         
-        if ([delegate respondsToSelector:@selector(HUDView:didSelectCellAtIndex:)]) {
-            [delegate HUDView:self didSelectCellAtIndex:self.selectedIndex];
+        if ([delegate respondsToSelector:@selector(HUDCollectionView:didSelectCellAtIndex:)]) {
+            [delegate HUDCollectionView:self didSelectCellAtIndex:self.selectedIndex];
         }
     }
     
@@ -87,8 +88,8 @@
         Check(self.selectedIndex == i);
         self.selectedIndex = i;
         
-        if ([delegate respondsToSelector:@selector(HUDView:activateCellAtIndex:)]) {
-            [delegate HUDView:self activateCellAtIndex:i];
+        if ([delegate respondsToSelector:@selector(HUDCollectionView:activateCellAtIndex:)]) {
+            [delegate HUDCollectionView:self activateCellAtIndex:i];
         }
     } else {
         [super mouseUp:theEvent];
@@ -239,25 +240,25 @@
     
     __strong __typeof__(self.dataSource) dataSource = self.dataSource;
     
+    if (!self.maxCellSize) {
+        self.maxCellSize = [dataSource HUDCollectionViewMaximumCellSize:self];
+        // dataSource side effect may have called reloadData, in which case it's not safe to continue anymore.
+        if (self.reloading) { return; }
+    }
+    
     [self.cells makeObjectsPerformSelector:NNTypedSelector(NSView, removeFromSuperview)];
     [self.cells removeAllObjects];
     
-    self.numberOfCells = [dataSource HUDViewNumberOfCells:self];
+    self.numberOfCells = [dataSource HUDCollectionViewNumberOfCells:self];
     // dataSource side effect may have called reloadData, in which case it's not safe to continue anymore.
-    if (self.reloading) {
-        SWLog(@"reloadData called while reloading data!");
-        return;
-    }
+    if (self.reloading) { return; }
     
     [self _setHUDSize:[self _computeCollectionViewSize]];
     
     for (NSUInteger i = 0; i < self.numberOfCells; i++) {
-        NSView *cell = [dataSource HUDView:self viewForCellAtIndex:i];
+        NSView *cell = [dataSource HUDCollectionView:self viewForCellAtIndex:i];
         // dataSource side effect may have called reloadData, in which case it's not safe to continue anymore.
-        if (self.reloading) {
-            SWLog(@"reloadData called while reloading data!");
-            return;
-        }
+        if (self.reloading) { return; }
         
         [self.cells insertObject:cell atIndex:i];
         cell.frame = [self _computeFrameForCellAtIndex:i];

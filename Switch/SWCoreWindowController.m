@@ -96,7 +96,6 @@
     SWHUDCollectionView *collectionView = [[SWHUDCollectionView alloc] initWithFrame:displayRect];
     {
         collectionView.autoresizingMask = NSViewHeightSizable | NSViewWidthSizable;
-        collectionView.maxCellSize = kNNMaxWindowThumbnailSize;
         collectionView.dataSource = self;
         collectionView.delegate = self;
     }
@@ -136,12 +135,17 @@
 
 #pragma mark SWHUDCollectionViewDataSource
 
-- (NSUInteger)HUDViewNumberOfCells:(SWHUDCollectionView *)view;
+- (CGFloat)HUDCollectionViewMaximumCellSize:(SWHUDCollectionView *)view;
+{
+    return kNNMaxWindowThumbnailSize;
+}
+
+- (NSUInteger)HUDCollectionViewNumberOfCells:(SWHUDCollectionView *)view;
 {
     return self.windowGroups.count;
 }
 
-- (NSView *)HUDView:(SWHUDCollectionView *)view viewForCellAtIndex:(NSUInteger)index;
+- (NSView *)HUDCollectionView:(SWHUDCollectionView *)view viewForCellAtIndex:(NSUInteger)index;
 {
     BailUnless([view isEqual:self.collectionView], [[NSView alloc] initWithFrame:NSZeroRect]);
     
@@ -154,14 +158,14 @@
 
 #pragma mark SWHUDCollectionViewDelegate
 
-- (void)HUDView:(SWHUDCollectionView *)view didSelectCellAtIndex:(NSUInteger)index;
+- (void)HUDCollectionView:(SWHUDCollectionView *)view didSelectCellAtIndex:(NSUInteger)index;
 {
     Assert(index < self.windowGroups.count);
     id<SWCoreWindowControllerDelegate> delegate = self.delegate;
     [delegate coreWindowController:self didSelectWindowGroup:self.windowGroups[index]];
 }
 
-- (void)HUDView:(SWHUDCollectionView *)view activateCellAtIndex:(NSUInteger)index;
+- (void)HUDCollectionView:(SWHUDCollectionView *)view activateCellAtIndex:(NSUInteger)index;
 {
     Assert(index < self.windowGroups.count);
     id<SWCoreWindowControllerDelegate> delegate = self.delegate;

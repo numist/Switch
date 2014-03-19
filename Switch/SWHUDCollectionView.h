@@ -20,8 +20,6 @@
 
 @property (nonatomic, weak) id<SWHUDCollectionViewDataSource> dataSource;
 @property (nonatomic, weak) id<SWHUDCollectionViewDelegate> delegate;
-#pragma message "Fold this into the delegate"
-@property (nonatomic, assign) CGFloat maxCellSize;
 
 @property (nonatomic, readonly) NSUInteger selectedIndex;
 
@@ -39,8 +37,9 @@
 
 @protocol SWHUDCollectionViewDataSource <NSObject>
 
-- (NSUInteger)HUDViewNumberOfCells:(SWHUDCollectionView *)view;
-- (NSView *)HUDView:(SWHUDCollectionView *)view viewForCellAtIndex:(NSUInteger)index;
+- (CGFloat)HUDCollectionViewMaximumCellSize:(SWHUDCollectionView *)view;
+- (NSUInteger)HUDCollectionViewNumberOfCells:(SWHUDCollectionView *)view;
+- (NSView *)HUDCollectionView:(SWHUDCollectionView *)view viewForCellAtIndex:(NSUInteger)index;
 
 @end
 
@@ -48,8 +47,8 @@
 @protocol SWHUDCollectionViewDelegate <NSObject>
 
 @optional
-- (void)HUDView:(SWHUDCollectionView *)view willSelectCellAtIndex:(NSUInteger)index;
-- (void)HUDView:(SWHUDCollectionView *)view didSelectCellAtIndex:(NSUInteger)index;
-- (void)HUDView:(SWHUDCollectionView *)view activateCellAtIndex:(NSUInteger)index;
+- (void)HUDCollectionView:(SWHUDCollectionView *)view willSelectCellAtIndex:(NSUInteger)index;
+- (void)HUDCollectionView:(SWHUDCollectionView *)view didSelectCellAtIndex:(NSUInteger)index;
+- (void)HUDCollectionView:(SWHUDCollectionView *)view activateCellAtIndex:(NSUInteger)index;
 
 @end
