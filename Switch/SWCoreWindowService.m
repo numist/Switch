@@ -261,6 +261,8 @@ static NSUInteger kScrollThreshold = 50;
     }
     
     self.pendingSwitch = YES;
+    // Clicking on an item cancels the keyboard invocation.
+    self.invoked = NO;
 }
 
 #pragma mark SWWindowListSubscriber

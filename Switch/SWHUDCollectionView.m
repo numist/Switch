@@ -14,14 +14,17 @@
 
 #import "SWHUDCollectionView.h"
 
+#import "SWHUDView.h"
 #import "SWSelectionBoxView.h"
 
 
 @interface SWHUDCollectionView ()
 
-@property (nonatomic, assign) NSUInteger numberOfCells;
-@property (nonatomic, strong) NSMutableArray *cells;
+@property (nonatomic, assign, readwrite) NSUInteger numberOfCells;
+@property (nonatomic, strong, readonly) NSMutableArray *cells;
 @property (nonatomic, assign, readwrite) BOOL reloading;
+
+@property (nonatomic, strong, readonly) SWHUDView *hud;
 
 @property (nonatomic, strong) SWSelectionBoxView *selectionBox;
 @property (nonatomic, assign) NSUInteger selectedIndex;
@@ -98,6 +101,16 @@
     return;
 }
 
+#pragma mark NSView
+
+- (void)viewWillMoveToSuperview:(NSView *)newSuperview;
+{
+    if (!self.hud) {
+        _hud = [[SWHUDView alloc] initWithFrame:NSZeroRect];
+        [self addSubview:self.hud];
+    }
+}
+
 #pragma mark SWHUDCollectionView
 
 - (void)setDataSource:(id<SWHUDCollectionViewDataSource>)dataSource;
@@ -129,11 +142,11 @@
 
     if (!self.selectionBox) {
         SWSelectionBoxView *selectionBox = [[SWSelectionBoxView alloc] initWithFrame:NSZeroRect];
-        [self addSubview:selectionBox positioned:NSWindowBelow relativeTo:nil];
+        [self.hud addSubview:selectionBox positioned:NSWindowBelow relativeTo:nil];
         self.selectionBox = selectionBox;
     }
     
-    self.selectionBox.frame = nnItemRect((self.frame.size.height - kNNWindowToThumbInset * 2.0), self.selectedIndex);
+    self.selectionBox.frame = nnItemRect((self.hud.frame.size.height - kNNWindowToThumbInset * 2.0), self.selectedIndex);
     [self.selectionBox setNeedsDisplay:YES];
 }
 
@@ -147,7 +160,6 @@
 {
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
     
-    // Keep honking, I'm reloading.
     if (!self.reloading) {
         self.reloading = YES;
         
@@ -159,12 +171,12 @@
 
 #pragma mark Internal
 
-- (void)_setSize:(NSSize)size;
+- (void)_setHUDSize:(NSSize)size;
 {
-    self.frame = (NSRect){
+    self.hud.frame = (NSRect){
         .size = size,
-        .origin.x = self.frame.origin.x + ((self.frame.size.width - size.width) / 2.0),
-        .origin.y = self.frame.origin.y + ((self.frame.size.height - size.height) / 2.0)
+        .origin.x = ((self.frame.size.width - size.width) / 2.0),
+        .origin.y = ((self.frame.size.height - size.height) / 2.0)
     };
 }
 
@@ -174,8 +186,8 @@
     CGFloat maxTheoreticalWindowWidth = nnTotalWidth(cellSize, self.numberOfCells);
     CGFloat requiredPaddings = nnTotalPadding(self.numberOfCells);
     
-    if (maxTheoreticalWindowWidth > self.maxWidth) {
-        cellSize = floor((self.maxWidth - requiredPaddings) / self.numberOfCells);
+    if (maxTheoreticalWindowWidth > self.frame.size.width) {
+        cellSize = floor((self.frame.size.width - requiredPaddings) / self.numberOfCells);
     }
 
     return cellSize;
@@ -187,7 +199,7 @@
     CGFloat maxTheoreticalWindowWidth = nnTotalWidth(cellSize, self.numberOfCells);
     
     if (self.numberOfCells == 0) {
-        CGFloat min = MIN(kNNWindowToThumbInset + self.maxCellSize + kNNWindowToThumbInset, self.maxWidth);
+        CGFloat min = MIN(kNNWindowToThumbInset + self.maxCellSize + kNNWindowToThumbInset, self.frame.size.width);
         return (NSSize){
             .height = min,
             .width = min
@@ -195,7 +207,7 @@
     }
 
     return (NSSize){
-        .width = MIN(self.maxWidth, maxTheoreticalWindowWidth),
+        .width = MIN(self.frame.size.width, maxTheoreticalWindowWidth),
         .height = kNNWindowToThumbInset + cellSize + kNNWindowToThumbInset
     };
 }
@@ -209,7 +221,7 @@
 {
     unsigned i;
     for (i = 0; i < self.numberOfCells; ++i) {
-        NSRect frame = [self convertRect:[self _computeFrameForCellAtIndex:i] toView:nil];
+        NSRect frame = [self.hud convertRect:[self _computeFrameForCellAtIndex:i] toView:self];
         
         if (NSPointInRect(point, frame)) {
             break;
@@ -227,8 +239,8 @@
     
     __strong __typeof__(self.dataSource) dataSource = self.dataSource;
     
+    [self.cells makeObjectsPerformSelector:NNTypedSelector(NSView, removeFromSuperview)];
     [self.cells removeAllObjects];
-    self.subviews = @[];
     
     self.numberOfCells = [dataSource HUDViewNumberOfCells:self];
     // dataSource side effect may have called reloadData, in which case it's not safe to continue anymore.
@@ -237,7 +249,7 @@
         return;
     }
     
-    [self _setSize:[self _computeCollectionViewSize]];
+    [self _setHUDSize:[self _computeCollectionViewSize]];
     
     for (NSUInteger i = 0; i < self.numberOfCells; i++) {
         NSView *cell = [dataSource HUDView:self viewForCellAtIndex:i];
@@ -249,15 +261,15 @@
         
         [self.cells insertObject:cell atIndex:i];
         cell.frame = [self _computeFrameForCellAtIndex:i];
-        [self addSubview:cell];
+        [self.hud addSubview:cell];
     }
     
     if (self.selectionBox) {
-        self.selectionBox.frame = nnItemRect((self.frame.size.height - kNNWindowToThumbInset * 2.0), self.selectedIndex);
-        [self addSubview:self.selectionBox positioned:NSWindowBelow relativeTo:nil];
+        self.selectionBox.frame = nnItemRect((self.hud.frame.size.height - kNNWindowToThumbInset * 2.0), self.selectedIndex);
+        [self.hud addSubview:self.selectionBox positioned:NSWindowBelow relativeTo:nil];
     }
     
-    [self setNeedsDisplay:YES];
+    [self.hud setNeedsDisplay:YES];
 }
 
 @end

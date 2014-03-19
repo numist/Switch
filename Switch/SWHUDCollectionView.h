@@ -12,20 +12,16 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "SWHUDView.h"
-
-
 @protocol SWHUDCollectionViewDataSource;
 @protocol SWHUDCollectionViewDelegate;
 
 
-@interface SWHUDCollectionView : SWHUDView
+@interface SWHUDCollectionView : NSView
 
 @property (nonatomic, weak) id<SWHUDCollectionViewDataSource> dataSource;
 @property (nonatomic, weak) id<SWHUDCollectionViewDelegate> delegate;
-
+#pragma message "Fold this into the delegate"
 @property (nonatomic, assign) CGFloat maxCellSize;
-@property (nonatomic, assign) CGFloat maxWidth;
 
 @property (nonatomic, readonly) NSUInteger selectedIndex;
 
@@ -37,8 +33,6 @@
 - (void)deselectCell;
 
 - (void)reloadData;
-
-//- (id)objectAtIndexedSubscript:(NSUInteger)idx;
 
 @end
 

@@ -93,10 +93,9 @@
     }
     self.window = switcherWindow;
     
-    SWHUDCollectionView *collectionView = [[SWHUDCollectionView alloc] initWithFrame:NSMakeRect(displayRect.size.width / 2.0, displayRect.size.height / 2.0, 0.0, 0.0)];
+    SWHUDCollectionView *collectionView = [[SWHUDCollectionView alloc] initWithFrame:displayRect];
     {
-        collectionView.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin;
-        collectionView.maxWidth = displayRect.size.width - (kNNScreenToWindowInset * 2.0);
+        collectionView.autoresizingMask = NSViewHeightSizable | NSViewWidthSizable;
         collectionView.maxCellSize = kNNMaxWindowThumbnailSize;
         collectionView.dataSource = self;
         collectionView.delegate = self;
