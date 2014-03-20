@@ -159,7 +159,7 @@
         return;
     }
     
-    CGFloat opacity = active ? 1.0 : 0.5;
+    float opacity = active ? 1.0 : 0.5;
     
     CABasicAnimation *animation = [CABasicAnimation animation];
     animation.fromValue = @(((CALayer *)self.layer.presentationLayer).opacity);
@@ -176,7 +176,7 @@
     }
     
     // Punting on this for now, it's copy-pasta from setActive.
-    CGFloat opacity = valid ? 1.0 : 0.5;
+    float opacity = valid ? 1.0 : 0.5;
     
     CABasicAnimation *animation = [CABasicAnimation animation];
     animation.fromValue = @(((CALayer *)self.layer.presentationLayer).opacity);
@@ -258,7 +258,7 @@
     self.thumbnailLayer.zPosition = 1.0;
     [self.layer addSublayer:self.thumbnailLayer];
     
-    for (SWWindow *window in self.windowGroup.windows) {
+    for (__attribute__((unused)) SWWindow *window in self.windowGroup.windows) {
         [self.thumbnailLayer addSublayer:newLayer()];
     }
     

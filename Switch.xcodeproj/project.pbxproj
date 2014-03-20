@@ -65,7 +65,6 @@
 		BCCA7A641807894A00CE36E5 /* SWPreferencesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCCA7A621807894A00CE36E5 /* SWPreferencesWindowController.xib */; };
 		BCCA7AB21807CD2B00CE36E5 /* NNKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCCA7A5618076ADB00CE36E5 /* NNKit.framework */; };
 		BCCA7AD0180896D100CE36E5 /* helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7ACF180896D100CE36E5 /* helpers.m */; };
-		BCCA7B181809008900CE36E5 /* NSNotificationCenter+RACSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7B171809008900CE36E5 /* NSNotificationCenter+RACSupport.m */; };
 		BCCE8CEB18091A4F006B0059 /* NSWindow+NNScreenCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCE8CEA18091A4F006B0059 /* NSWindow+NNScreenCapture.m */; };
 		BCCE8CEE18091AFC006B0059 /* NSImage+NNFilesystem.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCE8CED18091AFC006B0059 /* NSImage+NNFilesystem.m */; };
 		BCCE8CF018091F75006B0059 /* SWTweetbotTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCE8CEF18091F75006B0059 /* SWTweetbotTests.m */; };
@@ -143,6 +142,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = Sparkle;
+		};
+		BC85E74718DA68BA001DF986 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BCF357D6176CEE9E00458AFF /* ReactiveCocoa.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D05AD39417F2D56F0080895B;
+			remoteInfo = "ReactiveCocoa-Mac";
 		};
 		BCA7350116DAC54000CD4C74 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -767,6 +773,7 @@
 				BCF357E6176CEE9F00458AFF /* ReactiveCocoaTests-iOS.octest */,
 				BCCA7ADB180896D100CE36E5 /* ReactiveCocoa-iOS-UIKitTestHost.app */,
 				BCCA7ADD180896D100CE36E5 /* ReactiveCocoa-iOS-UIKitTestHostTests.octest */,
+				BC85E74818DA68BA001DF986 /* libReactiveCocoa-Mac.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -939,6 +946,13 @@
 			remoteRef = BC79689A18A852E700BB1CC5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		BC85E74818DA68BA001DF986 /* libReactiveCocoa-Mac.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libReactiveCocoa-Mac.a";
+			remoteRef = BC85E74718DA68BA001DF986 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		BCCA7A5618076ADB00CE36E5 /* NNKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -1101,7 +1115,6 @@
 				BCA7351B16DAC5E200CD4C74 /* SWWindowListWorker.m in Sources */,
 				BCA7351E16DAC61F00CD4C74 /* SWWindow.m in Sources */,
 				BCA7352216DAC6A900CD4C74 /* SWWindowWorker.m in Sources */,
-				BCCA7B181809008900CE36E5 /* NSNotificationCenter+RACSupport.m in Sources */,
 				BC19D3DA181436FB009CEC1F /* SWPreferencesService.m in Sources */,
 				BCCA7AD0180896D100CE36E5 /* helpers.m in Sources */,
 				BCA7352516DAC93C00CD4C74 /* SWApplication.m in Sources */,

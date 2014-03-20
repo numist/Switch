@@ -20,7 +20,6 @@
 
 #import "SWAPIEnabledWorker.h"
 #import "SWHotKey.h"
-#import "NSNotificationCenter+RACSupport.h"
 
 
 @interface SWEventTap ()
