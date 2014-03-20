@@ -7,11 +7,12 @@ require_relative 'Scripts/console'
 # TODO: deliverables should live in INTERMEDIATESDIR until the very last possible moment, when they have been fully verified.
 #
 
+XCODE_BUILD_FILTER = "| xcpretty -c"
+XCODE_TEST_FILTER = "| xcpretty -tc"
+
 #
 # Constants
 #
-
-DEVELOPER_ID = "Scott Perry"
 
 RELEASE_BRANCHES = ["develop", "master"]
 
@@ -19,7 +20,7 @@ BUILDDIR = File.absolute_path("Build")
 
 INTERMEDIATESDIR = "#{BUILDDIR}/Intermediates"
 
-DERIVEDDATA = File.absolute_path("DerivedData")
+DERIVEDDATA = "#{INTERMEDIATESDIR}/DerivedData"
 
 #
 # Environmental
@@ -89,26 +90,6 @@ def run_task(task, args=nil)
   end
 end
 
-def sparkle_signature(archive)
-  # TODO: Sorry.
-  private_key = "Secrets-local/Sparkle.dsa_priv.pem"
-  unless File.exist?(private_key)
-    Console.puts ' ____________________________________ '
-    Console.puts '/ WARNING: not able to sign app      \\'
-    Console.puts '| deliverable for appcast! Find this |'
-    Console.puts '\\ message in the Rakefile.           /'
-    Console.puts ' ------------------------------------ '
-    Console.puts '        \\   ^__^                      '
-    Console.puts '         \\  (oo)\\_______              '
-    Console.puts '            (__)\\       )\\/\\          '
-    Console.puts '                ||----w |             '
-    Console.puts '                ||     ||             '
-    sleep 5
-  else
-    return `Scripts/sign_update.rb \"#{archive}\" \"#{private_key}\"`.strip
-  end
-end
-
 def verify_codesign(app_path)
   shell "codesign --verify --verbose --deep \"#{app_path}\""
   shell "spctl --assess --verbose=4 --type execute \"#{app_path}\""
@@ -117,6 +98,29 @@ end
 def verify_deliverable(deliverable_path)
   formatted_fail "#{deliverable_path} wasn't produced!" unless File.exists? deliverable_path
 end
+
+def xcode(action)
+  run_task DERIVEDDATA
+  shell "set -e; set -o pipefail; xcodebuild #{XCODEFLAGS} #{action} 2>&1 #{XCODE_BUILD_FILTER}"
+end
+
+def shell(action)
+  Console.puts(Console.bold(Console.black("#{action}")))
+  formatted_fail "Shell command failed: #{action}" unless system(action)
+end
+
+def shell_non_fatal(action)
+  Console.puts(Console.bold(Console.black("#{action}")))
+  return system(action)
+end
+
+def echo_step(step)
+  Console.puts(Console.bold(Console.black(Console.background_white(step))))
+end
+
+#
+# Targets
+#
 
 directory BUILDDIR
 directory DERIVEDDATA
@@ -138,26 +142,7 @@ task :deps do
   shell "pod install"
 end
 
-def xcode(action)
-  run_task DERIVEDDATA
-  shell "set -e; set -o pipefail; xcodebuild #{XCODEFLAGS} #{action} 2>&1 | xcpretty -c"
-end
-
-def shell(action)
-  Console.puts(Console.bold(Console.black("#{action}")))
-  formatted_fail "Shell command failed: #{action}" unless system(action)
-end
-
-def shell_non_fatal(action)
-  Console.puts(Console.bold(Console.black("#{action}")))
-  return system(action)
-end
-
-def echo_step(step)
-  Console.puts(Console.bold(Console.black(Console.background_white(step))))
-end
-
-# can these just be tasks dependant on another task with an argument?
+# XXX: can these just be tasks dependant on another task with an argument?
 task :analyze do
   xcode "analyze"
 end
@@ -170,12 +155,16 @@ task :clean do
   xcode "clean"
 end
 
-task :test do
-  echo_step("Testing #{PROJECT}")
-  shell "set -e; set -o pipefail; xcodebuild -scheme \"Switch\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | xcpretty -tc"
-  shell "set -e; set -o pipefail; xcodebuild -scheme \"ReactiveCocoa\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | xcpretty -tc"
-  shell "set -e; set -o pipefail; xcodebuild -scheme \"NNKit\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | xcpretty -tc"
-  shell "set -e; set -o pipefail; xcodebuild -scheme \"Sparkle\" -project \"#{PROJECT}\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 | xcpretty -tc"
+task :test => [:build] do
+  echo_step("Testing #{PRODUCT}")
+  def test_scheme(scheme)
+    shell "set -e; set -o pipefail; xcodebuild -scheme \"#{scheme}\" -workspace \"#{PRODUCT}.xcworkspace\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 #{XCODE_TEST_FILTER}"
+  end
+
+  test_scheme("Switch")
+  test_scheme("ReactiveCocoa")
+  test_scheme("NNKit")
+  test_scheme("Sparkle")
 end
 
 
@@ -202,14 +191,14 @@ task DELIVERABLE_APP => [DELIVERABLE_ARCHIVE, File.dirname(DELIVERABLE_APP)] do
   
   verify_deliverable DELIVERABLE_APP
 
-  if shell_non_fatal "codesign --force --deep --sign \"Developer ID Application: #{DEVELOPER_ID}\" \"#{DELIVERABLE_APP}\""
+  if shell_non_fatal "codesign --force --deep --sign \"Developer ID\" \"#{DELIVERABLE_APP}\""
     verify_codesign DELIVERABLE_APP
   else
-    # If you're here, chances are DEVELOPER_ID isn't set correctly. It's at the top of this file, and should be set to the company name of your Developer ID certificate.
+    # If you're reading this message, you probably don't have a Developer ID certificate for signing the app.
+    # This is fine if you want to use your own build, but if you're planning on distributing the deliverables you're going to need to get a Developer ID certificate.
     Console.puts ' _____________________________________ '
     Console.puts '/ WARNING: unable to sign app         \\'
-    Console.puts '| deliverable with Developer ID!       |'
-    Console.puts '\\ Find this message in the Rakefile.  /'
+    Console.puts '\\ deliverable with Developer ID!      /'
     Console.puts ' ------------------------------------- '
     Console.puts '        \\   ^__^                       '
     Console.puts '         \\  (oo)\\_______               '
@@ -237,6 +226,8 @@ task DELIVERABLE_ZIP => [DELIVERABLE_APP, File.dirname(DELIVERABLE_ZIP), INTERME
   
   # Verify that unzipped app and app deliverable do not differ.
   shell "diff -r \"#{unzipped_app}\" \"#{DELIVERABLE_APP}\""
+  
+  # XXX: this will fail if the application was not code signed!
   # Verify unzipped application launches successfully.
   shell "open \"#{unzipped_app}\""
   # grep for "[/]Users/foo/bar" to prevent grep from showing up in the list of processes matching the query.
@@ -253,15 +244,14 @@ task DELIVERABLE_ZIP => [DELIVERABLE_APP, File.dirname(DELIVERABLE_ZIP), INTERME
   Console.puts "Finished: #{Console.green(DELIVERABLE_ZIP)}\n"
 end
 
-task :release => [:analyze, :test] do
-  # TODO
-  # formatted_fail "Releases can only be made from branches: #{RELEASE_BRANCHES.inspect}" unless BRANCH_IS_RELEASE
+task :release_ready? do
+  formatted_fail "Releases can only be made from branches: #{RELEASE_BRANCHES.inspect}" unless BRANCH_IS_RELEASE
 
   gst = 'git status -uno --ignore-submodules=untracked'
   formatted_fail "Uncommitted files detected!\n#{`#{gst} --short`}" unless `#{gst} --porcelain | wc -l`.strip == "0"
-  
-  run_task DELIVERABLE_ZIP
-  # The zip's contents can be unsigned, but a release must be signed!
+end
+
+task :release => [:release_ready?, :analyze, :test, :zip] do
+  # The zip build step might succeed without a code signature, but a deliverable for release must be signed!
   verify_codesign DELIVERABLE_APP
-  
 end

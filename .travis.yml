@@ -5,12 +5,10 @@ xcode_scheme: Switch
 rvm:
     - ruby-2.0.0-p247
 
-before_install:
+install:
     - gem install rake
     - rake deps
 
-install:
-    - rake analyze
-
 script:
+    - rake app
     - rake test
