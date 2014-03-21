@@ -137,13 +137,21 @@
     
     NSDictionary *views = @{
         @"hud" : self.hud,
+        @"collection" : self,
     };
     
     NSDictionary *metrics = @{
         @"hudPadding" : @(kNNScreenToWindowInset),
         @"cellPadding" : @(kNNWindowToThumbInset),
         @"maxThumbSize" : @(kNNMaxWindowThumbnailSize),
+        @"emptyHUDSize" : @(kNNMaxWindowThumbnailSize + (kNNWindowToThumbInset * 2.0)),
+        @"windowWidth" : @(self.frame.size.width),
+        @"windowHeight" : @(self.frame.size.height),
     };
+    
+    // Maintain the size of the frame.
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[collection(windowWidth)]" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[collection(windowHeight)]" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:views]];
 
     // Center the HUD inside its container view.
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.hud attribute:NSLayoutAttributeCenterX
@@ -189,7 +197,6 @@
             // Middle cells in the collection must have LHS padding to their neighbouring cell.
             [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[prevCell]-(cellPadding)-[cell]" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:cellConstraintViews]];
         } else {
-            #pragma message "This isn't working yet: when many windows exist, HUD expands beyond bounds of screen"
             // First cell in the collection establishes the size that all of the others follow. Max size, with lower priority so it will be compromised if layout pressure exists due to too many cells.
             [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[cell(maxThumbSize@777)]" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:cellConstraintViews]];
             
@@ -232,7 +239,14 @@
     }
     
     if (self.numberOfCells == 0) {
-        #pragma message "This isn't working yet, need to add constraints so the HUD is visible when there are no windows."
+        // Empty HUD is square.
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:self.hud attribute:NSLayoutAttributeHeight
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self.hud attribute:NSLayoutAttributeWidth
+                                                        multiplier:1.f constant:0.f]];
+        
+        // Empty HUD has the size of the HUD as if it contained one item.
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[hud(emptyHUDSize)]" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:views]];
     }
 
     self.currentConstraints = self.constraints;
