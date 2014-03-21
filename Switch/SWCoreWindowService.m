@@ -28,7 +28,7 @@
 
 
 static NSTimeInterval kWindowDisplayDelay = 0.15;
-static NSUInteger kScrollThreshold = 50;
+static int kScrollThreshold = 50;
 
 
 @interface SWCoreWindowService () <SWCoreWindowControllerDelegate, SWWindowListSubscriber>
@@ -250,7 +250,7 @@ static NSUInteger kScrollThreshold = 50;
 - (void)coreWindowController:(SWCoreWindowController *)controller didSelectWindowGroup:(SWWindowGroup *)windowGroup;
 {
     if (windowGroup == self.selector.selectedWindowGroup) { return; }
-    self.selector = [self.selector selectIndex:[self.windowGroups indexOfObject:windowGroup]];
+    self.selector = [self.selector selectIndex:(NSInteger)[self.windowGroups indexOfObject:windowGroup]];
     self.scrollOffset = 0;
 }
 
