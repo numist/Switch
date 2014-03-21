@@ -24,7 +24,6 @@
 @interface SWCoreWindowController () <SWHUDCollectionViewDataSource, SWHUDCollectionViewDelegate>
 
 @property (nonatomic, assign) BOOL interfaceLoaded;
-@property (nonatomic, assign) BOOL windowShowing;
 @property (nonatomic, strong) SWHUDCollectionView *collectionView;
 
 @end
