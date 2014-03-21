@@ -24,7 +24,7 @@
 @interface SWCoreWindowController () <SWHUDCollectionViewDataSource, SWHUDCollectionViewDelegate>
 
 @property (nonatomic, assign) BOOL interfaceLoaded;
-
+@property (nonatomic, assign) BOOL windowShowing;
 @property (nonatomic, strong) SWHUDCollectionView *collectionView;
 
 @end
@@ -41,8 +41,6 @@
     
     Check(![self isWindowLoaded]);
     (void)self.window;
-    
-    [self.window orderFront:self];
     
     @weakify(self);
     [[SWEventTap sharedService] registerForEventsWithType:kCGEventMouseMoved object:self block:^(CGEventRef event) {
@@ -100,7 +98,7 @@
         collectionView.delegate = self;
     }
     self.collectionView = collectionView;
-    [self.window.contentView addSubview:self.collectionView];
+    self.window.contentView = self.collectionView;
     self.interfaceLoaded = YES;
 }
 
@@ -109,7 +107,11 @@
 - (void)setWindowGroups:(NSOrderedSet *)windowGroups;
 {
     _windowGroups = windowGroups;
+    
     [self.collectionView reloadData];
+    if (!self.windowShowing) {
+        [self.window orderFront:self];
+    }
 }
 
 - (void)selectWindowGroup:(SWWindowGroup *)windowGroup;

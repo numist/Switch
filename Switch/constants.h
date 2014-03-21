@@ -29,12 +29,6 @@ extern const CGFloat kNNSelectionRoundRectRadius;
 // Seconds
 extern const NSTimeInterval delayBeforePresentingSwitcherWindow;
 
-// Maths
-NSRect nnItemRect(CGFloat thumbSize, NSUInteger index);
-NSRect nnThumbRect(CGFloat thumbSize, NSUInteger index);
-CGFloat nnTotalPadding(NSUInteger numWindows);
-CGFloat nnTotalWidth(CGFloat thumbSize, NSUInteger numWindows);
-
 // Enum stringification
 NSString *NNStringFromCGWindowLevel(long level);
 

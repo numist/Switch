@@ -71,6 +71,7 @@
     // View initialization
     //
     
+    self.translatesAutoresizingMaskIntoConstraints = NO;
     [self setWantsLayer:YES];
     self.layerContentsRedrawPolicy = NSViewLayerContentsRedrawOnSetNeedsDisplay;
     [self _createLayers];
@@ -113,6 +114,8 @@
 
 - (void)layout;
 {
+    [super layout];
+    
     self.thumbnailLayer.frame = self.bounds;
     
     NSSize thumbSize = self.thumbnailLayer.bounds.size;

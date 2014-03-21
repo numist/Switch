@@ -25,7 +25,7 @@
     
     self.border = kNNItemBorderWidth;
     self.radius = kNNSelectionRoundRectRadius;
-    self.autoresizingMask = NSViewNotSizable;
+    self.translatesAutoresizingMaskIntoConstraints = NO;
     
     return self;
 }
