@@ -212,7 +212,7 @@
                                                          relatedBy:NSLayoutRelationEqual
                                                             toItem:cell attribute:NSLayoutAttributeWidth
                                                         multiplier:1.f constant:0.f]];
-	
+
         // Cell must have top/bottom padding to its superview (the hud).
         [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(cellPadding)-[cell]-(cellPadding)-|" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:cellViews]];
 

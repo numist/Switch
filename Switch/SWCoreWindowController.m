@@ -109,9 +109,6 @@
     _windowGroups = windowGroups;
     
     [self.collectionView reloadData];
-    if (!self.windowShowing) {
-        [self.window orderFront:self];
-    }
 }
 
 - (void)selectWindowGroup:(SWWindowGroup *)windowGroup;

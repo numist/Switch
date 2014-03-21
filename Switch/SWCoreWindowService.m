@@ -201,6 +201,10 @@ static int kScrollThreshold = 50;
         self.coreWindowController.delegate = self;
         self.coreWindowController.windowGroups = self.windowGroups;
         [self _updateSelection];
+        // layoutSubviewsIfNeeded isn't instant (apparently?), so let everything take effect before showing the window.
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.coreWindowController.window orderFront:self];
+        });
         
         @weakify(self);
         [eventTap registerForEventsWithType:kCGEventScrollWheel object:self block:^(CGEventRef event) {
