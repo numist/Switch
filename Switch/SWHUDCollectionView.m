@@ -134,21 +134,21 @@
     if (self.currentConstraints) {
         return;
     }
-    
+
     NSDictionary *views = @{
         @"hud" : self.hud,
         @"collection" : self,
     };
-    
+
     NSDictionary *metrics = @{
         @"hudPadding" : @(kNNScreenToWindowInset),
         @"cellPadding" : @(kNNWindowToThumbInset),
-        @"maxThumbSize" : @(kNNMaxWindowThumbnailSize),
-        @"emptyHUDSize" : @(kNNMaxWindowThumbnailSize + (kNNWindowToThumbInset * 2.0)),
+        @"maxThumbSize" : @(self.maxCellSize),
+        @"emptyHUDSize" : @(self.maxCellSize + (kNNWindowToThumbInset * 2.0)),
         @"windowWidth" : @(self.frame.size.width),
         @"windowHeight" : @(self.frame.size.height),
     };
-    
+
     // Maintain the size of the frame.
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[collection(windowWidth)]" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[collection(windowHeight)]" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:views]];
@@ -158,36 +158,45 @@
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:self attribute:NSLayoutAttributeCenterX
                                                     multiplier:1.f constant:0.f]];
-    
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.hud attribute:NSLayoutAttributeCenterY
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:self attribute:NSLayoutAttributeCenterY
                                                     multiplier:1.f constant:0.f]];
-    
+
     // Ensure that the hud always has a minimum padding within its container view.
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(>=hudPadding)-[hud]-(>=hudPadding)-|" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:views]];
-    
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=hudPadding)-[hud]-(>=hudPadding)-|" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:views]];
-    
+
+    if (self.numberOfCells == 0) {
+        // Empty HUD is square.
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:self.hud attribute:NSLayoutAttributeHeight
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self.hud attribute:NSLayoutAttributeWidth
+                                                        multiplier:1.f constant:0.f]];
+
+        // Empty HUD has the size of the HUD as if it contained one item.
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[hud(emptyHUDSize)]" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:views]];
+    }
+
     for (NSUInteger i = 0; i < self.numberOfCells; i++) {
         NSView *prevCell = i != 0 ? self.cells[i - 1] : nil;
         NSView *cell = self.cells[i];
         NSView *nextCell = i < (self.numberOfCells - 1) ? self.cells[i + 1] : nil;
-        
-        NSDictionary *cellConstraintViews = @{
+
+        NSDictionary *cellViews = @{
             @"prevCell" : prevCell ?: [NSNull null],
             @"cell": cell,
             @"nextCell" : nextCell ?: [NSNull null],
             @"hud" : self.hud,
         };
-        
-        // Cells have a fixed aspect ratio (square).
-        [self addConstraint:[NSLayoutConstraint constraintWithItem:cell attribute:NSLayoutAttributeHeight
-                                                         relatedBy:NSLayoutRelationEqual
-                                                            toItem:cell attribute:NSLayoutAttributeWidth
-                                                        multiplier:1.f constant:0.f]];
-        
-        if (prevCell) {
+
+        if (!prevCell) {
+            // First cell in the collection establishes the size that all of the others follow. Max size, with lower priority so it will be compromised if layout pressure exists due to too many cells.
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[cell(maxThumbSize@777)]" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:cellViews]];
+            
+            // First cell in the collection must have RHS padding to its superview (the hud).
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(cellPadding)-[cell]" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:cellViews]];
+        } else {
             // Non-first cells set their width (and thus their size due to the aspect ratio constraint) to be equal to the first cell's width.
             [self addConstraint:[NSLayoutConstraint constraintWithItem:cell attribute:NSLayoutAttributeWidth
                                                              relatedBy:NSLayoutRelationEqual
@@ -195,21 +204,21 @@
                                                             multiplier:1.f constant:0.f]];
             
             // Middle cells in the collection must have LHS padding to their neighbouring cell.
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[prevCell]-(cellPadding)-[cell]" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:cellConstraintViews]];
-        } else {
-            // First cell in the collection establishes the size that all of the others follow. Max size, with lower priority so it will be compromised if layout pressure exists due to too many cells.
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[cell(maxThumbSize@777)]" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:cellConstraintViews]];
-            
-            // First cell in the collection must have RHS padding to its superview (the hud).
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(cellPadding)-[cell]" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:cellConstraintViews]];
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[prevCell]-(cellPadding)-[cell]" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:cellViews]];
         }
-        
+
+        // Cells have a fixed aspect ratio (square).
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:cell attribute:NSLayoutAttributeHeight
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:cell attribute:NSLayoutAttributeWidth
+                                                        multiplier:1.f constant:0.f]];
+	
         // Cell must have top/bottom padding to its superview (the hud).
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(cellPadding)-[cell]-(cellPadding)-|" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:cellConstraintViews]];
-        
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(cellPadding)-[cell]-(cellPadding)-|" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:cellViews]];
+
         if (!nextCell) {
             // Last cell in the collection must have LHS padding to its superview (the hud).
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[cell]-(cellPadding)-|" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:cellConstraintViews]];
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[cell]-(cellPadding)-|" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:cellViews]];
 
         }
 
@@ -219,34 +228,21 @@
                                                              relatedBy:NSLayoutRelationEqual
                                                                 toItem:cell attribute:NSLayoutAttributeCenterX
                                                             multiplier:1.f constant:0.f]];
-            
             [self addConstraint:[NSLayoutConstraint constraintWithItem:self.selectionBox attribute:NSLayoutAttributeCenterY
                                                              relatedBy:NSLayoutRelationEqual
                                                                 toItem:cell attribute:NSLayoutAttributeCenterY
                                                             multiplier:1.f constant:0.f]];
-            
+
             // Selection box height and width must be thumb [height|width] + const
             [self addConstraint:[NSLayoutConstraint constraintWithItem:self.selectionBox attribute:NSLayoutAttributeWidth
                                                              relatedBy:NSLayoutRelationEqual
                                                                 toItem:cell attribute:NSLayoutAttributeWidth
                                                             multiplier:1.f constant:(kNNWindowToThumbInset + kNNItemBorderWidth)]];
-            
             [self addConstraint:[NSLayoutConstraint constraintWithItem:self.selectionBox attribute:NSLayoutAttributeHeight
                                                              relatedBy:NSLayoutRelationEqual
                                                                 toItem:cell attribute:NSLayoutAttributeHeight
                                                             multiplier:1.f constant:(kNNWindowToThumbInset + kNNItemBorderWidth)]];
         }
-    }
-    
-    if (self.numberOfCells == 0) {
-        // Empty HUD is square.
-        [self addConstraint:[NSLayoutConstraint constraintWithItem:self.hud attribute:NSLayoutAttributeHeight
-                                                         relatedBy:NSLayoutRelationEqual
-                                                            toItem:self.hud attribute:NSLayoutAttributeWidth
-                                                        multiplier:1.f constant:0.f]];
-        
-        // Empty HUD has the size of the HUD as if it contained one item.
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[hud(emptyHUDSize)]" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:views]];
     }
 
     self.currentConstraints = self.constraints;
