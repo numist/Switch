@@ -14,9 +14,6 @@
 
 #import "SWCoreWindowService.h"
 
-#import <ReactiveCocoa/EXTScope.h>
-#import <ReactiveCocoa/ReactiveCocoa.h>
-
 #import "SWAccessibilityService.h"
 #import "SWApplication.h"
 #import "SWCoreWindowController.h"

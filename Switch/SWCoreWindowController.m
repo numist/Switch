@@ -14,8 +14,6 @@
 
 #import "SWCoreWindowController.h"
 
-#import <ReactiveCocoa/EXTScope.h>
-
 #import "SWEventTap.h"
 #import "SWHUDCollectionView.h"
 #import "SWWindowThumbnailView.h"
@@ -24,6 +22,7 @@
 @interface SWCoreWindowController () <SWHUDCollectionViewDataSource, SWHUDCollectionViewDelegate>
 
 @property (nonatomic, assign) BOOL interfaceLoaded;
+
 @property (nonatomic, strong) SWHUDCollectionView *collectionView;
 
 @end
@@ -106,7 +105,6 @@
 - (void)setWindowGroups:(NSOrderedSet *)windowGroups;
 {
     _windowGroups = windowGroups;
-    
     [self.collectionView reloadData];
 }
 

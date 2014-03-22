@@ -16,8 +16,6 @@
 
 #import <Foundation/NSGeometry.h>
 #import <QuartzCore/QuartzCore.h>
-#import <ReactiveCocoa/EXTScope.h>
-#import <ReactiveCocoa/ReactiveCocoa.h>
 
 #import "SWApplication.h"
 #import "SWWindowGroup.h"

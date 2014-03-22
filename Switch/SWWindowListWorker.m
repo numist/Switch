@@ -15,7 +15,6 @@
 #import "SWWindowListWorker.h"
 
 #import <NNKit/NNPollingObject+Protected.h>
-#import <ReactiveCocoa/EXTScope.h>
 
 
 static NSTimeInterval refreshInterval = 0.1;

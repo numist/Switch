@@ -14,8 +14,6 @@
 
 #import "SWHUDCollectionView.h"
 
-#import <ReactiveCocoa/EXTScope.h>
-
 #import "SWHUDView.h"
 #import "SWSelectionBoxView.h"
 
@@ -49,7 +47,6 @@
     }
     
     _cells = [NSMutableArray new];
-
     return self;
 }
 

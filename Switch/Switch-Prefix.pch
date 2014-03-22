@@ -9,6 +9,8 @@
 #ifdef __OBJC__
 #   import <Cocoa/Cocoa.h>
 #   import <NNKit/NNKit.h>
+#   import <ReactiveCocoa/ReactiveCocoa.h>
+#   import <ReactiveCocoa/EXTScope.h>
 #   import "debugger.h"
 #   import "constants.h"
 #   import "helpers.h"
