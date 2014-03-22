@@ -32,7 +32,15 @@ PROJECT = FileList['*.xcodeproj'][0]
 # Switch
 PRODUCT = PROJECT.slice(0..(PROJECT.index('.') - 1))
 
-BRANCH = `git symbolic-ref HEAD | sed -e 's|^refs/heads/||'`.strip
+def git_branch
+  branch = `git symbolic-ref HEAD 2> /dev/null | sed -e 's|^refs/heads/||'`.strip
+  if branch == ""
+    branch = `git show-ref --head -s --abbrev | head -n1`.strip
+  end
+  return branch
+end
+
+BRANCH = git_branch
 
 #
 # Synthesized
