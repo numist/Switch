@@ -291,13 +291,7 @@
         @"cellPadding" : @(kNNWindowToThumbInset),
         @"maxThumbSize" : @(self.maxCellSize),
         @"emptyHUDSize" : @(self.maxCellSize + (kNNWindowToThumbInset * 2.0)),
-        @"windowWidth" : @(self.frame.size.width),
-        @"windowHeight" : @(self.frame.size.height),
     };
-
-    // Maintain the size of the frame.
-    [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[collection(windowWidth)]" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:views]];
-    [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[collection(windowHeight)]" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:views]];
 
     // Center the HUD inside its container view.
     [constraints addObjectsFromArray:[NSLayoutConstraint sw_constraintsCenteringView:self.hud toView:self]];

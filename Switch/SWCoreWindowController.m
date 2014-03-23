@@ -70,32 +70,23 @@
 
 - (void)loadWindow;
 {
-    NSRect windowRect;
-    {
-        NSScreen *mainScreen = [NSScreen mainScreen];
-        windowRect = mainScreen.frame;
-    }
+    NSRect windowRect = [NSScreen mainScreen].frame;
     
     NSWindow *switcherWindow = [[NSWindow alloc] initWithContentRect:windowRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
-    NSRect displayRect;
-    {
-        switcherWindow.movableByWindowBackground = NO;
-        switcherWindow.hasShadow = NO;
-        switcherWindow.opaque = NO;
-        switcherWindow.backgroundColor = [NSColor clearColor];
-        switcherWindow.level = NSPopUpMenuWindowLevel;
-        
-        displayRect = [switcherWindow convertRectFromScreen:windowRect];
-    }
+    switcherWindow.movableByWindowBackground = NO;
+    switcherWindow.hasShadow = NO;
+    switcherWindow.opaque = NO;
+    switcherWindow.backgroundColor = [NSColor clearColor];
+    switcherWindow.level = NSPopUpMenuWindowLevel;
     self.window = switcherWindow;
     
+    NSRect displayRect = [switcherWindow convertRectFromScreen:windowRect];
+
     SWHUDCollectionView *collectionView = [[SWHUDCollectionView alloc] initWithFrame:displayRect];
-    {
-        collectionView.autoresizingMask = NSViewHeightSizable | NSViewWidthSizable;
-        collectionView.dataSource = self;
-        collectionView.delegate = self;
-    }
+    collectionView.dataSource = self;
+    collectionView.delegate = self;
     self.collectionView = collectionView;
+    
     self.window.contentView = self.collectionView;
     self.interfaceLoaded = YES;
 }
