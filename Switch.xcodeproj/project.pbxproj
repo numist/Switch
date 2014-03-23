@@ -29,6 +29,7 @@
 		BC6B6D1C178DE8E5001D691D /* SWAPIEnabledWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B6D1B178DE8E5001D691D /* SWAPIEnabledWorker.m */; };
 		BC79689E18A8555B00BB1CC5 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC79689318A852E700BB1CC5 /* Sparkle.framework */; };
 		BC82B3F1183C48EE00FDD3B9 /* SWCoreWindowService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC82B3F0183C48EE00FDD3B9 /* SWCoreWindowService.m */; };
+		BC85E79B18DE8C73001DF986 /* NSLayoutConstraint+SWConstraintHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = BC85E79A18DE8C73001DF986 /* NSLayoutConstraint+SWConstraintHelpers.m */; };
 		BC8D8DA1177BA53100B7A135 /* SWHUDCollectionViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC8D8DA0177BA53100B7A135 /* SWHUDCollectionViewTests.m */; };
 		BC8E07AC188C890400C208D4 /* SWChromeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC8E07AB188C890400C208D4 /* SWChromeTests.m */; };
 		BC948E2E180CFAA6008ED28A /* weave.png in Resources */ = {isa = PBXBuildFile; fileRef = BC948E2D180CFAA6008ED28A /* weave.png */; };
@@ -305,6 +306,8 @@
 		BC79688A18A852E700BB1CC5 /* Sparkle.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Sparkle.xcodeproj; path = Frameworks/Sparkle/Sparkle.xcodeproj; sourceTree = "<group>"; };
 		BC82B3EF183C48EE00FDD3B9 /* SWCoreWindowService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWCoreWindowService.h; sourceTree = "<group>"; };
 		BC82B3F0183C48EE00FDD3B9 /* SWCoreWindowService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWCoreWindowService.m; sourceTree = "<group>"; };
+		BC85E79918DE8C73001DF986 /* NSLayoutConstraint+SWConstraintHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSLayoutConstraint+SWConstraintHelpers.h"; sourceTree = "<group>"; };
+		BC85E79A18DE8C73001DF986 /* NSLayoutConstraint+SWConstraintHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSLayoutConstraint+SWConstraintHelpers.m"; sourceTree = "<group>"; };
 		BC8D8DA0177BA53100B7A135 /* SWHUDCollectionViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWHUDCollectionViewTests.m; sourceTree = "<group>"; };
 		BC8E07AB188C890400C208D4 /* SWChromeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWChromeTests.m; sourceTree = "<group>"; };
 		BC948E2D180CFAA6008ED28A /* weave.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = weave.png; path = Resources/weave.png; sourceTree = "<group>"; };
@@ -675,6 +678,8 @@
 		BCA7352C16DB237E00CD4C74 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				BC85E79918DE8C73001DF986 /* NSLayoutConstraint+SWConstraintHelpers.h */,
+				BC85E79A18DE8C73001DF986 /* NSLayoutConstraint+SWConstraintHelpers.m */,
 				BCA7354B16E2ED5000CD4C74 /* SWHUDView.h */,
 				BCA7354C16E2ED5000CD4C74 /* SWHUDView.m */,
 				BC63AB8D1755907D00016B9E /* SWHUDCollectionView.h */,
@@ -1132,6 +1137,7 @@
 				BCBF525017B079FA00716200 /* SWHotKey.m in Sources */,
 				BCA7354316E1621400CD4C74 /* constants.m in Sources */,
 				BC5A979B180E6949002ECD56 /* SWLoggingService.m in Sources */,
+				BC85E79B18DE8C73001DF986 /* NSLayoutConstraint+SWConstraintHelpers.m in Sources */,
 				BCA8AD6A18AD61A00059F253 /* SWEventTap.m in Sources */,
 				BCA7354916E1F14D00CD4C74 /* SWSelectionBoxView.m in Sources */,
 				BC82B3F1183C48EE00FDD3B9 /* SWCoreWindowService.m in Sources */,
