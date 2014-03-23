@@ -14,16 +14,18 @@
 
 #import "SWCoreWindowController.h"
 
+#import "NSSet+SWChaining.h"
 #import "SWEventTap.h"
 #import "SWHUDCollectionView.h"
+#import "SWWindowGroup.h"
 #import "SWWindowThumbnailView.h"
 
 
 @interface SWCoreWindowController () <SWHUDCollectionViewDataSource, SWHUDCollectionViewDelegate>
 
-@property (nonatomic, assign) BOOL interfaceLoaded;
-
-@property (nonatomic, strong) SWHUDCollectionView *collectionView;
+@property (nonatomic, assign, readwrite) BOOL interfaceLoaded;
+@property (nonatomic, strong, readwrite) SWHUDCollectionView *collectionView;
+@property (nonatomic, strong, readonly) NSMutableDictionary *collectionCells;
 
 @end
 
@@ -37,6 +39,8 @@
     Check(!window);
     if (!(self = [super initWithWindow:window])) { return nil; }
     
+    _collectionCells = [NSMutableDictionary new];
+
     Check(![self isWindowLoaded]);
     (void)self.window;
     
@@ -95,6 +99,10 @@
 
 - (void)setWindowGroups:(NSOrderedSet *)windowGroups;
 {
+    // Throw out any cells that aren't needed anymore.
+    NSSet *removedWindowGroups = [[NSSet setWithArray:self.collectionCells.allKeys] sw_minusSet:windowGroups.set];
+    [self.collectionCells removeObjectsForKeys:removedWindowGroups.allObjects];
+
     _windowGroups = windowGroups;
     [self.collectionView reloadData];
 }
@@ -139,8 +147,12 @@
     // Boundary method, index may not be in-bounds.
     SWWindowGroup *windowGroup = index < self.windowGroups.count ? self.windowGroups[index] : nil;
     BailUnless(windowGroup, [[NSView alloc] initWithFrame:NSZeroRect]);
-    
-    return [[SWWindowThumbnailView alloc] initWithFrame:NSZeroRect windowGroup:windowGroup];
+
+    if (!self.collectionCells[windowGroup]) {
+        self.collectionCells[windowGroup] = [[SWWindowThumbnailView alloc] initWithFrame:NSZeroRect windowGroup:windowGroup];
+    }
+
+    return self.collectionCells[windowGroup];
 }
 
 #pragma mark SWHUDCollectionViewDelegate
