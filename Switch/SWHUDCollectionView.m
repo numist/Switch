@@ -14,23 +14,27 @@
 
 #import "SWHUDCollectionView.h"
 
+#import "NSLayoutConstraint+SWConstraintHelpers.h"
 #import "SWHUDView.h"
 #import "SWSelectionBoxView.h"
-#import "NSLayoutConstraint+SWConstraintHelpers.h"
 
 
 @interface SWHUDCollectionView ()
 
-@property (nonatomic, assign) CGFloat maxCellSize;
+// dataSource information.
+@property (nonatomic, assign, readwrite) CGFloat maxCellSize;
 @property (nonatomic, assign, readwrite) NSUInteger numberOfCells;
-
 @property (nonatomic, strong, readonly) NSMutableArray *cells;
+
+// Persistent views.
 @property (nonatomic, strong, readonly) SWHUDView *hud;
-@property (nonatomic, strong, readwrite) SWSelectionBoxView *selectionBox;
+@property (nonatomic, strong, readonly) SWSelectionBoxView *selectionBox;
+
+// Constraint tracking.
 @property (nonatomic, strong, readwrite) NSArray *selectionBoxConstraints;
+@property (nonatomic, strong, readwrite) NSArray *collectionConstraints;
 
-@property (nonatomic, copy, readwrite) NSArray *collectionConstraints;
-
+// Internal state.
 @property (nonatomic, assign, readwrite) BOOL reloading;
 @property (nonatomic, assign, readwrite) NSUInteger selectedIndex;
 
@@ -49,6 +53,10 @@
     }
     
     _cells = [NSMutableArray new];
+    _hud = [[SWHUDView alloc] initWithFrame:NSZeroRect];
+    _selectionBox = [[SWSelectionBoxView alloc] initWithFrame:NSZeroRect];
+    _selectedIndex = NSNotFound;
+
     return self;
 }
 
@@ -115,12 +123,13 @@
 
 - (void)viewWillMoveToSuperview:(NSView *)newSuperview;
 {
-    if (!self.hud) {
-        _hud = [[SWHUDView alloc] initWithFrame:NSZeroRect];
-        [self addSubview:self.hud];
-        
+    if (![self.subviews containsObject:self.hud]) {
         self.hud.translatesAutoresizingMaskIntoConstraints = NO;
+        [self addSubview:self.hud];
     }
+
+    // Force layout and subview insertion of the selection box if necessary.
+    [self selectCellAtIndex:self.selectedIndex];
 }
 
 - (void)updateConstraints;
@@ -161,22 +170,23 @@
 - (void)selectCellAtIndex:(NSUInteger)index;
 {
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
+    Check(self.selectionBox);
     
     self.selectedIndex = index;
-
-    if (!self.selectionBox) {
-        SWSelectionBoxView *selectionBox = [[SWSelectionBoxView alloc] initWithFrame:NSZeroRect];
-        [self.hud addSubview:selectionBox positioned:NSWindowBelow relativeTo:nil];
-        self.selectionBox = selectionBox;
-    }
     
-    [self _constraintsForSelectionBoxNeedUpdate];
+    if (self.selectedIndex < self.numberOfCells) {
+        if (![self.subviews containsObject:self.selectionBox]) {
+            [self.hud addSubview:self.selectionBox positioned:NSWindowBelow relativeTo:nil];
+        }
+        [self _constraintsForSelectionBoxNeedUpdate];
+    } else if ([self.subviews containsObject:self.selectionBox]) {
+        [self.selectionBox removeFromSuperview];
+    }
 }
 
 - (void)deselectCell;
 {
-    [self.selectionBox removeFromSuperview];
-    self.selectionBox = nil;
+    [self selectCellAtIndex:NSNotFound];
 }
 
 - (void)reloadData;
