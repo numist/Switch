@@ -14,17 +14,29 @@
 
 #import "SWHUDCollectionView.h"
 
+#import "NSLayoutConstraint+SWConstraintHelpers.h"
+#import "SWHUDView.h"
 #import "SWSelectionBoxView.h"
 
 
 @interface SWHUDCollectionView ()
 
-@property (nonatomic, assign) NSUInteger numberOfCells;
-@property (nonatomic, strong) NSMutableArray *cells;
-@property (nonatomic, assign, readwrite) BOOL reloading;
+// dataSource information.
+@property (nonatomic, assign, readwrite) CGFloat maxCellSize;
+@property (nonatomic, assign, readwrite) NSUInteger numberOfCells;
+@property (nonatomic, strong, readonly) NSMutableArray *cells;
 
-@property (nonatomic, strong) SWSelectionBoxView *selectionBox;
-@property (nonatomic, assign) NSUInteger selectedIndex;
+// Persistent views.
+@property (nonatomic, strong, readonly) SWHUDView *hud;
+@property (nonatomic, strong, readonly) SWSelectionBoxView *selectionBox;
+
+// Constraint tracking.
+@property (nonatomic, strong, readwrite) NSArray *selectionBoxConstraints;
+@property (nonatomic, strong, readwrite) NSArray *collectionConstraints;
+
+// Internal state.
+@property (nonatomic, assign, readwrite) BOOL reloading;
+@property (nonatomic, assign, readwrite) NSUInteger selectedIndex;
 
 @end
 
@@ -41,6 +53,10 @@
     }
     
     _cells = [NSMutableArray new];
+    _hud = [[SWHUDView alloc] initWithFrame:NSZeroRect];
+    _selectionBox = [[SWSelectionBoxView alloc] initWithFrame:NSZeroRect];
+    _selectedIndex = NSNotFound;
+
     return self;
 }
 
@@ -60,14 +76,14 @@
         
         self.selectedIndex = i;
         
-        if ([delegate respondsToSelector:@selector(HUDView:willSelectCellAtIndex:)]) {
-            [delegate HUDView:self willSelectCellAtIndex:i];
+        if ([delegate respondsToSelector:@selector(HUDCollectionView:willSelectCellAtIndex:)]) {
+            [delegate HUDCollectionView:self willSelectCellAtIndex:i];
         }
         
         [self selectCellAtIndex:self.selectedIndex];
         
-        if ([delegate respondsToSelector:@selector(HUDView:didSelectCellAtIndex:)]) {
-            [delegate HUDView:self didSelectCellAtIndex:self.selectedIndex];
+        if ([delegate respondsToSelector:@selector(HUDCollectionView:didSelectCellAtIndex:)]) {
+            [delegate HUDCollectionView:self didSelectCellAtIndex:self.selectedIndex];
         }
     }
     
@@ -84,8 +100,8 @@
         Check(self.selectedIndex == i);
         self.selectedIndex = i;
         
-        if ([delegate respondsToSelector:@selector(HUDView:activateCellAtIndex:)]) {
-            [delegate HUDView:self activateCellAtIndex:i];
+        if ([delegate respondsToSelector:@selector(HUDCollectionView:activateCellAtIndex:)]) {
+            [delegate HUDCollectionView:self activateCellAtIndex:i];
         }
     } else {
         [super mouseUp:theEvent];
@@ -96,6 +112,36 @@
 {
     // Do not pass this event up the responder chain.
     return;
+}
+
+#pragma mark NSView
+
++ (BOOL)requiresConstraintBasedLayout;
+{
+    return YES;
+}
+
+- (void)viewWillMoveToSuperview:(NSView *)newSuperview;
+{
+    if (![self.subviews containsObject:self.hud]) {
+        self.hud.translatesAutoresizingMaskIntoConstraints = NO;
+        [self addSubview:self.hud];
+    }
+
+    // Force layout and subview insertion of the selection box if necessary.
+    [self selectCellAtIndex:self.selectedIndex];
+}
+
+- (void)updateConstraints;
+{
+    if (!self.collectionConstraints) {
+        [self _updateConstraintsForCollection];
+    }
+
+    if (!self.selectionBoxConstraints) {
+        [self _updateConstraintsForSelectionBox];
+    }
+    [super updateConstraints];
 }
 
 #pragma mark SWHUDCollectionView
@@ -124,30 +170,29 @@
 - (void)selectCellAtIndex:(NSUInteger)index;
 {
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
+    Check(self.selectionBox);
     
     self.selectedIndex = index;
-
-    if (!self.selectionBox) {
-        SWSelectionBoxView *selectionBox = [[SWSelectionBoxView alloc] initWithFrame:NSZeroRect];
-        [self addSubview:selectionBox positioned:NSWindowBelow relativeTo:nil];
-        self.selectionBox = selectionBox;
-    }
     
-    self.selectionBox.frame = nnItemRect((self.frame.size.height - kNNWindowToThumbInset * 2.0), self.selectedIndex);
-    [self.selectionBox setNeedsDisplay:YES];
+    if (self.selectedIndex < self.numberOfCells) {
+        if (![self.subviews containsObject:self.selectionBox]) {
+            [self.hud addSubview:self.selectionBox positioned:NSWindowBelow relativeTo:nil];
+        }
+        [self _constraintsForSelectionBoxNeedUpdate];
+    } else if ([self.subviews containsObject:self.selectionBox]) {
+        [self.selectionBox removeFromSuperview];
+    }
 }
 
 - (void)deselectCell;
 {
-    [self.selectionBox removeFromSuperview];
-    self.selectionBox = nil;
+    [self selectCellAtIndex:NSNotFound];
 }
 
 - (void)reloadData;
 {
     NSAssert([[NSThread currentThread] isMainThread], @"UI on main thread only!");
     
-    // Keep honking, I'm reloading.
     if (!self.reloading) {
         self.reloading = YES;
         
@@ -159,105 +204,193 @@
 
 #pragma mark Internal
 
-- (void)_setSize:(NSSize)size;
-{
-    self.frame = (NSRect){
-        .size = size,
-        .origin.x = self.frame.origin.x + ((self.frame.size.width - size.width) / 2.0),
-        .origin.y = self.frame.origin.y + ((self.frame.size.height - size.height) / 2.0)
-    };
-}
-
-- (CGFloat)_computeCellSize;
-{
-    CGFloat cellSize = self.maxCellSize;
-    CGFloat maxTheoreticalWindowWidth = nnTotalWidth(cellSize, self.numberOfCells);
-    CGFloat requiredPaddings = nnTotalPadding(self.numberOfCells);
-    
-    if (maxTheoreticalWindowWidth > self.maxWidth) {
-        cellSize = floor((self.maxWidth - requiredPaddings) / self.numberOfCells);
-    }
-
-    return cellSize;
-}
-
-- (NSSize)_computeCollectionViewSize;
-{
-    CGFloat cellSize = [self _computeCellSize];
-    CGFloat maxTheoreticalWindowWidth = nnTotalWidth(cellSize, self.numberOfCells);
-    
-    if (self.numberOfCells == 0) {
-        CGFloat min = MIN(kNNWindowToThumbInset + self.maxCellSize + kNNWindowToThumbInset, self.maxWidth);
-        return (NSSize){
-            .height = min,
-            .width = min
-        };
-    }
-
-    return (NSSize){
-        .width = MIN(self.maxWidth, maxTheoreticalWindowWidth),
-        .height = kNNWindowToThumbInset + cellSize + kNNWindowToThumbInset
-    };
-}
-
-- (NSRect)_computeFrameForCellAtIndex:(NSUInteger)index;
-{
-    return nnThumbRect([self _computeCellSize], index);
-}
-
 - (NSUInteger)_indexForCellAtPoint:(NSPoint)point;
 {
-    unsigned i;
-    for (i = 0; i < self.numberOfCells; ++i) {
-        NSRect frame = [self convertRect:[self _computeFrameForCellAtIndex:i] toView:nil];
+    for (NSUInteger i = 0; i < self.numberOfCells; ++i) {
+        NSPoint relativePoint = [self convertPoint:point toView:self.cells[i]];
+        NSRect cellFrame = CLASS_CAST(NSView, self.cells[i]).bounds;
         
-        if (NSPointInRect(point, frame)) {
-            break;
+        if (NSPointInRect(relativePoint, cellFrame)) {
+            return i;
         }
     }
     
-    return i < [self.cells count] ? i : NSNotFound;
+    return NSNotFound;
 }
 
 - (void)_reloadDataIfNeeded;
 {
     if (!self.reloading) { return; }
     
+    @weakify(self);
+    dispatch_block_t cleanupData = ^{
+        @strongify(self);
+        self.numberOfCells = 0;
+        [self.cells makeObjectsPerformSelector:NNTypedSelector(NSView, removeFromSuperview)];
+        [self.cells removeAllObjects];
+    };
+    
     self.reloading = NO;
     
     __strong __typeof__(self.dataSource) dataSource = self.dataSource;
     
-    [self.cells removeAllObjects];
-    self.subviews = @[];
-    
-    self.numberOfCells = [dataSource HUDViewNumberOfCells:self];
-    // dataSource side effect may have called reloadData, in which case it's not safe to continue anymore.
-    if (self.reloading) {
-        SWLog(@"reloadData called while reloading data!");
-        return;
+    if (!self.maxCellSize) {
+        self.maxCellSize = [dataSource HUDCollectionViewMaximumCellSize:self];
+        // dataSource side effect may have called reloadData, in which case it's not safe to continue anymore.
+        BailWithBlockUnless(!self.reloading, cleanupData);
     }
     
-    [self _setSize:[self _computeCollectionViewSize]];
+    cleanupData();
+    
+    self.numberOfCells = [dataSource HUDCollectionViewNumberOfCells:self];
+    // dataSource side effect may have called reloadData, in which case it's not safe to continue anymore.
+    BailWithBlockUnless(!self.reloading, cleanupData);
     
     for (NSUInteger i = 0; i < self.numberOfCells; i++) {
-        NSView *cell = [dataSource HUDView:self viewForCellAtIndex:i];
+        NSView *cell = [dataSource HUDCollectionView:self viewForCellAtIndex:i];
         // dataSource side effect may have called reloadData, in which case it's not safe to continue anymore.
-        if (self.reloading) {
-            SWLog(@"reloadData called while reloading data!");
-            return;
-        }
+        BailWithBlockUnless(!self.reloading, cleanupData);
         
         [self.cells insertObject:cell atIndex:i];
-        cell.frame = [self _computeFrameForCellAtIndex:i];
-        [self addSubview:cell];
+        [self.hud addSubview:cell];
     }
     
     if (self.selectionBox) {
-        self.selectionBox.frame = nnItemRect((self.frame.size.height - kNNWindowToThumbInset * 2.0), self.selectedIndex);
-        [self addSubview:self.selectionBox positioned:NSWindowBelow relativeTo:nil];
+        [self.hud addSubview:self.selectionBox positioned:NSWindowBelow relativeTo:nil];
     }
     
-    [self setNeedsDisplay:YES];
+    [self _constraintsForCollectionNeedUpdate];
+    [self _constraintsForSelectionBoxNeedUpdate];
+}
+
+- (void)_constraintsForCollectionNeedUpdate;
+{
+    if (self.collectionConstraints) {
+        [self removeConstraints:self.collectionConstraints];
+        self.collectionConstraints = nil;
+    }
+    [self setNeedsUpdateConstraints:YES];
+}
+
+- (void)_updateConstraintsForCollection;
+{
+    if (!Check(!self.collectionConstraints.count)) {
+        [self removeConstraints:self.collectionConstraints];
+        self.collectionConstraints = nil;
+    }
+
+    NSMutableArray *constraints = [NSMutableArray new];
+
+    NSDictionary *views = @{
+        @"hud" : self.hud,
+        @"collection" : self,
+    };
+
+    NSDictionary *metrics = @{
+        @"hudPadding" : @(kNNScreenToWindowInset),
+        @"cellPadding" : @(kNNWindowToThumbInset),
+        @"maxThumbSize" : @(self.maxCellSize),
+        @"emptyHUDSize" : @(self.maxCellSize + (kNNWindowToThumbInset * 2.0)),
+    };
+
+    // Center the HUD inside its container view.
+    [constraints addObjectsFromArray:[NSLayoutConstraint sw_constraintsCenteringView:self.hud toView:self]];
+
+    // Establish flexible minimum HUD size, for when there are no cells to display.
+    [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[hud(>=emptyHUDSize@500)]" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:views]];
+    [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[hud(>=emptyHUDSize@500)]" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:views]];
+
+    // Ensure that the hud always has a minimum padding within its container view.
+    [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(>=hudPadding)-[hud]-(>=hudPadding)-|" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:views]];
+    [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=hudPadding)-[hud]-(>=hudPadding)-|" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:views]];
+
+    for (NSUInteger i = 0; i < self.numberOfCells; i++) {
+        NSView *prevCell = i != 0 ? self.cells[i - 1] : nil;
+        NSView *cell = self.cells[i];
+        NSView *nextCell = i < (self.numberOfCells - 1) ? self.cells[i + 1] : nil;
+
+        NSDictionary *cellViews = @{
+            @"prevCell" : prevCell ?: [NSNull null],
+            @"cell": cell,
+            @"nextCell" : nextCell ?: [NSNull null],
+            @"hud" : self.hud,
+        };
+
+        if (!prevCell) {
+            // First cell in the collection establishes the size that all of the others follow. Max size, with lower priority so it will be compromised if layout pressure exists due to too many cells.
+            [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"[cell(maxThumbSize@750)]" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:cellViews]];
+
+            // First cell in the collection must have RHS padding to its superview (the hud).
+            [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(cellPadding)-[cell]" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:cellViews]];
+        } else {
+            // Non-first cells set their width (and thus their size due to the aspect ratio constraint) to be equal to the first cell's width.
+            [constraints addObject:[NSLayoutConstraint constraintWithItem:cell attribute:NSLayoutAttributeWidth
+                                                             relatedBy:NSLayoutRelationEqual
+                                                                toItem:self.cells[0] attribute:NSLayoutAttributeWidth
+                                                            multiplier:1.f constant:0.f]];
+
+            // Middle cells in the collection must have LHS padding to their neighbouring cell.
+            [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[prevCell]-(cellPadding)-[cell]" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:cellViews]];
+        }
+
+        // Cells have a fixed aspect ratio (square).
+        [constraints addObject:[NSLayoutConstraint constraintWithItem:cell attribute:NSLayoutAttributeHeight
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:cell attribute:NSLayoutAttributeWidth
+                                                        multiplier:1.f constant:0.f]];
+
+        // Cell must have top/bottom padding to its superview (the hud).
+        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(cellPadding)-[cell]-(cellPadding)-|" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:cellViews]];
+
+        if (!nextCell) {
+            // Last cell in the collection must have LHS padding to its superview (the hud).
+            [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[cell]-(cellPadding)-|" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:cellViews]];
+        }
+    }
+
+    self.collectionConstraints = [constraints copy];
+    [self addConstraints:self.collectionConstraints];
+}
+
+- (void)_constraintsForSelectionBoxNeedUpdate;
+{
+    if (self.selectionBoxConstraints) {
+        [self removeConstraints:self.selectionBoxConstraints];
+        self.selectionBoxConstraints = nil;
+    }
+    [self setNeedsUpdateConstraints:YES];
+}
+
+- (void)_updateConstraintsForSelectionBox;
+{
+    if (!Check(!self.selectionBoxConstraints.count)) {
+        [self removeConstraints:self.selectionBoxConstraints];
+        self.selectionBoxConstraints = nil;
+    }
+
+    NSMutableArray *constraints = [NSMutableArray new];
+
+    if (self.selectedIndex < self.numberOfCells) {
+        Check(self.selectionBox);
+
+        NSView *selectedView = self.cells[self.selectedIndex];
+
+        // Constraint: selection box must be centered over selection thumb
+        [constraints addObjectsFromArray:[NSLayoutConstraint sw_constraintsCenteringView:self.selectionBox toView:selectedView]];
+
+        // Selection box height and width must be thumb [height|width] + const
+        [constraints addObject:[NSLayoutConstraint constraintWithItem:self.selectionBox attribute:NSLayoutAttributeWidth
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:selectedView attribute:NSLayoutAttributeWidth
+                                                        multiplier:1.f constant:(kNNWindowToThumbInset + kNNItemBorderWidth)]];
+        [constraints addObject:[NSLayoutConstraint constraintWithItem:self.selectionBox attribute:NSLayoutAttributeHeight
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:selectedView attribute:NSLayoutAttributeHeight
+                                                        multiplier:1.f constant:(kNNWindowToThumbInset + kNNItemBorderWidth)]];
+    }
+
+    self.selectionBoxConstraints = [constraints copy];
+    [self addConstraints:self.selectionBoxConstraints];
 }
 
 @end

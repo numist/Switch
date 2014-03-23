@@ -14,8 +14,6 @@
 
 #import "SWCoreWindowController.h"
 
-#import <ReactiveCocoa/EXTScope.h>
-
 #import "SWEventTap.h"
 #import "SWHUDCollectionView.h"
 #import "SWWindowThumbnailView.h"
@@ -41,8 +39,6 @@
     
     Check(![self isWindowLoaded]);
     (void)self.window;
-    
-    [self.window orderFront:self];
     
     @weakify(self);
     [[SWEventTap sharedService] registerForEventsWithType:kCGEventMouseMoved object:self block:^(CGEventRef event) {
@@ -74,35 +70,24 @@
 
 - (void)loadWindow;
 {
-    NSRect windowRect;
-    {
-        NSScreen *mainScreen = [NSScreen mainScreen];
-        windowRect = mainScreen.frame;
-    }
+    NSRect windowRect = [NSScreen mainScreen].frame;
     
     NSWindow *switcherWindow = [[NSWindow alloc] initWithContentRect:windowRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
-    NSRect displayRect;
-    {
-        switcherWindow.movableByWindowBackground = NO;
-        switcherWindow.hasShadow = NO;
-        switcherWindow.opaque = NO;
-        switcherWindow.backgroundColor = [NSColor clearColor];
-        switcherWindow.level = NSPopUpMenuWindowLevel;
-        
-        displayRect = [switcherWindow convertRectFromScreen:windowRect];
-    }
+    switcherWindow.movableByWindowBackground = NO;
+    switcherWindow.hasShadow = NO;
+    switcherWindow.opaque = NO;
+    switcherWindow.backgroundColor = [NSColor clearColor];
+    switcherWindow.level = NSPopUpMenuWindowLevel;
     self.window = switcherWindow;
     
-    SWHUDCollectionView *collectionView = [[SWHUDCollectionView alloc] initWithFrame:NSMakeRect(displayRect.size.width / 2.0, displayRect.size.height / 2.0, 0.0, 0.0)];
-    {
-        collectionView.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin;
-        collectionView.maxWidth = displayRect.size.width - (kNNScreenToWindowInset * 2.0);
-        collectionView.maxCellSize = kNNMaxWindowThumbnailSize;
-        collectionView.dataSource = self;
-        collectionView.delegate = self;
-    }
+    NSRect displayRect = [switcherWindow convertRectFromScreen:windowRect];
+
+    SWHUDCollectionView *collectionView = [[SWHUDCollectionView alloc] initWithFrame:displayRect];
+    collectionView.dataSource = self;
+    collectionView.delegate = self;
     self.collectionView = collectionView;
-    [self.window.contentView addSubview:self.collectionView];
+    
+    self.window.contentView = self.collectionView;
     self.interfaceLoaded = YES;
 }
 
@@ -137,12 +122,17 @@
 
 #pragma mark SWHUDCollectionViewDataSource
 
-- (NSUInteger)HUDViewNumberOfCells:(SWHUDCollectionView *)view;
+- (CGFloat)HUDCollectionViewMaximumCellSize:(SWHUDCollectionView *)view;
+{
+    return kNNMaxWindowThumbnailSize;
+}
+
+- (NSUInteger)HUDCollectionViewNumberOfCells:(SWHUDCollectionView *)view;
 {
     return self.windowGroups.count;
 }
 
-- (NSView *)HUDView:(SWHUDCollectionView *)view viewForCellAtIndex:(NSUInteger)index;
+- (NSView *)HUDCollectionView:(SWHUDCollectionView *)view viewForCellAtIndex:(NSUInteger)index;
 {
     BailUnless([view isEqual:self.collectionView], [[NSView alloc] initWithFrame:NSZeroRect]);
     
@@ -155,14 +145,14 @@
 
 #pragma mark SWHUDCollectionViewDelegate
 
-- (void)HUDView:(SWHUDCollectionView *)view didSelectCellAtIndex:(NSUInteger)index;
+- (void)HUDCollectionView:(SWHUDCollectionView *)view didSelectCellAtIndex:(NSUInteger)index;
 {
     Assert(index < self.windowGroups.count);
     id<SWCoreWindowControllerDelegate> delegate = self.delegate;
     [delegate coreWindowController:self didSelectWindowGroup:self.windowGroups[index]];
 }
 
-- (void)HUDView:(SWHUDCollectionView *)view activateCellAtIndex:(NSUInteger)index;
+- (void)HUDCollectionView:(SWHUDCollectionView *)view activateCellAtIndex:(NSUInteger)index;
 {
     Assert(index < self.windowGroups.count);
     id<SWCoreWindowControllerDelegate> delegate = self.delegate;

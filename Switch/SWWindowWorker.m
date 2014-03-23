@@ -15,7 +15,6 @@
 #import "SWWindowWorker.h"
 
 #import <NNKit/NNPollingObject+Protected.h>
-#import <ReactiveCocoa/EXTScope.h>
 
 #import "imageComparators.h"
 #import "SWWindow.h"

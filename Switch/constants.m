@@ -37,51 +37,6 @@ const CGFloat kNNSelectionRoundRectRadius = kNNWindowRoundRectRadius - kNNWindow
 // Timing
 const NSTimeInterval delayBeforePresentingSwitcherWindow = 0.25;
 
-// Maths
-__attribute__((const)) static CGFloat nnItemSideLength(CGFloat thumbSize)
-{
-    return kNNItemToThumbInset * 2.0 + thumbSize;
-}
-
-__attribute__((const)) static NSSize nnItemSize(CGFloat thumbSize)
-{
-    return NSMakeSize(nnItemSideLength(thumbSize),
-                      nnItemSideLength(thumbSize));
-}
-
-__attribute__((const)) NSRect nnItemRect(CGFloat thumbSize, NSUInteger index)
-{
-    return (NSRect){
-        .origin.x = kNNWindowToItemInset + (index * (nnItemSideLength(thumbSize) - kNNItemBorderWidth)),
-        .origin.y = kNNWindowToItemInset,
-        .size = nnItemSize(thumbSize)
-    };
-}
-
-__attribute__((const)) static NSSize nnThumbSize(CGFloat thumbSize)
-{
-    return NSMakeSize(thumbSize, thumbSize);
-}
-
-__attribute__((const)) NSRect nnThumbRect(CGFloat thumbSize, NSUInteger index)
-{
-    return (NSRect){
-        .origin.x = kNNWindowToThumbInset + index * (nnItemSideLength(thumbSize) - kNNItemBorderWidth),
-        .origin.y = kNNWindowToThumbInset,
-        .size = nnThumbSize(thumbSize)
-    };
-}
-
-__attribute__((const)) CGFloat nnTotalPadding(NSUInteger numWindows)
-{
-    return kNNWindowToItemInset * 2.0 + numWindows * (kNNItemToThumbInset * 2.0 - kNNItemBorderWidth) + kNNItemBorderWidth;
-}
-
-__attribute__((const)) CGFloat nnTotalWidth(CGFloat thumbSize, NSUInteger numWindows)
-{
-    NSRect lastItem = nnItemRect(thumbSize, (numWindows - 1));
-    return lastItem.origin.x + lastItem.size.width + kNNWindowToItemInset;
-}
 
 __attribute__((const)) NSString *NNStringFromCGWindowLevel(long level)
 {

@@ -14,9 +14,6 @@
 
 #import "SWCoreWindowService.h"
 
-#import <ReactiveCocoa/EXTScope.h>
-#import <ReactiveCocoa/ReactiveCocoa.h>
-
 #import "SWAccessibilityService.h"
 #import "SWApplication.h"
 #import "SWCoreWindowController.h"
@@ -201,6 +198,10 @@ static int kScrollThreshold = 50;
         self.coreWindowController.delegate = self;
         self.coreWindowController.windowGroups = self.windowGroups;
         [self _updateSelection];
+        // layoutSubviewsIfNeeded isn't instant (apparently?), so let everything take effect before showing the window.
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.coreWindowController.window orderFront:self];
+        });
         
         @weakify(self);
         [eventTap registerForEventsWithType:kCGEventScrollWheel object:self block:^(CGEventRef event) {
@@ -261,6 +262,8 @@ static int kScrollThreshold = 50;
     }
     
     self.pendingSwitch = YES;
+    // Clicking on an item cancels the keyboard invocation.
+    self.invoked = NO;
 }
 
 #pragma mark SWWindowListSubscriber

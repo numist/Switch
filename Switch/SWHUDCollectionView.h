@@ -12,20 +12,14 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "SWHUDView.h"
-
-
 @protocol SWHUDCollectionViewDataSource;
 @protocol SWHUDCollectionViewDelegate;
 
 
-@interface SWHUDCollectionView : SWHUDView
+@interface SWHUDCollectionView : NSView
 
 @property (nonatomic, weak) id<SWHUDCollectionViewDataSource> dataSource;
 @property (nonatomic, weak) id<SWHUDCollectionViewDelegate> delegate;
-
-@property (nonatomic, assign) CGFloat maxCellSize;
-@property (nonatomic, assign) CGFloat maxWidth;
 
 @property (nonatomic, readonly) NSUInteger selectedIndex;
 
@@ -38,15 +32,14 @@
 
 - (void)reloadData;
 
-//- (id)objectAtIndexedSubscript:(NSUInteger)idx;
-
 @end
 
 
 @protocol SWHUDCollectionViewDataSource <NSObject>
 
-- (NSUInteger)HUDViewNumberOfCells:(SWHUDCollectionView *)view;
-- (NSView *)HUDView:(SWHUDCollectionView *)view viewForCellAtIndex:(NSUInteger)index;
+- (CGFloat)HUDCollectionViewMaximumCellSize:(SWHUDCollectionView *)view;
+- (NSUInteger)HUDCollectionViewNumberOfCells:(SWHUDCollectionView *)view;
+- (NSView *)HUDCollectionView:(SWHUDCollectionView *)view viewForCellAtIndex:(NSUInteger)index;
 
 @end
 
@@ -54,8 +47,8 @@
 @protocol SWHUDCollectionViewDelegate <NSObject>
 
 @optional
-- (void)HUDView:(SWHUDCollectionView *)view willSelectCellAtIndex:(NSUInteger)index;
-- (void)HUDView:(SWHUDCollectionView *)view didSelectCellAtIndex:(NSUInteger)index;
-- (void)HUDView:(SWHUDCollectionView *)view activateCellAtIndex:(NSUInteger)index;
+- (void)HUDCollectionView:(SWHUDCollectionView *)view willSelectCellAtIndex:(NSUInteger)index;
+- (void)HUDCollectionView:(SWHUDCollectionView *)view didSelectCellAtIndex:(NSUInteger)index;
+- (void)HUDCollectionView:(SWHUDCollectionView *)view activateCellAtIndex:(NSUInteger)index;
 
 @end
