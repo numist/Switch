@@ -14,6 +14,7 @@
 
 #import "SWCoreWindowController.h"
 
+#import "NSSet+SWChaining.h"
 #import "SWEventTap.h"
 #import "SWHUDCollectionView.h"
 #import "SWWindowGroup.h"
@@ -99,9 +100,8 @@
 - (void)setWindowGroups:(NSOrderedSet *)windowGroups;
 {
     // Throw out any cells that aren't needed anymore.
-    NSMutableSet *removedObjects = [[NSSet setWithArray:self.collectionCells.allKeys] mutableCopy];
-    [removedObjects minusSet:[windowGroups set]];
-    [self.collectionCells removeObjectsForKeys:removedObjects.allObjects];
+    NSSet *removedWindowGroups = [[NSSet setWithArray:self.collectionCells.allKeys] sw_minusSet:windowGroups.set];
+    [self.collectionCells removeObjectsForKeys:removedWindowGroups.allObjects];
 
     _windowGroups = windowGroups;
     [self.collectionView reloadData];
