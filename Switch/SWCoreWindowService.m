@@ -44,8 +44,6 @@ static int kScrollThreshold = 50;
 #pragma mark Selector state
 @property (nonatomic, strong) SWSelector *selector;
 @property (nonatomic, assign) int scrollOffset;
-@property (nonatomic, assign) BOOL incrementing;
-@property (nonatomic, assign) BOOL decrementing;
 
 #pragma mark Logging state
 @property (nonatomic, strong) NSDate *invocationTime;
@@ -404,79 +402,72 @@ static int kScrollThreshold = 50;
     @weakify(self);
     SWEventTap *eventTap = [SWEventTap sharedService];
 
-    void (^selectorChange)(BOOL, BOOL, BOOL) = ^(BOOL keyDown, BOOL invokesInterface, BOOL incrementing) {
-        @strongify(self);
+    BOOL (^updateSelector)(CGEventRef, BOOL, BOOL) = ^(CGEventRef event, BOOL invokesInterface, BOOL incrementing) {
+        BailUnless(event, YES);
         
-        if (keyDown) {
-            if (invokesInterface) {
-                self.invoked = YES;
-            }
-            
-            if (incrementing ? self.incrementing : self.decrementing) {
-                self.selector = incrementing ? self.selector.incrementWithoutWrapping : self.selector.decrementWithoutWrapping;
-            } else {
-                self.selector = incrementing ? self.selector.increment : self.selector.decrement;
-            }
-            
-            self.scrollOffset = 0;
+        // If this hotKey doesn't invoke the interface and it is not already active, pass the event through and do nothing.
+        if (!invokesInterface && !self.invoked) {
+            return YES;
         }
         
-        // I wish I could just use (incrementing ? self.incrementing : self.decrementing) = keyDown
-        if (incrementing) {
-            self.incrementing = keyDown;
-        } else {
-            self.decrementing = keyDown;
-        }
+        // The event is passed by reference. Copy it in case it mutates after control returns to the caller. Released in the async block below.
+        event = CGEventCreateCopy(event);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @strongify(self);
+
+            // Avoid leaking the event if this block early-returns.
+            NNCFAutorelease(event);
+            
+            if (CGEventGetType(event) == kCGEventKeyDown) {
+                if (invokesInterface) {
+                    self.invoked = YES;
+                }
+
+                if (!Check(self.invoked)) {
+                    return;
+                }
+
+                if (CGEventGetIntegerValueField(event, kCGKeyboardEventAutorepeat)) {
+                    self.selector = incrementing ? self.selector.incrementWithoutWrapping : self.selector.decrementWithoutWrapping;
+                } else {
+                    self.selector = incrementing ? self.selector.increment : self.selector.decrement;
+                }
+                
+                self.scrollOffset = 0;
+            }
+        });
+        
+        return NO;
     };
     
     // Incrementing/invoking is bound to option-tab by default.
-    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:SWHotKeyModifierOption] object:self block:^BOOL(BOOL keyDown) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // Invokes, incrementing.
-            selectorChange(keyDown, YES, YES);
-        });
-        return NO;
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:SWHotKeyModifierOption] object:self block:^BOOL(CGEventRef event) {
+        // Invokes, incrementing.
+        return updateSelector(event, YES, YES);
     }];
 
     // Option-arrow can be used to change the selection when Switch has been invoked.
-    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_RightArrow modifiers:SWHotKeyModifierOption] object:self block:^BOOL(BOOL keyDown) {
-        @strongify(self);
-        if (self.invoked) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                // Does not invoke, incrementing.
-                selectorChange(keyDown, NO, YES);
-            });
-            return NO;
-        }
-        return YES;
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_RightArrow modifiers:SWHotKeyModifierOption] object:self block:^BOOL(CGEventRef event) {
+        // Does not invoke, incrementing.
+        return updateSelector(event, NO, YES);
     }];
 
     // Decrementing/invoking is bound to option-shift-tab by default.
-    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:(SWHotKeyModifierOption|SWHotKeyModifierShift)] object:self block:^BOOL(BOOL keyDown) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // Invokes, decrementing.
-            selectorChange(keyDown, YES, NO);
-        });
-        return NO;
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:(SWHotKeyModifierOption|SWHotKeyModifierShift)] object:self block:^BOOL(CGEventRef event) {
+        // Invokes, decrementing.
+        return updateSelector(event, YES, NO);
     }];
 
     // Option-arrow can be used to change the selection when Switch has been invoked.
-    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_LeftArrow modifiers:SWHotKeyModifierOption] object:self block:^BOOL(BOOL keyDown) {
-        @strongify(self);
-        if (self.invoked) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                // Does not invoke, decrementing.
-                selectorChange(keyDown, NO, NO);
-            });
-            return NO;
-        }
-        return YES;
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_LeftArrow modifiers:SWHotKeyModifierOption] object:self block:^BOOL(CGEventRef event) {
+        // Does not invoke, decrementing.
+        return updateSelector(event, NO, NO);
     }];
 
     // Closing a window is bound to option-W when the interface is open.
-    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_ANSI_W modifiers:SWHotKeyModifierOption] object:self block:^BOOL(BOOL keyDown) {
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_ANSI_W modifiers:SWHotKeyModifierOption] object:self block:^BOOL(CGEventRef event) {
         @strongify(self);
-        if (keyDown && self.interfaceVisible) {
+        if (CGEventGetType(event) == kCGEventKeyDown && self.interfaceVisible) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 @strongify(self);
                 [self _closeSelectedWindow];
@@ -487,8 +478,9 @@ static int kScrollThreshold = 50;
     }];
 
     // Showing the preferences is bound to option-, when the interface is open. This action closes the interface.
-    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_ANSI_Comma modifiers:SWHotKeyModifierOption] object:self block:^BOOL(BOOL keyDown) {
-        if (keyDown && self.interfaceVisible) {
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_ANSI_Comma modifiers:SWHotKeyModifierOption] object:self block:^BOOL(CGEventRef event) {
+        @strongify(self);
+        if (CGEventGetType(event) == kCGEventKeyDown && self.invoked) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 @strongify(self);
                 self.invoked = NO;
@@ -500,9 +492,9 @@ static int kScrollThreshold = 50;
     }];
 
     // Cancelling the switcher is bound to option-escape. This action closes the interface.
-    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Escape modifiers:SWHotKeyModifierOption] object:self block:^(BOOL keyDown){
+    [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Escape modifiers:SWHotKeyModifierOption] object:self block:^(CGEventRef event){
         @strongify(self);
-        if (keyDown && self.invoked) {
+        if (CGEventGetType(event) == kCGEventKeyDown && self.invoked) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.invoked = NO;
             });

@@ -263,7 +263,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
     //
     
     for (SWEventTapKeyFilter filter in [eventTap.keyFilters[key] allValues]) {
-        if (!filter(type == kCGEventKeyDown)) {
+        if (!filter(event)) {
             event = NULL;
             break;
         }
