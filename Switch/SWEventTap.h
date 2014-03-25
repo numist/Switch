@@ -15,7 +15,7 @@
 #import "SWHotKey.h"
 
 
-typedef BOOL (^SWEventTapKeyFilter)(BOOL keyDown);
+typedef BOOL (^SWEventTapKeyFilter)(CGEventRef event);
 typedef void (^SWEventTapModifierCallback)(BOOL matched);
 typedef void (^SWEventTapCallback)(CGEventRef event);
 
