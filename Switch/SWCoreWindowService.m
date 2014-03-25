@@ -410,11 +410,13 @@ static int kScrollThreshold = 50;
             return YES;
         }
         
-        // The event is passed by reference. Copy it in case it mutates after control returns to the caller.
+        // The event is passed by reference. Copy it in case it mutates after control returns to the caller. Released in the async block below.
         event = CGEventCreateCopy(event);
-
         dispatch_async(dispatch_get_main_queue(), ^{
             @strongify(self);
+
+            // Avoid leaking the event if this block early-returns.
+            NNCFAutorelease(event);
             
             if (CGEventGetType(event) == kCGEventKeyDown) {
                 if (invokesInterface) {
@@ -433,7 +435,6 @@ static int kScrollThreshold = 50;
                 
                 self.scrollOffset = 0;
             }
-            CFRelease(event);
         });
         
         return NO;
