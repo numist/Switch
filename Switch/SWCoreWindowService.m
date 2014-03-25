@@ -402,7 +402,7 @@ static int kScrollThreshold = 50;
     @weakify(self);
     SWEventTap *eventTap = [SWEventTap sharedService];
 
-    BOOL (^selectorChange)(CGEventRef, BOOL, BOOL) = ^(CGEventRef event, BOOL invokesInterface, BOOL incrementing) {
+    BOOL (^updateSelector)(CGEventRef, BOOL, BOOL) = ^(CGEventRef event, BOOL invokesInterface, BOOL incrementing) {
         BailUnless(event, YES);
         
         // If this hotKey doesn't invoke the interface and it is not already active, pass the event through and do nothing.
@@ -443,25 +443,25 @@ static int kScrollThreshold = 50;
     // Incrementing/invoking is bound to option-tab by default.
     [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:SWHotKeyModifierOption] object:self block:^BOOL(CGEventRef event) {
         // Invokes, incrementing.
-        return selectorChange(event, YES, YES);
+        return updateSelector(event, YES, YES);
     }];
 
     // Option-arrow can be used to change the selection when Switch has been invoked.
     [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_RightArrow modifiers:SWHotKeyModifierOption] object:self block:^BOOL(CGEventRef event) {
         // Does not invoke, incrementing.
-        return selectorChange(event, NO, YES);
+        return updateSelector(event, NO, YES);
     }];
 
     // Decrementing/invoking is bound to option-shift-tab by default.
     [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_Tab modifiers:(SWHotKeyModifierOption|SWHotKeyModifierShift)] object:self block:^BOOL(CGEventRef event) {
         // Invokes, decrementing.
-        return selectorChange(event, YES, NO);
+        return updateSelector(event, YES, NO);
     }];
 
     // Option-arrow can be used to change the selection when Switch has been invoked.
     [eventTap registerHotKey:[SWHotKey hotKeyWithKeycode:kVK_LeftArrow modifiers:SWHotKeyModifierOption] object:self block:^BOOL(CGEventRef event) {
         // Does not invoke, decrementing.
-        return selectorChange(event, NO, NO);
+        return updateSelector(event, NO, NO);
     }];
 
     // Closing a window is bound to option-W when the interface is open.
