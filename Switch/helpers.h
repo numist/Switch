@@ -20,5 +20,4 @@
 BOOL NNNSRectsEqual(NSRect a, NSRect b);
 BOOL NNNSSizesEqual(NSSize a, NSSize b);
 
-#define NNCFAutorelease(ref) _NNCFAutorelease(CFBridgingRelease((ref)))
-void * _NNCFAutorelease(id obj);
+void *NNCFAutorelease(CFTypeRef cfObject);

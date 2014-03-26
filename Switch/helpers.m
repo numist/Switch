@@ -25,13 +25,18 @@ BOOL NNNSRectsEqual(NSRect a, NSRect b)
     return a.origin.x == b.origin.x && a.origin.y == b.origin.y && NNNSSizesEqual(a.size, b.size);
 }
 
-void * _NNCFAutorelease(id obj) {
-    _Pragma("clang diagnostic push");
-    if (obj) {
-        _Pragma("clang diagnostic ignored \"-Warc-performSelector-leaks\"");
-        [[obj performSelector:NSSelectorFromString(@"retain")] performSelector:NSSelectorFromString(@"autorelease")];
+void *NNCFAutorelease(CFTypeRef cfObject)
+{
+    if (cfObject) {
+        static Class arp = Nil;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            arp = NSClassFromString(@"NSAutoreleasePool");
+            Assert(arp);
+        });
+        
+        [arp addObject:(__bridge id)cfObject];
     }
-    _Pragma("clang diagnostic ignored \"-Wincompatible-pointer-types-discards-qualifiers\"")
-    return (__bridge void *)obj;
-    _Pragma("clang diagnostic pop");
+    
+    return (void *)cfObject;
 }
