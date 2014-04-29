@@ -3,7 +3,7 @@ xcode_project: Switch.xcodeproj
 xcode_scheme: Switch
 
 rvm:
-    - ruby-2.0.0-p247
+    - ruby-2.0.0-p353
 
 install:
     - gem install rake
