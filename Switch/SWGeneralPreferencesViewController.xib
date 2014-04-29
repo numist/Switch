@@ -8,7 +8,9 @@
         <customObject id="-2" userLabel="File's Owner" customClass="SWGeneralPreferencesViewController">
             <connections>
                 <outlet property="autoLaunchEnabledBox" destination="bSj-8o-hxv" id="AeF-Ke-6iQ"/>
+                <outlet property="automaticUpdateCell" destination="POU-5T-RB4" id="38T-0L-QZv"/>
                 <outlet property="currentVersionCell" destination="4XI-wX-xjD" id="z8p-pM-SKB"/>
+                <outlet property="prereleaseUpdatesCell" destination="VfI-ca-2me" id="ZbA-an-9Ar"/>
                 <outlet property="view" destination="NKx-kf-Jnj" id="1d5-FJ-imd"/>
             </connections>
         </customObject>

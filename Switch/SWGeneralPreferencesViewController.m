@@ -29,6 +29,9 @@
 - (IBAction)changelogPressed:(NSButton *)sender;
 - (IBAction)quitPressed:(NSButton *)sender;
 
+@property (nonatomic, weak) IBOutlet NSButtonCell *automaticUpdateCell;
+@property (nonatomic, weak) IBOutlet NSButtonCell *prereleaseUpdatesCell;
+
 @end
 
 
@@ -43,6 +46,11 @@
     
     NSButton *autoLaunchEnabled = self.autoLaunchEnabledBox;
     autoLaunchEnabled.state = [self _isAutoLaunchEnabled] ? NSOnState : NSOffState;
+
+    NSButtonCell *buttonCell = self.automaticUpdateCell;
+    buttonCell.enabled = NO;
+    buttonCell = self.prereleaseUpdatesCell;
+    buttonCell.enabled = NO;
 }
 
 #pragma mark MASPreferencesViewController
