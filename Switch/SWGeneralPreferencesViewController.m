@@ -17,7 +17,7 @@
 #import <Sparkle/Sparkle.h>
 
 
-@interface SWGeneralPreferencesViewController ()
+@interface SWGeneralPreferencesViewController () <MASPreferencesViewController>
 
 @property (nonatomic, weak) IBOutlet NSTextFieldCell *currentVersionCell;
 @property (nonatomic, weak) IBOutlet NSButton *autoLaunchEnabledBox;
@@ -60,6 +60,16 @@
 - (NSString *)toolbarItemLabel
 {
     return NSLocalizedString(@"General", @"Toolbar item name for the General preference pane");
+}
+
+- (BOOL)hasResizableWidth;
+{
+    return NO;
+}
+
+- (BOOL)hasResizableHeight;
+{
+    return NO;
 }
 
 #pragma mark IBAction

@@ -15,6 +15,6 @@
 #import "MASPreferencesViewController.h"
 
 
-@interface SWGeneralPreferencesViewController : NSViewController <MASPreferencesViewController>
+@interface SWGeneralPreferencesViewController : NSViewController
 
 @end

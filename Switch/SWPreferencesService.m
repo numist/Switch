@@ -26,7 +26,7 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
 
 @interface SWPreferencesService ()
 
-@property (nonatomic, strong) NSWindowController *preferencesWindowController;
+@property (nonatomic, strong) MASPreferencesWindowController *preferencesWindowController;
 
 @end
 
@@ -65,10 +65,11 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
 #   endif
     
     NSViewController *generalViewController = [[SWGeneralPreferencesViewController alloc] initWithNibName:@"SWGeneralPreferencesViewController" bundle:[NSBundle mainBundle]];
-    NSArray *controllers = @[generalViewController, [NSNull null]];
+    NSArray *controllers = @[generalViewController];
     NSString *title = NSLocalizedString(@"Preferences", @"Common title for Preferences window");
     
     self.preferencesWindowController = [[MASPreferencesWindowController alloc] initWithViewControllers:controllers title:title];
+    [self.preferencesWindowController selectControllerAtIndex:controllers.count - 1];
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:kNNFirstLaunchKey] && [SWAPIEnabledWorker isAPIEnabled]) {
         [self setObject:@NO forKey:kNNFirstLaunchKey];
