@@ -1,5 +1,5 @@
 //
-//  SWPreferencesWindowController.h
+//  SWGeneralPreferencesViewController.h
 //  Switch
 //
 //  Created by Scott Perry on 10/10/13.
@@ -12,19 +12,9 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import <Cocoa/Cocoa.h>
+#import "MASPreferencesViewController.h"
 
 
-@interface SWPreferencesWindowController : NSWindowController
-
-@property (nonatomic, weak) IBOutlet NSTextFieldCell *currentVersionCell;
-@property (nonatomic, weak) IBOutlet NSButton *autoLaunchEnabledBox;
-
-- (IBAction)autoLaunchChanged:(NSButton *)sender;
-- (IBAction)autoUpdatesChanged:(NSButton *)sender;
-- (IBAction)checkForUpdatesPressed:(NSButton *)sender;
-- (IBAction)preReleaseUpdatesChanged:(NSButton *)sender;
-- (IBAction)changelogPressed:(NSButton *)sender;
-- (IBAction)quitPressed:(NSButton *)sender;
+@interface SWGeneralPreferencesViewController : NSViewController <MASPreferencesViewController>
 
 @end

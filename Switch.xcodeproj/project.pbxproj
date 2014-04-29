@@ -63,8 +63,8 @@
 		BCBC848F1882138B00E5B52E /* SWWindow+TweetbotQuirks.m in Sources */ = {isa = PBXBuildFile; fileRef = BCBC848E1882138B00E5B52E /* SWWindow+TweetbotQuirks.m */; };
 		BCBF525017B079FA00716200 /* SWHotKey.m in Sources */ = {isa = PBXBuildFile; fileRef = BCBF524D17B079FA00716200 /* SWHotKey.m */; };
 		BCCA7A5F18076AF500CE36E5 /* NNKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCCA7A5618076ADB00CE36E5 /* NNKit.framework */; };
-		BCCA7A631807894A00CE36E5 /* SWPreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7A611807894A00CE36E5 /* SWPreferencesWindowController.m */; };
-		BCCA7A641807894A00CE36E5 /* SWPreferencesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCCA7A621807894A00CE36E5 /* SWPreferencesWindowController.xib */; };
+		BCCA7A631807894A00CE36E5 /* SWGeneralPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7A611807894A00CE36E5 /* SWGeneralPreferencesViewController.m */; };
+		BCCA7A641807894A00CE36E5 /* SWGeneralPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCCA7A621807894A00CE36E5 /* SWGeneralPreferencesViewController.xib */; };
 		BCCA7AB21807CD2B00CE36E5 /* NNKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCCA7A5618076ADB00CE36E5 /* NNKit.framework */; };
 		BCCA7AD0180896D100CE36E5 /* helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7ACF180896D100CE36E5 /* helpers.m */; };
 		BCCE8CEB18091A4F006B0059 /* NSWindow+NNScreenCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCE8CEA18091A4F006B0059 /* NSWindow+NNScreenCapture.m */; };
@@ -366,9 +366,9 @@
 		BCBF524C17B079FA00716200 /* SWHotKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWHotKey.h; sourceTree = "<group>"; };
 		BCBF524D17B079FA00716200 /* SWHotKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWHotKey.m; sourceTree = "<group>"; };
 		BCCA7A4E18076ADB00CE36E5 /* NNKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = NNKit.xcodeproj; path = Frameworks/NNKit/NNKit.xcodeproj; sourceTree = "<group>"; };
-		BCCA7A601807894A00CE36E5 /* SWPreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWPreferencesWindowController.h; sourceTree = "<group>"; };
-		BCCA7A611807894A00CE36E5 /* SWPreferencesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWPreferencesWindowController.m; sourceTree = "<group>"; };
-		BCCA7A621807894A00CE36E5 /* SWPreferencesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SWPreferencesWindowController.xib; sourceTree = "<group>"; };
+		BCCA7A601807894A00CE36E5 /* SWGeneralPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWGeneralPreferencesViewController.h; sourceTree = "<group>"; };
+		BCCA7A611807894A00CE36E5 /* SWGeneralPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWGeneralPreferencesViewController.m; sourceTree = "<group>"; };
+		BCCA7A621807894A00CE36E5 /* SWGeneralPreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SWGeneralPreferencesViewController.xib; sourceTree = "<group>"; };
 		BCCA7ACE180896D100CE36E5 /* helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helpers.h; sourceTree = "<group>"; };
 		BCCA7ACF180896D100CE36E5 /* helpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = helpers.m; sourceTree = "<group>"; };
 		BCCA7B161809008900CE36E5 /* NSNotificationCenter+RACSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSNotificationCenter+RACSupport.h"; path = "Frameworks/ReactiveCocoa/RACExtensions/NSNotificationCenter+RACSupport.h"; sourceTree = SOURCE_ROOT; };
@@ -423,6 +423,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BC1B45A1190F2B0100246529 /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				BCCA7A601807894A00CE36E5 /* SWGeneralPreferencesViewController.h */,
+				BCCA7A611807894A00CE36E5 /* SWGeneralPreferencesViewController.m */,
+				BCCA7A621807894A00CE36E5 /* SWGeneralPreferencesViewController.xib */,
+			);
+			name = Preferences;
+			sourceTree = "<group>";
+		};
 		BC275C1318CFD3C900761247 /* relaunch */ = {
 			isa = PBXGroup;
 			children = (
@@ -468,13 +478,11 @@
 		BC63AB901755C6EC00016B9E /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				BC1B45A1190F2B0100246529 /* Preferences */,
 				BCA734F216DAC53F00CD4C74 /* SWAppDelegate.h */,
 				BCA734F316DAC53F00CD4C74 /* SWAppDelegate.m */,
 				BC6B6D11178DDBDA001D691D /* SWCoreWindowController.h */,
 				BC6B6D12178DDBDA001D691D /* SWCoreWindowController.m */,
-				BCCA7A601807894A00CE36E5 /* SWPreferencesWindowController.h */,
-				BCCA7A611807894A00CE36E5 /* SWPreferencesWindowController.m */,
-				BCCA7A621807894A00CE36E5 /* SWPreferencesWindowController.xib */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -1045,7 +1053,7 @@
 				BCA734EB16DAC53F00CD4C74 /* InfoPlist.strings in Resources */,
 				BCA734F716DAC53F00CD4C74 /* MainMenu.xib in Resources */,
 				BC948E2E180CFAA6008ED28A /* weave.png in Resources */,
-				BCCA7A641807894A00CE36E5 /* SWPreferencesWindowController.xib in Resources */,
+				BCCA7A641807894A00CE36E5 /* SWGeneralPreferencesViewController.xib in Resources */,
 				BC660D5B1796573200CE8333 /* Sparkle.dsa_pub.pem in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1133,7 +1141,7 @@
 				BC6B6D13178DDBDA001D691D /* SWCoreWindowController.m in Sources */,
 				BC6B6D00178B711E001D691D /* NNMainThreadGuard.m in Sources */,
 				BCBC848F1882138B00E5B52E /* SWWindow+TweetbotQuirks.m in Sources */,
-				BCCA7A631807894A00CE36E5 /* SWPreferencesWindowController.m in Sources */,
+				BCCA7A631807894A00CE36E5 /* SWGeneralPreferencesViewController.m in Sources */,
 				BC6B6D1C178DE8E5001D691D /* SWAPIEnabledWorker.m in Sources */,
 				BCA7353816E148EF00CD4C74 /* SWRoundedRectView.m in Sources */,
 				BC85E7B718DEA7C4001DF986 /* NSSet+SWChaining.m in Sources */,
