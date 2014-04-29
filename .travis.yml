@@ -1,7 +1,10 @@
 language: objective-c
 xcode_project: Switch.xcodeproj
 xcode_scheme: Switch
-
+    
+before_script:
+    - export LANG=en_US.UTF-8
+    
 rvm:
     - ruby-2.0.0-p353
 
