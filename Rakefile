@@ -7,8 +7,8 @@ require_relative 'Scripts/console'
 # TODO: deliverables should live in INTERMEDIATESDIR until the very last possible moment, when they have been fully verified.
 #
 
-XCODE_BUILD_FILTER = "| xcpretty -c"
-XCODE_TEST_FILTER = "| xcpretty -tc"
+XCODE_BUILD_FILTER = "xcpretty -c"
+XCODE_TEST_FILTER = "xcpretty -tc"
 
 #
 # Constants
@@ -90,6 +90,14 @@ XCODEFLAGS = [
 # Helpers
 #
 
+def prettify_xcode_task(task, test=false)
+  unless shell_non_fatal("set -e; set -o pipefail; #{task} | #{test ? XCODE_TEST_FILTER : XCODE_BUILD_FILTER}")
+     Console.print(Console.background_red(Console.white("Task failed, retrying without filter")))
+    shell(task)
+  end
+
+end
+
 def run_task(task, args=nil)
   if args.nil?
     Rake::Task[task].invoke
@@ -109,7 +117,7 @@ end
 
 def xcode(action)
   run_task DERIVEDDATA
-  shell "set -e; set -o pipefail; xcodebuild #{XCODEFLAGS} #{action} 2>&1 #{XCODE_BUILD_FILTER}"
+  prettify_xcode_task("xcodebuild #{XCODEFLAGS} #{action}")
 end
 
 def shell(action)
@@ -166,7 +174,7 @@ end
 task :test => [:build] do
   echo_step("Testing #{PRODUCT}")
   def test_scheme(scheme)
-    shell "set -e; set -o pipefail; xcodebuild -scheme \"#{scheme}\" -workspace \"#{PRODUCT}.xcworkspace\" -derivedDataPath \"#{DERIVEDDATA}\" test 2>&1 #{XCODE_TEST_FILTER}"
+    prettify_xcode_task("xcodebuild -scheme \"#{scheme}\" -workspace \"#{PRODUCT}.xcworkspace\" -derivedDataPath \"#{DERIVEDDATA}\" test", true)
   end
 
   test_scheme("Switch")
