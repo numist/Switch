@@ -19,6 +19,7 @@
 
 #import "SWAPIEnabledWorker.h"
 #import "SWGeneralPreferencesViewController.h"
+#import "SWKeyboardPreferencesViewController.h"
 
 
 static NSString *kNNFirstLaunchKey = @"firstLaunch";
@@ -65,11 +66,11 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
 #   endif
     
     NSViewController *generalViewController = [[SWGeneralPreferencesViewController alloc] initWithNibName:@"SWGeneralPreferencesViewController" bundle:[NSBundle mainBundle]];
-    NSArray *controllers = @[generalViewController];
+    NSViewController *keyboardViewController = [[SWKeyboardPreferencesViewController alloc] initWithNibName:@"SWKeyboardPreferencesViewController" bundle:[NSBundle mainBundle]];
+    NSArray *controllers = @[generalViewController, keyboardViewController];
     NSString *title = NSLocalizedString(@"Preferences", @"Common title for Preferences window");
     
     self.preferencesWindowController = [[MASPreferencesWindowController alloc] initWithViewControllers:controllers title:title];
-    [self.preferencesWindowController selectControllerAtIndex:controllers.count - 1];
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:kNNFirstLaunchKey] && [SWAPIEnabledWorker isAPIEnabled]) {
         [self setObject:@NO forKey:kNNFirstLaunchKey];

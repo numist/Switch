@@ -17,7 +17,7 @@
 #import <Sparkle/Sparkle.h>
 
 
-@interface SWGeneralPreferencesViewController () <MASPreferencesViewController>
+@interface SWGeneralPreferencesViewController ()
 
 @property (nonatomic, weak) IBOutlet NSTextFieldCell *currentVersionCell;
 @property (nonatomic, weak) IBOutlet NSButton *autoLaunchEnabledBox;

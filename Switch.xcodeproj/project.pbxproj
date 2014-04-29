@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		BC19D3DA181436FB009CEC1F /* SWPreferencesService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3D9181436FB009CEC1F /* SWPreferencesService.m */; };
 		BC19D3DD18143AB1009CEC1F /* SWAccessibilityService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3DC18143AB1009CEC1F /* SWAccessibilityService.m */; };
+		BC1B45B7190F379900246529 /* SWKeyboardPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC1B45B5190F379900246529 /* SWKeyboardPreferencesViewController.m */; };
+		BC1B45B8190F379900246529 /* SWKeyboardPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BC1B45B6190F379900246529 /* SWKeyboardPreferencesViewController.xib */; };
+		BC1B45BA190F37B400246529 /* Keyboard.icns in Resources */ = {isa = PBXBuildFile; fileRef = BC1B45B9190F37B400246529 /* Keyboard.icns */; };
 		BC275C1218CFD3C900761247 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC275C1118CFD3C900761247 /* Foundation.framework */; };
 		BC275C1518CFD3CA00761247 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BC275C1418CFD3CA00761247 /* main.m */; };
 		BC275C2918CFD55000761247 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCA734E316DAC53F00CD4C74 /* AppKit.framework */; };
@@ -277,6 +280,10 @@
 		BC19D3D9181436FB009CEC1F /* SWPreferencesService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWPreferencesService.m; sourceTree = "<group>"; };
 		BC19D3DB18143AB1009CEC1F /* SWAccessibilityService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWAccessibilityService.h; sourceTree = "<group>"; };
 		BC19D3DC18143AB1009CEC1F /* SWAccessibilityService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWAccessibilityService.m; sourceTree = "<group>"; };
+		BC1B45B4190F379900246529 /* SWKeyboardPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWKeyboardPreferencesViewController.h; sourceTree = "<group>"; };
+		BC1B45B5190F379900246529 /* SWKeyboardPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWKeyboardPreferencesViewController.m; sourceTree = "<group>"; };
+		BC1B45B6190F379900246529 /* SWKeyboardPreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SWKeyboardPreferencesViewController.xib; sourceTree = "<group>"; };
+		BC1B45B9190F37B400246529 /* Keyboard.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Keyboard.icns; path = Resources/Keyboard.icns; sourceTree = "<group>"; };
 		BC275C1018CFD3C900761247 /* relaunch */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = relaunch; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC275C1118CFD3C900761247 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BC275C1418CFD3CA00761247 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -429,6 +436,9 @@
 				BCCA7A601807894A00CE36E5 /* SWGeneralPreferencesViewController.h */,
 				BCCA7A611807894A00CE36E5 /* SWGeneralPreferencesViewController.m */,
 				BCCA7A621807894A00CE36E5 /* SWGeneralPreferencesViewController.xib */,
+				BC1B45B4190F379900246529 /* SWKeyboardPreferencesViewController.h */,
+				BC1B45B5190F379900246529 /* SWKeyboardPreferencesViewController.m */,
+				BC1B45B6190F379900246529 /* SWKeyboardPreferencesViewController.xib */,
 			);
 			name = Preferences;
 			sourceTree = "<group>";
@@ -544,6 +554,7 @@
 		BC948E24180CFA97008ED28A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				BC1B45B9190F37B400246529 /* Keyboard.icns */,
 				BC948E2D180CFAA6008ED28A /* weave.png */,
 			);
 			name = Resources;
@@ -1049,9 +1060,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				BC275C3218CFD84000761247 /* relaunch in Resources */,
+				BC1B45BA190F37B400246529 /* Keyboard.icns in Resources */,
 				BCA734F116DAC53F00CD4C74 /* Credits.rtf in Resources */,
 				BCA734EB16DAC53F00CD4C74 /* InfoPlist.strings in Resources */,
 				BCA734F716DAC53F00CD4C74 /* MainMenu.xib in Resources */,
+				BC1B45B8190F379900246529 /* SWKeyboardPreferencesViewController.xib in Resources */,
 				BC948E2E180CFAA6008ED28A /* weave.png in Resources */,
 				BCCA7A641807894A00CE36E5 /* SWGeneralPreferencesViewController.xib in Resources */,
 				BC660D5B1796573200CE8333 /* Sparkle.dsa_pub.pem in Resources */,
@@ -1156,6 +1169,7 @@
 				BCA7354916E1F14D00CD4C74 /* SWSelectionBoxView.m in Sources */,
 				BC82B3F1183C48EE00FDD3B9 /* SWCoreWindowService.m in Sources */,
 				BCA7354D16E2ED5000CD4C74 /* SWHUDView.m in Sources */,
+				BC1B45B7190F379900246529 /* SWKeyboardPreferencesViewController.m in Sources */,
 				BC63AB8F1755907D00016B9E /* SWHUDCollectionView.m in Sources */,
 				BC63ABA517598C4100016B9E /* debugger.c in Sources */,
 				BC19D3DD18143AB1009CEC1F /* SWAccessibilityService.m in Sources */,
