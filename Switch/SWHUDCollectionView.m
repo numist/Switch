@@ -175,11 +175,11 @@
     self.selectedIndex = index;
     
     if (self.selectedIndex < self.numberOfCells) {
-        if (![self.subviews containsObject:self.selectionBox]) {
+        if (![self.hud.subviews containsObject:self.selectionBox]) {
             [self.hud addSubview:self.selectionBox positioned:NSWindowBelow relativeTo:nil];
         }
         [self _constraintsForSelectionBoxNeedUpdate];
-    } else if ([self.subviews containsObject:self.selectionBox]) {
+    } else if ([self.hud.subviews containsObject:self.selectionBox]) {
         [self.selectionBox removeFromSuperview];
     }
 }

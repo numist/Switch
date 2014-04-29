@@ -24,6 +24,7 @@
 @interface SWCoreWindowController () <SWHUDCollectionViewDataSource, SWHUDCollectionViewDelegate>
 
 @property (nonatomic, assign, readwrite) BOOL interfaceLoaded;
+@property (nonatomic, assign, readonly) CGRect screenFrame;
 @property (nonatomic, strong, readwrite) SWHUDCollectionView *collectionView;
 @property (nonatomic, strong, readonly) NSMutableDictionary *collectionCells;
 
@@ -34,12 +35,12 @@
 
 #pragma mark Initialization
 
-- (id)initWithWindow:(NSWindow *)window
+- (id)initWithRect:(CGRect)frame;
 {
-    Check(!window);
-    if (!(self = [super initWithWindow:window])) { return nil; }
+    if (!(self = [super initWithWindow:nil])) { return nil; }
     
     _collectionCells = [NSMutableDictionary new];
+    _screenFrame = frame;
 
     Check(![self isWindowLoaded]);
     (void)self.window;
@@ -74,9 +75,7 @@
 
 - (void)loadWindow;
 {
-    NSRect windowRect = [NSScreen mainScreen].frame;
-    
-    NSWindow *switcherWindow = [[NSWindow alloc] initWithContentRect:windowRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
+    NSWindow *switcherWindow = [[NSWindow alloc] initWithContentRect:self.screenFrame styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
     switcherWindow.movableByWindowBackground = NO;
     switcherWindow.hasShadow = NO;
     switcherWindow.opaque = NO;
@@ -84,7 +83,7 @@
     switcherWindow.level = NSPopUpMenuWindowLevel;
     self.window = switcherWindow;
     
-    NSRect displayRect = [switcherWindow convertRectFromScreen:windowRect];
+    NSRect displayRect = [switcherWindow convertRectFromScreen:self.screenFrame];
 
     SWHUDCollectionView *collectionView = [[SWHUDCollectionView alloc] initWithFrame:displayRect];
     collectionView.dataSource = self;
@@ -120,11 +119,15 @@
 
 - (void)disableWindowGroup:(SWWindowGroup *)windowGroup;
 {
+    if (![self.windowGroups containsObject:windowGroup]) { return; }
+    
     [self _thumbnailForWindowGroup:windowGroup].active = NO;
 }
 
 - (void)enableWindowGroup:(SWWindowGroup *)windowGroup;
 {
+    if (![self.windowGroups containsObject:windowGroup]) { return; }
+    
     [self _thumbnailForWindowGroup:windowGroup].active = YES;
 }
 

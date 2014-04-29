@@ -117,7 +117,7 @@
     self.thumbnailLayer.frame = self.bounds;
     
     NSSize thumbSize = self.thumbnailLayer.bounds.size;
-    NSRect windowGroupFrame = self.windowGroup.frame;
+    NSRect windowGroupFrame = self.windowGroup.flippedFrame;
     
     CGFloat scale = MIN(thumbSize.width / windowGroupFrame.size.width, thumbSize.height / windowGroupFrame.size.height);
     
@@ -127,14 +127,11 @@
     for (NSUInteger i = 0; i < self.windowGroup.windows.count; i++) {
         SWWindow *window = self.windowGroup.windows[i];
         CALayer *layer = [self _sublayerForWindow:window];
-        NSRect frame = window.frame;
+        NSRect frame = window.flippedFrame;
         
         // Move the frame's origin to be anchored at the "bottom left" of the windowFrame.
         frame.origin.x -= windowGroupFrame.origin.x;
         frame.origin.y -= windowGroupFrame.origin.y;
-        
-        // Flip the y axis to convert from screen coordinates to view coordinates.
-        frame.origin.y = windowGroupFrame.size.height - (frame.origin.y + frame.size.height);
         
         // Scale the frame into the layer's space.
         frame.origin.x *= scale;

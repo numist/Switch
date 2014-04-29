@@ -27,13 +27,22 @@
 @end
 
 
-@interface SWCoreWindowController : NSWindowController
+// A poor attempt at getting core window controllers to be well-behaved targets for the multi-dispatch manager.
+@protocol SWCoreWindowControllerAPI <NSObject>
+
+@required
+- (void)selectWindowGroup:(SWWindowGroup *)windowGroup;
+- (void)disableWindowGroup:(SWWindowGroup *)windowGroup;
+- (void)enableWindowGroup:(SWWindowGroup *)windowGroup;
+
+@end
+
+
+@interface SWCoreWindowController : NSWindowController <SWCoreWindowControllerAPI>
 
 @property (nonatomic, strong) NSOrderedSet *windowGroups;
 @property (nonatomic, weak) id<SWCoreWindowControllerDelegate> delegate;
 
-- (void)selectWindowGroup:(SWWindowGroup *)windowGroup;
-- (void)disableWindowGroup:(SWWindowGroup *)windowGroup;
-- (void)enableWindowGroup:(SWWindowGroup *)windowGroup;
+- (id)initWithRect:(CGRect)frame;
 
 @end

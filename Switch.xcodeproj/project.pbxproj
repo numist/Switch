@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		BC19D3DA181436FB009CEC1F /* SWPreferencesService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3D9181436FB009CEC1F /* SWPreferencesService.m */; };
 		BC19D3DD18143AB1009CEC1F /* SWAccessibilityService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3DC18143AB1009CEC1F /* SWAccessibilityService.m */; };
+		BC1B45F3190F925900246529 /* NSScreen+SWAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = BC1B45F2190F925900246529 /* NSScreen+SWAdditions.m */; };
 		BC275C1218CFD3C900761247 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC275C1118CFD3C900761247 /* Foundation.framework */; };
 		BC275C1518CFD3CA00761247 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BC275C1418CFD3CA00761247 /* main.m */; };
 		BC275C2918CFD55000761247 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCA734E316DAC53F00CD4C74 /* AppKit.framework */; };
@@ -277,6 +278,8 @@
 		BC19D3D9181436FB009CEC1F /* SWPreferencesService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWPreferencesService.m; sourceTree = "<group>"; };
 		BC19D3DB18143AB1009CEC1F /* SWAccessibilityService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWAccessibilityService.h; sourceTree = "<group>"; };
 		BC19D3DC18143AB1009CEC1F /* SWAccessibilityService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWAccessibilityService.m; sourceTree = "<group>"; };
+		BC1B45F1190F925900246529 /* NSScreen+SWAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSScreen+SWAdditions.h"; sourceTree = "<group>"; };
+		BC1B45F2190F925900246529 /* NSScreen+SWAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSScreen+SWAdditions.m"; sourceTree = "<group>"; };
 		BC275C1018CFD3C900761247 /* relaunch */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = relaunch; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC275C1118CFD3C900761247 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BC275C1418CFD3CA00761247 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -712,6 +715,8 @@
 				BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */,
 				BCCA7ACE180896D100CE36E5 /* helpers.h */,
 				BCCA7ACF180896D100CE36E5 /* helpers.m */,
+				BC1B45F1190F925900246529 /* NSScreen+SWAdditions.h */,
+				BC1B45F2190F925900246529 /* NSScreen+SWAdditions.m */,
 			);
 			name = Logic;
 			sourceTree = "<group>";
@@ -1126,6 +1131,7 @@
 				BCA7351E16DAC61F00CD4C74 /* SWWindow.m in Sources */,
 				BCA7352216DAC6A900CD4C74 /* SWWindowWorker.m in Sources */,
 				BC19D3DA181436FB009CEC1F /* SWPreferencesService.m in Sources */,
+				BC1B45F3190F925900246529 /* NSScreen+SWAdditions.m in Sources */,
 				BCCA7AD0180896D100CE36E5 /* helpers.m in Sources */,
 				BCA7352516DAC93C00CD4C74 /* SWApplication.m in Sources */,
 				BCA7352F16DB239900CD4C74 /* SWWindowThumbnailView.m in Sources */,

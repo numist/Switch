@@ -18,6 +18,7 @@
 #import <Haxcessibility/Haxcessibility.h>
 #import <Haxcessibility/HAXElement+Protected.h>
 
+#import "NSScreen+SWAdditions.h"
 #import "SWApplication.h"
 
 
@@ -69,6 +70,11 @@
 
 #pragma mark SWWindow
 
+- (CGWindowID)windowID;
+{
+    return (CGWindowID)[[self.windowDescription objectForKey:(__bridge NSString *)kCGWindowNumber] unsignedLongValue];
+}
+
 - (NSRect)frame;
 {
     CGRect result = {{},{}};
@@ -77,14 +83,49 @@
     return result;
 }
 
+- (CGRect)flippedFrame;
+{
+    CGRect flippedFrame = self.frame;
+    CGFloat totalScreenHeight = [[[NSScreen screens] nn_reduce:^id(id accumulator, id item) {
+        if (!accumulator) { accumulator = @(0.0); }
+        CGRect screenFrame = [item nn_absoluteFrame];
+        CGFloat screenHeight = screenFrame.origin.y + screenFrame.size.height;
+        if ([accumulator floatValue] < screenFrame.origin.y + screenFrame.size.height) {
+            accumulator = @(screenHeight);
+        }
+        return accumulator;
+    }] floatValue];
+    flippedFrame.origin.y = totalScreenHeight - (flippedFrame.origin.y + flippedFrame.size.height);
+    return flippedFrame;
+}
+
 - (NSString *)name;
 {
     return [self.windowDescription objectForKey:(__bridge NSString *)kCGWindowName];
 }
 
-- (CGWindowID)windowID;
+- (NSScreen *)screen;
 {
-    return (CGWindowID)[[self.windowDescription objectForKey:(__bridge NSString *)kCGWindowNumber] unsignedLongValue];
+    CGRect flippedFrame = self.flippedFrame;
+    return [[NSScreen screens] nn_reduce:^id(id accumulator, id item) {
+        if (!accumulator) {
+            accumulator = [NSScreen mainScreen];
+        }
+        
+        CGRect itemFrame = [item nn_absoluteFrame];
+        CGRect newIntersection = CGRectIntersection(itemFrame, flippedFrame);
+        CGFloat newOverlapArea = newIntersection.size.width * newIntersection.size.height;
+        
+        CGRect accumulatorFrame = [accumulator nn_absoluteFrame];
+        CGRect oldIntersection = CGRectIntersection(accumulatorFrame, flippedFrame);
+        CGFloat oldOverlapArea = oldIntersection.size.width * oldIntersection.size.height;
+        
+        if (newOverlapArea > oldOverlapArea) {
+            return item;
+        } else {
+            return accumulator;
+        }
+    }];
 }
 
 - (BOOL)isRelatedToLowerWindow:(SWWindow *)window;
