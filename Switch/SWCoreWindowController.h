@@ -31,6 +31,7 @@
 @protocol SWCoreWindowControllerAPI <NSObject>
 
 @required
+- (void)setWindowGroups:(NSOrderedSet *)windowGroups;
 - (void)selectWindowGroup:(SWWindowGroup *)windowGroup;
 - (void)disableWindowGroup:(SWWindowGroup *)windowGroup;
 - (void)enableWindowGroup:(SWWindowGroup *)windowGroup;
