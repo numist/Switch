@@ -1,5 +1,5 @@
 //
-//  NNGithubRegressionTests.m
+//  SWGithubTests.m
 //  Switch
 //
 //  Created by Scott Perry on 10/11/13.
