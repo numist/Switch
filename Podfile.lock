@@ -1,10 +1,13 @@
 PODS:
   - HockeySDK-Mac (2.1.0)
+  - MASPreferences (1.1)
 
 DEPENDENCIES:
   - HockeySDK-Mac
+  - MASPreferences
 
 SPEC CHECKSUMS:
   HockeySDK-Mac: 4a85f8784af28f36e23467d4b3f0b5eb516413d1
+  MASPreferences: 2c2f30b38c3dfceb0d3b29132a13417706a5adac
 
 COCOAPODS: 0.32.1

@@ -10,6 +10,9 @@
 		BC19D3DA181436FB009CEC1F /* SWPreferencesService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3D9181436FB009CEC1F /* SWPreferencesService.m */; };
 		BC19D3DD18143AB1009CEC1F /* SWAccessibilityService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3DC18143AB1009CEC1F /* SWAccessibilityService.m */; };
 		BC1B45F3190F925900246529 /* NSScreen+SWAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = BC1B45F2190F925900246529 /* NSScreen+SWAdditions.m */; };
+		BC1B45B7190F379900246529 /* SWKeyboardPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC1B45B5190F379900246529 /* SWKeyboardPreferencesViewController.m */; };
+		BC1B45B8190F379900246529 /* SWKeyboardPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BC1B45B6190F379900246529 /* SWKeyboardPreferencesViewController.xib */; };
+		BC1B45BA190F37B400246529 /* Keyboard.icns in Resources */ = {isa = PBXBuildFile; fileRef = BC1B45B9190F37B400246529 /* Keyboard.icns */; };
 		BC275C1218CFD3C900761247 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC275C1118CFD3C900761247 /* Foundation.framework */; };
 		BC275C1518CFD3CA00761247 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BC275C1418CFD3CA00761247 /* main.m */; };
 		BC275C2918CFD55000761247 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCA734E316DAC53F00CD4C74 /* AppKit.framework */; };
@@ -64,8 +67,8 @@
 		BCBC848F1882138B00E5B52E /* SWWindow+TweetbotQuirks.m in Sources */ = {isa = PBXBuildFile; fileRef = BCBC848E1882138B00E5B52E /* SWWindow+TweetbotQuirks.m */; };
 		BCBF525017B079FA00716200 /* SWHotKey.m in Sources */ = {isa = PBXBuildFile; fileRef = BCBF524D17B079FA00716200 /* SWHotKey.m */; };
 		BCCA7A5F18076AF500CE36E5 /* NNKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCCA7A5618076ADB00CE36E5 /* NNKit.framework */; };
-		BCCA7A631807894A00CE36E5 /* SWPreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7A611807894A00CE36E5 /* SWPreferencesWindowController.m */; };
-		BCCA7A641807894A00CE36E5 /* SWPreferencesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCCA7A621807894A00CE36E5 /* SWPreferencesWindowController.xib */; };
+		BCCA7A631807894A00CE36E5 /* SWGeneralPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7A611807894A00CE36E5 /* SWGeneralPreferencesViewController.m */; };
+		BCCA7A641807894A00CE36E5 /* SWGeneralPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCCA7A621807894A00CE36E5 /* SWGeneralPreferencesViewController.xib */; };
 		BCCA7AB21807CD2B00CE36E5 /* NNKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCCA7A5618076ADB00CE36E5 /* NNKit.framework */; };
 		BCCA7AD0180896D100CE36E5 /* helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCA7ACF180896D100CE36E5 /* helpers.m */; };
 		BCCE8CEB18091A4F006B0059 /* NSWindow+NNScreenCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCE8CEA18091A4F006B0059 /* NSWindow+NNScreenCapture.m */; };
@@ -280,6 +283,10 @@
 		BC19D3DC18143AB1009CEC1F /* SWAccessibilityService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWAccessibilityService.m; sourceTree = "<group>"; };
 		BC1B45F1190F925900246529 /* NSScreen+SWAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSScreen+SWAdditions.h"; sourceTree = "<group>"; };
 		BC1B45F2190F925900246529 /* NSScreen+SWAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSScreen+SWAdditions.m"; sourceTree = "<group>"; };
+		BC1B45B4190F379900246529 /* SWKeyboardPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWKeyboardPreferencesViewController.h; sourceTree = "<group>"; };
+		BC1B45B5190F379900246529 /* SWKeyboardPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWKeyboardPreferencesViewController.m; sourceTree = "<group>"; };
+		BC1B45B6190F379900246529 /* SWKeyboardPreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SWKeyboardPreferencesViewController.xib; sourceTree = "<group>"; };
+		BC1B45B9190F37B400246529 /* Keyboard.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Keyboard.icns; path = Resources/Keyboard.icns; sourceTree = "<group>"; };
 		BC275C1018CFD3C900761247 /* relaunch */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = relaunch; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC275C1118CFD3C900761247 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BC275C1418CFD3CA00761247 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -369,9 +376,9 @@
 		BCBF524C17B079FA00716200 /* SWHotKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWHotKey.h; sourceTree = "<group>"; };
 		BCBF524D17B079FA00716200 /* SWHotKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWHotKey.m; sourceTree = "<group>"; };
 		BCCA7A4E18076ADB00CE36E5 /* NNKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = NNKit.xcodeproj; path = Frameworks/NNKit/NNKit.xcodeproj; sourceTree = "<group>"; };
-		BCCA7A601807894A00CE36E5 /* SWPreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWPreferencesWindowController.h; sourceTree = "<group>"; };
-		BCCA7A611807894A00CE36E5 /* SWPreferencesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWPreferencesWindowController.m; sourceTree = "<group>"; };
-		BCCA7A621807894A00CE36E5 /* SWPreferencesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SWPreferencesWindowController.xib; sourceTree = "<group>"; };
+		BCCA7A601807894A00CE36E5 /* SWGeneralPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWGeneralPreferencesViewController.h; sourceTree = "<group>"; };
+		BCCA7A611807894A00CE36E5 /* SWGeneralPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWGeneralPreferencesViewController.m; sourceTree = "<group>"; };
+		BCCA7A621807894A00CE36E5 /* SWGeneralPreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SWGeneralPreferencesViewController.xib; sourceTree = "<group>"; };
 		BCCA7ACE180896D100CE36E5 /* helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helpers.h; sourceTree = "<group>"; };
 		BCCA7ACF180896D100CE36E5 /* helpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = helpers.m; sourceTree = "<group>"; };
 		BCCA7B161809008900CE36E5 /* NSNotificationCenter+RACSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSNotificationCenter+RACSupport.h"; path = "Frameworks/ReactiveCocoa/RACExtensions/NSNotificationCenter+RACSupport.h"; sourceTree = SOURCE_ROOT; };
@@ -426,6 +433,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BC1B45A1190F2B0100246529 /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				BCCA7A601807894A00CE36E5 /* SWGeneralPreferencesViewController.h */,
+				BCCA7A611807894A00CE36E5 /* SWGeneralPreferencesViewController.m */,
+				BCCA7A621807894A00CE36E5 /* SWGeneralPreferencesViewController.xib */,
+				BC1B45B4190F379900246529 /* SWKeyboardPreferencesViewController.h */,
+				BC1B45B5190F379900246529 /* SWKeyboardPreferencesViewController.m */,
+				BC1B45B6190F379900246529 /* SWKeyboardPreferencesViewController.xib */,
+			);
+			name = Preferences;
+			sourceTree = "<group>";
+		};
 		BC275C1318CFD3C900761247 /* relaunch */ = {
 			isa = PBXGroup;
 			children = (
@@ -471,13 +491,11 @@
 		BC63AB901755C6EC00016B9E /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				BC1B45A1190F2B0100246529 /* Preferences */,
 				BCA734F216DAC53F00CD4C74 /* SWAppDelegate.h */,
 				BCA734F316DAC53F00CD4C74 /* SWAppDelegate.m */,
 				BC6B6D11178DDBDA001D691D /* SWCoreWindowController.h */,
 				BC6B6D12178DDBDA001D691D /* SWCoreWindowController.m */,
-				BCCA7A601807894A00CE36E5 /* SWPreferencesWindowController.h */,
-				BCCA7A611807894A00CE36E5 /* SWPreferencesWindowController.m */,
-				BCCA7A621807894A00CE36E5 /* SWPreferencesWindowController.xib */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -539,6 +557,7 @@
 		BC948E24180CFA97008ED28A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				BC1B45B9190F37B400246529 /* Keyboard.icns */,
 				BC948E2D180CFAA6008ED28A /* weave.png */,
 			);
 			name = Resources;
@@ -1046,11 +1065,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				BC275C3218CFD84000761247 /* relaunch in Resources */,
+				BC1B45BA190F37B400246529 /* Keyboard.icns in Resources */,
 				BCA734F116DAC53F00CD4C74 /* Credits.rtf in Resources */,
 				BCA734EB16DAC53F00CD4C74 /* InfoPlist.strings in Resources */,
 				BCA734F716DAC53F00CD4C74 /* MainMenu.xib in Resources */,
+				BC1B45B8190F379900246529 /* SWKeyboardPreferencesViewController.xib in Resources */,
 				BC948E2E180CFAA6008ED28A /* weave.png in Resources */,
-				BCCA7A641807894A00CE36E5 /* SWPreferencesWindowController.xib in Resources */,
+				BCCA7A641807894A00CE36E5 /* SWGeneralPreferencesViewController.xib in Resources */,
 				BC660D5B1796573200CE8333 /* Sparkle.dsa_pub.pem in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1139,7 +1160,7 @@
 				BC6B6D13178DDBDA001D691D /* SWCoreWindowController.m in Sources */,
 				BC6B6D00178B711E001D691D /* NNMainThreadGuard.m in Sources */,
 				BCBC848F1882138B00E5B52E /* SWWindow+TweetbotQuirks.m in Sources */,
-				BCCA7A631807894A00CE36E5 /* SWPreferencesWindowController.m in Sources */,
+				BCCA7A631807894A00CE36E5 /* SWGeneralPreferencesViewController.m in Sources */,
 				BC6B6D1C178DE8E5001D691D /* SWAPIEnabledWorker.m in Sources */,
 				BCA7353816E148EF00CD4C74 /* SWRoundedRectView.m in Sources */,
 				BC85E7B718DEA7C4001DF986 /* NSSet+SWChaining.m in Sources */,
@@ -1154,6 +1175,7 @@
 				BCA7354916E1F14D00CD4C74 /* SWSelectionBoxView.m in Sources */,
 				BC82B3F1183C48EE00FDD3B9 /* SWCoreWindowService.m in Sources */,
 				BCA7354D16E2ED5000CD4C74 /* SWHUDView.m in Sources */,
+				BC1B45B7190F379900246529 /* SWKeyboardPreferencesViewController.m in Sources */,
 				BC63AB8F1755907D00016B9E /* SWHUDCollectionView.m in Sources */,
 				BC63ABA517598C4100016B9E /* debugger.c in Sources */,
 				BC19D3DD18143AB1009CEC1F /* SWAccessibilityService.m in Sources */,

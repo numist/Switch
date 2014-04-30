@@ -15,9 +15,11 @@
 #import "SWPreferencesService.h"
 
 #import <NNKit/NNService+Protected.h>
+#import <MASPreferencesWindowController.h>
 
 #import "SWAPIEnabledWorker.h"
-#import "SWPreferencesWindowController.h"
+#import "SWGeneralPreferencesViewController.h"
+#import "SWKeyboardPreferencesViewController.h"
 
 
 static NSString *kNNFirstLaunchKey = @"firstLaunch";
@@ -25,7 +27,7 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
 
 @interface SWPreferencesService ()
 
-@property (nonatomic, strong) SWPreferencesWindowController *preferencesWindowController;
+@property (nonatomic, strong) MASPreferencesWindowController *preferencesWindowController;
 
 @end
 
@@ -63,7 +65,13 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
     }
 #   endif
     
-    self.preferencesWindowController = [[SWPreferencesWindowController alloc] initWithWindowNibName:@"SWPreferencesWindowController"];
+    NSViewController *generalViewController = [[SWGeneralPreferencesViewController alloc] initWithNibName:@"SWGeneralPreferencesViewController" bundle:[NSBundle mainBundle]];
+    NSViewController *keyboardViewController = [[SWKeyboardPreferencesViewController alloc] initWithNibName:@"SWKeyboardPreferencesViewController" bundle:[NSBundle mainBundle]];
+    NSArray *controllers = @[generalViewController, keyboardViewController];
+    NSString *title = NSLocalizedString(@"Preferences", @"Common title for Preferences window");
+    
+    self.preferencesWindowController = [[MASPreferencesWindowController alloc] initWithViewControllers:controllers title:title];
+    
     if ([[NSUserDefaults standardUserDefaults] boolForKey:kNNFirstLaunchKey] && [SWAPIEnabledWorker isAPIEnabled]) {
         [self setObject:@NO forKey:kNNFirstLaunchKey];
         dispatch_async(dispatch_get_main_queue(), ^{
