@@ -70,11 +70,6 @@
 
 #pragma mark SWWindow
 
-- (CGWindowID)windowID;
-{
-    return (CGWindowID)[[self.windowDescription objectForKey:(__bridge NSString *)kCGWindowNumber] unsignedLongValue];
-}
-
 - (NSRect)frame;
 {
     CGRect result = {{},{}};
@@ -119,6 +114,11 @@
             return accumulator;
         }
     }];
+}
+
+- (CGWindowID)windowID;
+{
+    return (CGWindowID)[[self.windowDescription objectForKey:(__bridge NSString *)kCGWindowNumber] unsignedLongValue];
 }
 
 - (BOOL)isRelatedToLowerWindow:(SWWindow *)window;

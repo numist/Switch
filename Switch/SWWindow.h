@@ -25,14 +25,14 @@ typedef NSPoint NNVec2;
 
 + (instancetype)windowWithDescription:(NSDictionary *)description;
 
-@property (nonatomic, assign, readonly) CGWindowID windowID;
 @property (nonatomic, strong, readonly) SWApplication *application;
-@property (nonatomic, assign, readonly) NSRect frame;
-- (CGRect)cartesianFrame;
-@property (nonatomic, strong, readonly) NSString *name;
 @property (atomic, copy, readonly) NSDictionary *windowDescription;
 
+- (NSRect)frame;
+- (CGRect)cartesianFrame;
+- (NSString *)name;
 - (NSScreen *)screen;
+- (CGWindowID)windowID;
 
 - (BOOL)isRelatedToLowerWindow:(SWWindow *)window;
 - (NNVec2)offsetOfCenterToCenterOfWindow:(SWWindow *)window;

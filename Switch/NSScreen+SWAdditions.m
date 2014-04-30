@@ -14,6 +14,7 @@
 
 #import "NSScreen+SWAdditions.h"
 
+
 @implementation NSScreen (SWAdditions)
 
 + (CGFloat)sw_totalScreenHeight;

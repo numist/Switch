@@ -323,9 +323,7 @@ static int kScrollThreshold = 50;
     // A nil update means clean up, we're shutting down until the next invocation.
     if (!windowGroups) {
         self.windowGroups = nil;
-        for (SWCoreWindowController *windowController in self.windowControllersByFrame.allValues) {
-            windowController.windowGroups = nil;
-        }
+        self.windowControllerDispatcher.windowGroups = nil;
         self.windowListLoaded = NO;
         return;
     }

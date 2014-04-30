@@ -14,6 +14,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+
 @interface NSScreen (SWAdditions)
 
 + (CGFloat)sw_totalScreenHeight;
