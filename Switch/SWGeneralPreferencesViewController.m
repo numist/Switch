@@ -1,5 +1,5 @@
 //
-//  SWPreferencesWindowController.m
+//  SWGeneralPreferencesViewController.m
 //  Switch
 //
 //  Created by Scott Perry on 10/10/13.
@@ -12,12 +12,22 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "SWPreferencesWindowController.h"
+#import "SWGeneralPreferencesViewController.h"
 
 #import <Sparkle/Sparkle.h>
 
 
-@interface SWPreferencesWindowController ()
+@interface SWGeneralPreferencesViewController ()
+
+@property (nonatomic, weak) IBOutlet NSTextFieldCell *currentVersionCell;
+@property (nonatomic, weak) IBOutlet NSButton *autoLaunchEnabledBox;
+
+- (IBAction)autoLaunchChanged:(NSButton *)sender;
+- (IBAction)autoUpdatesChanged:(NSButton *)sender;
+- (IBAction)checkForUpdatesPressed:(NSButton *)sender;
+- (IBAction)preReleaseUpdatesChanged:(NSButton *)sender;
+- (IBAction)changelogPressed:(NSButton *)sender;
+- (IBAction)quitPressed:(NSButton *)sender;
 
 @property (nonatomic, weak) IBOutlet NSButtonCell *automaticUpdateCell;
 @property (nonatomic, weak) IBOutlet NSButtonCell *prereleaseUpdatesCell;
@@ -25,14 +35,12 @@
 @end
 
 
-@implementation SWPreferencesWindowController
+@implementation SWGeneralPreferencesViewController
 
-#pragma mark NSWindowController
+#pragma mark NSViewController
 
-- (void)windowDidLoad
+- (void)awakeFromNib;
 {
-    [super windowDidLoad];
-    
     NSTextFieldCell *currentVersionCell = self.currentVersionCell;
     currentVersionCell.title = [NSString stringWithFormat:@"Currently using version %@", [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"]];
     
@@ -43,6 +51,33 @@
     buttonCell.enabled = NO;
     buttonCell = self.prereleaseUpdatesCell;
     buttonCell.enabled = NO;
+}
+
+#pragma mark MASPreferencesViewController
+
+- (NSString *)identifier
+{
+    return NSStringFromClass([self class]);
+}
+
+- (NSImage *)toolbarItemImage
+{
+    return [NSImage imageNamed:NSImageNamePreferencesGeneral];
+}
+
+- (NSString *)toolbarItemLabel
+{
+    return NSLocalizedString(@"General", @"Toolbar item name for the General preference pane");
+}
+
+- (BOOL)hasResizableWidth;
+{
+    return NO;
+}
+
+- (BOOL)hasResizableHeight;
+{
+    return NO;
 }
 
 #pragma mark IBAction

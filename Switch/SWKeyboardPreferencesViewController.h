@@ -1,9 +1,9 @@
 //
-//  SWPreferencesWindowController.h
+//  SWKeyboardPreferencesViewController.h
 //  Switch
 //
-//  Created by Scott Perry on 10/10/13.
-//  Copyright © 2013 Scott Perry.
+//  Created by Scott Perry on 04/28/14.
+//  Copyright © 2014 Scott Perry.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 //
@@ -12,19 +12,9 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <MASPreferencesViewController.h>
 
 
-@interface SWPreferencesWindowController : NSWindowController
-
-@property (nonatomic, weak) IBOutlet NSTextFieldCell *currentVersionCell;
-@property (nonatomic, weak) IBOutlet NSButton *autoLaunchEnabledBox;
-
-- (IBAction)autoLaunchChanged:(NSButton *)sender;
-- (IBAction)autoUpdatesChanged:(NSButton *)sender;
-- (IBAction)checkForUpdatesPressed:(NSButton *)sender;
-- (IBAction)preReleaseUpdatesChanged:(NSButton *)sender;
-- (IBAction)changelogPressed:(NSButton *)sender;
-- (IBAction)quitPressed:(NSButton *)sender;
+@interface SWKeyboardPreferencesViewController : NSViewController <MASPreferencesViewController>
 
 @end
