@@ -305,10 +305,15 @@ static int kScrollThreshold = 50;
     }
     
     for (SWWindowGroup *windowGroup in self.windowGroups) {
-        CGRect unboxedScreenFrame = [SWPreferencesService sharedService].multimonInterface
-                                  ? [[windowGroup screen] sw_absoluteCartesianFrame]
-                                  : [[NSScreen mainScreen] sw_absoluteCartesianFrame];
+        CGRect unboxedScreenFrame = [[windowGroup screen] sw_absoluteCartesianFrame];
         NSValue *screenFrame = [NSValue valueWithRect:unboxedScreenFrame];
+        
+        // If there is no window controller that owns that screen, assign the group to the main screen.
+        if (![windowsPerScreen objectForKey:screenFrame]) {
+            screenFrame = [NSValue valueWithRect:[[NSScreen mainScreen] sw_absoluteCartesianFrame]];
+            Check([windowsPerScreen objectForKey:screenFrame]);
+        }
+        
         [windowsPerScreen[screenFrame] addObject:windowGroup];
     }
     
