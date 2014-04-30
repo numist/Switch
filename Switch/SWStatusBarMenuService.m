@@ -18,7 +18,7 @@
 #import "SWPreferencesService.h"
 
 
-@interface SWStatusBarMenuService () <NSMenuDelegate, SWPreferencesServiceDelegate>
+@interface SWStatusBarMenuService () <NSMenuDelegate>
 
 @property (nonatomic, strong) NSStatusItem *statusItem;
 @property (nonatomic, strong) NSSet *debugItems;
@@ -99,26 +99,6 @@
 + (NNServiceType)serviceType;
 {
     return NNServiceTypePersistent;
-}
-
-- (void)startService;
-{
-    [super startService];
-
-    [[NNServiceManager sharedManager] addSubscriber:self forService:[SWPreferencesService class]];
-}
-- (void)stopService;
-{
-    [[NNServiceManager sharedManager] removeSubscriber:self forService:[SWPreferencesService class]];
-    
-    [super stopService];
-}
-
-#pragma mark SWPreferencesServiceDelegate
-
-- (oneway void)preferencesService:(SWPreferencesService *)service didSetValue:(id)value forKey:(NSString *)key;
-{
-    // See: Issue #46
 }
 
 #pragma mark SWStatusBarMenuService

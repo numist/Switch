@@ -198,7 +198,11 @@ static int kScrollThreshold = 50;
         
         NSMutableDictionary *windowControllers = [NSMutableDictionary new];
         NNMultiDispatchManager *dispatcher = [[NNMultiDispatchManager alloc] initWithProtocol:@protocol(SWCoreWindowControllerAPI)];
-        for (NSScreen *screen in [NSScreen screens]) {
+        NSArray *screens = [SWPreferencesService sharedService].multimonInterface
+                         ? [NSScreen screens]
+                         : @[[NSScreen mainScreen]];
+
+        for (NSScreen *screen in screens) {
             SWCoreWindowController *windowController = [[SWCoreWindowController alloc] initWithScreen:screen];
             windowController.delegate = self;
             windowControllers[[NSValue valueWithRect:[screen sw_absoluteCartesianFrame]]] = windowController;
@@ -295,13 +299,16 @@ static int kScrollThreshold = 50;
 
 - (void)_updateWindowControllerWindowGroups;
 {
-    NSMutableDictionary *windowsPerScreen = [NSMutableDictionary dictionaryWithCapacity:self.windowControllersByFrame.count];
+    NSMutableDictionary *windowsPerScreen = [NSMutableDictionary new];
     for (NSValue *frame in self.windowControllersByFrame.allKeys) {
         windowsPerScreen[frame] = [NSMutableOrderedSet new];
     }
     
     for (SWWindowGroup *windowGroup in self.windowGroups) {
-        NSValue *screenFrame = [NSValue valueWithRect:[[windowGroup screen] sw_absoluteCartesianFrame]];
+        CGRect unboxedScreenFrame = [SWPreferencesService sharedService].multimonInterface
+                                  ? [[windowGroup screen] sw_absoluteCartesianFrame]
+                                  : [[NSScreen mainScreen] sw_absoluteCartesianFrame];
+        NSValue *screenFrame = [NSValue valueWithRect:unboxedScreenFrame];
         [windowsPerScreen[screenFrame] addObject:windowGroup];
     }
     
