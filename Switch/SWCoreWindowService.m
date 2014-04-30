@@ -192,7 +192,6 @@ static int kScrollThreshold = 50;
     self->_interfaceVisible = interfaceVisible;
     
     SWEventTap *eventTap = [SWEventTap sharedService];
-
     if (interfaceVisible) {
         // Assign each window to a screen based on largest frame overlap.
         Check(!self.windowControllersByFrame);
