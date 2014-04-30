@@ -28,7 +28,7 @@ typedef NSPoint NNVec2;
 @property (nonatomic, assign, readonly) CGWindowID windowID;
 @property (nonatomic, strong, readonly) SWApplication *application;
 @property (nonatomic, assign, readonly) NSRect frame;
-- (CGRect)flippedFrame;
+- (CGRect)cartesianFrame;
 @property (nonatomic, strong, readonly) NSString *name;
 @property (atomic, copy, readonly) NSDictionary *windowDescription;
 

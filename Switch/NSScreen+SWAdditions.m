@@ -16,7 +16,20 @@
 
 @implementation NSScreen (SWAdditions)
 
-- (CGRect)nn_absoluteFrame;
++ (CGFloat)sw_totalScreenHeight;
+{
+    return [[[NSScreen screens] nn_reduce:^id(id accumulator, id item) {
+        if (!accumulator) { accumulator = @(0.0); }
+        CGRect screenFrame = [item sw_absoluteCartesianFrame];
+        CGFloat screenHeight = screenFrame.origin.y + screenFrame.size.height;
+        if ([accumulator floatValue] < screenFrame.origin.y + screenFrame.size.height) {
+            accumulator = @(screenHeight);
+        }
+        return accumulator;
+    }] floatValue];
+}
+
+- (CGRect)sw_absoluteCartesianFrame;
 {
     CGPoint offset = CGPointZero;
     for (NSScreen *screen in [NSScreen screens]) {
@@ -34,19 +47,10 @@
     return result;
 }
 
-- (CGRect)nn_flippedAbsoluteFrame;
+- (CGRect)sw_flippedAbsoluteFrame;
 {
-    CGFloat totalScreenHeight = [[[NSScreen screens] nn_reduce:^id(id accumulator, id item) {
-        if (!accumulator) { accumulator = @(0.0); }
-        CGRect screenFrame = [item nn_absoluteFrame];
-        CGFloat screenHeight = screenFrame.origin.y + screenFrame.size.height;
-        if ([accumulator floatValue] < screenFrame.origin.y + screenFrame.size.height) {
-            accumulator = @(screenHeight);
-        }
-        return accumulator;
-    }] floatValue];
-
-    CGRect result = [self nn_absoluteFrame];
+    CGFloat totalScreenHeight = [self class].sw_totalScreenHeight;
+    CGRect result = [self sw_absoluteCartesianFrame];
     result.origin.y = totalScreenHeight - (result.origin.y + result.size.height);
     return result;
 }

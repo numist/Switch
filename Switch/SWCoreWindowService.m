@@ -200,9 +200,9 @@ static int kScrollThreshold = 50;
         NSMutableDictionary *windowControllers = [NSMutableDictionary new];
         NNMultiDispatchManager *dispatcher = [[NNMultiDispatchManager alloc] initWithProtocol:@protocol(SWCoreWindowControllerAPI)];
         for (NSScreen *screen in [NSScreen screens]) {
-            SWCoreWindowController *windowController = [[SWCoreWindowController alloc] initWithRect:screen.nn_flippedAbsoluteFrame];
+            SWCoreWindowController *windowController = [[SWCoreWindowController alloc] initWithRect:screen.sw_flippedAbsoluteFrame];
             windowController.delegate = self;
-            windowControllers[[NSValue valueWithRect:[screen nn_absoluteFrame]]] = windowController;
+            windowControllers[[NSValue valueWithRect:[screen sw_absoluteCartesianFrame]]] = windowController;
             [dispatcher addObserver:windowController];
         }
         self.windowControllersByFrame = windowControllers;
@@ -299,7 +299,7 @@ static int kScrollThreshold = 50;
     }
     
     for (SWWindowGroup *windowGroup in self.windowGroups) {
-        NSValue *screenFrame = [NSValue valueWithRect:[[windowGroup screen] nn_absoluteFrame]];
+        NSValue *screenFrame = [NSValue valueWithRect:[[windowGroup screen] sw_absoluteCartesianFrame]];
         [windowsPerScreen[screenFrame] addObject:windowGroup];
     }
     

@@ -83,18 +83,10 @@
     return result;
 }
 
-- (CGRect)flippedFrame;
+- (CGRect)cartesianFrame;
 {
+    CGFloat totalScreenHeight = NSScreen.sw_totalScreenHeight;
     CGRect flippedFrame = self.frame;
-    CGFloat totalScreenHeight = [[[NSScreen screens] nn_reduce:^id(id accumulator, id item) {
-        if (!accumulator) { accumulator = @(0.0); }
-        CGRect screenFrame = [item nn_absoluteFrame];
-        CGFloat screenHeight = screenFrame.origin.y + screenFrame.size.height;
-        if ([accumulator floatValue] < screenFrame.origin.y + screenFrame.size.height) {
-            accumulator = @(screenHeight);
-        }
-        return accumulator;
-    }] floatValue];
     flippedFrame.origin.y = totalScreenHeight - (flippedFrame.origin.y + flippedFrame.size.height);
     return flippedFrame;
 }
@@ -106,18 +98,19 @@
 
 - (NSScreen *)screen;
 {
-    CGRect flippedFrame = self.flippedFrame;
+    CGRect cartesianFrame = self.cartesianFrame;
+    
     return [[NSScreen screens] nn_reduce:^id(id accumulator, id item) {
         if (!accumulator) {
             accumulator = [NSScreen mainScreen];
         }
         
-        CGRect itemFrame = [item nn_absoluteFrame];
-        CGRect newIntersection = CGRectIntersection(itemFrame, flippedFrame);
+        CGRect itemFrame = [item sw_absoluteCartesianFrame];
+        CGRect newIntersection = CGRectIntersection(itemFrame, cartesianFrame);
         CGFloat newOverlapArea = newIntersection.size.width * newIntersection.size.height;
         
-        CGRect accumulatorFrame = [accumulator nn_absoluteFrame];
-        CGRect oldIntersection = CGRectIntersection(accumulatorFrame, flippedFrame);
+        CGRect accumulatorFrame = [accumulator sw_absoluteCartesianFrame];
+        CGRect oldIntersection = CGRectIntersection(accumulatorFrame, cartesianFrame);
         CGFloat oldOverlapArea = oldIntersection.size.width * oldIntersection.size.height;
         
         if (newOverlapArea > oldOverlapArea) {
