@@ -44,6 +44,6 @@
 @property (nonatomic, strong) NSOrderedSet *windowGroups;
 @property (nonatomic, weak) id<SWCoreWindowControllerDelegate> delegate;
 
-- (id)initWithRect:(CGRect)frame;
+- (id)initWithScreen:(NSScreen *)screen;
 
 @end

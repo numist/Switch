@@ -199,10 +199,13 @@ static int kScrollThreshold = 50;
         NSMutableDictionary *windowControllers = [NSMutableDictionary new];
         NNMultiDispatchManager *dispatcher = [[NNMultiDispatchManager alloc] initWithProtocol:@protocol(SWCoreWindowControllerAPI)];
         for (NSScreen *screen in [NSScreen screens]) {
-            SWCoreWindowController *windowController = [[SWCoreWindowController alloc] initWithRect:screen.sw_flippedAbsoluteFrame];
+            SWCoreWindowController *windowController = [[SWCoreWindowController alloc] initWithScreen:screen];
             windowController.delegate = self;
             windowControllers[[NSValue valueWithRect:[screen sw_absoluteCartesianFrame]]] = windowController;
             [dispatcher addObserver:windowController];
+            
+            // Force-update the window's frame on the correct screen—it gets incorrectly updated (by what?) between -loadWIndow and here.
+            [windowController.window setFrame:screen.frame display:YES];
         }
         self.windowControllersByFrame = windowControllers;
         self.windowControllerDispatcher = (SWCoreWindowController *)dispatcher;

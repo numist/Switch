@@ -175,9 +175,6 @@
     self.selectedIndex = index;
     
     if (self.selectedIndex < self.numberOfCells) {
-        if (![self.hud.subviews containsObject:self.selectionBox]) {
-            [self.hud addSubview:self.selectionBox positioned:NSWindowBelow relativeTo:nil];
-        }
         [self _constraintsForSelectionBoxNeedUpdate];
     } else if ([self.hud.subviews containsObject:self.selectionBox]) {
         [self.selectionBox removeFromSuperview];
@@ -378,6 +375,11 @@
 
     if (self.selectedIndex < self.numberOfCells) {
         Check(self.selectionBox);
+        
+        // Selection box (re)insertion into the view hierarchy happens during layout-time to prevent the box appearing to jump between its old location (pre-deselection) and its new location.
+        if (![self.hud.subviews containsObject:self.selectionBox]) {
+            [self.hud addSubview:self.selectionBox positioned:NSWindowBelow relativeTo:nil];
+        }
 
         NSView *selectedView = self.cells[self.selectedIndex];
 

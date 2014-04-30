@@ -48,12 +48,4 @@
     return result;
 }
 
-- (CGRect)sw_flippedAbsoluteFrame;
-{
-    CGFloat totalScreenHeight = [self class].sw_totalScreenHeight;
-    CGRect result = [self sw_absoluteCartesianFrame];
-    result.origin.y = totalScreenHeight - (result.origin.y + result.size.height);
-    return result;
-}
-
 @end
