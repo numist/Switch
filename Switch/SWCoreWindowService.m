@@ -307,6 +307,8 @@ static int kScrollThreshold = 50;
 
 - (void)_updateWindowControllerWindowGroups;
 {
+    if (!self.windowControllersByFrame.count) { return; }
+    
     NSMutableDictionary *windowsPerScreen = [NSMutableDictionary new];
     for (NSValue *frame in self.windowControllersByFrame.allKeys) {
         windowsPerScreen[frame] = [NSMutableOrderedSet new];
