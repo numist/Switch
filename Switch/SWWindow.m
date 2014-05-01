@@ -100,11 +100,11 @@
             accumulator = [NSScreen mainScreen];
         }
         
-        CGRect itemFrame = [item sw_absoluteCartesianFrame];
+        CGRect itemFrame = [item sw_absoluteFrame];
         CGRect newIntersection = CGRectIntersection(itemFrame, cartesianFrame);
         CGFloat newOverlapArea = newIntersection.size.width * newIntersection.size.height;
         
-        CGRect accumulatorFrame = [accumulator sw_absoluteCartesianFrame];
+        CGRect accumulatorFrame = [accumulator sw_absoluteFrame];
         CGRect oldIntersection = CGRectIntersection(accumulatorFrame, cartesianFrame);
         CGFloat oldOverlapArea = oldIntersection.size.width * oldIntersection.size.height;
         

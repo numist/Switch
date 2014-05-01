@@ -19,6 +19,6 @@
 
 + (CGFloat)sw_totalScreenHeight;
 
-- (CGRect)sw_absoluteCartesianFrame;
+- (CGRect)sw_absoluteFrame;
 
 @end

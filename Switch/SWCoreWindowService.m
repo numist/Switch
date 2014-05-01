@@ -204,7 +204,7 @@ static int kScrollThreshold = 50;
             for (NSScreen *screen in screens) {
                 SWCoreWindowController *windowController = [[SWCoreWindowController alloc] initWithScreen:screen];
                 windowController.delegate = self;
-                windowControllers[[NSValue valueWithRect:[screen sw_absoluteCartesianFrame]]] = windowController;
+                windowControllers[[NSValue valueWithRect:[screen sw_absoluteFrame]]] = windowController;
                 
                 // Force-update the window's frame on the correct screen—it gets incorrectly updated (by what?) between -loadWIndow and here.
                 [windowController.window setFrame:screen.frame display:YES];
@@ -313,12 +313,12 @@ static int kScrollThreshold = 50;
     }
     
     for (SWWindowGroup *windowGroup in self.windowGroups) {
-        CGRect unboxedScreenFrame = [[windowGroup screen] sw_absoluteCartesianFrame];
+        CGRect unboxedScreenFrame = [[windowGroup screen] sw_absoluteFrame];
         NSValue *screenFrame = [NSValue valueWithRect:unboxedScreenFrame];
         
         // If there is no window controller that owns that screen, assign the group to the main screen.
         if (![windowsPerScreen objectForKey:screenFrame]) {
-            screenFrame = [NSValue valueWithRect:[[NSScreen mainScreen] sw_absoluteCartesianFrame]];
+            screenFrame = [NSValue valueWithRect:[[NSScreen mainScreen] sw_absoluteFrame]];
             Check([windowsPerScreen objectForKey:screenFrame]);
         }
         
