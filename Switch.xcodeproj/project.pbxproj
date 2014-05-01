@@ -15,6 +15,7 @@
 		BC1B45F3190F925900246529 /* NSScreen+SWAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = BC1B45F2190F925900246529 /* NSScreen+SWAdditions.m */; };
 		BC1B46571911A77F00246529 /* SWAdvancedPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC1B46551911A77F00246529 /* SWAdvancedPreferencesViewController.m */; };
 		BC1B46581911A77F00246529 /* SWAdvancedPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BC1B46561911A77F00246529 /* SWAdvancedPreferencesViewController.xib */; };
+		BC1B46401911A56100246529 /* SWIsolatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC1B463F1911A56100246529 /* SWIsolatorTests.m */; };
 		BC275C1218CFD3C900761247 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC275C1118CFD3C900761247 /* Foundation.framework */; };
 		BC275C1518CFD3CA00761247 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BC275C1418CFD3CA00761247 /* main.m */; };
 		BC275C2918CFD55000761247 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCA734E316DAC53F00CD4C74 /* AppKit.framework */; };
@@ -292,6 +293,7 @@
 		BC1B46541911A77F00246529 /* SWAdvancedPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWAdvancedPreferencesViewController.h; sourceTree = "<group>"; };
 		BC1B46551911A77F00246529 /* SWAdvancedPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWAdvancedPreferencesViewController.m; sourceTree = "<group>"; };
 		BC1B46561911A77F00246529 /* SWAdvancedPreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SWAdvancedPreferencesViewController.xib; sourceTree = "<group>"; };
+		BC1B463F1911A56100246529 /* SWIsolatorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWIsolatorTests.m; sourceTree = "<group>"; };
 		BC275C1018CFD3C900761247 /* relaunch */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = relaunch; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC275C1118CFD3C900761247 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BC275C1418CFD3CA00761247 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -577,6 +579,7 @@
 				BC8E07AB188C890400C208D4 /* SWChromeTests.m */,
 				BCA5E9AC187A4020004D70EE /* SWDashTests.m */,
 				BCCE8CF818093037006B0059 /* SWGithubTests.m */,
+				BC1B463F1911A56100246529 /* SWIsolatorTests.m */,
 				BC3C78C3188262EB0021C244 /* SWMacVimTests.m */,
 				BCCE8CF618092CDF006B0059 /* SWPowerboxTests.m */,
 				BCCE8CF21809266A006B0059 /* SWSafariTests.m */,
@@ -1203,6 +1206,7 @@
 				BCA5E9AA187A3CCA004D70EE /* SWWindowListServiceTests.m in Sources */,
 				BCA5E9B8187BB06F004D70EE /* SWApplication+SWTestingOverloads.m in Sources */,
 				BC8E07AC188C890400C208D4 /* SWChromeTests.m in Sources */,
+				BC1B46401911A56100246529 /* SWIsolatorTests.m in Sources */,
 				BCCE8CEB18091A4F006B0059 /* NSWindow+NNScreenCapture.m in Sources */,
 				BCCE8CF51809297B006B0059 /* SWSheetTests.m in Sources */,
 				BCA8AD5B18AC5E3F0059F253 /* SWWordTests.m in Sources */,

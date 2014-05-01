@@ -1,9 +1,9 @@
 //
-//  SWGithubTests.m
+//  SWIsolatorTests.m
 //  Switch
 //
-//  Created by Scott Perry on 10/11/13.
-//  Copyright © 2013 Scott Perry.
+//  Created by Scott Perry on 04/30/14.
+//  Copyright © 2014 Scott Perry.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 //
@@ -15,40 +15,38 @@
 #import "SWWindowListServiceTests.h"
 
 
-@interface SWGithubTests : SWWindowListServiceTests
+@interface SWIsolatorTests : SWWindowListServiceTests
 
 @end
 
 
-@implementation SWGithubTests
+@implementation SWIsolatorTests
 
-// This never had an Issue on Github, but it was a problem. Fixed in the Github app at the end of 2013 (thanks! <3), test kept for compatibility.
-- (void)testUnnamedGithubWindow;
+- (void)testIsolatorShieldFiltering;
 {
     NSDictionary *windowDescription = @{
-        NNWindowAlpha : @1,
-        NNWindowBounds : DICT_FROM_RECT(((CGRect){
-            .size.height = 742,
-            .size.width = 1311,
-            .origin.x = 28,
-            .origin.y = 22
-        })),
-        NNWindowIsOnscreen : @1,
         NNWindowLayer : @0,
-        NNWindowMemoryUsage : @4804660,
-        NNWindowNumber : @93247,
-        NNWindowOwnerName : @"GitHub",
-        NNWindowOwnerPID : @23598,
+        NNWindowName : @"",
+        NNWindowMemoryUsage : @5186812,
+        NNWindowIsOnscreen : @1,
         NNWindowSharingState : @1,
+        NNWindowOwnerPID : @428,
+        NNWindowNumber : @121,
+        NNWindowOwnerName : @"Isolator",
         NNWindowStoreType : @2,
+        NNWindowBounds : @{
+            @"Height" : @900,
+            @"Width" : @1440,
+            @"X" : @0,
+            @"Y" : @0,
+        },
+        NNWindowAlpha : @0.731156,
     };
     NSArray *infoList = @[windowDescription];
     
     [self updateListServiceWithInfoList:infoList];
     
-    XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))1, @"");
-    XCTAssertEqual(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).windows.count, infoList.count, @"");
-    XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, windowDescription, @"");
+    XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))0, @"");
 }
 
 @end
