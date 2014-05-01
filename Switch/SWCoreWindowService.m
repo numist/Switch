@@ -193,26 +193,34 @@ static int kScrollThreshold = 50;
     
     SWEventTap *eventTap = [SWEventTap sharedService];
     if (interfaceVisible) {
-        // Assign each window to a screen based on largest frame overlap.
         Check(!self.windowControllersByFrame);
         
-        NSMutableDictionary *windowControllers = [NSMutableDictionary new];
-        NNMultiDispatchManager *dispatcher = [[NNMultiDispatchManager alloc] initWithProtocol:@protocol(SWCoreWindowControllerAPI)];
-        NSArray *screens = [SWPreferencesService sharedService].multimonInterface
-                         ? [NSScreen screens]
-                         : @[[NSScreen mainScreen]];
-
-        for (NSScreen *screen in screens) {
-            SWCoreWindowController *windowController = [[SWCoreWindowController alloc] initWithScreen:screen];
-            windowController.delegate = self;
-            windowControllers[[NSValue valueWithRect:[screen sw_absoluteCartesianFrame]]] = windowController;
-            [dispatcher addObserver:windowController];
+        self.windowControllersByFrame = ^{
+            NSMutableDictionary *windowControllers = [NSMutableDictionary new];
+            NSArray *screens = [SWPreferencesService sharedService].multimonInterface
+            ? [NSScreen screens]
+            : @[[NSScreen mainScreen]];
             
-            // Force-update the window's frame on the correct screen—it gets incorrectly updated (by what?) between -loadWIndow and here.
-            [windowController.window setFrame:screen.frame display:YES];
-        }
-        self.windowControllersByFrame = windowControllers;
-        self.windowControllerDispatcher = (SWCoreWindowController *)dispatcher;
+            for (NSScreen *screen in screens) {
+                SWCoreWindowController *windowController = [[SWCoreWindowController alloc] initWithScreen:screen];
+                windowController.delegate = self;
+                windowControllers[[NSValue valueWithRect:[screen sw_absoluteCartesianFrame]]] = windowController;
+                
+                // Force-update the window's frame on the correct screen—it gets incorrectly updated (by what?) between -loadWIndow and here.
+                [windowController.window setFrame:screen.frame display:YES];
+            }
+            return windowControllers;
+        }();
+
+        self.windowControllerDispatcher = (SWCoreWindowController *)^{
+            NNMultiDispatchManager *dispatcher = [[NNMultiDispatchManager alloc] initWithProtocol:@protocol(SWCoreWindowControllerAPI)];
+            
+            for (SWCoreWindowController *windowController in self.windowControllersByFrame.allValues) {
+                [dispatcher addObserver:windowController];
+            }
+            
+            return dispatcher;
+        }();
         
         [self _updateWindowControllerWindowGroups];
         [self _updateSelection];
