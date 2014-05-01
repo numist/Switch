@@ -18,11 +18,12 @@
 #import <MASPreferencesWindowController.h>
 
 #import "SWAPIEnabledWorker.h"
+#import "SWAdvancedPreferencesViewController.h"
 #import "SWGeneralPreferencesViewController.h"
 #import "SWKeyboardPreferencesViewController.h"
 
-
-static NSString *kNNFirstLaunchKey = @"firstLaunch";
+static NSString *kSWFirstLaunchKey = @"firstLaunch";
+static NSString *kSWMultimonInterfaceKey = @"multimonInterface";
 
 
 @interface SWPreferencesService ()
@@ -41,9 +42,15 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
     return NNServiceTypePersistent;
 }
 
-+ (Protocol *)subscriberProtocol;
+- (instancetype)init;
 {
-    return @protocol(SWPreferencesServiceDelegate);
+    if (!(self = [super init])) { return nil; }
+    
+    [[NSUserDefaults standardUserDefaults] registerDefaults:self._defaultValues];
+
+    _multimonInterface = [[self _objectForKey:kSWMultimonInterfaceKey] boolValue];
+    
+    return self;
 }
 
 - (void)startService;
@@ -51,8 +58,7 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
     [super startService];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults registerDefaults:self._defaultValues];
-    
+
 #   if DEBUG
     {
         BOOL resetDefaults = NO;
@@ -65,15 +71,19 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
     }
 #   endif
     
-    NSViewController *generalViewController = [[SWGeneralPreferencesViewController alloc] initWithNibName:@"SWGeneralPreferencesViewController" bundle:[NSBundle mainBundle]];
-    NSViewController *keyboardViewController = [[SWKeyboardPreferencesViewController alloc] initWithNibName:@"SWKeyboardPreferencesViewController" bundle:[NSBundle mainBundle]];
-    NSArray *controllers = @[generalViewController, keyboardViewController];
+    NSViewController *(^prefPaneForClass)(Class) = ^(Class class){
+        return [[class alloc] initWithNibName:NSStringFromClass(class) bundle:[NSBundle mainBundle]];
+    };
+    NSViewController *generalViewController = prefPaneForClass([SWGeneralPreferencesViewController class]);
+    NSViewController *keyboardViewController = prefPaneForClass([SWKeyboardPreferencesViewController class]);
+    NSViewController *advancedViewController = prefPaneForClass([SWAdvancedPreferencesViewController class]);
+    NSArray *controllers = @[generalViewController, keyboardViewController, advancedViewController];
     NSString *title = NSLocalizedString(@"Preferences", @"Common title for Preferences window");
     
     self.preferencesWindowController = [[MASPreferencesWindowController alloc] initWithViewControllers:controllers title:title];
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:kNNFirstLaunchKey] && [SWAPIEnabledWorker isAPIEnabled]) {
-        [self setObject:@NO forKey:kNNFirstLaunchKey];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:kSWFirstLaunchKey] && [SWAPIEnabledWorker isAPIEnabled]) {
+        [self _setObject:@NO forKey:kSWFirstLaunchKey];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self showPreferencesWindow:self];
         });
@@ -84,6 +94,12 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
 
 #pragma mark SWPreferencesService
 
+- (void)setMultimonInterface:(BOOL)multimonInterface;
+{
+    _multimonInterface = multimonInterface;
+    [self _setObject:@(multimonInterface) forKey:kSWMultimonInterfaceKey];
+}
+
 - (void)showPreferencesWindow:(id)sender;
 {
     [self.preferencesWindowController showWindow:sender];
@@ -91,13 +107,12 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
     [self.preferencesWindowController.window makeKeyAndOrderFront:sender];
 }
 
-- (void)setObject:(id)object forKey:(NSString *)key;
+- (void)_setObject:(id)object forKey:(NSString *)key;
 {
     [[NSUserDefaults standardUserDefaults] setObject:object forKey:key];
-    [(id<SWPreferencesServiceDelegate>)self.subscriberDispatcher preferencesService:self didSetValue:object forKey:key];
 }
 
-- (id)objectForKey:(NSString *)key;
+- (id)_objectForKey:(NSString *)key;
 {
     return [[NSUserDefaults standardUserDefaults] objectForKey:key];
 }
@@ -110,7 +125,8 @@ static NSString *kNNFirstLaunchKey = @"firstLaunch";
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _defaultValues = @{
-            kNNFirstLaunchKey : @YES,
+            kSWFirstLaunchKey : @YES,
+            kSWMultimonInterfaceKey : @YES,
         };
     });
     return _defaultValues;

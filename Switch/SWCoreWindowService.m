@@ -14,6 +14,7 @@
 
 #import "SWCoreWindowService.h"
 
+#import "NSScreen+SWAdditions.h"
 #import "SWAccessibilityService.h"
 #import "SWApplication.h"
 #import "SWCoreWindowController.h"
@@ -49,7 +50,8 @@ static int kScrollThreshold = 50;
 @property (nonatomic, strong) NSDate *invocationTime;
 
 #pragma mark UI
-@property (nonatomic, strong) SWCoreWindowController *coreWindowController;
+@property (nonatomic, strong) NSDictionary *windowControllersByFrame;
+@property (nonatomic, strong) SWCoreWindowController *windowControllerDispatcher;
 
 @end
 
@@ -191,14 +193,43 @@ static int kScrollThreshold = 50;
     
     SWEventTap *eventTap = [SWEventTap sharedService];
     if (interfaceVisible) {
-        Check(!self.coreWindowController);
-        self.coreWindowController = [[SWCoreWindowController alloc] initWithWindow:nil];
-        self.coreWindowController.delegate = self;
-        self.coreWindowController.windowGroups = self.windowGroups;
+        Check(!self.windowControllersByFrame);
+        
+        self.windowControllersByFrame = ^{
+            NSMutableDictionary *windowControllers = [NSMutableDictionary new];
+            NSArray *screens = [SWPreferencesService sharedService].multimonInterface
+            ? [NSScreen screens]
+            : @[[NSScreen mainScreen]];
+            
+            for (NSScreen *screen in screens) {
+                SWCoreWindowController *windowController = [[SWCoreWindowController alloc] initWithScreen:screen];
+                windowController.delegate = self;
+                windowControllers[[NSValue valueWithRect:[screen sw_absoluteFrame]]] = windowController;
+                
+                // Force-update the window's frame on the correct screen—it gets incorrectly updated (by what?) between -loadWIndow and here.
+                [windowController.window setFrame:screen.frame display:YES];
+            }
+            return windowControllers;
+        }();
+
+        self.windowControllerDispatcher = (SWCoreWindowController *)^{
+            NNMultiDispatchManager *dispatcher = [[NNMultiDispatchManager alloc] initWithProtocol:@protocol(SWCoreWindowControllerAPI)];
+            
+            for (SWCoreWindowController *windowController in self.windowControllersByFrame.allValues) {
+                [dispatcher addObserver:windowController];
+            }
+            
+            return dispatcher;
+        }();
+        
+        [self _updateWindowControllerWindowGroups];
         [self _updateSelection];
-        // layoutSubviewsIfNeeded isn't instant (apparently?), so let everything take effect before showing the window.
+        
+        // layoutSubviewsIfNeeded isn't instant due to Auto Layout magic, so let everything take effect before showing the window.
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.coreWindowController.window orderFront:self];
+            for (SWCoreWindowController *windowController in self.windowControllersByFrame.allValues) {
+                [windowController.window orderFront:self];
+            }
         });
         
         @weakify(self);
@@ -234,7 +265,8 @@ static int kScrollThreshold = 50;
         }];
     } else {
         [eventTap removeBlockForEventsWithType:kCGEventScrollWheel object:self];
-        self.coreWindowController = nil;
+        self.windowControllerDispatcher = nil;
+        self.windowControllersByFrame = nil;
     }
 }
 
@@ -273,9 +305,37 @@ static int kScrollThreshold = 50;
 
 #pragma mark - Private
 
+- (void)_updateWindowControllerWindowGroups;
+{
+    if (!self.windowControllersByFrame.count) { return; }
+    
+    NSMutableDictionary *windowsPerScreen = [NSMutableDictionary new];
+    for (NSValue *frame in self.windowControllersByFrame.allKeys) {
+        windowsPerScreen[frame] = [NSMutableOrderedSet new];
+    }
+    
+    for (SWWindowGroup *windowGroup in self.windowGroups) {
+        CGRect unboxedScreenFrame = [[windowGroup screen] sw_absoluteFrame];
+        NSValue *screenFrame = [NSValue valueWithRect:unboxedScreenFrame];
+        
+        // If there is no window controller that owns that screen, assign the group to the main screen.
+        if (![windowsPerScreen objectForKey:screenFrame]) {
+            screenFrame = [NSValue valueWithRect:[[NSScreen mainScreen] sw_absoluteFrame]];
+            Check([windowsPerScreen objectForKey:screenFrame]);
+        }
+        
+        [windowsPerScreen[screenFrame] addObject:windowGroup];
+    }
+    
+    for (NSValue *frame in windowsPerScreen.allKeys) {
+        SWCoreWindowController *windowController = self.windowControllersByFrame[frame];
+        windowController.windowGroups = windowsPerScreen[frame];
+    }
+}
+
 - (void)_updateSelection;
 {
-    [self.coreWindowController selectWindowGroup:self.selector.selectedWindowGroup];
+    [self.windowControllerDispatcher selectWindowGroup:self.selector.selectedWindowGroup];
 }
 
 - (void)_updateWindowGroups:(NSOrderedSet *)windowGroups;
@@ -287,13 +347,13 @@ static int kScrollThreshold = 50;
     // A nil update means clean up, we're shutting down until the next invocation.
     if (!windowGroups) {
         self.windowGroups = nil;
-        self.coreWindowController.windowGroups = nil;
+        self.windowControllerDispatcher.windowGroups = nil;
         self.windowListLoaded = NO;
         return;
     }
 
     self.windowGroups = windowGroups;
-    self.coreWindowController.windowGroups = windowGroups;
+    [self _updateWindowControllerWindowGroups];
     self.selector = [self.selector updateWithWindowGroups:windowGroups];
 
     if (!self.windowListLoaded) {
@@ -323,7 +383,7 @@ static int kScrollThreshold = 50;
         return;
     }
 
-    [self.coreWindowController disableWindowGroup:selectedWindowGroup];
+    [self.windowControllerDispatcher disableWindowGroup:selectedWindowGroup];
     
     [[SWAccessibilityService sharedService] raiseWindow:selectedWindowGroup.mainWindow completion:^(NSError *error) {
         // TODO: This does not always mean that the window has been raised, just that it was told to!
@@ -331,7 +391,7 @@ static int kScrollThreshold = 50;
             self.pendingSwitch = NO;
         }
 
-        [self.coreWindowController enableWindowGroup:selectedWindowGroup];
+        [self.windowControllerDispatcher enableWindowGroup:selectedWindowGroup];
     }];
 }
 
@@ -366,7 +426,7 @@ static int kScrollThreshold = 50;
     // If sending events to Switch itself, we have to use the main thread!
     dispatch_queue_t actionQueue = [selectedWindowGroup.application isCurrentApplication] ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 
-    [self.coreWindowController disableWindowGroup:selectedWindowGroup];
+    [self.windowControllerDispatcher disableWindowGroup:selectedWindowGroup];
 
     // Yo dawg, I herd you like async blocks…
     dispatch_async(actionQueue, ^{
@@ -376,7 +436,7 @@ static int kScrollThreshold = 50;
                     if (closeError) {
                         // We *should* re-raise selectedWindow, but if it didn't succeed at -close it will also probably fail to -raise.
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            [self.coreWindowController enableWindowGroup:selectedWindowGroup];
+                            [self.windowControllerDispatcher enableWindowGroup:selectedWindowGroup];
                         });
                     }
                 }];

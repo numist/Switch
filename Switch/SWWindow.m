@@ -18,6 +18,7 @@
 #import <Haxcessibility/Haxcessibility.h>
 #import <Haxcessibility/HAXElement+Protected.h>
 
+#import "NSScreen+SWAdditions.h"
 #import "SWApplication.h"
 
 
@@ -77,9 +78,42 @@
     return result;
 }
 
+- (CGRect)cartesianFrame;
+{
+    CGFloat totalScreenHeight = NSScreen.sw_totalScreenHeight;
+    CGRect flippedFrame = self.frame;
+    flippedFrame.origin.y = totalScreenHeight - (flippedFrame.origin.y + flippedFrame.size.height);
+    return flippedFrame;
+}
+
 - (NSString *)name;
 {
     return [self.windowDescription objectForKey:(__bridge NSString *)kCGWindowName];
+}
+
+- (NSScreen *)screen;
+{
+    CGRect cartesianFrame = self.cartesianFrame;
+    
+    return [[NSScreen screens] nn_reduce:^id(id accumulator, id item) {
+        if (!accumulator) {
+            accumulator = [NSScreen mainScreen];
+        }
+        
+        CGRect itemFrame = [item sw_absoluteFrame];
+        CGRect newIntersection = CGRectIntersection(itemFrame, cartesianFrame);
+        CGFloat newOverlapArea = newIntersection.size.width * newIntersection.size.height;
+        
+        CGRect accumulatorFrame = [accumulator sw_absoluteFrame];
+        CGRect oldIntersection = CGRectIntersection(accumulatorFrame, cartesianFrame);
+        CGFloat oldOverlapArea = oldIntersection.size.width * oldIntersection.size.height;
+        
+        if (newOverlapArea > oldOverlapArea) {
+            return item;
+        } else {
+            return accumulator;
+        }
+    }];
 }
 
 - (CGWindowID)windowID;

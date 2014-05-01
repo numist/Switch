@@ -18,19 +18,10 @@
 @class SWPreferencesService;
 
 
-@protocol SWPreferencesServiceDelegate <NSObject>
-
-@optional
-- (oneway void)preferencesService:(SWPreferencesService *)service didSetValue:(id)value forKey:(NSString *)key;
-
-@end
-
-
 @interface SWPreferencesService : NNService
 
-- (void)showPreferencesWindow:(id)sender;
+@property (nonatomic, assign, readwrite) BOOL multimonInterface;
 
-- (void)setObject:(id)object forKey:(NSString *)key;
-- (id)objectForKey:(NSString *)key;
+- (void)showPreferencesWindow:(id)sender;
 
 @end
