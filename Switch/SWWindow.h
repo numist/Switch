@@ -29,7 +29,7 @@ typedef NSPoint NNVec2;
 @property (atomic, copy, readonly) NSDictionary *windowDescription;
 
 - (NSRect)frame;
-- (CGRect)cartesianFrame;
+- (NSRect)flippedFrame;
 - (NSString *)name;
 - (NSScreen *)screen;
 - (CGWindowID)windowID;

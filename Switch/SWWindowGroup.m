@@ -83,13 +83,31 @@
 
 - (NSRect)frame;
 {
-    NSPoint min = self.mainWindow.frame.origin, max = self.mainWindow.frame.origin;
+    NSPoint min = self.mainWindow.frame.origin;
+    NSPoint max = min;
     
     for (SWWindow *window in self.windows) {
-        min.x = MIN(min.x, window.frame.origin.x);
-        min.y = MIN(min.y, window.frame.origin.y);
-        max.x = MAX(max.x, window.frame.origin.x + window.frame.size.width);
-        max.y = MAX(max.y, window.frame.origin.y + window.frame.size.height);
+        CGRect frame = window.frame;
+        min.x = MIN(min.x, frame.origin.x);
+        min.y = MIN(min.y, frame.origin.y);
+        max.x = MAX(max.x, frame.origin.x + frame.size.width);
+        max.y = MAX(max.y, frame.origin.y + frame.size.height);
+    }
+    
+    return (NSRect){.origin = min, .size.width = max.x - min.x, .size.height = max.y - min.y};
+}
+
+- (NSRect)flippedFrame;
+{
+    NSPoint min = self.mainWindow.flippedFrame.origin;
+    NSPoint max = min;
+    
+    for (SWWindow *window in self.windows) {
+        CGRect flippedFrame = window.flippedFrame;
+        min.x = MIN(min.x, flippedFrame.origin.x);
+        min.y = MIN(min.y, flippedFrame.origin.y);
+        max.x = MAX(max.x, flippedFrame.origin.x + flippedFrame.size.width);
+        max.y = MAX(max.y, flippedFrame.origin.y + flippedFrame.size.height);
     }
     
     return (NSRect){.origin = min, .size.width = max.x - min.x, .size.height = max.y - min.y};

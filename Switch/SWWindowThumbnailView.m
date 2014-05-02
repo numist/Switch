@@ -117,7 +117,7 @@
     self.thumbnailLayer.frame = self.bounds;
     
     NSSize thumbSize = self.thumbnailLayer.bounds.size;
-    NSRect windowGroupFrame = self.windowGroup.cartesianFrame;
+    NSRect windowGroupFrame = self.windowGroup.frame;
     
     CGFloat scale = MIN(thumbSize.width / windowGroupFrame.size.width, thumbSize.height / windowGroupFrame.size.height);
     
@@ -127,7 +127,7 @@
     for (NSUInteger i = 0; i < self.windowGroup.windows.count; i++) {
         SWWindow *window = self.windowGroup.windows[i];
         CALayer *layer = [self _sublayerForWindow:window];
-        NSRect frame = window.cartesianFrame;
+        NSRect frame = window.frame;
         
         // Move the frame's origin to be anchored at the "bottom left" of the windowFrame.
         frame.origin.x -= windowGroupFrame.origin.x;
