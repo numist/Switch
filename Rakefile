@@ -270,4 +270,14 @@ end
 task :release => [:release_ready?, :analyze, :test, :zip] do
   # The zip build step might succeed without a code signature, but a deliverable for release must be signed!
   verify_codesign DELIVERABLE_APP
+
+  hockey_api_token_file = File.open("Secrets-local/Hockey.api_token.asc", "r")
+  hockey_api_token = hockey_api_token_file.read
+  
+  hockey_app_id_file = File.open("Secrets-local/Hockey.app_id.asc", "r")
+  hockey_app_id = hockey_app_id_file.read
+
+  # TODO: get SHA from git
+  # TODO: release type from BRANCH_IS_GM
+  shell("/usr/local/bin/puck -submit=auto -download=true -source_path=\".\" -api_token=\"#{hockey_api_token}\" -app_id=\"#{hockey_app_id}\" \"#{DELIVERABLE_ARCHIVE}\"")
 end
