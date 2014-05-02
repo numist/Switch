@@ -13,9 +13,9 @@
 		BC1B45B8190F379900246529 /* SWKeyboardPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BC1B45B6190F379900246529 /* SWKeyboardPreferencesViewController.xib */; };
 		BC1B45BA190F37B400246529 /* Keyboard.icns in Resources */ = {isa = PBXBuildFile; fileRef = BC1B45B9190F37B400246529 /* Keyboard.icns */; };
 		BC1B45F3190F925900246529 /* NSScreen+SWAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = BC1B45F2190F925900246529 /* NSScreen+SWAdditions.m */; };
+		BC1B46401911A56100246529 /* SWIsolatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC1B463F1911A56100246529 /* SWIsolatorTests.m */; };
 		BC1B46571911A77F00246529 /* SWAdvancedPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC1B46551911A77F00246529 /* SWAdvancedPreferencesViewController.m */; };
 		BC1B46581911A77F00246529 /* SWAdvancedPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BC1B46561911A77F00246529 /* SWAdvancedPreferencesViewController.xib */; };
-		BC1B46401911A56100246529 /* SWIsolatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC1B463F1911A56100246529 /* SWIsolatorTests.m */; };
 		BC275C1218CFD3C900761247 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC275C1118CFD3C900761247 /* Foundation.framework */; };
 		BC275C1518CFD3CA00761247 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BC275C1418CFD3CA00761247 /* main.m */; };
 		BC275C2918CFD55000761247 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCA734E316DAC53F00CD4C74 /* AppKit.framework */; };
@@ -290,10 +290,10 @@
 		BC1B45B9190F37B400246529 /* Keyboard.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Keyboard.icns; path = Resources/Keyboard.icns; sourceTree = "<group>"; };
 		BC1B45F1190F925900246529 /* NSScreen+SWAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSScreen+SWAdditions.h"; sourceTree = "<group>"; };
 		BC1B45F2190F925900246529 /* NSScreen+SWAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSScreen+SWAdditions.m"; sourceTree = "<group>"; };
+		BC1B463F1911A56100246529 /* SWIsolatorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWIsolatorTests.m; sourceTree = "<group>"; };
 		BC1B46541911A77F00246529 /* SWAdvancedPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWAdvancedPreferencesViewController.h; sourceTree = "<group>"; };
 		BC1B46551911A77F00246529 /* SWAdvancedPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWAdvancedPreferencesViewController.m; sourceTree = "<group>"; };
 		BC1B46561911A77F00246529 /* SWAdvancedPreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SWAdvancedPreferencesViewController.xib; sourceTree = "<group>"; };
-		BC1B463F1911A56100246529 /* SWIsolatorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWIsolatorTests.m; sourceTree = "<group>"; };
 		BC275C1018CFD3C900761247 /* relaunch */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = relaunch; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC275C1118CFD3C900761247 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BC275C1418CFD3CA00761247 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
