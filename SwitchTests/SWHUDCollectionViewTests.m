@@ -44,7 +44,7 @@
 
 /*- (void)testEmptyCollectionView
 {
-    NSRect windowRect = NSMakeRect(0.0, 0.0, 800.0, 100.0);
+    CGRect windowRect = CGRectMake(0.0, 0.0, 800.0, 100.0);
     NSWindow *window = [[NSWindow alloc] initWithContentRect:windowRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
     {
         window.movableByWindowBackground = NO;
@@ -55,7 +55,7 @@
         window.acceptsMouseMovedEvents = YES;
     }
     
-    NNHUDCollectionView *collectionView = [[NNHUDCollectionView alloc] initWithFrame:NSMakeRect((800.0 - 100.0) / 2.0, 0.0, 100.0, 100.0)];
+    NNHUDCollectionView *collectionView = [[NNHUDCollectionView alloc] initWithFrame:CGRectMake((800.0 - 100.0) / 2.0, 0.0, 100.0, 100.0)];
     [window.contentView addSubview:collectionView];
     
     [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
