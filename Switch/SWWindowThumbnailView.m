@@ -45,7 +45,7 @@
 
 #pragma mark Initialization
 
-- (id)initWithFrame:(NSRect)frame windowGroup:(SWWindowGroup *)windowGroup;
+- (id)initWithFrame:(CGRect)frame windowGroup:(SWWindowGroup *)windowGroup;
 {
     if (!(self = [super initWithFrame:frame])) { return nil; }
     
@@ -117,7 +117,7 @@
     self.thumbnailLayer.frame = self.bounds;
     
     NSSize thumbSize = self.thumbnailLayer.bounds.size;
-    NSRect windowGroupFrame = self.windowGroup.frame;
+    CGRect windowGroupFrame = self.windowGroup.frame;
     
     CGFloat scale = MIN(thumbSize.width / windowGroupFrame.size.width, thumbSize.height / windowGroupFrame.size.height);
     
@@ -127,7 +127,7 @@
     for (NSUInteger i = 0; i < self.windowGroup.windows.count; i++) {
         SWWindow *window = self.windowGroup.windows[i];
         CALayer *layer = [self _sublayerForWindow:window];
-        NSRect frame = window.frame;
+        CGRect frame = window.frame;
         
         // Move the frame's origin to be anchored at the "bottom left" of the windowFrame.
         frame.origin.x -= windowGroupFrame.origin.x;
@@ -267,7 +267,7 @@
 
 - (void)_updateIconLayout;
 {
-    NSRect thumbFrame = self.bounds;
+    CGRect thumbFrame = self.bounds;
     CGFloat thumbSize = thumbFrame.size.width;
 
     // imageSize is a lie, but it does give the correct aspect ratio. It's always been a square anecdotally, but you can't be too careful!
@@ -279,7 +279,7 @@
     // make the size fit correctly
     imageSize = NSMakeSize(MIN(round(imageSize.width * scale), iconSize), MIN(round(imageSize.height * scale), iconSize));
     
-    self.iconLayer.frame = (NSRect){
+    self.iconLayer.frame = (CGRect){
         .size = imageSize,
         .origin.x = thumbFrame.origin.x + (thumbFrame.size.width - imageSize.width),
         .origin.y = thumbFrame.origin.y

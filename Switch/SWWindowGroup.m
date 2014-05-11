@@ -81,7 +81,7 @@
     return self.mainWindow.name;
 }
 
-- (NSRect)frame;
+- (CGRect)frame;
 {
     NSPoint min = self.mainWindow.frame.origin;
     NSPoint max = min;
@@ -94,10 +94,10 @@
         max.y = MAX(max.y, frame.origin.y + frame.size.height);
     }
     
-    return (NSRect){.origin = min, .size.width = max.x - min.x, .size.height = max.y - min.y};
+    return (CGRect){.origin = min, .size.width = max.x - min.x, .size.height = max.y - min.y};
 }
 
-- (NSRect)flippedFrame;
+- (CGRect)flippedFrame;
 {
     NSPoint min = self.mainWindow.flippedFrame.origin;
     NSPoint max = min;
@@ -110,7 +110,7 @@
         max.y = MAX(max.y, flippedFrame.origin.y + flippedFrame.size.height);
     }
     
-    return (NSRect){.origin = min, .size.width = max.x - min.x, .size.height = max.y - min.y};
+    return (CGRect){.origin = min, .size.width = max.x - min.x, .size.height = max.y - min.y};
 }
 
 #pragma mark SWWindowGroup
@@ -151,16 +151,16 @@
              
              (lldb) po [((NSOrderedSet *)[windowGroupList[7] windows])[2] application]
              0x6080002268e0 <82769 (com.apple.appkit.xpc.openAndSavePanelService)>
-             (lldb) p (NSRect)[((NSOrderedSet *)[windowGroupList[7] windows])[2] frame]
-             (NSRect) $8 = (x=222, y=69), (width=489, height=319)
+             (lldb) p (CGRect)[((NSOrderedSet *)[windowGroupList[7] windows])[2] frame]
+             (CGRect) $8 = (x=222, y=69), (width=489, height=319)
 
              (lldb) po [((NSOrderedSet *)[windowGroupList[7] windows])[3] application]
              0x608000226560 <82763 (TextEdit)>
-             (lldb) p (NSRect)[((NSOrderedSet *)[windowGroupList[7] windows])[3] frame]
-             (NSRect) $7 = (x=222, y=69), (width=490, height=319)
+             (lldb) p (CGRect)[((NSOrderedSet *)[windowGroupList[7] windows])[3] frame]
+             (CGRect) $7 = (x=222, y=69), (width=490, height=319)
              
-             (lldb) p (NSRect)[((NSOrderedSet *)[windowGroupList[7] windows])[4] frame]
-             (NSRect) $9 = (x=147, y=47), (width=640, height=412)
+             (lldb) p (CGRect)[((NSOrderedSet *)[windowGroupList[7] windows])[4] frame]
+             (CGRect) $9 = (x=147, y=47), (width=640, height=412)
              
              */
             break;

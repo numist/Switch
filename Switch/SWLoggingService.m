@@ -106,7 +106,7 @@
     
     for (NSDictionary *description in rawList) {
         CGWindowID windowID = (CGWindowID)[[description objectForKey:(__bridge NSString *)kCGWindowNumber] unsignedLongValue];
-        CGImageRef cgContents = NNCFAutorelease(CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, windowID, kCGWindowImageBoundsIgnoreFraming));
+        CGImageRef cgContents = NNCFAutorelease(CGWindowListCreateImage(CGRectZero, kCGWindowListOptionIncludingWindow, windowID, kCGWindowImageBoundsIgnoreFraming));
         
         if (!cgContents) {
             [handle writeData:[[NSString stringWithFormat:@"Failed to save window contents for window ID %u: CGWindowListCreateImage returned NULL\n", windowID] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -120,7 +120,7 @@
         
         NSImage *contents = [[NSImage alloc] initWithCGImage:cgContents size:(NSSize){.width = CGImageGetWidth(cgContents), .height = CGImageGetHeight(cgContents)}];
         [contents lockFocus];
-        NSBitmapImageRep *bitmapContents = [[NSBitmapImageRep alloc] initWithFocusedViewRect:(NSRect){.origin = NSZeroPoint, .size = contents.size}];
+        NSBitmapImageRep *bitmapContents = [[NSBitmapImageRep alloc] initWithFocusedViewRect:(CGRect){.origin = NSZeroPoint, .size = contents.size}];
         [contents unlockFocus];
         NSData *pngContents = [bitmapContents representationUsingType:NSPNGFileType properties:nil];
         if (!pngContents) {

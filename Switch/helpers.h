@@ -17,7 +17,7 @@
 
 #define NNAssertMainQueue() NSAssert([[NSThread currentThread] isMainThread], @"Current path of execution must be run on the main thread");
 
-BOOL NNNSRectsEqual(NSRect a, NSRect b);
+BOOL NNCGRectsEqual(CGRect a, CGRect b);
 BOOL NNNSSizesEqual(NSSize a, NSSize b);
 
 void *NNCFAutorelease(CFTypeRef cfObject);

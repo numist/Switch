@@ -250,7 +250,7 @@
         CGRect haxFrame = haxWindow.frame;
         haxFrame.origin.y = NSScreen.sw_totalScreenHeight - (haxFrame.origin.y + haxFrame.size.height);
         
-        BOOL framesMatch = NNNSRectsEqual(window.frame, haxFrame);
+        BOOL framesMatch = NNCGRectsEqual(window.frame, haxFrame);
         // AX will return an empty string when CG returns nil/unset!
         BOOL namesMatch = (window.name.length == 0 && haxTitle.length == 0) || [window.name isEqualToString:haxTitle];
         

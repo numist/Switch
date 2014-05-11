@@ -70,15 +70,15 @@
 
 #pragma mark SWWindow
 
-- (NSRect)flippedFrame;
+- (CGRect)flippedFrame;
 {
     CGRect result = {{},{}};
     bool success = CGRectMakeWithDictionaryRepresentation((__bridge CFDictionaryRef)[self.windowDescription objectForKey:(NSString *)kCGWindowBounds], &result);
-    BailUnless(success, ((NSRect){{0.0,0.0},{0.0,0.0}}));
+    BailUnless(success, ((CGRect){{0.0,0.0},{0.0,0.0}}));
     return result;
 }
 
-- (NSRect)frame;
+- (CGRect)frame;
 {
     CGFloat totalScreenHeight = NSScreen.sw_totalScreenHeight;
     CGRect flippedFrame = self.flippedFrame;
@@ -160,8 +160,8 @@
 
 - (NNVec2)offsetOfCenterToCenterOfWindow:(SWWindow *)window;
 {
-    NSRect selfBounds = self.frame;
-    NSRect windowBounds = window.frame;
+    CGRect selfBounds = self.frame;
+    CGRect windowBounds = window.frame;
     
     return (NNVec2){
         .x = ((windowBounds.origin.x + (windowBounds.size.width / 2.0)) - (selfBounds.origin.x + (selfBounds.size.width / 2.0))),
@@ -171,8 +171,8 @@
 
 - (NSSize)sizeDifferenceFromWindow:(SWWindow *)window;
 {
-    NSRect selfBounds = self.frame;
-    NSRect windowBounds = window.frame;
+    CGRect selfBounds = self.frame;
+    CGRect windowBounds = window.frame;
     
     return (NSSize){
         .width = selfBounds.size.width - windowBounds.size.width,

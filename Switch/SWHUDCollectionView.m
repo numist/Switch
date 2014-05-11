@@ -45,7 +45,7 @@
 
 #pragma mark Initialization
 
-- (id)initWithFrame:(NSRect)frame
+- (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (!self) {
@@ -53,8 +53,8 @@
     }
     
     _cells = [NSMutableArray new];
-    _hud = [[SWHUDView alloc] initWithFrame:NSZeroRect];
-    _selectionBox = [[SWSelectionBoxView alloc] initWithFrame:NSZeroRect];
+    _hud = [[SWHUDView alloc] initWithFrame:CGRectZero];
+    _selectionBox = [[SWSelectionBoxView alloc] initWithFrame:CGRectZero];
     _selectedIndex = NSNotFound;
 
     return self;
@@ -205,7 +205,7 @@
 {
     for (NSUInteger i = 0; i < self.numberOfCells; ++i) {
         NSPoint relativePoint = [self convertPoint:point toView:self.cells[i]];
-        NSRect cellFrame = CLASS_CAST(NSView, self.cells[i]).bounds;
+        CGRect cellFrame = CLASS_CAST(NSView, self.cells[i]).bounds;
         
         if (NSPointInRect(relativePoint, cellFrame)) {
             return i;

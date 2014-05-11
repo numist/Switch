@@ -28,8 +28,8 @@ typedef NSPoint NNVec2;
 @property (nonatomic, strong, readonly) SWApplication *application;
 @property (atomic, copy, readonly) NSDictionary *windowDescription;
 
-- (NSRect)frame;
-- (NSRect)flippedFrame;
+- (CGRect)frame;
+- (CGRect)flippedFrame;
 - (NSString *)name;
 - (NSScreen *)screen;
 - (CGWindowID)windowID;
