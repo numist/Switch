@@ -19,4 +19,6 @@
 
 + (CGFloat)sw_totalScreenHeight;
 
+- (CGDirectDisplayID)sw_screenNumber;
+
 @end

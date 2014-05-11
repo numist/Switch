@@ -388,8 +388,6 @@
 		BCCA7A621807894A00CE36E5 /* SWGeneralPreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SWGeneralPreferencesViewController.xib; sourceTree = "<group>"; };
 		BCCA7ACE180896D100CE36E5 /* helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helpers.h; sourceTree = "<group>"; };
 		BCCA7ACF180896D100CE36E5 /* helpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = helpers.m; sourceTree = "<group>"; };
-		BCCA7B161809008900CE36E5 /* NSNotificationCenter+RACSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSNotificationCenter+RACSupport.h"; path = "Frameworks/ReactiveCocoa/RACExtensions/NSNotificationCenter+RACSupport.h"; sourceTree = SOURCE_ROOT; };
-		BCCA7B171809008900CE36E5 /* NSNotificationCenter+RACSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSNotificationCenter+RACSupport.m"; path = "Frameworks/ReactiveCocoa/RACExtensions/NSNotificationCenter+RACSupport.m"; sourceTree = SOURCE_ROOT; };
 		BCCE8CE918091A4F006B0059 /* NSWindow+NNScreenCapture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSWindow+NNScreenCapture.h"; sourceTree = "<group>"; };
 		BCCE8CEA18091A4F006B0059 /* NSWindow+NNScreenCapture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSWindow+NNScreenCapture.m"; sourceTree = "<group>"; };
 		BCCE8CEC18091AFC006B0059 /* NSImage+NNFilesystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSImage+NNFilesystem.h"; sourceTree = "<group>"; };
@@ -565,6 +563,19 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		BC9A0263191F9452008E5103 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				BC85E79918DE8C73001DF986 /* NSLayoutConstraint+SWConstraintHelpers.h */,
+				BC85E79A18DE8C73001DF986 /* NSLayoutConstraint+SWConstraintHelpers.m */,
+				BC85E7B518DEA7C4001DF986 /* NSSet+SWChaining.h */,
+				BC85E7B618DEA7C4001DF986 /* NSSet+SWChaining.m */,
+				BC1B45F1190F925900246529 /* NSScreen+SWAdditions.h */,
+				BC1B45F2190F925900246529 /* NSScreen+SWAdditions.m */,
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
 		BCA5E9AB187A3FF4004D70EE /* Regression */ = {
 			isa = PBXGroup;
 			children = (
@@ -634,6 +645,7 @@
 		BCA734E616DAC53F00CD4C74 /* Switch */ = {
 			isa = PBXGroup;
 			children = (
+				BC9A0263191F9452008E5103 /* Categories */,
 				BC63AB901755C6EC00016B9E /* Controller */,
 				BC6B6CFB178B7115001D691D /* Debug */,
 				BCA7353016DB2BDC00CD4C74 /* Logic */,
@@ -705,8 +717,6 @@
 		BCA7352C16DB237E00CD4C74 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				BC85E79918DE8C73001DF986 /* NSLayoutConstraint+SWConstraintHelpers.h */,
-				BC85E79A18DE8C73001DF986 /* NSLayoutConstraint+SWConstraintHelpers.m */,
 				BCA7354B16E2ED5000CD4C74 /* SWHUDView.h */,
 				BCA7354C16E2ED5000CD4C74 /* SWHUDView.m */,
 				BC63AB8D1755907D00016B9E /* SWHUDCollectionView.h */,
@@ -724,20 +734,15 @@
 		BCA7353016DB2BDC00CD4C74 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
-				BC85E7B518DEA7C4001DF986 /* NSSet+SWChaining.h */,
-				BC85E7B618DEA7C4001DF986 /* NSSet+SWChaining.m */,
 				BCA5E9A4187A21A9004D70EE /* SWSelector.h */,
 				BCA5E9A5187A21A9004D70EE /* SWSelector.m */,
 				BCBF525517B079FF00716200 /* Hotkeys */,
 				BCA7358F16E585D400CD4C74 /* Polling */,
-				BCCA7B0D1809006400CE36E5 /* ReactiveCocoa Extras */,
 				BC5A978D180E5A66002ECD56 /* Services */,
 				BCFF230F177DD42E008759C4 /* Window Filtering */,
 				BCA7354A16E2AC3F00CD4C74 /* imageComparators.h */,
 				BCCA7ACE180896D100CE36E5 /* helpers.h */,
 				BCCA7ACF180896D100CE36E5 /* helpers.m */,
-				BC1B45F1190F925900246529 /* NSScreen+SWAdditions.h */,
-				BC1B45F2190F925900246529 /* NSScreen+SWAdditions.m */,
 			);
 			name = Logic;
 			sourceTree = "<group>";
@@ -781,15 +786,6 @@
 				BCCA7A5C18076ADB00CE36E5 /* NNKit iOS Tests.xctest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		BCCA7B0D1809006400CE36E5 /* ReactiveCocoa Extras */ = {
-			isa = PBXGroup;
-			children = (
-				BCCA7B161809008900CE36E5 /* NSNotificationCenter+RACSupport.h */,
-				BCCA7B171809008900CE36E5 /* NSNotificationCenter+RACSupport.m */,
-			);
-			name = "ReactiveCocoa Extras";
 			sourceTree = "<group>";
 		};
 		BCF357D5176CEE0200458AFF /* ReactiveCocoa */ = {
