@@ -21,7 +21,7 @@
 {
     return [[[NSScreen screens] nn_reduce:^id(id accumulator, id item) {
         if (!accumulator) { accumulator = @(0.0); }
-        CGRect screenFrame = [item sw_absoluteFrame];
+        CGRect screenFrame = [item _sw_absoluteFrame];
         CGFloat screenHeight = screenFrame.origin.y + screenFrame.size.height;
         if ([accumulator floatValue] < screenFrame.origin.y + screenFrame.size.height) {
             accumulator = @(screenHeight);
@@ -30,7 +30,13 @@
     }] floatValue];
 }
 
-- (CGRect)sw_absoluteFrame;
+- (CGDirectDisplayID)sw_screenNumber;
+{
+    NSDictionary *description = self.deviceDescription;
+    return [description[@"NSScreenNumber"] unsignedIntValue];
+}
+
+- (CGRect)_sw_absoluteFrame;
 {
     CGPoint offset = CGPointZero;
     for (NSScreen *screen in [NSScreen screens]) {

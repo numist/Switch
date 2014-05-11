@@ -50,7 +50,8 @@ static int kScrollThreshold = 50;
 @property (nonatomic, strong) NSDate *invocationTime;
 
 #pragma mark UI
-@property (nonatomic, strong) NSDictionary *windowControllersByFrame;
+@property (nonatomic, strong) NSMutableDictionary *windowControllerCache;
+@property (nonatomic, strong) NSDictionary *windowControllersByScreenID;
 @property (nonatomic, strong) SWCoreWindowController *windowControllerDispatcher;
 
 @end
@@ -64,6 +65,8 @@ static int kScrollThreshold = 50;
 {
     if (!(self = [super init])) { return nil; }
     
+    _windowControllerCache = [NSMutableDictionary new];
+
     @weakify(self);
     
     // interfaceVisible = (((invoked && displayTimer == nil) || pendingSwitch) && windowListLoaded)
@@ -193,29 +196,39 @@ static int kScrollThreshold = 50;
     
     SWEventTap *eventTap = [SWEventTap sharedService];
     if (interfaceVisible) {
-        Check(!self.windowControllersByFrame);
+        Check(!self.windowControllersByScreenID);
         
-        self.windowControllersByFrame = ^{
+        self.windowControllersByScreenID = ^{
             NSMutableDictionary *windowControllers = [NSMutableDictionary new];
             NSArray *screens = [SWPreferencesService sharedService].multimonInterface
             ? [NSScreen screens]
             : @[[NSScreen mainScreen]];
             
             for (NSScreen *screen in screens) {
-                SWCoreWindowController *windowController = [[SWCoreWindowController alloc] initWithScreen:screen];
-                windowController.delegate = self;
-                windowControllers[[NSValue valueWithRect:screen.frame]] = windowController;
-                
-                // Force-update the window's frame on the correct screen—it gets incorrectly updated (by what?) between -loadWIndow and here.
+                SWCoreWindowController *windowController = [self.windowControllerCache objectForKey:@(screen.sw_screenNumber)];
+                if (!windowController) {
+                    windowController = [[SWCoreWindowController alloc] initWithScreen:screen];
+                    self.windowControllerCache[@(screen.sw_screenNumber)] = windowController;
+                }
                 [windowController.window setFrame:screen.frame display:YES];
+                windowController.delegate = self;
+                windowControllers[@(screen.sw_screenNumber)] = windowController;
             }
+            
+            // Remove any windows for screens that no longer exist.
+            for (NSNumber *screenNumber in self.windowControllerCache.allKeys.copy) {
+                if (![windowControllers.allValues containsObject:self.windowControllerCache[screenNumber]]) {
+                    [self.windowControllerCache removeObjectForKey:screenNumber];
+                }
+            }
+            
             return windowControllers;
         }();
 
         self.windowControllerDispatcher = (SWCoreWindowController *)^{
             NNMultiDispatchManager *dispatcher = [[NNMultiDispatchManager alloc] initWithProtocol:@protocol(SWCoreWindowControllerAPI)];
             
-            for (SWCoreWindowController *windowController in self.windowControllersByFrame.allValues) {
+            for (SWCoreWindowController *windowController in self.windowControllersByScreenID.allValues) {
                 [dispatcher addObserver:windowController];
             }
             
@@ -227,7 +240,7 @@ static int kScrollThreshold = 50;
         
         // layoutSubviewsIfNeeded isn't instant due to Auto Layout magic, so let everything take effect before showing the window.
         dispatch_async(dispatch_get_main_queue(), ^{
-            for (SWCoreWindowController *windowController in self.windowControllersByFrame.allValues) {
+            for (SWCoreWindowController *windowController in self.windowControllersByScreenID.allValues) {
                 [windowController.window orderFront:self];
             }
         });
@@ -266,7 +279,12 @@ static int kScrollThreshold = 50;
     } else {
         [eventTap removeBlockForEventsWithType:kCGEventScrollWheel object:self];
         self.windowControllerDispatcher = nil;
-        self.windowControllersByFrame = nil;
+
+        for (SWCoreWindowController *windowController in self.windowControllersByScreenID.allValues) {
+            [windowController.window orderOut:self];
+            windowController.delegate = nil;
+        }
+        self.windowControllersByScreenID = nil;
     }
 }
 
@@ -307,29 +325,28 @@ static int kScrollThreshold = 50;
 
 - (void)_updateWindowControllerWindowGroups;
 {
-    if (!self.windowControllersByFrame.count) { return; }
+    if (!self.windowControllersByScreenID.count) { return; }
     
     NSMutableDictionary *windowsPerScreen = [NSMutableDictionary new];
-    for (NSValue *frame in self.windowControllersByFrame.allKeys) {
-        windowsPerScreen[frame] = [NSMutableOrderedSet new];
+    for (NSNumber *screenNumber in self.windowControllersByScreenID.allKeys) {
+        windowsPerScreen[screenNumber] = [NSMutableOrderedSet new];
     }
     
     for (SWWindowGroup *windowGroup in self.windowGroups) {
-        CGRect unboxedScreenFrame = [windowGroup screen].frame;
-        NSValue *screenFrame = [NSValue valueWithRect:unboxedScreenFrame];
-        
+        NSNumber *screenNumber = @([windowGroup screen].sw_screenNumber);
+
         // If there is no window controller that owns that screen, assign the group to the main screen.
-        if (![windowsPerScreen objectForKey:screenFrame]) {
-            screenFrame = [NSValue valueWithRect:[NSScreen mainScreen].frame];
-            Check([windowsPerScreen objectForKey:screenFrame]);
+        if (![windowsPerScreen objectForKey:screenNumber]) {
+            screenNumber = @([NSScreen mainScreen].sw_screenNumber);
+            Check([windowsPerScreen objectForKey:screenNumber]);
         }
-        
-        [windowsPerScreen[screenFrame] addObject:windowGroup];
+
+        [windowsPerScreen[screenNumber] addObject:windowGroup];
     }
     
-    for (NSValue *frame in windowsPerScreen.allKeys) {
-        SWCoreWindowController *windowController = self.windowControllersByFrame[frame];
-        windowController.windowGroups = windowsPerScreen[frame];
+    for (NSNumber *screenNumber in windowsPerScreen.allKeys) {
+        SWCoreWindowController *windowController = self.windowControllersByScreenID[screenNumber];
+        windowController.windowGroups = windowsPerScreen[screenNumber];
     }
 }
 
