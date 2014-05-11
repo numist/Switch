@@ -7,7 +7,7 @@ DEPENDENCIES:
   - MASPreferences
 
 SPEC CHECKSUMS:
-  HockeySDK-Mac: 4a85f8784af28f36e23467d4b3f0b5eb516413d1
+  HockeySDK-Mac: ae9be4cc5263446070a8c6a74190eaf0de3df78f
   MASPreferences: 2c2f30b38c3dfceb0d3b29132a13417706a5adac
 
 COCOAPODS: 0.32.1
