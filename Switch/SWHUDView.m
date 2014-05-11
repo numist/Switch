@@ -19,7 +19,7 @@
 
 #pragma mark Initialization
 
-- (id)initWithFrame:(NSRect)frame
+- (id)initWithFrame:(CGRect)frame
 {
     if (!(self = [super initWithFrame:frame])) { return nil; }
 

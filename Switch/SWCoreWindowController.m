@@ -75,7 +75,7 @@
 
 - (void)loadWindow;
 {
-    NSRect contentRect = self.screen.frame;
+    CGRect contentRect = self.screen.frame;
     NSWindow *switcherWindow = [[NSWindow alloc] initWithContentRect:contentRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO screen:self.screen];
     switcherWindow.movableByWindowBackground = NO;
     switcherWindow.hasShadow = NO;
@@ -84,7 +84,7 @@
     switcherWindow.level = NSPopUpMenuWindowLevel;
     self.window = switcherWindow;
     
-    NSRect displayRect = [switcherWindow convertRectFromScreen:contentRect];
+    CGRect displayRect = [switcherWindow convertRectFromScreen:contentRect];
     SWHUDCollectionView *collectionView = [[SWHUDCollectionView alloc] initWithFrame:displayRect];
     collectionView.dataSource = self;
     collectionView.delegate = self;
@@ -145,14 +145,14 @@
 
 - (NSView *)HUDCollectionView:(SWHUDCollectionView *)view viewForCellAtIndex:(NSUInteger)index;
 {
-    BailUnless([view isEqual:self.collectionView], [[NSView alloc] initWithFrame:NSZeroRect]);
+    BailUnless([view isEqual:self.collectionView], [[NSView alloc] initWithFrame:CGRectZero]);
     
     // Boundary method, index may not be in-bounds.
     SWWindowGroup *windowGroup = index < self.windowGroups.count ? self.windowGroups[index] : nil;
-    BailUnless(windowGroup, [[NSView alloc] initWithFrame:NSZeroRect]);
+    BailUnless(windowGroup, [[NSView alloc] initWithFrame:CGRectZero]);
 
     if (!self.collectionCells[windowGroup]) {
-        self.collectionCells[windowGroup] = [[SWWindowThumbnailView alloc] initWithFrame:NSZeroRect windowGroup:windowGroup];
+        self.collectionCells[windowGroup] = [[SWWindowThumbnailView alloc] initWithFrame:CGRectZero windowGroup:windowGroup];
     }
 
     return self.collectionCells[windowGroup];

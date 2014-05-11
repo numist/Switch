@@ -20,7 +20,7 @@ BOOL NNNSSizesEqual(NSSize a, NSSize b)
     return a.width == b.width && a.height == b.height;
 }
 
-BOOL NNNSRectsEqual(NSRect a, NSRect b)
+BOOL NNCGRectsEqual(CGRect a, CGRect b)
 {
     return a.origin.x == b.origin.x && a.origin.y == b.origin.y && NNNSSizesEqual(a.size, b.size);
 }

@@ -70,7 +70,7 @@ static BOOL (^imagesDifferByCachedTIFFComparison)(NSImage *, NSImage *) = ^(NSIm
 //            [NSGraphicsContext saveGraphicsState];
 //            [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:result flipped:NO]];
 //            [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationNone];
-//            [image drawInRect:NSMakeRect(0, 0, x, y) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.0];
+//            [image drawInRect:CGRectMake(0, 0, x, y) fromRect:CGRectZero operation:NSCompositeCopy fraction:1.0];
 //            [NSGraphicsContext restoreGraphicsState];
 //            objc_setAssociatedObject(image, bitmapContextKey, (__bridge id)result, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 //        }

@@ -20,7 +20,7 @@
 
 @interface SWWindowThumbnailView : NSView
 
-- (instancetype)initWithFrame:(NSRect)frameRect windowGroup:(SWWindowGroup *)window;
+- (instancetype)initWithFrame:(CGRect)frameRect windowGroup:(SWWindowGroup *)window;
 
 - (void)setActive:(BOOL)active;
 

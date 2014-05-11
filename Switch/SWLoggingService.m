@@ -120,7 +120,7 @@
         
         NSImage *contents = [[NSImage alloc] initWithCGImage:cgContents size:(NSSize){.width = CGImageGetWidth(cgContents), .height = CGImageGetHeight(cgContents)}];
         [contents lockFocus];
-        NSBitmapImageRep *bitmapContents = [[NSBitmapImageRep alloc] initWithFocusedViewRect:(NSRect){.origin = NSZeroPoint, .size = contents.size}];
+        NSBitmapImageRep *bitmapContents = [[NSBitmapImageRep alloc] initWithFocusedViewRect:(CGRect){.origin = NSZeroPoint, .size = contents.size}];
         [contents unlockFocus];
         NSData *pngContents = [bitmapContents representationUsingType:NSPNGFileType properties:nil];
         if (!pngContents) {

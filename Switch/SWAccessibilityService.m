@@ -18,6 +18,7 @@
 #import <Haxcessibility/Haxcessibility.h>
 #import <Haxcessibility/HAXElement+Protected.h>
 
+#import "NSScreen+SWAdditions.h"
 #import "SWAPIEnabledWorker.h"
 #import "SWApplication.h"
 #import "SWWindow.h"
@@ -244,7 +245,12 @@
     
     return [[haxApplication windows] nn_reduce:^id(id accumulator, HAXWindow *haxWindow){
         NSString *haxTitle = haxWindow.title;
-        BOOL framesMatch = NNNSRectsEqual(window.frame, haxWindow.frame);
+        
+        // This should ultimately be flipped in Haxcessibility, per #89.
+        CGRect haxFrame = haxWindow.frame;
+        haxFrame.origin.y = NSScreen.sw_totalScreenHeight - (haxFrame.origin.y + haxFrame.size.height);
+        
+        BOOL framesMatch = NNCGRectsEqual(window.frame, haxFrame);
         // AX will return an empty string when CG returns nil/unset!
         BOOL namesMatch = (window.name.length == 0 && haxTitle.length == 0) || [window.name isEqualToString:haxTitle];
         

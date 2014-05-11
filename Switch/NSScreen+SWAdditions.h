@@ -19,6 +19,4 @@
 
 + (CGFloat)sw_totalScreenHeight;
 
-- (CGRect)sw_absoluteFrame;
-
 @end

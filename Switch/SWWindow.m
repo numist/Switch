@@ -70,18 +70,18 @@
 
 #pragma mark SWWindow
 
-- (NSRect)frame;
+- (CGRect)flippedFrame;
 {
     CGRect result = {{},{}};
     bool success = CGRectMakeWithDictionaryRepresentation((__bridge CFDictionaryRef)[self.windowDescription objectForKey:(NSString *)kCGWindowBounds], &result);
-    BailUnless(success, ((NSRect){{0.0,0.0},{0.0,0.0}}));
+    BailUnless(success, ((CGRect){{0.0,0.0},{0.0,0.0}}));
     return result;
 }
 
-- (CGRect)cartesianFrame;
+- (CGRect)frame;
 {
     CGFloat totalScreenHeight = NSScreen.sw_totalScreenHeight;
-    CGRect flippedFrame = self.frame;
+    CGRect flippedFrame = self.flippedFrame;
     flippedFrame.origin.y = totalScreenHeight - (flippedFrame.origin.y + flippedFrame.size.height);
     return flippedFrame;
 }
@@ -93,22 +93,21 @@
 
 - (NSScreen *)screen;
 {
-    CGRect cartesianFrame = self.cartesianFrame;
+    CGRect cgFrame = self.flippedFrame;
     
-    return [[NSScreen screens] nn_reduce:^id(id accumulator, id item) {
+    return [[NSScreen screens] nn_reduce:^id(NSScreen *accumulator, NSScreen *item) {
         if (!accumulator) {
             accumulator = [NSScreen mainScreen];
         }
         
-        CGRect itemFrame = [item sw_absoluteFrame];
-        CGRect newIntersection = CGRectIntersection(itemFrame, cartesianFrame);
-        CGFloat newOverlapArea = newIntersection.size.width * newIntersection.size.height;
-        
-        CGRect accumulatorFrame = [accumulator sw_absoluteFrame];
-        CGRect oldIntersection = CGRectIntersection(accumulatorFrame, cartesianFrame);
-        CGFloat oldOverlapArea = oldIntersection.size.width * oldIntersection.size.height;
-        
-        if (newOverlapArea > oldOverlapArea) {
+        CGFloat (^overlapWithScreen)(NSScreen *) = ^(NSScreen *screen) {
+            CGDirectDisplayID displayID = [screen.deviceDescription[@"NSScreenNumber"] unsignedIntValue];
+            CGRect displayRect = CGDisplayBounds(displayID);
+            CGRect intersection = CGRectIntersection(displayRect, cgFrame);
+            return intersection.size.width * intersection.size.height;
+        };
+
+        if (overlapWithScreen(item) > overlapWithScreen(accumulator)) {
             return item;
         } else {
             return accumulator;
@@ -161,8 +160,8 @@
 
 - (NNVec2)offsetOfCenterToCenterOfWindow:(SWWindow *)window;
 {
-    NSRect selfBounds = self.frame;
-    NSRect windowBounds = window.frame;
+    CGRect selfBounds = self.frame;
+    CGRect windowBounds = window.frame;
     
     return (NNVec2){
         .x = ((windowBounds.origin.x + (windowBounds.size.width / 2.0)) - (selfBounds.origin.x + (selfBounds.size.width / 2.0))),
@@ -172,8 +171,8 @@
 
 - (NSSize)sizeDifferenceFromWindow:(SWWindow *)window;
 {
-    NSRect selfBounds = self.frame;
-    NSRect windowBounds = window.frame;
+    CGRect selfBounds = self.frame;
+    CGRect windowBounds = window.frame;
     
     return (NSSize){
         .width = selfBounds.size.width - windowBounds.size.width,
