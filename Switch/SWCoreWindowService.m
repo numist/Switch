@@ -215,7 +215,7 @@ static int kScrollThreshold = 50;
                 windowControllers[@(screen.sw_screenNumber)] = windowController;
             }
             
-            // Remove any windows for screens that no longer exist.
+            // Remove any window controllers assigned to screens that no longer exist.
             for (NSNumber *screenNumber in self.windowControllerCache.allKeys.copy) {
                 if (![windowControllers.allValues containsObject:self.windowControllerCache[screenNumber]]) {
                     [self.windowControllerCache removeObjectForKey:screenNumber];
