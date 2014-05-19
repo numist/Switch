@@ -59,6 +59,8 @@
     [[NSWorkspace sharedWorkspace] openFile:[[SWLoggingService sharedService] logDirectoryPath]];
 }
 
+#pragma mark NSMenuDelegate
+
 - (void)menuNeedsUpdate:(NSMenu *)menu;
 {
     NSUInteger flags = ([NSEvent modifierFlags] & NSDeviceIndependentModifierFlagsMask);
