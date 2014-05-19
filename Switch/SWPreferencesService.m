@@ -23,7 +23,8 @@
 #import "SWKeyboardPreferencesViewController.h"
 
 static NSString *kSWFirstLaunchKey = @"firstLaunch";
-static NSString *kSWMultimonInterfaceKey = @"multimonInterface";
+static NSString const * const kSWMultimonInterfaceKey = @"multimonInterface";
+static NSString const * const kSWShowStatusItemKey = @"showStatusItem";
 
 
 @interface SWPreferencesService ()
@@ -49,6 +50,7 @@ static NSString *kSWMultimonInterfaceKey = @"multimonInterface";
     [[NSUserDefaults standardUserDefaults] registerDefaults:self._defaultValues];
 
     _multimonInterface = [[self _objectForKey:kSWMultimonInterfaceKey] boolValue];
+    _showStatusItem = [[self _objectForKey:kSWShowStatusItemKey] boolValue];
     
     return self;
 }
@@ -100,6 +102,12 @@ static NSString *kSWMultimonInterfaceKey = @"multimonInterface";
     [self _setObject:@(multimonInterface) forKey:kSWMultimonInterfaceKey];
 }
 
+- (void)setShowStatusItem:(BOOL)showStatusItem;
+{
+    _showStatusItem = showStatusItem;
+    [self _setObject:@(showStatusItem) forKey:kSWShowStatusItemKey];
+}
+
 - (void)showPreferencesWindow:(id)sender;
 {
     [self.preferencesWindowController showWindow:sender];
@@ -107,14 +115,14 @@ static NSString *kSWMultimonInterfaceKey = @"multimonInterface";
     [self.preferencesWindowController.window makeKeyAndOrderFront:sender];
 }
 
-- (void)_setObject:(id)object forKey:(NSString *)key;
+- (void)_setObject:(id)object forKey:(NSString const * const)key;
 {
-    [[NSUserDefaults standardUserDefaults] setObject:object forKey:key];
+    [[NSUserDefaults standardUserDefaults] setObject:object forKey:[key copy]];
 }
 
-- (id)_objectForKey:(NSString *)key;
+- (id)_objectForKey:(NSString const * const)key;
 {
-    return [[NSUserDefaults standardUserDefaults] objectForKey:key];
+    return [[NSUserDefaults standardUserDefaults] objectForKey:[key copy]];
 }
 
 #pragma mark Internal
@@ -127,6 +135,7 @@ static NSString *kSWMultimonInterfaceKey = @"multimonInterface";
         _defaultValues = @{
             kSWFirstLaunchKey : @YES,
             kSWMultimonInterfaceKey : @YES,
+            kSWShowStatusItemKey : @YES,
         };
     });
     return _defaultValues;

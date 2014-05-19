@@ -21,6 +21,7 @@
 @interface SWPreferencesService : NNService
 
 @property (nonatomic, assign, readwrite) BOOL multimonInterface;
+@property (nonatomic, assign, readwrite) BOOL showStatusItem;
 
 - (void)showPreferencesWindow:(id)sender;
 

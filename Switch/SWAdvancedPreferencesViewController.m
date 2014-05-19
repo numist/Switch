@@ -19,7 +19,8 @@
 
 @interface SWAdvancedPreferencesViewController ()
 
-@property (nonatomic, weak) IBOutlet NSButtonCell *multimonBox;
+@property (nonatomic, weak) IBOutlet NSButton *multimonBox;
+@property (nonatomic, weak) IBOutlet NSButton *statusItemBox;
 
 @end
 
@@ -28,8 +29,11 @@
 
 - (void)viewWillAppear;
 {
-    NSButtonCell *multimonBox = self.multimonBox;
+    NSButton *multimonBox = self.multimonBox;
     multimonBox.state = [SWPreferencesService sharedService].multimonInterface ? NSOnState : NSOffState;
+    
+    NSButton *statusItemBox = self.statusItemBox;
+    statusItemBox.state = [SWPreferencesService sharedService].showStatusItem ? NSOnState : NSOffState;
 }
 
 #pragma mark MASPreferencesViewController
@@ -61,8 +65,14 @@
 
 #pragma mark IBAction
 
-- (IBAction)multimonChanged:(NSButton *)sender {
-    [SWPreferencesService sharedService].multimonInterface = sender.state == NSOnState;
+- (IBAction)multimonChanged:(NSButton *)sender;
+{
+    [SWPreferencesService sharedService].multimonInterface = (sender.state == NSOnState);
+}
+
+- (IBAction)statusItemChanged:(NSButton *)sender;
+{
+    [SWPreferencesService sharedService].showStatusItem = (sender.state == NSOnState);
 }
 
 @end

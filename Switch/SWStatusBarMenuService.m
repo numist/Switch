@@ -34,6 +34,60 @@
 {
     if (!(self = [super init])) { return nil; }
     
+    @weakify(self);
+    
+    RAC(self,statusItem) = [[RACObserve([SWPreferencesService sharedService], showStatusItem)
+    distinctUntilChanged]
+    map:^id(NSNumber *value) {
+        @strongify(self);
+        BOOL shouldShowStatusItem = [value boolValue];
+        if (shouldShowStatusItem && !self.statusItem) {
+            return [self _newStatusItem];
+        } else if (!shouldShowStatusItem && self.statusItem) {
+            [self.statusItem.statusBar removeStatusItem:self.statusItem];
+            return nil;
+        }
+    }];
+    
+    return self;
+}
+
+#pragma mark NNService
+
++ (NNServiceType)serviceType;
+{
+    return NNServiceTypePersistent;
+}
+
+#pragma mark SWStatusBarMenuService
+
+- (IBAction)snapshot:(id)sender;
+{
+    [[SWLoggingService sharedService] takeWindowListSnapshot];
+    [self openLogFolder:self];
+}
+
+- (IBAction)openLogFolder:(id)sender;
+{
+    [[NSWorkspace sharedWorkspace] openFile:[[SWLoggingService sharedService] logDirectoryPath]];
+}
+
+#pragma mark NSMenuDelegate
+
+- (void)menuNeedsUpdate:(NSMenu *)menu;
+{
+    NSUInteger flags = ([NSEvent modifierFlags] & NSDeviceIndependentModifierFlagsMask);
+    BOOL hideDebugItems = !(flags == NSAlternateKeyMask);
+    
+    for (NSMenuItem *item in self.debugItems) {
+        item.hidden = hideDebugItems;
+    }
+}
+
+#pragma mark Internal
+
+- (NSStatusItem *)_newStatusItem;
+{
     NSStatusItem *statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSSquareStatusItemLength];
     statusItem.image = [[NSBundle mainBundle] imageForResource:@"weave"];
     statusItem.highlightMode = YES;
@@ -41,13 +95,8 @@
     
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Status Bar Menu"];
     
-    // and set self.menu.menu to a menu (AND RENAME THAT SHIT WHAT THE EVERLOVING FUCK)
     NSMenuItem * menuItem;
-    
-#   pragma clang diagnostic push
-#   pragma clang diagnostic ignored "-Wselector"
     menuItem = [[NSMenuItem alloc] initWithTitle:@"Preferences…" action:NNTypedSelector1(SWAppDelegate, showPreferences:) keyEquivalent:@""];
-#   pragma clang diagnostic pop
     menuItem.target = [NSApplication sharedApplication].delegate;
     [menu addItem:menuItem];
     
@@ -89,39 +138,7 @@
     
     statusItem.menu = menu;
     
-    _statusItem = statusItem;
-    
-    return self;
-}
-
-#pragma mark NNService
-
-+ (NNServiceType)serviceType;
-{
-    return NNServiceTypePersistent;
-}
-
-#pragma mark SWStatusBarMenuService
-
-- (IBAction)snapshot:(id)sender;
-{
-    [[SWLoggingService sharedService] takeWindowListSnapshot];
-    [self openLogFolder:self];
-}
-
-- (IBAction)openLogFolder:(id)sender;
-{
-    [[NSWorkspace sharedWorkspace] openFile:[[SWLoggingService sharedService] logDirectoryPath]];
-}
-
-- (void)menuNeedsUpdate:(NSMenu *)menu;
-{
-    NSUInteger flags = ([NSEvent modifierFlags] & NSDeviceIndependentModifierFlagsMask);
-    BOOL hideDebugItems = !(flags == NSAlternateKeyMask);
-    
-    for (NSMenuItem *item in self.debugItems) {
-        item.hidden = hideDebugItems;
-    }
+    return statusItem;
 }
 
 @end
