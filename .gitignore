@@ -3,6 +3,8 @@
 *-local.*
 *-local/
 
+Pods/
+
 # Xcode-specific ignores:
 
 #########################
