@@ -24,6 +24,7 @@
 
 static NSString *kSWFirstLaunchKey = @"firstLaunch";
 static NSString const * const kSWMultimonInterfaceKey = @"multimonInterface";
+static NSString const * const kSWShowStatusItemKey = @"showStatusItem";
 
 
 @interface SWPreferencesService ()
@@ -49,6 +50,7 @@ static NSString const * const kSWMultimonInterfaceKey = @"multimonInterface";
     [[NSUserDefaults standardUserDefaults] registerDefaults:self._defaultValues];
 
     _multimonInterface = [[self _objectForKey:kSWMultimonInterfaceKey] boolValue];
+    _showStatusItem = [[self _objectForKey:kSWShowStatusItemKey] boolValue];
     
     return self;
 }
@@ -100,6 +102,12 @@ static NSString const * const kSWMultimonInterfaceKey = @"multimonInterface";
     [self _setObject:@(multimonInterface) forKey:kSWMultimonInterfaceKey];
 }
 
+- (void)setShowStatusItem:(BOOL)showStatusItem;
+{
+    _showStatusItem = showStatusItem;
+    [self _setObject:@(showStatusItem) forKey:kSWShowStatusItemKey];
+}
+
 - (void)showPreferencesWindow:(id)sender;
 {
     [self.preferencesWindowController showWindow:sender];
@@ -127,6 +135,7 @@ static NSString const * const kSWMultimonInterfaceKey = @"multimonInterface";
         _defaultValues = @{
             kSWFirstLaunchKey : @YES,
             kSWMultimonInterfaceKey : @YES,
+            kSWShowStatusItemKey : @YES,
         };
     });
     return _defaultValues;

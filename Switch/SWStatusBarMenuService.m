@@ -34,7 +34,20 @@
 {
     if (!(self = [super init])) { return nil; }
     
-    _statusItem = [self _newStatusItem];
+    @weakify(self);
+    
+    RAC(self,statusItem) = [[RACObserve([SWPreferencesService sharedService], showStatusItem)
+    distinctUntilChanged]
+    map:^id(NSNumber *value) {
+        @strongify(self);
+        BOOL shouldShowStatusItem = [value boolValue];
+        if (shouldShowStatusItem && !self.statusItem) {
+            return [self _newStatusItem];
+        } else if (!shouldShowStatusItem && self.statusItem) {
+            [self.statusItem.statusBar removeStatusItem:self.statusItem];
+            return nil;
+        }
+    }];
     
     return self;
 }
