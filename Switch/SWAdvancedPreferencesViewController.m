@@ -19,7 +19,7 @@
 
 @interface SWAdvancedPreferencesViewController ()
 
-@property (nonatomic, weak) IBOutlet NSButtonCell *multimonBox;
+@property (nonatomic, weak) IBOutlet NSButton *multimonBox;
 
 @end
 
@@ -28,7 +28,7 @@
 
 - (void)viewWillAppear;
 {
-    NSButtonCell *multimonBox = self.multimonBox;
+    NSButton *multimonBox = self.multimonBox;
     multimonBox.state = [SWPreferencesService sharedService].multimonInterface ? NSOnState : NSOffState;
 }
 
@@ -61,8 +61,9 @@
 
 #pragma mark IBAction
 
-- (IBAction)multimonChanged:(NSButton *)sender {
-    [SWPreferencesService sharedService].multimonInterface = sender.state == NSOnState;
+- (IBAction)multimonChanged:(NSButton *)sender;
+{
+    [SWPreferencesService sharedService].multimonInterface = (sender.state == NSOnState);
 }
 
 @end
