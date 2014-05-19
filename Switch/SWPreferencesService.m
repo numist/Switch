@@ -23,7 +23,7 @@
 #import "SWKeyboardPreferencesViewController.h"
 
 static NSString *kSWFirstLaunchKey = @"firstLaunch";
-static NSString *kSWMultimonInterfaceKey = @"multimonInterface";
+static NSString const * const kSWMultimonInterfaceKey = @"multimonInterface";
 
 
 @interface SWPreferencesService ()
@@ -107,14 +107,14 @@ static NSString *kSWMultimonInterfaceKey = @"multimonInterface";
     [self.preferencesWindowController.window makeKeyAndOrderFront:sender];
 }
 
-- (void)_setObject:(id)object forKey:(NSString *)key;
+- (void)_setObject:(id)object forKey:(NSString const * const)key;
 {
-    [[NSUserDefaults standardUserDefaults] setObject:object forKey:key];
+    [[NSUserDefaults standardUserDefaults] setObject:object forKey:[key copy]];
 }
 
-- (id)_objectForKey:(NSString *)key;
+- (id)_objectForKey:(NSString const * const)key;
 {
-    return [[NSUserDefaults standardUserDefaults] objectForKey:key];
+    return [[NSUserDefaults standardUserDefaults] objectForKey:[key copy]];
 }
 
 #pragma mark Internal
