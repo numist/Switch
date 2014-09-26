@@ -21,7 +21,6 @@
 #import "SWWindowWorker.h"
 
 
-
 @interface _SWWindowContentContainer : NSObject
 
 @property (nonatomic, strong) NSImage *content;
@@ -29,18 +28,21 @@
 @property (nonatomic, strong, readonly) SWWindowWorker *worker;
 
 @end
+
+
 @implementation _SWWindowContentContainer
+
 - (void)setWindow:(SWWindow *)window;
 {
-    if (!_window) {
+    if (!Check(_window)) {
         self->_worker = [[SWWindowWorker alloc] initWithModelObject:window];
     } else {
         Check(_window.windowID == window.windowID);
     }
     _window = window;
 }
-@end
 
+@end
 
 
 @interface SWWindowContentsService () <SWWindowListSubscriber>
@@ -111,8 +113,8 @@
 
 - (NSImage *)contentForWindow:(SWWindow *)window;
 {
-    _SWWindowContentContainer *contentObject = [self.contentContainers objectForKey:@(window.windowID)];
-    return contentObject.content;
+    _SWWindowContentContainer *contentContainerObject = [self.contentContainers objectForKey:@(window.windowID)];
+    return contentContainerObject.content;
 }
 
 #pragma mark SWWindowListSubscriber
@@ -130,13 +132,13 @@
 
         // Update/create content containers for all windows that exist.
         for (SWWindow *window in existingWindows) {
-            _SWWindowContentContainer *contentContainer = [self.contentContainers objectForKey:@(window.windowID)];
-            if (!contentContainer) {
-                contentContainer = [_SWWindowContentContainer new];
-                [self.contentContainers setObject:contentContainer forKey:@(window.windowID)];
+            _SWWindowContentContainer *contentContainerObject = [self.contentContainers objectForKey:@(window.windowID)];
+            if (!contentContainerObject) {
+                contentContainerObject = [_SWWindowContentContainer new];
+                [self.contentContainers setObject:contentContainerObject forKey:@(window.windowID)];
             }
             
-            contentContainer.window = window;
+            contentContainerObject.window = window;
         }
         
         // Remove content containers for windows that don't exist.
@@ -154,19 +156,19 @@
 {
     dispatch_async(self.queue, ^{
         SWWindowWorker *worker = notification.object;
-        _SWWindowContentContainer *contentContainer = [self.contentContainers objectForKey:@(worker.windowID)];
-        if (!contentContainer) {
+        _SWWindowContentContainer *contentContainerObject = [self.contentContainers objectForKey:@(worker.windowID)];
+        if (!contentContainerObject) {
             return;
         }
         
         NSImage *content = notification.userInfo[@"content"];
         if (!Check(content)) {
             return;
-        }   
+        }
         
-        contentContainer.content = content;
+        contentContainerObject.content = content;
         
-        [(id<SWWindowContentsSubscriber>)self.subscriberDispatcher windowContentService:self updatedContent:contentContainer.content forWindow:contentContainer.window];
+        [(id<SWWindowContentsSubscriber>)self.subscriberDispatcher windowContentService:self updatedContent:content forWindow:contentContainerObject.window];
     });
 }
 
