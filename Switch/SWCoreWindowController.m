@@ -162,14 +162,18 @@
 
 - (void)HUDCollectionView:(SWHUDCollectionView *)view didSelectCellAtIndex:(NSUInteger)index;
 {
-    Assert(index < self.windowGroups.count);
+    if (!Check(index < self.windowGroups.count)) {
+        index = self.windowGroups.count - 1;
+    }
     id<SWCoreWindowControllerDelegate> delegate = self.delegate;
     [delegate coreWindowController:self didSelectWindowGroup:self.windowGroups[index]];
 }
 
 - (void)HUDCollectionView:(SWHUDCollectionView *)view activateCellAtIndex:(NSUInteger)index;
 {
-    Assert(index < self.windowGroups.count);
+    if (!Check(index < self.windowGroups.count)) {
+        index = self.windowGroups.count - 1;
+    }
     id<SWCoreWindowControllerDelegate> delegate = self.delegate;
     [delegate coreWindowController:self didActivateWindowGroup:self.windowGroups[index]];
 }

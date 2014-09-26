@@ -34,7 +34,7 @@
 
 - (void)setWindow:(SWWindow *)window;
 {
-    if (!Check(_window)) {
+    if (!_window) {
         self->_worker = [[SWWindowWorker alloc] initWithModelObject:window];
     } else {
         Check(_window.windowID == window.windowID);
