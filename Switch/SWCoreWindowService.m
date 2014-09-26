@@ -69,11 +69,11 @@ static int kScrollThreshold = 50;
 
     @weakify(self);
     
-    // interfaceVisible = (((invoked && displayTimer == nil) || pendingSwitch) && windowListLoaded)
+	// interfaceVisible = ((invoked || pendingSwitch) && displayTimer == nil && windowListLoaded)
     RAC(self, interfaceVisible) = [[RACSignal
     combineLatest:@[RACObserve(self, invoked), RACObserve(self, displayTimer), RACObserve(self, pendingSwitch), RACObserve(self, windowListLoaded)]
     reduce:^(NSNumber *invoked, NSTimer *displayTimer, NSNumber *pendingSwitch, NSNumber *windowListLoaded){
-        return @(((invoked.boolValue && displayTimer == nil) || pendingSwitch.boolValue) && windowListLoaded.boolValue);
+        return @((invoked.boolValue || pendingSwitch.boolValue) && displayTimer == nil && windowListLoaded.boolValue);
     }]
     distinctUntilChanged];
 
