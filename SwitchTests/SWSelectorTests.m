@@ -20,6 +20,7 @@
 
 @property (nonatomic, strong, readonly) NSOrderedSet *list0;
 @property (nonatomic, strong, readonly) NSOrderedSet *list0123;
+@property (nonatomic, strong, readonly) NSOrderedSet *list321;
 
 @end
 
@@ -32,6 +33,7 @@
     
     self->_list0 = [NSOrderedSet orderedSetWithArray:@[@(0)]];
     self->_list0123 = [NSOrderedSet orderedSetWithArray:@[@(0), @(1), @(2), @(3)]];
+    self->_list321 = [NSOrderedSet orderedSetWithArray:@[@(3), @(2), @(1)]];
 }
 
 - (void)tearDown
@@ -232,6 +234,65 @@
     selector = [selector decrementWithoutWrapping];
     XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123[0], @"");
     XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))0, @"");
+    
+    updateWithEmptyAndCheck(selector);
+}
+
+- (void)testDecrementBeforeUpdate;
+{
+    SWSelector *selector = [SWSelector new];
+    
+    selector = [selector decrement];
+    selector = [selector updateWithWindowGroups:self.list0123];
+
+    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123.lastObject, @"");
+    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))(self.list0123.count - 1), @"");
+    
+    updateWithEmptyAndCheck(selector);
+}
+
+- (void)testIncrementBeforeUpdate;
+{
+    SWSelector *selector = [SWSelector new];
+    
+    selector = [selector increment];
+    selector = [selector increment];
+    selector = [selector increment];
+    selector = [selector increment];
+    selector = [selector updateWithWindowGroups:self.list0123];
+    
+    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123.firstObject, @"");
+    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))0, @"");
+    
+    updateWithEmptyAndCheck(selector);
+}
+
+- (void)testUpdateWithSmallerList;
+{
+    SWSelector *selector = [SWSelector new];
+    
+    selector = [selector increment];
+    selector = [selector increment];
+    selector = [selector updateWithWindowGroups:self.list0123];
+    selector = [selector updateWithWindowGroups:self.list0];
+    
+    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123.firstObject, @"");
+    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))0, @"");
+    
+    updateWithEmptyAndCheck(selector);
+}
+
+- (void)testUpdateWithSharedSelectedObject;
+{
+    SWSelector *selector = [SWSelector new];
+    
+    selector = [selector increment];
+    selector = [selector increment];
+    selector = [selector updateWithWindowGroups:self.list0123];
+    selector = [selector updateWithWindowGroups:self.list321];
+    
+    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123[2], @"");
+    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))1, @"");
     
     updateWithEmptyAndCheck(selector);
 }
