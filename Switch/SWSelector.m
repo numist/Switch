@@ -15,13 +15,6 @@
 #import "SWSelector.h"
 
 
-@interface SWSelector ()
-
-@property (nonatomic, copy, readonly) NSOrderedSet *windowGroups;
-
-@end
-
-
 @implementation SWSelector
 
 #pragma mark Initialization

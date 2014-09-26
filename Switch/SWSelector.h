@@ -22,6 +22,7 @@
 
 @property (nonatomic, copy, readonly) SWWindowGroup *selectedWindowGroup;
 @property (nonatomic, assign, readonly) NSInteger selectedIndex;
+@property (nonatomic, copy, readonly) NSOrderedSet *windowGroups;
 
 - (NSUInteger)selectedUIndex;
 

@@ -25,7 +25,7 @@
 #import "SWWindowListService.h"
 
 
-static NSTimeInterval kWindowDisplayDelay = 0.15;
+static NSTimeInterval kWindowDisplayDelay = 0.2;
 static int kScrollThreshold = 50;
 
 
@@ -43,6 +43,7 @@ static int kScrollThreshold = 50;
 @property (nonatomic, assign) BOOL interfaceVisible;
 
 #pragma mark Selector state
+@property (nonatomic, assign) BOOL selectorAdjusted;
 @property (nonatomic, strong) SWSelector *selector;
 @property (nonatomic, assign) int scrollOffset;
 
@@ -196,6 +197,8 @@ static int kScrollThreshold = 50;
     
     SWEventTap *eventTap = [SWEventTap sharedService];
     if (interfaceVisible) {
+        [self _adjustSelector];
+        
         Check(!self.windowControllersByScreenID);
         
         self.windowControllersByScreenID = ^{
@@ -355,6 +358,23 @@ static int kScrollThreshold = 50;
     [self.windowControllerDispatcher selectWindowGroup:self.selector.selectedWindowGroup];
 }
 
+- (void)_adjustSelector;
+{
+    if (!self.selectorAdjusted) {
+        Check(self.windowListLoaded);
+        Check(self.displayTimer == nil || self.pendingSwitch);
+        Check(self.selector.windowGroups == nil);
+        if (self.selector.selectedIndex == 1 && [self.windowGroups count] > 1 && !CLASS_CAST(SWWindowGroup, [self.windowGroups objectAtIndex:0]).mainWindow.application.runningApplication.active) {
+            SWLog(@"Adjusted index to select first window (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+            self.selector = [[SWSelector new] updateWithWindowGroups:self.windowGroups];
+        } else {
+            SWLog(@"Index does not need adjustment (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+        }
+        self.selectorAdjusted = YES;
+        self.selector = [self.selector updateWithWindowGroups:self.windowGroups];
+    }
+}
+
 - (void)_updateWindowGroups:(NSOrderedSet *)windowGroups;
 {
     if ([windowGroups isEqual:self.windowGroups]) {
@@ -366,26 +386,22 @@ static int kScrollThreshold = 50;
         self.windowGroups = nil;
         self.windowControllerDispatcher.windowGroups = nil;
         self.windowListLoaded = NO;
+        self.selectorAdjusted = NO;
         return;
     }
 
     self.windowGroups = windowGroups;
     [self _updateWindowControllerWindowGroups];
-    self.selector = [self.selector updateWithWindowGroups:windowGroups];
 
     if (!self.windowListLoaded) {
         SWLog(@"Window list loaded with %lu windows (%.3fs elapsed)", (unsigned long)self.windowGroups.count, [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
 
-        if (self.selector.selectedIndex == 1 && [self.windowGroups count] > 1 && !CLASS_CAST(SWWindowGroup, [self.windowGroups objectAtIndex:0]).mainWindow.application.runningApplication.active) {
-            SWLog(@"Adjusted index to select first window (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
-            self.selector = [[SWSelector new] updateWithWindowGroups:self.windowGroups];
-        } else {
-            SWLog(@"Index does not need adjustment (%.3fs elapsed)", [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
-        }
-
         self.windowListLoaded = YES;
     } else {
         SWLog(@"Window list updated with %lu windows (%.3fs elapsed)", (unsigned long)self.windowGroups.count, [[NSDate date] timeIntervalSinceDate:self.invocationTime]);
+        if (self.selectorAdjusted) {
+            self.selector = [self.selector updateWithWindowGroups:windowGroups];
+        }
     }
 }
 
@@ -393,6 +409,8 @@ static int kScrollThreshold = 50;
 {
     BailUnless(self.pendingSwitch && self.windowListLoaded,);
 
+    [self _adjustSelector];
+    
     SWWindowGroup *selectedWindowGroup = self.selector.selectedWindowGroup;
     if (!selectedWindowGroup) {
         SWLog(@"No windows to raise! (Selection index: %lu)", self.selector.selectedUIndex);

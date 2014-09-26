@@ -154,14 +154,15 @@
 
 - (void)_windowUpdateNotification:(NSNotification *)notification;
 {
+    SWWindowWorker *worker = notification.object;
+    NSImage *content = notification.userInfo[@"content"];
+    
     dispatch_async(self.queue, ^{
-        SWWindowWorker *worker = notification.object;
         _SWWindowContentContainer *contentContainerObject = [self.contentContainers objectForKey:@(worker.windowID)];
         if (!contentContainerObject) {
             return;
         }
         
-        NSImage *content = notification.userInfo[@"content"];
         if (!Check(content)) {
             return;
         }
