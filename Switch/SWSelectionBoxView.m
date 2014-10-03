@@ -17,7 +17,7 @@
 
 @implementation SWSelectionBoxView
 
-#pragma mark Initialization
+#pragma mark - Initialization
 
 - (id)initWithFrame:(CGRect)frame
 {

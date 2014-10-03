@@ -17,8 +17,8 @@
 
 #if DEBUG
 
-#import <objc/runtime.h>
 #import <objc/message.h>
+#import <objc/runtime.h>
 
 // Compile-time selector checks.
 #if DEBUG

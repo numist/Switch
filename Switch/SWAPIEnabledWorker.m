@@ -29,7 +29,7 @@ NSString *SWAXAPIEnabledKey = @"AXAPIEnabled";
 
 @implementation SWAPIEnabledWorker
 
-#pragma mark Initialization
+#pragma mark - Initialization
 
 - (instancetype)init;
 {
@@ -41,7 +41,7 @@ NSString *SWAXAPIEnabledKey = @"AXAPIEnabled";
     return self;
 }
 
-#pragma mark NNPollingObject
+#pragma mark - NNPollingObject
 
 - (void)main;
 {
@@ -52,7 +52,7 @@ NSString *SWAXAPIEnabledKey = @"AXAPIEnabled";
     }
 }
 
-#pragma mark SWAPIEnabledWorker
+#pragma mark - SWAPIEnabledWorker
 
 + (BOOL)isAPIEnabled;
 {

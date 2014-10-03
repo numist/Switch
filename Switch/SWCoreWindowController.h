@@ -16,13 +16,13 @@
 
 
 @class SWCoreWindowController;
-@class SWWindowGroup;
+@class SWWindow;
 
 
 @protocol SWCoreWindowControllerDelegate <NSObject>
 
-- (void)coreWindowController:(SWCoreWindowController *)controller didSelectWindowGroup:(SWWindowGroup *)windowGroup;
-- (void)coreWindowController:(SWCoreWindowController *)controller didActivateWindowGroup:(SWWindowGroup *)windowGroup;
+- (void)coreWindowController:(SWCoreWindowController *)controller didSelectWindow:(SWWindow *)window;
+- (void)coreWindowController:(SWCoreWindowController *)controller didActivateWindow:(SWWindow *)window;
 
 @end
 
@@ -31,17 +31,17 @@
 @protocol SWCoreWindowControllerAPI <NSObject>
 
 @required
-- (void)setWindowGroups:(NSOrderedSet *)windowGroups;
-- (void)selectWindowGroup:(SWWindowGroup *)windowGroup;
-- (void)disableWindowGroup:(SWWindowGroup *)windowGroup;
-- (void)enableWindowGroup:(SWWindowGroup *)windowGroup;
+- (void)updateWindowList:(NSOrderedSet *)windowList;
+- (void)selectWindow:(SWWindow *)window;
+- (void)disableWindow:(SWWindow *)window;
+- (void)enableWindow:(SWWindow *)window;
 
 @end
 
 
 @interface SWCoreWindowController : NSWindowController <SWCoreWindowControllerAPI>
 
-@property (nonatomic, strong) NSOrderedSet *windowGroups;
+@property (nonatomic, strong, setter=updateWindowList:) NSOrderedSet *windowList;
 @property (nonatomic, weak) id<SWCoreWindowControllerDelegate> delegate;
 
 - (id)initWithScreen:(NSScreen *)screen;

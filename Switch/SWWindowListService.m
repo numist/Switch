@@ -14,12 +14,12 @@
 
 #import "SWWindowListService.h"
 
+#import <NNKit/NNService+Protected.h>
+
+#import "SWApplication.h"
 #import "SWWindow.h"
 #import "SWWindowGroup.h"
 #import "SWWindowListWorker.h"
-#import "SWApplication.h"
-
-#import <NNKit/NNService+Protected.h>
 
 
 @interface SWWindowListService ()
@@ -35,7 +35,7 @@ static NSMutableSet *loggedWindows;
 
 @implementation SWWindowListService
 
-#pragma mark Initialization
+#pragma mark - Initialization
 
 - (id)init;
 {
@@ -48,7 +48,7 @@ static NSMutableSet *loggedWindows;
     return self;
 }
 
-#pragma mark NNService
+#pragma mark - NNService
 
 + (NNServiceType)serviceType;
 {
@@ -85,7 +85,7 @@ static NSMutableSet *loggedWindows;
     [super stopService];
 }
 
-#pragma mark SWWindowListService
+#pragma mark - SWWindowListService
 
 + (NSOrderedSet *)filterInfoDictionariesToWindowObjects:(NSArray *)infoDicts;
 {
@@ -168,7 +168,7 @@ static NSMutableSet *loggedWindows;
     return [mutableWindowGroupList reversedOrderedSet];
 }
 
-#pragma mark Internal
+#pragma mark - Internal
 
 - (void)_workerUpdatedWindowList:(NSNotification *)notification;
 {
@@ -186,7 +186,8 @@ static NSMutableSet *loggedWindows;
     BailUnless(windowInfoList,);
     NSOrderedSet *windowObjectList = [[self class] filterInfoDictionariesToWindowObjects:windowInfoList];
     NSOrderedSet *windowGroupList = [[self class] filterWindowObjectsToWindowGroups:windowObjectList];
-    
+
+    // This probably needs to change for #105 to get fixed properly as well—there are two views of equality, window order and window order and activation.
     if (![self.windows isEqualToOrderedSet:windowGroupList]) {
         self.windows = windowGroupList;
         [(id<SWWindowListSubscriber>)self.subscriberDispatcher windowListService:self updatedList:self.windows];

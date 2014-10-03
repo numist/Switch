@@ -16,8 +16,8 @@
 
 #import <NNKit/NNService+Protected.h>
 
-#import "SWWindowListService.h"
 #import "SWWindowGroup.h"
+#import "SWWindowListService.h"
 #import "SWWindowWorker.h"
 
 
@@ -55,7 +55,7 @@
 
 @implementation SWWindowContentsService
 
-#pragma mark Initialization
+#pragma mark - Initialization
 
 - (id)init;
 {
@@ -69,7 +69,7 @@
     return self;
 }
 
-#pragma mark NNService
+#pragma mark - NNService
 
 + (NNServiceType)serviceType;
 {
@@ -109,7 +109,7 @@
     [super stopService];
 }
 
-#pragma mark SWWindowContentsService
+#pragma mark - SWWindowContentsService
 
 - (NSImage *)contentForWindow:(SWWindow *)window;
 {
@@ -117,7 +117,7 @@
     return contentContainerObject.content;
 }
 
-#pragma mark SWWindowListSubscriber
+#pragma mark - SWWindowListSubscriber
 
 - (oneway void)windowListService:(SWWindowListService *)service updatedList:(NSOrderedSet *)windowList;
 {
@@ -150,7 +150,7 @@
     });
 }
 
-#pragma mark Internal
+#pragma mark - Internal
 
 - (void)_windowUpdateNotification:(NSNotification *)notification;
 {

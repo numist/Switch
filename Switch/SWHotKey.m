@@ -20,7 +20,7 @@ static NSDictionary *specialKeys = nil;
 
 @implementation SWHotKey
 
-#pragma mark Initialization
+#pragma mark - Initialization
 
 + (void)initialize;
 {
@@ -114,7 +114,7 @@ static NSDictionary *specialKeys = nil;
     return self;
 }
 
-#pragma mark NSObject
+#pragma mark - NSObject
 
 - (NSUInteger)hash;
 {
@@ -138,7 +138,7 @@ static NSDictionary *specialKeys = nil;
             [self codeDescription]];
 }
 
-#pragma mark Internal
+#pragma mark - Internal
 
 - (NSString *)codeDescription;
 {

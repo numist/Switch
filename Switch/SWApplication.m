@@ -19,13 +19,24 @@
 #import "SWWindow.h"
 
 
+@interface SWApplication ()
+
+@property (nonatomic, strong, readonly) NSRunningApplication *runningApplication;
+
+@end
+
+
 @implementation SWApplication
 
-#pragma mark Initialization
+#pragma mark - Initialization
 
 + (instancetype)applicationWithPID:(pid_t)pid name:(NSString *)name;
 {
-    return [[self alloc] initWithPID:pid name:name];
+    Class factory = self;
+    if (NSClassFromString(@"SWTestApplication")) {
+        factory = NSClassFromString(@"SWTestApplication");
+    }
+    return [[factory alloc] initWithPID:pid name:name];
 }
 
 - (instancetype)initWithPID:(pid_t)pid name:(NSString *)name;
@@ -39,7 +50,7 @@
     return self;
 }
 
-#pragma mark NSObject
+#pragma mark - NSObject
 
 - (instancetype)copyWithZone:(NSZone *)zone;
 {
@@ -63,12 +74,17 @@
     return [NSString stringWithFormat:@"%p <%d (%@)>", self, self.pid, self.name];
 }
 
-#pragma mark SWApplication
+#pragma mark - SWApplication
 
 - (NSImage *)icon;
 {
     NSString *path = [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:[self.runningApplication bundleIdentifier]];
     return [[NSWorkspace sharedWorkspace] iconForFile:path];
+}
+
+- (BOOL)isActiveApplication;
+{
+    return self.runningApplication.active;
 }
 
 - (BOOL)isCurrentApplication;

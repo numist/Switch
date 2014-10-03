@@ -18,7 +18,9 @@ static BOOL (^imagesDifferByCachedTIFFComparison)(NSImage *, NSImage *) = ^(NSIm
         NSData *result = objc_getAssociatedObject(image, tiffContextKey);
         if (!result) {
             result = [image TIFFRepresentation];
+#ifndef TESTING
             objc_setAssociatedObject(image, tiffContextKey, result, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+#endif
         }
         return result;
     };
@@ -29,71 +31,73 @@ static BOOL (^imagesDifferByCachedTIFFComparison)(NSImage *, NSImage *) = ^(NSIm
 };
 
 /// This used to be the fastest option, but something changed in CG and it's now doing a whole lot of buffer copying. I suspect it used to be returning references (instead of copies) from calls to CGDataProviderCopyData
-//static BOOL (^imagesDifferByCGDataProviderComparison)(CGImageRef, CGImageRef) = ^(CGImageRef a, CGImageRef b) {
-//    BOOL result = NO;
-//    
-//    CGDataProviderRef aDataProvider = CGImageGetDataProvider(a);
-//    CGDataProviderRef bDataProvider = CGImageGetDataProvider(b);
-//    
-//    CFDataRef aData = NNCFAutorelease(CGDataProviderCopyData(aDataProvider));
-//    CFDataRef bData = NNCFAutorelease(CGDataProviderCopyData(bDataProvider));
-//    
-//    if (CFDataGetLength(aData) != CFDataGetLength(bData)) {
-//        result = YES;
-//    }
-//    
-//    if (!result) {
-//        // It turns out that striding over the buffers is slower than memcmp. Jesus.
-//        result = !!memcmp(CFDataGetBytePtr(aData), CFDataGetBytePtr(bData), (unsigned long)CFDataGetLength(aData));
-//    }
-//    
-//    return result;
-//};
+static BOOL (^imagesDifferByCGDataProviderComparison)(CGImageRef, CGImageRef) = ^(CGImageRef a, CGImageRef b) {
+    BOOL result = NO;
+    
+    CGDataProviderRef aDataProvider = CGImageGetDataProvider(a);
+    CGDataProviderRef bDataProvider = CGImageGetDataProvider(b);
+    
+    CFDataRef aData = NNCFAutorelease(CGDataProviderCopyData(aDataProvider));
+    CFDataRef bData = NNCFAutorelease(CGDataProviderCopyData(bDataProvider));
+    
+    if (CFDataGetLength(aData) != CFDataGetLength(bData)) {
+        result = YES;
+    }
+    
+    if (!result) {
+        // It turns out that striding over the buffers is slower than memcmp. Jesus.
+        result = !!memcmp(CFDataGetBytePtr(aData), CFDataGetBytePtr(bData), (unsigned long)CFDataGetLength(aData));
+    }
+    
+    return result;
+};
 
 /// This was both slow and inexact.
-//static BOOL (^imagesDifferByCachedBitmapContextComparison)(NSImage *, NSImage *) = ^(NSImage *a, NSImage *b) {
-//    static void *bitmapContextKey = (void *)1567529422; // Guaranteed random by arc4random()
-//    NSSize imageSize = a.size;
-//    assert(a.size.width == b.size.width);
-//    assert(a.size.height == b.size.height);
-//    
-//    // Sane number of testing points per axis.
-//    CGFloat maxSize = 32;
-//    CGFloat x = maxSize * imageSize.width / MAX(imageSize.width, imageSize.height);
-//    CGFloat y = maxSize * imageSize.height / MAX(imageSize.width, imageSize.height);
-//    
-//    CGContextRef (^contextForImage)(NSImage *) = ^(NSImage *image) {
-//        CGContextRef result = (CGContextRef)CFBridgingRetain(objc_getAssociatedObject(image, bitmapContextKey));
-//        if (!result) {
-//            // Bake the old image data into a (smallish) buffer.
-//            result = CGBitmapContextCreate(NULL, (unsigned)x, (unsigned)y, 8, 0, [[NSColorSpace genericRGBColorSpace] CGColorSpace], kCGBitmapByteOrder32Host|kCGImageAlphaPremultipliedFirst);
-//            [NSGraphicsContext saveGraphicsState];
-//            [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:result flipped:NO]];
-//            [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationNone];
-//            [image drawInRect:CGRectMake(0, 0, x, y) fromRect:CGRectZero operation:NSCompositeCopy fraction:1.0];
-//            [NSGraphicsContext restoreGraphicsState];
-//            objc_setAssociatedObject(image, bitmapContextKey, (__bridge id)result, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-//        }
-//        return result;
-//    };
-//    
-//    CGContextRef aContext = contextForImage(a);
-//    void *aData = CGBitmapContextGetData(aContext);
-//    
-//    CGContextRef bContext = contextForImage(b);
-//    void *bData = CGBitmapContextGetData(bContext);
-//    
-//    // Determine the size of the buffers.
-//    size_t bytesPerRow = CGBitmapContextGetBytesPerRow(bContext);
-//    size_t height = CGBitmapContextGetHeight(bContext);
-//    size_t len = bytesPerRow * height;
-//    
-//    // Determine image equality, with hoizTestPointCount * vertTestPointCount pixel samples.
-//    BOOL result = !!memcmp(aData, bData, len);
-//    
-//    // Clean up.
-//    CFRelease(aContext);
-//    CFRelease(bContext);
-//    
-//    return result;
-//};
+static BOOL (^imagesDifferByCachedBitmapContextComparison)(NSImage *, NSImage *) = ^(NSImage *a, NSImage *b) {
+    static void *bitmapContextKey = (void *)1567529422; // Guaranteed random by arc4random()
+    NSSize imageSize = a.size;
+    assert(a.size.width == b.size.width);
+    assert(a.size.height == b.size.height);
+    
+    // Sane number of testing points per axis.
+    CGFloat maxSize = 32;
+    CGFloat x = maxSize * imageSize.width / MAX(imageSize.width, imageSize.height);
+    CGFloat y = maxSize * imageSize.height / MAX(imageSize.width, imageSize.height);
+    
+    CGContextRef (^contextForImage)(NSImage *) = ^(NSImage *image) {
+        CGContextRef result = (CGContextRef)CFBridgingRetain(objc_getAssociatedObject(image, bitmapContextKey));
+        if (!result) {
+            // Bake the old image data into a (smallish) buffer.
+            result = CGBitmapContextCreate(NULL, (unsigned)x, (unsigned)y, 8, 0, [[NSColorSpace genericRGBColorSpace] CGColorSpace], kCGBitmapByteOrder32Host|kCGImageAlphaPremultipliedFirst);
+            [NSGraphicsContext saveGraphicsState];
+            [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:result flipped:NO]];
+            [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationNone];
+            [image drawInRect:CGRectMake(0, 0, x, y) fromRect:CGRectZero operation:NSCompositeCopy fraction:1.0];
+            [NSGraphicsContext restoreGraphicsState];
+#ifndef TESTING
+            objc_setAssociatedObject(image, bitmapContextKey, (__bridge id)result, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+#endif
+        }
+        return result;
+    };
+    
+    CGContextRef aContext = contextForImage(a);
+    void *aData = CGBitmapContextGetData(aContext);
+    
+    CGContextRef bContext = contextForImage(b);
+    void *bData = CGBitmapContextGetData(bContext);
+    
+    // Determine the size of the buffers.
+    size_t bytesPerRow = CGBitmapContextGetBytesPerRow(bContext);
+    size_t height = CGBitmapContextGetHeight(bContext);
+    size_t len = bytesPerRow * height;
+    
+    // Determine image equality, with hoizTestPointCount * vertTestPointCount pixel samples.
+    BOOL result = !!memcmp(aData, bData, len);
+    
+    // Clean up.
+    CFRelease(aContext);
+    CFRelease(bContext);
+    
+    return result;
+};

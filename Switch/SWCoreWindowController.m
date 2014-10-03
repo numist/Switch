@@ -17,7 +17,7 @@
 #import "NSSet+SWChaining.h"
 #import "SWEventTap.h"
 #import "SWHUDCollectionView.h"
-#import "SWWindowGroup.h"
+#import "SWWindow.h"
 #import "SWWindowThumbnailView.h"
 
 
@@ -33,7 +33,7 @@
 
 @implementation SWCoreWindowController
 
-#pragma mark Initialization
+#pragma mark - Initialization
 
 - (id)initWithScreen:(NSScreen *)screen;
 {
@@ -47,7 +47,10 @@
     
     @weakify(self);
     [[SWEventTap sharedService] registerForEventsWithType:kCGEventMouseMoved object:self block:^(CGEventRef event) {
+        // The event is passed by reference. Copy it in case it mutates after control returns to the caller. Released in the async block below.
+        event = CGEventCreateCopy(event);
         dispatch_async(dispatch_get_main_queue(), ^{
+            NNCFAutorelease(event);
             @strongify(self);
             
             NSPoint windowLocation = [self.window convertScreenToBase:[NSEvent mouseLocation]];
@@ -94,44 +97,44 @@
     self.interfaceLoaded = YES;
 }
 
-#pragma mark SWCoreWindowController
+#pragma mark - SWCoreWindowController
 
-- (void)setWindowGroups:(NSOrderedSet *)windowGroups;
+- (void)updateWindowList:(NSOrderedSet *)windowList;
 {
     // Throw out any cells that aren't needed anymore.
-    NSSet *removedWindowGroups = [[NSSet setWithArray:self.collectionCells.allKeys] sw_minusSet:windowGroups.set];
-    [self.collectionCells removeObjectsForKeys:removedWindowGroups.allObjects];
+    NSSet *removedWindows = [[NSSet setWithArray:self.collectionCells.allKeys] sw_minusSet:windowList.set];
+    [self.collectionCells removeObjectsForKeys:removedWindows.allObjects];
 
-    _windowGroups = windowGroups;
+    _windowList = windowList;
     [self.collectionView reloadData];
 }
 
-- (void)selectWindowGroup:(SWWindowGroup *)windowGroup;
+- (void)selectWindow:(SWWindow *)window;
 {
-    NSUInteger index = [self.windowGroups indexOfObject:windowGroup];
+    NSUInteger index = [self.windowList indexOfObject:window];
 
-    if (index < self.windowGroups.count) {
+    if (index < self.windowList.count) {
         [self.collectionView selectCellAtIndex:index];
     } else {
         [self.collectionView deselectCell];
     }
 }
 
-- (void)disableWindowGroup:(SWWindowGroup *)windowGroup;
+- (void)disableWindow:(SWWindow *)window;
 {
-    if (![self.windowGroups containsObject:windowGroup]) { return; }
+    if (![self.windowList containsObject:window]) { return; }
     
-    [self _thumbnailForWindowGroup:windowGroup].active = NO;
+    [self _thumbnailForWindow:window].active = NO;
 }
 
-- (void)enableWindowGroup:(SWWindowGroup *)windowGroup;
+- (void)enableWindow:(SWWindow *)window;
 {
-    if (![self.windowGroups containsObject:windowGroup]) { return; }
+    if (![self.windowList containsObject:window]) { return; }
     
-    [self _thumbnailForWindowGroup:windowGroup].active = YES;
+    [self _thumbnailForWindow:window].active = YES;
 }
 
-#pragma mark SWHUDCollectionViewDataSource
+#pragma mark - SWHUDCollectionViewDataSource
 
 - (CGFloat)HUDCollectionViewMaximumCellSize:(SWHUDCollectionView *)view;
 {
@@ -140,7 +143,7 @@
 
 - (NSUInteger)HUDCollectionViewNumberOfCells:(SWHUDCollectionView *)view;
 {
-    return self.windowGroups.count;
+    return self.windowList.count;
 }
 
 - (NSView *)HUDCollectionView:(SWHUDCollectionView *)view viewForCellAtIndex:(NSUInteger)index;
@@ -148,43 +151,43 @@
     BailUnless([view isEqual:self.collectionView], [[NSView alloc] initWithFrame:CGRectZero]);
     
     // Boundary method, index may not be in-bounds.
-    SWWindowGroup *windowGroup = index < self.windowGroups.count ? self.windowGroups[index] : nil;
-    BailUnless(windowGroup, [[NSView alloc] initWithFrame:CGRectZero]);
+    SWWindow *window = index < self.windowList.count ? self.windowList[index] : nil;
+    BailUnless(window, [[NSView alloc] initWithFrame:CGRectZero]);
 
-    if (!self.collectionCells[windowGroup]) {
-        self.collectionCells[windowGroup] = [[SWWindowThumbnailView alloc] initWithFrame:CGRectZero windowGroup:windowGroup];
+    if (!self.collectionCells[window]) {
+        self.collectionCells[window] = [[SWWindowThumbnailView alloc] initWithFrame:CGRectZero window:window];
     }
 
-    return self.collectionCells[windowGroup];
+    return self.collectionCells[window];
 }
 
-#pragma mark SWHUDCollectionViewDelegate
+#pragma mark - SWHUDCollectionViewDelegate
 
 - (void)HUDCollectionView:(SWHUDCollectionView *)view didSelectCellAtIndex:(NSUInteger)index;
 {
-    if (!Check(index < self.windowGroups.count)) {
-        index = self.windowGroups.count - 1;
+    if (!Check(index < self.windowList.count)) {
+        index = self.windowList.count - 1;
     }
     id<SWCoreWindowControllerDelegate> delegate = self.delegate;
-    [delegate coreWindowController:self didSelectWindowGroup:self.windowGroups[index]];
+    [delegate coreWindowController:self didSelectWindow:self.windowList[index]];
 }
 
 - (void)HUDCollectionView:(SWHUDCollectionView *)view activateCellAtIndex:(NSUInteger)index;
 {
-    if (!Check(index < self.windowGroups.count)) {
-        index = self.windowGroups.count - 1;
+    if (!Check(index < self.windowList.count)) {
+        index = self.windowList.count - 1;
     }
     id<SWCoreWindowControllerDelegate> delegate = self.delegate;
-    [delegate coreWindowController:self didActivateWindowGroup:self.windowGroups[index]];
+    [delegate coreWindowController:self didActivateWindow:self.windowList[index]];
 }
 
 #pragma mark - Private
 
-- (SWWindowThumbnailView *)_thumbnailForWindowGroup:(SWWindowGroup *)windowGroup;
+- (SWWindowThumbnailView *)_thumbnailForWindow:(SWWindow *)window;
 {
-    NSUInteger index = [self.windowGroups indexOfObject:windowGroup];
+    NSUInteger index = [self.windowList indexOfObject:window];
 
-    if (index < self.windowGroups.count) {
+    if (index < self.windowList.count) {
         id thumb = [self.collectionView cellForIndex:index];
 
         if (!Check([thumb isKindOfClass:[SWWindowThumbnailView class]])) {

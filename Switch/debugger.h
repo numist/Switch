@@ -35,7 +35,7 @@
     #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
         // iOS DebugBreak initial implementations provided by http://iphone.m20.nl/wp/?p=1 (now defunct). This code has been largely rewritten.
         #if defined(__arm__)
-            #pragma mark iOS(arm)
+            #pragma mark - iOS(arm)
 
             #define DebugBreak() \
                 do { \
@@ -51,7 +51,7 @@
                 } while (false)
 
         #elif defined(__i386__) || defined(__x86_64__)
-            #pragma mark iOS(x86)
+            #pragma mark - iOS(x86)
 
             #define DebugBreak() \
                 do { \
@@ -68,14 +68,14 @@
                 } while (false)
 
         #else
-            #pragma mark iOS(unknown)
+            #pragma mark - iOS(unknown)
             #warning Debugger: Current iOS architecture not supported, please report (Debugger integration disabled)
             #define DebugBreak()
         #endif
     #elif TARGET_OS_MAC
         // Mac DebugBreak initial implementations provided by: http://cocoawithlove.com/2008/03/break-into-debugger.html
         #if defined(__ppc64__) || defined(__ppc__)
-            #pragma mark desktop(ppc)
+            #pragma mark - desktop(ppc)
 
             #define DebugBreak() \
                 if(AmIBeingDebugged()) \
@@ -93,20 +93,20 @@
                 }
 
         #elif defined(__x86_64__) || defined(__i386__)
-            #pragma mark desktop(x86)
+            #pragma mark - desktop(x86)
             #define DebugBreak() if(AmIBeingDebugged()) {__asm__("int $3\n" : : );}
         #else
-            #pragma mark desktop(unknown)
+            #pragma mark - desktop(unknown)
             #warning Debugger: Current desktop architecture not supported, please report (Debugger integration disabled)
             #define DebugBreak()
         #endif
     #else
-        #pragma mark unknown()
+        #pragma mark - unknown()
         #warning Debugger: Current platform not supported, please report (Debugger integration disabled)
         #define DebugBreak()
     #endif
 
-#pragma mark High(er) level debugging macros
+#pragma mark - High(er) level debugging macros
     #define NotTested() do { \
                 Log(@"NOT TESTED"); \
                 DebugBreak(); \

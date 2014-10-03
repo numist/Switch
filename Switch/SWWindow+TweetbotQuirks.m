@@ -14,6 +14,7 @@
 
 #import "SWWindow+TweetbotQuirks.h"
 
+
 @implementation SWWindow (TweetbotQuirks)
 
 - (BOOL)tweetbot_isRelatedToLowerWindow:(SWWindow *)window;

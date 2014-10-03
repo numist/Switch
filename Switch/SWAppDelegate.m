@@ -14,8 +14,8 @@
 
 #import "SWAppDelegate.h"
 
-#import <Sparkle/Sparkle.h>
 #import <HockeySDK/HockeySDK.h>
+#import <Sparkle/Sparkle.h>
 
 #import "SWPreferencesService.h"
 #import "SWWindowListService.h"
@@ -23,7 +23,7 @@
 
 @implementation SWAppDelegate
 
-#pragma mark NSApplicationDelegate
+#pragma mark - NSApplicationDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification;
 {
@@ -62,7 +62,7 @@
     [NSApp terminate:sender];
 }
 
-#pragma mark IBAction
+#pragma mark - IBAction
 
 - (IBAction)showPreferences:(id)sender;
 {

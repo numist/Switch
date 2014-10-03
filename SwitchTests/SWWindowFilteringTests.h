@@ -16,7 +16,7 @@
 #define Switch_NNWindowFilteringTests_h
 
 
-#define DICT_FROM_RECT(rect) (__bridge NSDictionary *)CGRectCreateDictionaryRepresentation(rect)
+#define DICT_FROM_RECT(rect) ((__bridge_transfer NSDictionary *)CGRectCreateDictionaryRepresentation(rect))
 
 
 static NSString *NNWindowAlpha;

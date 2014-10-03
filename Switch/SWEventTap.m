@@ -54,7 +54,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
     [self _removeEventTap];
 }
 
-#pragma mark NNService
+#pragma mark - NNService
 
 + (NNServiceType)serviceType;
 {
@@ -75,7 +75,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
     [super stopService];
 }
 
-#pragma mark SWEventTap
+#pragma mark - SWEventTap
 
 - (void)registerHotKey:(SWHotKey *)hotKey object:(id)owner block:(SWEventTapKeyFilter)eventFilter;
 {
@@ -140,7 +140,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
     [self.eventTypeCallbacks[@(eventType)] removeObjectForKey:@((uintptr_t)owner)];
 }
 
-#pragma mark Internal
+#pragma mark - Internal
 
 // Called from dealloc, use direct ivar access.
 - (void)_removeEventTap;

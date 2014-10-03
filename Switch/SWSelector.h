@@ -15,14 +15,14 @@
 #import <Foundation/Foundation.h>
 
 
-@class SWWindowGroup;
+@class SWWindow;
 
 
 @interface SWSelector : NSObject
 
-@property (nonatomic, copy, readonly) SWWindowGroup *selectedWindowGroup;
+@property (nonatomic, copy, readonly) SWWindow *selectedWindow;
 @property (nonatomic, assign, readonly) NSInteger selectedIndex;
-@property (nonatomic, copy, readonly) NSOrderedSet *windowGroups;
+@property (nonatomic, copy, readonly) NSOrderedSet *windowList;
 
 - (NSUInteger)selectedUIndex;
 
@@ -31,6 +31,6 @@
 - (instancetype)decrement;
 - (instancetype)decrementWithoutWrapping;
 - (instancetype)selectIndex:(NSInteger)index;
-- (instancetype)updateWithWindowGroups:(NSOrderedSet *)windowGroups;
+- (instancetype)updateWithWindowList:(NSOrderedSet *)windowList;
 
 @end

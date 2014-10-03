@@ -12,10 +12,10 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "SWWindowListServiceTests.h"
+#import "SWWindowListServiceTestSuperclass.h"
 
 
-@interface SWGithubTests : SWWindowListServiceTests
+@interface SWGithubTests : SWWindowListServiceTestSuperclass
 
 @end
 
@@ -46,7 +46,7 @@
     
     [self updateListServiceWithInfoList:infoList];
     
-    XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))1, @"");
+    XCTAssertEqual(self.listService.windows.count, 1, @"");
     XCTAssertEqual(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).windows.count, infoList.count, @"");
     XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, windowDescription, @"");
 }

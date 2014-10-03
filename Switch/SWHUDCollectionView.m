@@ -43,7 +43,7 @@
 
 @implementation SWHUDCollectionView
 
-#pragma mark Initialization
+#pragma mark - Initialization
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -60,7 +60,7 @@
     return self;
 }
 
-#pragma mark NSResponder
+#pragma mark - NSResponder
 
 - (BOOL)acceptsFirstResponder;
 {
@@ -114,7 +114,7 @@
     return;
 }
 
-#pragma mark NSView
+#pragma mark - NSView
 
 + (BOOL)requiresConstraintBasedLayout;
 {
@@ -144,7 +144,7 @@
     [super updateConstraints];
 }
 
-#pragma mark SWHUDCollectionView
+#pragma mark - SWHUDCollectionView
 
 - (void)setDataSource:(id<SWHUDCollectionViewDataSource>)dataSource;
 {
@@ -199,7 +199,7 @@
     }
 }
 
-#pragma mark Internal
+#pragma mark - Internal
 
 - (NSUInteger)_indexForCellAtPoint:(NSPoint)point;
 {

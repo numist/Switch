@@ -14,8 +14,8 @@
 
 #import "SWPreferencesService.h"
 
-#import <NNKit/NNService+Protected.h>
 #import <MASPreferencesWindowController.h>
+#import <NNKit/NNService+Protected.h>
 
 #import "SWAPIEnabledWorker.h"
 #import "SWAdvancedPreferencesViewController.h"
@@ -36,7 +36,7 @@ static NSString const * const kSWShowStatusItemKey = @"showStatusItem";
 
 @implementation SWPreferencesService
 
-#pragma mark NNService
+#pragma mark - NNService
 
 + (NNServiceType)serviceType;
 {
@@ -94,7 +94,7 @@ static NSString const * const kSWShowStatusItemKey = @"showStatusItem";
     [defaults synchronize];
 }
 
-#pragma mark SWPreferencesService
+#pragma mark - SWPreferencesService
 
 - (void)setMultimonInterface:(BOOL)multimonInterface;
 {
@@ -125,7 +125,7 @@ static NSString const * const kSWShowStatusItemKey = @"showStatusItem";
     return [[NSUserDefaults standardUserDefaults] objectForKey:[key copy]];
 }
 
-#pragma mark Internal
+#pragma mark - Internal
 
 - (NSDictionary *)_defaultValues;
 {

@@ -15,8 +15,8 @@
 #import "SWWindow.h"
 #import "SWWindow+TweetbotQuirks.h"
 
-#import <Haxcessibility/Haxcessibility.h>
 #import <Haxcessibility/HAXElement+Protected.h>
+#import <Haxcessibility/Haxcessibility.h>
 
 #import "NSScreen+SWAdditions.h"
 #import "SWApplication.h"
@@ -24,7 +24,7 @@
 
 @implementation SWWindow
 
-#pragma mark Initialization
+#pragma mark - Initialization
 
 + (instancetype)windowWithDescription:(NSDictionary *)description;
 {
@@ -45,7 +45,7 @@
     return self;
 }
 
-#pragma mark NSObject
+#pragma mark - NSObject
 
 - (instancetype)copyWithZone:(NSZone *)zone;
 {
@@ -68,7 +68,7 @@
     return [NSString stringWithFormat:@"%p <%u (%@)>", self, self.windowID, self.name];
 }
 
-#pragma mark SWWindow
+#pragma mark - SWWindow
 
 - (CGRect)flippedFrame;
 {
