@@ -1392,55 +1392,55 @@ static SWWindow *(^rwg)() = ^{
 
 #pragma mark Compound tests executing end-to-end usage
 
-- (void)testInvokeTimerWindowListKeyReleasedSuccessfulRaise;
+- (void)ptestInvokeTimerWindowListKeyReleasedSuccessfulRaise;
 {
     [self testInvokeTimerWindowListKeyReleased];
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeWindowListTimerKeyReleasedSuccessfulRaise;
+- (void)ptestInvokeWindowListTimerKeyReleasedSuccessfulRaise;
 {
     [self testInvokeWindowListTimerKeyReleased];
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeWindowListKeyReleasedTimerSuccessfulRaise;
+- (void)ptestInvokeWindowListKeyReleasedTimerSuccessfulRaise;
 {
     [self testInvokeWindowListKeyReleasedTimer];
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeKeyReleasedWindowListTimerSuccessfulRaise;
+- (void)ptestInvokeKeyReleasedWindowListTimerSuccessfulRaise;
 {
     [self testInvokeKeyReleasedWindowListTimer];
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeKeyReleasedTimerWindowListSuccessfulRaise;
+- (void)ptestInvokeKeyReleasedTimerWindowListSuccessfulRaise;
 {
     [self testInvokeKeyReleasedTimerWindowList];
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeTimerKeyReleasedWindowListSuccessfulRaise;
+- (void)ptestInvokeTimerKeyReleasedWindowListSuccessfulRaise;
 {
     [self testInvokeTimerKeyReleasedWindowList];
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeKeyReleasedWindowListSuccessfulRaise;
+- (void)ptestInvokeKeyReleasedWindowListSuccessfulRaise;
 {
     [self testInvokeKeyReleasedWindowList];
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeWindowListKeyReleasedSuccessfulRaise;
+- (void)ptestInvokeWindowListKeyReleasedSuccessfulRaise;
 {
     [self testInvokeWindowListKeyReleased];
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeTimerWindowListKeyReleasedSuccessfulRaiseTwice;
+- (void)ptestInvokeTimerWindowListKeyReleasedSuccessfulRaiseTwice;
 {
     [self testInvokeTimerWindowListKeyReleased];
     [self stateMachineCompletePendingRaise];
@@ -1448,7 +1448,7 @@ static SWWindow *(^rwg)() = ^{
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeWindowListTimerKeyReleasedSuccessfulRaiseTwice;
+- (void)ptestInvokeWindowListTimerKeyReleasedSuccessfulRaiseTwice;
 {
     [self testInvokeWindowListTimerKeyReleased];
     [self stateMachineCompletePendingRaise];
@@ -1456,7 +1456,7 @@ static SWWindow *(^rwg)() = ^{
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeWindowListKeyReleasedTimerSuccessfulRaiseTwice;
+- (void)ptestInvokeWindowListKeyReleasedTimerSuccessfulRaiseTwice;
 {
     [self testInvokeWindowListKeyReleasedTimer];
     [self stateMachineCompletePendingRaise];
@@ -1464,7 +1464,7 @@ static SWWindow *(^rwg)() = ^{
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeKeyReleasedWindowListTimerSuccessfulRaiseTwice;
+- (void)ptestInvokeKeyReleasedWindowListTimerSuccessfulRaiseTwice;
 {
     [self testInvokeKeyReleasedWindowListTimer];
     [self stateMachineCompletePendingRaise];
@@ -1472,7 +1472,7 @@ static SWWindow *(^rwg)() = ^{
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeKeyReleasedTimerWindowListSuccessfulRaiseTwice;
+- (void)ptestInvokeKeyReleasedTimerWindowListSuccessfulRaiseTwice;
 {
     [self testInvokeKeyReleasedTimerWindowList];
     [self stateMachineCompletePendingRaise];
@@ -1480,7 +1480,7 @@ static SWWindow *(^rwg)() = ^{
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeTimerKeyReleasedWindowListSuccessfulRaiseTwice;
+- (void)ptestInvokeTimerKeyReleasedWindowListSuccessfulRaiseTwice;
 {
     [self testInvokeTimerKeyReleasedWindowList];
     [self stateMachineCompletePendingRaise];
@@ -1488,7 +1488,7 @@ static SWWindow *(^rwg)() = ^{
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeKeyReleasedWindowListSuccessfulRaiseTwice;
+- (void)ptestInvokeKeyReleasedWindowListSuccessfulRaiseTwice;
 {
     [self testInvokeKeyReleasedWindowList];
     [self stateMachineCompletePendingRaise];
@@ -1496,7 +1496,7 @@ static SWWindow *(^rwg)() = ^{
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeWindowListKeyReleasedSuccessfulRaiseTwice;
+- (void)ptestInvokeWindowListKeyReleasedSuccessfulRaiseTwice;
 {
     [self testInvokeWindowListKeyReleased];
     [self stateMachineCompletePendingRaise];
@@ -1504,120 +1504,168 @@ static SWWindow *(^rwg)() = ^{
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeTimerWindowListKeyReleasedSuccessfulRaiseInterrupted;
+- (void)ptestInvokeTimerWindowListKeyReleasedSuccessfulRaiseInterrupted;
 {
     [self testInvokeTimerWindowListKeyReleased];
     [self testInvokeTimerWindowListKeyReleased];
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeWindowListTimerKeyReleasedSuccessfulRaiseInterrupted;
+- (void)ptestInvokeWindowListTimerKeyReleasedSuccessfulRaiseInterrupted;
 {
     [self testInvokeWindowListTimerKeyReleased];
     [self testInvokeWindowListTimerKeyReleased];
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeWindowListKeyReleasedTimerSuccessfulRaiseInterrupted;
+- (void)ptestInvokeWindowListKeyReleasedTimerSuccessfulRaiseInterrupted;
 {
     [self testInvokeWindowListKeyReleasedTimer];
     [self testInvokeWindowListKeyReleasedTimer];
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeWindowListKeyReleasedSuccessfulRaiseInterrupted;
+- (void)ptestInvokeWindowListKeyReleasedSuccessfulRaiseInterrupted;
 {
     [self testInvokeWindowListKeyReleased];
     [self testInvokeWindowListKeyReleased];
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeTimerWindowListKeyReleasedSuccessfulRaiseWithMonkey;
+- (void)ptestInvokeTimerWindowListKeyReleasedSuccessfulRaiseWithMonkey;
 {
     [self testInvokeTimerWindowListKeyReleased];
     [self stateMachineInRaiseStateMonkey:self.monkeyCount];
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeWindowListTimerKeyReleasedSuccessfulRaiseWithMonkey;
+- (void)ptestInvokeWindowListTimerKeyReleasedSuccessfulRaiseWithMonkey;
 {
     [self testInvokeWindowListTimerKeyReleased];
     [self stateMachineInRaiseStateMonkey:self.monkeyCount];
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeWindowListKeyReleasedTimerSuccessfulRaiseWithMonkey;
+- (void)ptestInvokeWindowListKeyReleasedTimerSuccessfulRaiseWithMonkey;
 {
     [self testInvokeWindowListKeyReleasedTimer];
     [self stateMachineInRaiseStateMonkey:self.monkeyCount];
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeKeyReleasedWindowListTimerSuccessfulRaiseWithMonkey;
+- (void)ptestInvokeKeyReleasedWindowListTimerSuccessfulRaiseWithMonkey;
 {
     [self testInvokeKeyReleasedWindowListTimer];
     [self stateMachineInRaiseStateMonkey:self.monkeyCount];
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeKeyReleasedTimerWindowListSuccessfulRaiseWithMonkey;
+- (void)ptestInvokeKeyReleasedTimerWindowListSuccessfulRaiseWithMonkey;
 {
     [self testInvokeKeyReleasedTimerWindowList];
     [self stateMachineInRaiseStateMonkey:self.monkeyCount];
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeTimerKeyReleasedWindowListSuccessfulRaiseWithMonkey;
+- (void)ptestInvokeTimerKeyReleasedWindowListSuccessfulRaiseWithMonkey;
 {
     [self testInvokeTimerKeyReleasedWindowList];
     [self stateMachineInRaiseStateMonkey:self.monkeyCount];
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeKeyReleasedWindowListSuccessfulRaiseWithMonkey;
+- (void)ptestInvokeKeyReleasedWindowListSuccessfulRaiseWithMonkey;
 {
     [self testInvokeKeyReleasedWindowList];
     [self stateMachineInRaiseStateMonkey:self.monkeyCount];
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testInvokeWindowListKeyReleasedSuccessfulRaiseWithMonkey;
+- (void)ptestInvokeWindowListKeyReleasedSuccessfulRaiseWithMonkey;
 {
     [self testInvokeWindowListKeyReleased];
     [self stateMachineInRaiseStateMonkey:self.monkeyCount];
     [self stateMachineCompletePendingRaise];
 }
 
-- (void)testAllSuccessfulRaiseTests;
+- (void)testAllParalellTests;
 {
-    [self testInvokeTimerWindowListKeyReleasedSuccessfulRaise];
-    [self testInvokeWindowListTimerKeyReleasedSuccessfulRaise];
-    [self testInvokeWindowListKeyReleasedTimerSuccessfulRaise];
-    [self testInvokeKeyReleasedWindowListTimerSuccessfulRaise];
-    [self testInvokeKeyReleasedTimerWindowListSuccessfulRaise];
-    [self testInvokeTimerKeyReleasedWindowListSuccessfulRaise];
-    [self testInvokeKeyReleasedWindowListSuccessfulRaise];
-    [self testInvokeWindowListKeyReleasedSuccessfulRaise];
-    [self testInvokeTimerWindowListKeyReleasedSuccessfulRaiseTwice];
-    [self testInvokeWindowListTimerKeyReleasedSuccessfulRaiseTwice];
-    [self testInvokeWindowListKeyReleasedTimerSuccessfulRaiseTwice];
-    [self testInvokeKeyReleasedWindowListTimerSuccessfulRaiseTwice];
-    [self testInvokeKeyReleasedTimerWindowListSuccessfulRaiseTwice];
-    [self testInvokeTimerKeyReleasedWindowListSuccessfulRaiseTwice];
-    [self testInvokeKeyReleasedWindowListSuccessfulRaiseTwice];
-    [self testInvokeWindowListKeyReleasedSuccessfulRaiseTwice];
-    [self testInvokeTimerWindowListKeyReleasedSuccessfulRaiseInterrupted];
-    [self testInvokeWindowListTimerKeyReleasedSuccessfulRaiseInterrupted];
-    [self testInvokeWindowListKeyReleasedTimerSuccessfulRaiseInterrupted];
-    [self testInvokeWindowListKeyReleasedSuccessfulRaiseInterrupted];
-    [self testInvokeTimerWindowListKeyReleasedSuccessfulRaiseWithMonkey];
-    [self testInvokeWindowListTimerKeyReleasedSuccessfulRaiseWithMonkey];
-    [self testInvokeWindowListKeyReleasedTimerSuccessfulRaiseWithMonkey];
-    [self testInvokeKeyReleasedWindowListTimerSuccessfulRaiseWithMonkey];
-    [self testInvokeKeyReleasedTimerWindowListSuccessfulRaiseWithMonkey];
-    [self testInvokeTimerKeyReleasedWindowListSuccessfulRaiseWithMonkey];
-    [self testInvokeKeyReleasedWindowListSuccessfulRaiseWithMonkey];
-    [self testInvokeWindowListKeyReleasedSuccessfulRaiseWithMonkey];
+    NSArray *ptests = @[
+        @"ptestInvokeTimerWindowListKeyReleasedSuccessfulRaise",
+        @"ptestInvokeWindowListTimerKeyReleasedSuccessfulRaise",
+        @"ptestInvokeWindowListKeyReleasedTimerSuccessfulRaise",
+        @"ptestInvokeKeyReleasedWindowListTimerSuccessfulRaise",
+        @"ptestInvokeKeyReleasedTimerWindowListSuccessfulRaise",
+        @"ptestInvokeTimerKeyReleasedWindowListSuccessfulRaise",
+        @"ptestInvokeKeyReleasedWindowListSuccessfulRaise",
+        @"ptestInvokeWindowListKeyReleasedSuccessfulRaise",
+        @"ptestInvokeTimerWindowListKeyReleasedSuccessfulRaiseTwice",
+        @"ptestInvokeWindowListTimerKeyReleasedSuccessfulRaiseTwice",
+        @"ptestInvokeWindowListKeyReleasedTimerSuccessfulRaiseTwice",
+        @"ptestInvokeKeyReleasedWindowListTimerSuccessfulRaiseTwice",
+        @"ptestInvokeKeyReleasedTimerWindowListSuccessfulRaiseTwice",
+        @"ptestInvokeTimerKeyReleasedWindowListSuccessfulRaiseTwice",
+        @"ptestInvokeKeyReleasedWindowListSuccessfulRaiseTwice",
+        @"ptestInvokeWindowListKeyReleasedSuccessfulRaiseTwice",
+        @"ptestInvokeTimerWindowListKeyReleasedSuccessfulRaiseInterrupted",
+        @"ptestInvokeWindowListTimerKeyReleasedSuccessfulRaiseInterrupted",
+        @"ptestInvokeWindowListKeyReleasedTimerSuccessfulRaiseInterrupted",
+        @"ptestInvokeWindowListKeyReleasedSuccessfulRaiseInterrupted",
+        @"ptestInvokeTimerWindowListKeyReleasedSuccessfulRaiseWithMonkey",
+        @"ptestInvokeWindowListTimerKeyReleasedSuccessfulRaiseWithMonkey",
+        @"ptestInvokeWindowListKeyReleasedTimerSuccessfulRaiseWithMonkey",
+        @"ptestInvokeKeyReleasedWindowListTimerSuccessfulRaiseWithMonkey",
+        @"ptestInvokeKeyReleasedTimerWindowListSuccessfulRaiseWithMonkey",
+        @"ptestInvokeTimerKeyReleasedWindowListSuccessfulRaiseWithMonkey",
+        @"ptestInvokeKeyReleasedWindowListSuccessfulRaiseWithMonkey",
+        @"ptestInvokeWindowListKeyReleasedSuccessfulRaiseWithMonkey",
+    ];
+
+    #warning Running tests in parallel doesn't work. Judging from the backtraces RAC is getting confused somewhere?
+    dispatch_queue_t queue = dispatch_queue_create("thing", DISPATCH_QUEUE_SERIAL);
+    // For a Good Time™, uncomment the line below. The tests fail in unexpected ways, and occasionally the testrunner will crash in the RAC scheduler queue.
+//    queue = dispatch_get_global_queue(0, 0);
+
+    dispatch_apply(ptests.count, queue, ^(size_t i) {
+        NSLog(@"Test case %@ started.", ptests[i]);
+        SWStateMachineTests *test = [SWStateMachineTests testCaseWithSelector:NSSelectorFromString(ptests[i])];
+        [test setUp];
+        XCTAssertNoThrow([test invokeTest]);
+        [test tearDown];
+        NSLog(@"Test case %@ finished.", ptests[i]);
+    });
+}
+
+- (void)testAllSuccessfulRaiseTestsAgainstSameStateMachine;
+{
+    [self ptestInvokeTimerWindowListKeyReleasedSuccessfulRaise];
+    [self ptestInvokeWindowListTimerKeyReleasedSuccessfulRaise];
+    [self ptestInvokeWindowListKeyReleasedTimerSuccessfulRaise];
+    [self ptestInvokeKeyReleasedWindowListTimerSuccessfulRaise];
+    [self ptestInvokeKeyReleasedTimerWindowListSuccessfulRaise];
+    [self ptestInvokeTimerKeyReleasedWindowListSuccessfulRaise];
+    [self ptestInvokeKeyReleasedWindowListSuccessfulRaise];
+    [self ptestInvokeWindowListKeyReleasedSuccessfulRaise];
+    [self ptestInvokeTimerWindowListKeyReleasedSuccessfulRaiseTwice];
+    [self ptestInvokeWindowListTimerKeyReleasedSuccessfulRaiseTwice];
+    [self ptestInvokeWindowListKeyReleasedTimerSuccessfulRaiseTwice];
+    [self ptestInvokeKeyReleasedWindowListTimerSuccessfulRaiseTwice];
+    [self ptestInvokeKeyReleasedTimerWindowListSuccessfulRaiseTwice];
+    [self ptestInvokeTimerKeyReleasedWindowListSuccessfulRaiseTwice];
+    [self ptestInvokeKeyReleasedWindowListSuccessfulRaiseTwice];
+    [self ptestInvokeWindowListKeyReleasedSuccessfulRaiseTwice];
+    [self ptestInvokeTimerWindowListKeyReleasedSuccessfulRaiseInterrupted];
+    [self ptestInvokeWindowListTimerKeyReleasedSuccessfulRaiseInterrupted];
+    [self ptestInvokeWindowListKeyReleasedTimerSuccessfulRaiseInterrupted];
+    [self ptestInvokeWindowListKeyReleasedSuccessfulRaiseInterrupted];
+    [self ptestInvokeTimerWindowListKeyReleasedSuccessfulRaiseWithMonkey];
+    [self ptestInvokeWindowListTimerKeyReleasedSuccessfulRaiseWithMonkey];
+    [self ptestInvokeWindowListKeyReleasedTimerSuccessfulRaiseWithMonkey];
+    [self ptestInvokeKeyReleasedWindowListTimerSuccessfulRaiseWithMonkey];
+    [self ptestInvokeKeyReleasedTimerWindowListSuccessfulRaiseWithMonkey];
+    [self ptestInvokeTimerKeyReleasedWindowListSuccessfulRaiseWithMonkey];
+    [self ptestInvokeKeyReleasedWindowListSuccessfulRaiseWithMonkey];
+    [self ptestInvokeWindowListKeyReleasedSuccessfulRaiseWithMonkey];
 }
 
 - (void)testAllAPIAtRandom;
