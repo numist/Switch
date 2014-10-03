@@ -53,7 +53,7 @@ static int const kScrollThreshold = 50;
 {
     if (!(self = [super init])) { return nil; }
 
-    self->_stateMachine = [[SWStateMachine alloc] initWithDelegate:self];
+    self->_stateMachine = [SWStateMachine stateMachineWithDelegate:self];
 
     self->_interface = [[SWInterfaceController alloc] initWithDelegate:self];
 

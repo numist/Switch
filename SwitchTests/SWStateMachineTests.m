@@ -74,7 +74,7 @@ static SWWindow *(^rwg)() = ^{
 
     self.niceMock = false;
     self->_stateMachineDelegateMock = OCMStrictProtocolMock(@protocol(SWStateMachineDelegate));
-    self->_stateMachineUnderTest = [[SWStateMachine alloc] initWithDelegate:self.stateMachineDelegateMock];
+    self->_stateMachineUnderTest = [SWStateMachine stateMachineWithDelegate:self.stateMachineDelegateMock];
 
     self->_monkeyCount = 15;
 
@@ -709,7 +709,7 @@ static SWWindow *(^rwg)() = ^{
     self->_stateMachineDelegateMock = niceMock
                                     ? OCMProtocolMock(@protocol(SWStateMachineDelegate))
                                     : OCMStrictProtocolMock(@protocol(SWStateMachineDelegate));
-    self->_stateMachineUnderTest = [[SWStateMachine alloc] initWithDelegate:self.stateMachineDelegateMock];
+    self->_stateMachineUnderTest = [SWStateMachine stateMachineWithDelegate:self.stateMachineDelegateMock];
 }
 
 - (void)stateMachineInvokeWithDirection:(SWIncrementDirection)direction;
@@ -718,17 +718,32 @@ static SWWindow *(^rwg)() = ^{
         [self.stateMachineUnderTest incrementWithInvoke:true direction:direction isRepeating:false];
         return;
     }
+
+    // State machine is inactive, everything should be off.
     XCTAssertNil(self.stateMachineUnderTest.windowList);
     XCTAssertNil(self.stateMachineUnderTest.selectedWindow);
+
+    XCTAssertFalse(self.stateMachineUnderTest.interfaceVisible);
+    XCTAssertFalse(self.stateMachineUnderTest.windowListUpdates);
+    XCTAssertFalse(self.stateMachineUnderTest.displayTimer);
+    XCTAssertFalse(self.stateMachineUnderTest.pendingSwitch);
+    XCTAssertFalse(self.stateMachineUnderTest.active);
 
     [self stateMachineExpectDisplayTimerStart:^{
         [self stateMachineExpectWindowListUpdates:true block:^{
             [self.stateMachineUnderTest incrementWithInvoke:true direction:direction isRepeating:false];
         }];
     }];
-    
+
     XCTAssertNil(self.stateMachineUnderTest.windowList);
     XCTAssertNil(self.stateMachineUnderTest.selectedWindow);
+
+    XCTAssertTrue(self.stateMachineUnderTest.active);
+    XCTAssertTrue(self.stateMachineUnderTest.invoked);
+    XCTAssertTrue(self.stateMachineUnderTest.windowListUpdates);
+    XCTAssertTrue(self.stateMachineUnderTest.displayTimer);
+
+    XCTAssertFalse(self.stateMachineUnderTest.pendingSwitch);
 }
 
 - (void)stateMachineShowUIWithWindowList:(NSOrderedSet *)windowList;

@@ -55,6 +55,31 @@
 
 @implementation SWStateMachine
 
++ (instancetype)stateMachineWithDelegate:(id<SWStateMachineDelegate>) delegate;
+{
+    if ([NSThread isMainThread]) {
+        return [[self alloc] initWithDelegate:delegate];
+    }
+
+    __block SWStateMachine *result;
+    dispatch_group_t group = dispatch_group_create();
+    dispatch_group_enter(group);
+
+    [[RACScheduler scheduler] schedule:^{
+        result = [[self alloc] initWithDelegate:delegate];
+        dispatch_group_leave(group);
+    }];
+
+    dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+    Check(result);
+    return result;
+}
+
+- (instancetype)init;
+{
+    __builtin_trap();
+}
+
 - (instancetype)initWithDelegate:(id<SWStateMachineDelegate>) delegate;
 {
     if (!(self = [super init])) { return nil; }

@@ -41,7 +41,7 @@ typedef NS_ENUM(uint8_t, SWIncrementDirection) {
 @property (nonatomic, readonly, assign, getter=wantsInterfaceVisible) _Bool interfaceVisible;
 @property (nonatomic, readonly, assign, getter=wantsWindowListUpdates) _Bool windowListUpdates;
 
-- (instancetype)initWithDelegate:(id<SWStateMachineDelegate>) delegate;
++ (instancetype)stateMachineWithDelegate:(id<SWStateMachineDelegate>) delegate;
 
 #pragma mark - Delegate responses
 - (void)displayTimerCompleted;
