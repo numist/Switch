@@ -47,10 +47,7 @@
     
     @weakify(self);
     [[SWEventTap sharedService] registerForEventsWithType:kCGEventMouseMoved object:self block:^(CGEventRef event) {
-        // The event is passed by reference. Copy it in case it mutates after control returns to the caller. Released in the async block below.
-        event = CGEventCreateCopy(event);
         dispatch_async(dispatch_get_main_queue(), ^{
-            NNCFAutorelease(event);
             @strongify(self);
             
             NSPoint windowLocation = [self.window convertScreenToBase:[NSEvent mouseLocation]];

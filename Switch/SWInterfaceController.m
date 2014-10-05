@@ -245,7 +245,6 @@
         windowController.delegate = nil;
     }
 
-#warning Did the old interface clear out the window lists of its cached controllers? Should the new one?
     self.windowList = nil;
     [self _updateWindowList];
 

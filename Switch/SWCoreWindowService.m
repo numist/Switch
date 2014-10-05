@@ -203,6 +203,7 @@ static int const kScrollThreshold = 50;
                 @strongify(self);
                 if (self.stateMachine.active) {
                     dispatch_async(dispatch_get_main_queue(), ^{
+                        @strongify(self);
                         [[SWPreferencesService sharedService] showPreferencesWindow:self];
                     });
                 }
@@ -218,6 +219,7 @@ static int const kScrollThreshold = 50;
         @strongify(self);
         if (CGEventGetType(event) == kCGEventKeyDown) {
             dispatch_async(dispatch_get_main_queue(), ^{
+                @strongify(self);
                 [self.stateMachine cancelInvocation];
             });
             return (BOOL)!self.stateMachine.active;
@@ -387,7 +389,8 @@ static int const kScrollThreshold = 50;
 {
     @weakify(self);
     [[SWEventTap sharedService] registerForEventsWithType:kCGEventScrollWheel object:self block:^(CGEventRef event) {
-        CFRetain(event);
+        // The event may be passed by reference and reused later. Copy it in case it mutates after control returns to the caller. Released in the async block below.
+        event = CGEventCreateCopy(event);
         dispatch_async(dispatch_get_main_queue(), ^{
             NNCFAutorelease(event);
             @strongify(self);
