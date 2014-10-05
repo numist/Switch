@@ -16,3 +16,6 @@
 #   import "helpers.h"
 #   import "SWLoggingService.h"
 #endif
+
+#define sw_deprecated __attribute__((deprecated))
+#define sw_unused __attribute__((unused))

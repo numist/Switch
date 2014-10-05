@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Scott Perry. All rights reserved.
 //
 
-#import "SWWindowListServiceTests.h"
+#import "SWWindowListServiceTestSuperclass.h"
 
-@interface SWMacVimTests : SWWindowListServiceTests
+@interface SWMacVimTests : SWWindowListServiceTestSuperclass
 
 @end
 
@@ -59,7 +59,7 @@
     
     [self updateListServiceWithInfoList:infoList];
     
-    XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))2, @"");
+    XCTAssertEqual(self.listService.windows.count, 2, @"");
     if (self.listService.windows.count == 2) {
         XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, window1Description, @"");
         XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:1]).mainWindow.windowDescription, window2Description, @"");
@@ -110,7 +110,7 @@
 
     [self updateListServiceWithInfoList:infoList];
     
-    XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))2, @"");
+    XCTAssertEqual(self.listService.windows.count, 2, @"");
     if (self.listService.windows.count == 2) {
         XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, window1Description, @"");
         XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:1]).mainWindow.windowDescription, window2Description, @"");

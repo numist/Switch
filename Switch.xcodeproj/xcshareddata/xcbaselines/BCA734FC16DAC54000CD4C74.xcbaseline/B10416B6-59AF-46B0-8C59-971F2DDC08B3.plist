@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>classNames</key>
+	<dict>
+		<key>SWImageComparisonTests</key>
+		<dict>
+			<key>testBitmapContextComparisonDifferent</key>
+			<dict>
+				<key>com.apple.XCTPerformanceMetric_WallClockTime</key>
+				<dict>
+					<key>baselineAverage</key>
+					<real>0.01951</real>
+					<key>baselineIntegrationDisplayName</key>
+					<string>10-01-2014, 0:24:03</string>
+				</dict>
+			</dict>
+			<key>testBitmapContextComparisonSame</key>
+			<dict>
+				<key>com.apple.XCTPerformanceMetric_WallClockTime</key>
+				<dict>
+					<key>baselineAverage</key>
+					<real>0.016262</real>
+					<key>baselineIntegrationDisplayName</key>
+					<string>10-01-2014, 0:24:03</string>
+				</dict>
+			</dict>
+			<key>testCGDataProviderComparisonDifferent</key>
+			<dict>
+				<key>com.apple.XCTPerformanceMetric_WallClockTime</key>
+				<dict>
+					<key>baselineAverage</key>
+					<real>0.0074387</real>
+					<key>baselineIntegrationDisplayName</key>
+					<string>10-01-2014, 0:24:03</string>
+				</dict>
+			</dict>
+			<key>testCGDataProviderComparisonSame</key>
+			<dict>
+				<key>com.apple.XCTPerformanceMetric_WallClockTime</key>
+				<dict>
+					<key>baselineAverage</key>
+					<real>0.0074524</real>
+					<key>baselineIntegrationDisplayName</key>
+					<string>10-01-2014, 0:24:03</string>
+				</dict>
+			</dict>
+			<key>testTIFFComparisonDifferent</key>
+			<dict>
+				<key>com.apple.XCTPerformanceMetric_WallClockTime</key>
+				<dict>
+					<key>baselineAverage</key>
+					<real>0.0094832</real>
+					<key>baselineIntegrationDisplayName</key>
+					<string>10-01-2014, 0:24:03</string>
+				</dict>
+			</dict>
+			<key>testTIFFComparisonSame</key>
+			<dict>
+				<key>com.apple.XCTPerformanceMetric_WallClockTime</key>
+				<dict>
+					<key>baselineAverage</key>
+					<real>0.011315</real>
+					<key>baselineIntegrationDisplayName</key>
+					<string>10-01-2014, 0:24:03</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>SWWindowListServiceTests</key>
+		<dict>
+			<key>testEmpty</key>
+			<dict>
+				<key>com.apple.XCTPerformanceMetric_WallClockTime</key>
+				<dict>
+					<key>baselineAverage</key>
+					<real>3.9768e-05</real>
+					<key>baselineIntegrationDisplayName</key>
+					<string>10-01-2014, 0:24:03</string>
+				</dict>
+			</dict>
+			<key>testNormalDay</key>
+			<dict>
+				<key>com.apple.XCTPerformanceMetric_WallClockTime</key>
+				<dict>
+					<key>baselineAverage</key>
+					<real>0.00070195</real>
+					<key>baselineIntegrationDisplayName</key>
+					<string>10-01-2014, 0:24:03</string>
+				</dict>
+			</dict>
+		</dict>
+	</dict>
+</dict>
+</plist>

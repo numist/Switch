@@ -12,10 +12,10 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "SWWindowListServiceTests.h"
+#import "SWWindowListServiceTestSuperclass.h"
 
 
-@interface SWPowerboxTests : SWWindowListServiceTests
+@interface SWPowerboxTests : SWWindowListServiceTestSuperclass
 
 @end
 
@@ -99,7 +99,7 @@
     ];
 
     [self updateListServiceWithInfoList:infoList];
-    XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))1, @"Powerbox save dialog wasn't grouped correctly");
+    XCTAssertEqual(self.listService.windows.count, 1, @"Powerbox save dialog wasn't grouped correctly");
     if (self.listService.windows.count == 1) {
         XCTAssertEqual(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).windows.count, infoList.count, @"");
         XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, windowDescription, @"Main window for group was not identified correctly");
@@ -204,7 +204,7 @@
 
     [self updateListServiceWithInfoList:infoList];
     
-    XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))1, @"Powerbox save dialog wasn't grouped correctly");
+    XCTAssertEqual(self.listService.windows.count, 1, @"Powerbox save dialog wasn't grouped correctly");
     if (self.listService.windows.count == 1) {
         XCTAssertEqual(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).windows.count, infoList.count, @"");
         XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, windowDescription, @"Main window for group was not identified correctly");
@@ -271,7 +271,7 @@
     
     [self updateListServiceWithInfoList:infoList];
     
-    XCTAssertEqual(self.listService.windows.count, (__typeof__(self.listService.windows.count))1, @"Save dialog wasn't grouped correctly");
+    XCTAssertEqual(self.listService.windows.count, 1, @"Save dialog wasn't grouped correctly");
     if (self.listService.windows.count == 1) {
         XCTAssertEqual(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).windows.count, infoList.count, @"");
         XCTAssertEqualObjects(((SWWindowGroup *)[self.listService.windows objectAtIndex:0]).mainWindow.windowDescription, windowDescription, @"Main window for group was not identified correctly");

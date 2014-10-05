@@ -15,10 +15,6 @@
 #import <Foundation/Foundation.h>
 
 
-@class HAXWindow;
-@class SWWindow;
-
-
 @interface SWApplication : NSObject
 
 + (instancetype)applicationWithPID:(pid_t)pid name:(NSString *)name;
@@ -26,8 +22,8 @@
 @property (nonatomic, assign, readonly) pid_t pid;
 @property (nonatomic, copy, readonly) NSImage *icon;
 @property (nonatomic, strong, readonly) NSString *name;
-@property (nonatomic, strong, readonly) NSRunningApplication *runningApplication;
 
+- (BOOL)isActiveApplication;
 - (BOOL)isCurrentApplication;
 - (BOOL)canBeActivated;
 

@@ -22,7 +22,7 @@
 
 @implementation SWKeyboardPreferencesViewController
 
-#pragma mark MASPreferencesViewController
+#pragma mark - MASPreferencesViewController
 
 - (NSString *)identifier
 {

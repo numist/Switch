@@ -37,7 +37,7 @@
 
 @implementation SWGeneralPreferencesViewController
 
-#pragma mark NSViewController
+#pragma mark - NSViewController
 
 - (void)awakeFromNib;
 {
@@ -53,7 +53,7 @@
     buttonCell.enabled = NO;
 }
 
-#pragma mark MASPreferencesViewController
+#pragma mark - MASPreferencesViewController
 
 - (NSString *)identifier
 {
@@ -80,7 +80,7 @@
     return NO;
 }
 
-#pragma mark IBAction
+#pragma mark - IBAction
 
 - (IBAction)autoLaunchChanged:(NSButton *)sender {
     if (sender.state == NSOnState) {
@@ -112,7 +112,7 @@
     [[SUUpdater sharedUpdater] checkForUpdates:self];
 }
 
-#pragma mark Internal
+#pragma mark - Internal
 
 //
 // Launch at login helper methods!

@@ -28,7 +28,7 @@
 
 @implementation SWStatusBarMenuService
 
-#pragma mark Initialization
+#pragma mark - Initialization
 
 - (instancetype)init;
 {
@@ -41,25 +41,31 @@
     map:^id(NSNumber *value) {
         @strongify(self);
         BOOL shouldShowStatusItem = [value boolValue];
-        if (shouldShowStatusItem && !self.statusItem) {
-            return [self _newStatusItem];
-        } else if (!shouldShowStatusItem && self.statusItem) {
-            [self.statusItem.statusBar removeStatusItem:self.statusItem];
+        NSStatusItem *statusItem = self.statusItem;
+
+        if (!shouldShowStatusItem) {
+            [statusItem.statusBar removeStatusItem:statusItem];
             return nil;
         }
+
+        if (statusItem) {
+            return statusItem;
+        }
+
+        return [self _newStatusItem];
     }];
     
     return self;
 }
 
-#pragma mark NNService
+#pragma mark - NNService
 
 + (NNServiceType)serviceType;
 {
     return NNServiceTypePersistent;
 }
 
-#pragma mark SWStatusBarMenuService
+#pragma mark - SWStatusBarMenuService
 
 - (IBAction)snapshot:(id)sender;
 {
@@ -72,7 +78,7 @@
     [[NSWorkspace sharedWorkspace] openFile:[[SWLoggingService sharedService] logDirectoryPath]];
 }
 
-#pragma mark NSMenuDelegate
+#pragma mark - NSMenuDelegate
 
 - (void)menuNeedsUpdate:(NSMenu *)menu;
 {
@@ -84,7 +90,7 @@
     }
 }
 
-#pragma mark Internal
+#pragma mark - Internal
 
 - (NSStatusItem *)_newStatusItem;
 {

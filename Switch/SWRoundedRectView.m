@@ -17,7 +17,7 @@
 
 @implementation SWRoundedRectView
 
-#pragma mark Initialization
+#pragma mark - Initialization
 
 - (instancetype)initWithFrame:(CGRect)frameRect;
 {
@@ -28,7 +28,7 @@
     return self;
 }
 
-#pragma mark NSView
+#pragma mark - NSView
 
 - (void)updateLayer;
 {

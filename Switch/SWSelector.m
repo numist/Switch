@@ -17,37 +17,37 @@
 
 @implementation SWSelector
 
-#pragma mark Initialization
+#pragma mark - Initialization
 
-- (instancetype)initWithWindowGroups:(NSOrderedSet *)windowGroups selectedIndex:(NSInteger)index;
+- (instancetype)initWithWindowList:(NSOrderedSet *)windowList selectedIndex:(NSInteger)index;
 {
     if (!(self = [super init])) { return nil; }
     
-    if (windowGroups && !windowGroups.count) {
+    if ((windowList && !windowList.count) || index == NSNotFound) {
         Check(index == NSNotFound);
         index = NSNotFound;
-    } else if (windowGroups.count) {
+    } else if (windowList.count) {
         while (index < 0) {
-            index += windowGroups.count;
+            index += windowList.count;
         }
-        if ((NSUInteger)index >= windowGroups.count) {
-            index = index % (NSInteger)windowGroups.count;
+        if ((NSUInteger)index >= windowList.count) {
+            index = index % (NSInteger)windowList.count;
         }
     }
     
-    _windowGroups = windowGroups;
+    _windowList = windowList;
     _selectedIndex = index;
-    _selectedWindowGroup = (NSUInteger)index >= windowGroups.count ? nil : windowGroups[(NSUInteger)index];
+    _selectedWindow = (NSUInteger)index >= windowList.count ? nil : windowList[(NSUInteger)index];
     
     return self;
 }
 
 - (instancetype)init;
 {
-    return [self initWithWindowGroups:nil selectedIndex:0];
+    return [self initWithWindowList:nil selectedIndex:0];
 }
 
-#pragma mark SWSelector
+#pragma mark - SWSelector
 
 - (NSUInteger)selectedUIndex;
 {
@@ -60,25 +60,25 @@
 
 - (instancetype)increment;
 {
-    NSInteger newSelectedIndex = self.selectedIndex + 1;
-    
-    if (self.windowGroups) {
-        if (!self.windowGroups.count) {
-            Check(self.selectedIndex == NSNotFound);
-            return self;
-        }
+    NSInteger newSelectedIndex = (self.selectedIndex == NSNotFound)
+                               ? 0
+                               : self.selectedIndex + 1;
+
+    if (self.windowList && !self.windowList.count) {
+        Check(self.selectedIndex == NSNotFound);
+        return self;
     }
     
-    return [[[self class] alloc] initWithWindowGroups:self.windowGroups selectedIndex:newSelectedIndex];
+    return [[[self class] alloc] initWithWindowList:self.windowList selectedIndex:newSelectedIndex];
 }
 
 - (instancetype)incrementWithoutWrapping;
 {
-    if (!self.windowGroups) {
+    if (!self.windowList) {
         return [self increment];
     }
     
-    if (self.selectedUIndex < (self.windowGroups.count - 1)) {
+    if (self.selectedUIndex != (self.windowList.count - 1)) {
         return [self increment];
     }
     
@@ -87,27 +87,27 @@
 
 - (instancetype)decrement;
 {
-    Check(!self.windowGroups || self.selectedUIndex < self.windowGroups.count);
+    Check(!self.windowList || self.selectedUIndex < self.windowList.count || self.selectedIndex == NSNotFound);
 
-    NSInteger newSelectedIndex = self.selectedIndex - 1;
+    NSInteger newSelectedIndex = (self.selectedIndex == NSNotFound)
+                               ? (NSInteger)self.windowList.count - 1
+                               : self.selectedIndex - 1;
     
-    if (self.windowGroups) {
-        if (!self.windowGroups.count) {
-            Check(self.selectedIndex == NSNotFound);
-            return self;
-        }
+    if (self.windowList && !self.windowList.count) {
+        Check(self.selectedIndex == NSNotFound);
+        return self;
     }
     
-    return [[[self class] alloc] initWithWindowGroups:self.windowGroups selectedIndex:newSelectedIndex];
+    return [[[self class] alloc] initWithWindowList:self.windowList selectedIndex:newSelectedIndex];
 }
 
 - (instancetype)decrementWithoutWrapping;
 {
-    if (!self.windowGroups) {
+    if (!self.windowList) {
         return [self decrement];
     }
     
-    if (self.selectedIndex > 0) {
+    if (self.selectedIndex != 0) {
         return [self decrement];
     }
     
@@ -116,44 +116,48 @@
 
 - (instancetype)selectIndex:(NSInteger)index;
 {
-    if (self.windowGroups) {
-        if (!self.windowGroups.count) {
+    if (self.windowList) {
+        if (!self.windowList.count) {
             Check(self.selectedIndex == NSNotFound);
+            Check(index == NSNotFound);
+            index = NSNotFound;
+        } else if (index > (NSInteger)self.windowList.count) {
+            Check(index == NSNotFound);
             index = NSNotFound;
         } else {
             Check(index >= 0);
             index = MAX(index, 0);
             
-            Check(index < (NSInteger)self.windowGroups.count);
-            index = MIN(index, (NSInteger)self.windowGroups.count - 1);
+            Check(index < (NSInteger)self.windowList.count);
+            index = MIN(index, (NSInteger)self.windowList.count - 1);
         }
     }
     
-    return [[[self class] alloc] initWithWindowGroups:self.windowGroups selectedIndex:index];
+    return [[[self class] alloc] initWithWindowList:self.windowList selectedIndex:index];
 }
 
-- (instancetype)updateWithWindowGroups:(NSOrderedSet *)windowGroups;
+- (instancetype)updateWithWindowList:(NSOrderedSet *)windowList;
 {
-    NSInteger newSelectedIndex;
+    // Carry over the current selected index by default.
+    NSInteger newSelectedIndex = self.selectedIndex;
     
-    if (windowGroups && !windowGroups.count) {
+    if (windowList && !windowList.count) {
         // Empty set? Selected window not found.
         newSelectedIndex = NSNotFound;
-    } else if (!Check(windowGroups) || !self.windowGroups) {
-        // Carry over the current selected index if list on either side is nil.
+    } else if (!Check(windowList) || !self.windowList) {
         newSelectedIndex = self.selectedIndex;
-    } else if (self.windowGroups.count == 0) {
+    } else if (self.windowList.count == 0) {
         // Previously empty list? Select the beginning.
         newSelectedIndex = 0;
-    } else if ([windowGroups containsObject:self.selectedWindowGroup]) {
+    } else if ([windowList containsObject:self.selectedWindow]) {
         // Select the same window group as was previously selected, if it's still there.
-        newSelectedIndex = (NSInteger)[windowGroups indexOfObject:self.selectedWindowGroup];
-    } else if ((NSInteger)windowGroups.count <= self.selectedIndex) {
+        newSelectedIndex = (NSInteger)[windowList indexOfObject:self.selectedWindow];
+    } else if ((NSInteger)windowList.count <= newSelectedIndex) {
         // Clamp the selected index to the end of the window list.
-        newSelectedIndex = (NSInteger)windowGroups.count - 1;
+        newSelectedIndex = (NSInteger)windowList.count - 1;
     }
     
-    return [[[self class] alloc] initWithWindowGroups:windowGroups selectedIndex:newSelectedIndex];
+    return [[[self class] alloc] initWithWindowList:windowList selectedIndex:newSelectedIndex];
 }
 
 @end

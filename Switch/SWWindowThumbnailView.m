@@ -18,9 +18,9 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "SWApplication.h"
+#import "SWWindowContentsService.h"
 #import "SWWindowGroup.h"
 #import "SWWindowListService.h"
-#import "SWWindowContentsService.h"
 
 
 @interface SWWindowThumbnailView () <SWWindowListSubscriber, SWWindowContentsSubscriber>
@@ -43,16 +43,19 @@
 
 @implementation SWWindowThumbnailView
 
-#pragma mark Initialization
+#pragma mark - Initialization
 
-- (id)initWithFrame:(CGRect)frame windowGroup:(SWWindowGroup *)windowGroup;
+- (id)initWithFrame:(CGRect)frame window:(SWWindow *)windowGroup;
 {
     if (!(self = [super initWithFrame:frame])) { return nil; }
     
     //
     // Data initialization
     //
-    _windowGroup = windowGroup;
+    if (!Check([windowGroup isKindOfClass:[SWWindowGroup class]])) {
+        return nil;
+    }
+    _windowGroup = CLASS_CAST(SWWindowGroup, windowGroup);
     
     NSMutableOrderedSet *windowIDList = [NSMutableOrderedSet new];
     NSMutableDictionary *windowFrames = [NSMutableDictionary new];
@@ -108,7 +111,7 @@
     return self;
 }
 
-#pragma mark NSView
+#pragma mark - NSView
 
 - (void)layout;
 {
@@ -149,7 +152,7 @@
     [self _updateIconLayout];
 }
 
-#pragma mark SWWindowThumbnailView
+#pragma mark - SWWindowThumbnailView
 
 - (void)setActive:(BOOL)active;
 {
@@ -184,7 +187,7 @@
     self.layer.opacity = opacity;
 }
 
-#pragma mark SWWindowListSubscriber
+#pragma mark - SWWindowListSubscriber
 
 - (oneway void)windowListService:(SWWindowListService *)service updatedList:(NSOrderedSet *)windows;
 {
@@ -219,7 +222,7 @@
     self.valid = thisWindowExists;
 }
 
-#pragma mark SWWindowContentsSubscriber
+#pragma mark - SWWindowContentsSubscriber
 
 - (oneway void)windowContentService:(SWWindowContentsService *)windowService updatedContent:(NSImage *)content forWindow:(SWWindow *)window;
 {
@@ -239,7 +242,7 @@
     [self _sublayerForWindow:window].contents = content;
 }
 
-#pragma mark Internal
+#pragma mark - Internal
 
 - (void)_createLayers;
 {
@@ -256,7 +259,7 @@
     self.thumbnailLayer.zPosition = 1.0;
     [self.layer addSublayer:self.thumbnailLayer];
     
-    for (__attribute__((unused)) SWWindow *window in self.windowGroup.windows) {
+    for (sw_unused SWWindow *window in self.windowGroup.windows) {
         [self.thumbnailLayer addSublayer:newLayer()];
     }
     

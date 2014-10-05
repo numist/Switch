@@ -27,14 +27,14 @@
 
 @implementation SWLoggingService
 
-#pragma mark NNService
+#pragma mark - NNService
 
 + (NNServiceType)serviceType;
 {
     return NNServiceTypePersistent;
 }
 
-#pragma mark SWLoggingService
+#pragma mark - SWLoggingService
 
 - (NSString *)logDirectoryPath;
 {
@@ -119,6 +119,7 @@
         }
         
         NSImage *contents = [[NSImage alloc] initWithCGImage:cgContents size:(NSSize){.width = CGImageGetWidth(cgContents), .height = CGImageGetHeight(cgContents)}];
+//        [NSArchiver archiveRootObject:contents toFile:[snapshotDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%u.ar", windowID]]];
         [contents lockFocus];
         NSBitmapImageRep *bitmapContents = [[NSBitmapImageRep alloc] initWithFocusedViewRect:(CGRect){.origin = NSZeroPoint, .size = contents.size}];
         [contents unlockFocus];
@@ -135,7 +136,7 @@
     handle = nil;
 }
 
-#pragma mark Internal
+#pragma mark - Internal
 
 - (NSString *)_logFilePath;
 {

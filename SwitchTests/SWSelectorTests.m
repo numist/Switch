@@ -43,9 +43,9 @@
 }
 
 #define updateWithEmptyAndCheck(_selector_) \
-    _selector_ = [(_selector_) updateWithWindowGroups:[NSOrderedSet new]]; \
-    XCTAssertNil((_selector_).selectedWindowGroup, @""); \
-    XCTAssertEqual((_selector_).selectedIndex, (__typeof__((_selector_).selectedIndex))NSNotFound, @"");
+    _selector_ = [(_selector_) updateWithWindowList:[NSOrderedSet new]]; \
+    XCTAssertNil((_selector_).selectedWindow); \
+    XCTAssertEqual((_selector_).selectedIndex, NSNotFound);
 
 - (void)testEmptySet;
 {
@@ -80,9 +80,9 @@
 - (void)testEmpty;
 {
     SWSelector *selector = [SWSelector new];
-    XCTAssertNotNil(selector, @"");
-    XCTAssertNil(selector.selectedWindowGroup, @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))0, @"");
+    XCTAssertNotNil(selector);
+    XCTAssertNil(selector.selectedWindow);
+    XCTAssertEqual(selector.selectedIndex, 0);
     
     updateWithEmptyAndCheck(selector);
 }
@@ -92,12 +92,12 @@
     SWSelector *selector = [SWSelector new];
     
     selector = [selector increment];
-    XCTAssertNil(selector.selectedWindowGroup, @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))1, @"");
+    XCTAssertNil(selector.selectedWindow);
+    XCTAssertEqual(selector.selectedIndex, 1);
     
     selector = [selector increment];
-    XCTAssertNil(selector.selectedWindowGroup, @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))2, @"");
+    XCTAssertNil(selector.selectedWindow);
+    XCTAssertEqual(selector.selectedIndex, 2);
     
     updateWithEmptyAndCheck(selector);
 }
@@ -107,12 +107,12 @@
     SWSelector *selector = [SWSelector new];
     
     selector = [selector incrementWithoutWrapping];
-    XCTAssertNil(selector.selectedWindowGroup, @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))1, @"");
+    XCTAssertNil(selector.selectedWindow);
+    XCTAssertEqual(selector.selectedIndex, 1);
     
     selector = [selector incrementWithoutWrapping];
-    XCTAssertNil(selector.selectedWindowGroup, @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))2, @"");
+    XCTAssertNil(selector.selectedWindow);
+    XCTAssertEqual(selector.selectedIndex, 2);
     
     updateWithEmptyAndCheck(selector);
 }
@@ -122,12 +122,12 @@
     SWSelector *selector = [SWSelector new];
     
     selector = [selector decrement];
-    XCTAssertNil(selector.selectedWindowGroup, @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))-1, @"");
+    XCTAssertNil(selector.selectedWindow);
+    XCTAssertEqual(selector.selectedIndex, -1);
     
     selector = [selector decrement];
-    XCTAssertNil(selector.selectedWindowGroup, @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))-2, @"");
+    XCTAssertNil(selector.selectedWindow);
+    XCTAssertEqual(selector.selectedIndex, -2);
     
     updateWithEmptyAndCheck(selector);
 }
@@ -137,103 +137,103 @@
     SWSelector *selector = [SWSelector new];
     
     selector = [selector decrementWithoutWrapping];
-    XCTAssertNil(selector.selectedWindowGroup, @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))-1, @"");
+    XCTAssertNil(selector.selectedWindow);
+    XCTAssertEqual(selector.selectedIndex, -1);
     
     selector = [selector decrementWithoutWrapping];
-    XCTAssertNil(selector.selectedWindowGroup, @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))-2, @"");
+    XCTAssertNil(selector.selectedWindow);
+    XCTAssertEqual(selector.selectedIndex, -2);
     
     updateWithEmptyAndCheck(selector);
 }
 
 - (void)testSet;
 {
-    SWSelector *selector = [[SWSelector new] updateWithWindowGroups:self.list0123];
-    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123[0], @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))0, @"");
+    SWSelector *selector = [[SWSelector new] updateWithWindowList:self.list0123];
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123[0]);
+    XCTAssertEqual(selector.selectedIndex, 0);
 }
 
 - (void)testIncrement;
 {
-    SWSelector *selector = [[SWSelector new] updateWithWindowGroups:self.list0123];
+    SWSelector *selector = [[SWSelector new] updateWithWindowList:self.list0123];
     
     selector = [selector increment];
-    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123[1], @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))1, @"");
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123[1]);
+    XCTAssertEqual(selector.selectedIndex, 1);
     
     selector = [selector increment];
-    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123[2], @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))2, @"");
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123[2]);
+    XCTAssertEqual(selector.selectedIndex, 2);
 
     selector = [selector increment];
-    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123[3], @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))3, @"");
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123[3]);
+    XCTAssertEqual(selector.selectedIndex, 3);
 
     selector = [selector increment];
-    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123[0], @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))0, @"");
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123[0]);
+    XCTAssertEqual(selector.selectedIndex, 0);
     
     selector = [selector increment];
-    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123[1], @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))1, @"");
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123[1]);
+    XCTAssertEqual(selector.selectedIndex, 1);
     
     updateWithEmptyAndCheck(selector);
 }
 
 - (void)testIncrementWithoutWrapping;
 {
-    SWSelector *selector = [[SWSelector new] updateWithWindowGroups:self.list0123];
+    SWSelector *selector = [[SWSelector new] updateWithWindowList:self.list0123];
     
     selector = [selector incrementWithoutWrapping];
-    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123[1], @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))1, @"");
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123[1]);
+    XCTAssertEqual(selector.selectedIndex, 1);
     
     selector = [selector incrementWithoutWrapping];
-    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123[2], @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))2, @"");
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123[2]);
+    XCTAssertEqual(selector.selectedIndex, 2);
     
     selector = [selector incrementWithoutWrapping];
-    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123[3], @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))3, @"");
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123[3]);
+    XCTAssertEqual(selector.selectedIndex, 3);
     
     selector = [selector incrementWithoutWrapping];
-    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123[3], @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))3, @"");
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123[3]);
+    XCTAssertEqual(selector.selectedIndex, 3);
     
     updateWithEmptyAndCheck(selector);
 }
 
 - (void)testDecrement;
 {
-    SWSelector *selector = [[SWSelector new] updateWithWindowGroups:self.list0123];
+    SWSelector *selector = [[SWSelector new] updateWithWindowList:self.list0123];
     
     selector = [selector decrement];
-    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123[3], @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))3, @"");
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123[3]);
+    XCTAssertEqual(selector.selectedIndex, 3);
     
     selector = [selector decrement];
-    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123[2], @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))2, @"");
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123[2]);
+    XCTAssertEqual(selector.selectedIndex, 2);
     
     selector = [selector decrement];
-    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123[1], @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))1, @"");
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123[1]);
+    XCTAssertEqual(selector.selectedIndex, 1);
     
     selector = [selector decrement];
-    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123[0], @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))0, @"");
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123[0]);
+    XCTAssertEqual(selector.selectedIndex, 0);
     
     updateWithEmptyAndCheck(selector);
 }
 
 - (void)testDecrementWithoutWrapping;
 {
-    SWSelector *selector = [[SWSelector new] updateWithWindowGroups:self.list0123];
+    SWSelector *selector = [[SWSelector new] updateWithWindowList:self.list0123];
     
     selector = [selector decrementWithoutWrapping];
-    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123[0], @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))0, @"");
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123[0]);
+    XCTAssertEqual(selector.selectedIndex, 0);
     
     updateWithEmptyAndCheck(selector);
 }
@@ -243,10 +243,10 @@
     SWSelector *selector = [SWSelector new];
     
     selector = [selector decrement];
-    selector = [selector updateWithWindowGroups:self.list0123];
+    selector = [selector updateWithWindowList:self.list0123];
 
-    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123.lastObject, @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))(self.list0123.count - 1), @"");
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123.lastObject);
+    XCTAssertEqual(selector.selectedIndex, (self.list0123.count - 1));
     
     updateWithEmptyAndCheck(selector);
 }
@@ -259,10 +259,10 @@
     selector = [selector increment];
     selector = [selector increment];
     selector = [selector increment];
-    selector = [selector updateWithWindowGroups:self.list0123];
+    selector = [selector updateWithWindowList:self.list0123];
     
-    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123.firstObject, @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))0, @"");
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123.firstObject);
+    XCTAssertEqual(selector.selectedIndex, 0);
     
     updateWithEmptyAndCheck(selector);
 }
@@ -273,11 +273,11 @@
     
     selector = [selector increment];
     selector = [selector increment];
-    selector = [selector updateWithWindowGroups:self.list0123];
-    selector = [selector updateWithWindowGroups:self.list0];
+    selector = [selector updateWithWindowList:self.list0123];
+    selector = [selector updateWithWindowList:self.list0];
     
-    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123.firstObject, @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))0, @"");
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123.firstObject);
+    XCTAssertEqual(selector.selectedIndex, 0);
     
     updateWithEmptyAndCheck(selector);
 }
@@ -285,16 +285,73 @@
 - (void)testUpdateWithSharedSelectedObject;
 {
     SWSelector *selector = [SWSelector new];
-    
+
     selector = [selector increment];
     selector = [selector increment];
-    selector = [selector updateWithWindowGroups:self.list0123];
-    selector = [selector updateWithWindowGroups:self.list321];
-    
-    XCTAssertEqualObjects(selector.selectedWindowGroup, self.list0123[2], @"");
-    XCTAssertEqual(selector.selectedIndex, (__typeof__(selector.selectedIndex))1, @"");
+
+    selector = [selector updateWithWindowList:self.list0123];
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123[2]);
+
+    selector = [selector updateWithWindowList:self.list321];
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123[2]);
+
+    XCTAssertEqual(selector.selectedIndex, 1);
     
     updateWithEmptyAndCheck(selector);
+}
+
+- (void)testDeselectionWithUpdateToNotFoundIndex;
+{
+    SWSelector *selector = [SWSelector new];
+    selector = [selector updateWithWindowList:self.list0123];
+
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123[0]);
+    XCTAssertEqual(selector.selectedIndex, 0);
+
+    selector = [selector selectIndex:NSNotFound];
+
+    XCTAssertNil(selector.selectedWindow);
+    XCTAssertEqual(selector.selectedIndex, NSNotFound);
+}
+
+- (void)testIncrementAfterDeselection;
+{
+    SWSelector *selector = [SWSelector new];
+    selector = [selector updateWithWindowList:self.list0123];
+    selector = [selector selectIndex:NSNotFound];
+    selector = [selector increment];
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123[0]);
+    XCTAssertEqual(selector.selectedIndex, 0);
+}
+
+- (void)testIncrementAfterDeselectionNoWrap;
+{
+    SWSelector *selector = [SWSelector new];
+    selector = [selector updateWithWindowList:self.list0123];
+    selector = [selector selectIndex:NSNotFound];
+    selector = [selector incrementWithoutWrapping];
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123[0]);
+    XCTAssertEqual(selector.selectedIndex, 0);
+}
+
+- (void)testDecrementAfterDeselection;
+{
+    SWSelector *selector = [SWSelector new];
+    selector = [selector updateWithWindowList:self.list0123];
+    selector = [selector selectIndex:NSNotFound];
+    selector = [selector decrement];
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123[3]);
+    XCTAssertEqual(selector.selectedIndex, 3);
+}
+
+- (void)testDecrementAfterDeselectionNoWrap;
+{
+    SWSelector *selector = [SWSelector new];
+    selector = [selector updateWithWindowList:self.list0123];
+    selector = [selector selectIndex:NSNotFound];
+    selector = [selector decrementWithoutWrapping];
+    XCTAssertEqualObjects(selector.selectedWindow, self.list0123[3]);
+    XCTAssertEqual(selector.selectedIndex, 3);
 }
 
 @end

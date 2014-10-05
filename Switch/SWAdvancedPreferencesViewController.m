@@ -36,7 +36,7 @@
     statusItemBox.state = [SWPreferencesService sharedService].showStatusItem ? NSOnState : NSOffState;
 }
 
-#pragma mark MASPreferencesViewController
+#pragma mark - MASPreferencesViewController
 
 - (NSString *)identifier
 {
@@ -63,7 +63,7 @@
     return NO;
 }
 
-#pragma mark IBAction
+#pragma mark - IBAction
 
 - (IBAction)multimonChanged:(NSButton *)sender;
 {

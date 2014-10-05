@@ -17,7 +17,7 @@
 
 @implementation SWHUDView
 
-#pragma mark Initialization
+#pragma mark - Initialization
 
 - (id)initWithFrame:(CGRect)frame
 {

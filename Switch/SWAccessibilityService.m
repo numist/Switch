@@ -14,16 +14,16 @@
 
 #import "SWAccessibilityService.h"
 
-#import <NNKit/NNService+Protected.h>
-#import <Haxcessibility/Haxcessibility.h>
 #import <Haxcessibility/HAXElement+Protected.h>
+#import <Haxcessibility/Haxcessibility.h>
+#import <NNKit/NNService+Protected.h>
 
 #import "NSScreen+SWAdditions.h"
 #import "SWAPIEnabledWorker.h"
+#import "SWAppDelegate.h"
 #import "SWApplication.h"
 #import "SWWindow.h"
 #import "SWWindowGroup.h"
-#import "SWAppDelegate.h"
 
 
 @interface SWAccessibilityService ()
@@ -37,7 +37,7 @@
 
 @implementation SWAccessibilityService
 
-#pragma mark Initialization
+#pragma mark - Initialization
 
 - (instancetype)init;
 {
@@ -48,7 +48,7 @@
     return self;
 }
 
-#pragma mark NNService
+#pragma mark - NNService
 
 + (NNServiceType)serviceType;
 {
@@ -62,7 +62,7 @@
     [self checkAPI];
 }
 
-#pragma mark SWAccessibilityService
+#pragma mark - SWAccessibilityService
 
 - (void)setWorker:(SWAPIEnabledWorker *)worker;
 {
@@ -115,7 +115,7 @@
     });
 }
 
-#pragma mark Internal
+#pragma mark - Internal
 
 - (void)_accessibilityAPIAvailabilityChangedNotification:(NSNotification *)notification;
 {
@@ -166,8 +166,8 @@
     }
     
     // Then raise the application (if it's not already topmost)
-    NSRunningApplication *runningApplication = window.application.runningApplication;
-    if (!runningApplication.active) {
+    if (![window.application isActiveApplication]) {
+        NSRunningApplication *runningApplication = [NSRunningApplication runningApplicationWithProcessIdentifier:window.application.pid];
         if (![runningApplication activateWithOptions:NSApplicationActivateIgnoringOtherApps]) {
             NSString *errorString = [NSString stringWithFormat:@"Raising application %@ failed.", window.application];
             SWLog(@"%@", errorString);
@@ -238,7 +238,15 @@
 - (HAXWindow *)_haxWindowForWindow:(SWWindow *)window;
 {
     // If window is a group, the frame will be calculated incorrectly, and no accessibility object for the window will be found!
-    Check(![window isKindOfClass:[SWWindowGroup class]]);
+    while (![window isMemberOfClass:[SWWindow class]]) {
+        if ([window isKindOfClass:[SWWindowGroup class]]) {
+            window = [(SWWindowGroup *)window mainWindow];
+        } else {
+            // TODO: If I had nothing but time, I'd trap on launch if SWWindow had any other subclasses but ain't nobody got time for that, maybe if this project ever has more than one developer.
+            DebugBreak();
+            break;
+        }
+    }
 
     HAXApplication *haxApplication = [HAXApplication applicationWithPID:window.application.pid];
     BailUnless(haxApplication, nil);
