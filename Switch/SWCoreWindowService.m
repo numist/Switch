@@ -373,6 +373,11 @@ static int const kScrollThreshold = 50;
     [self.stateMachine activateWindow:window];
 }
 
+- (void)interfaceControllerDidClickOutsideInterface:(SWInterfaceController *)controller;
+{
+    [self.stateMachine cancelInvocation];
+}
+
 #pragma mark - Private callbacks
 
 - (void)_displayTimerFired:(NSTimer *)timer;

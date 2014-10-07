@@ -23,6 +23,7 @@
 
 - (void)interfaceController:(SWInterfaceController *)controller didSelectWindow:(SWWindow *)window;
 - (void)interfaceController:(SWInterfaceController *)controller didActivateWindow:(SWWindow *)window;
+- (void)interfaceControllerDidClickOutsideInterface:(SWInterfaceController *)controller;
 
 @end
 

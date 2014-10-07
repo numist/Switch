@@ -65,6 +65,13 @@
     [delegate interfaceController:self didActivateWindow:window];
 }
 
+- (void)coreWindowControllerDidClickOutsideInterface:(SWCoreWindowController *)controller;
+{
+    Check([NSThread isMainThread]);
+    id<SWInterfaceControllerDelegate> delegate = self.delegate;
+    [delegate interfaceControllerDidClickOutsideInterface:self];
+}
+
 #pragma mark - SWInterfaceController
 
 - (void)shouldShowInterface:(_Bool)showInterface;
