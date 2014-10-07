@@ -105,13 +105,8 @@
     distinctUntilChanged];
     
     // Update the selected cell in the collection view when the selector is updated.
-    [[RACObserve(self, selector)
-    distinctUntilChanged]
-    subscribeNext:^(SWSelector *selector) {
-        @strongify(self);
-        self.selectedWindow = self.selector.selectedWindow;
-    }];
-    
+    RAC(self, selectedWindow) = RACObserve(self, selector.selectedWindow);
+
     // raise when (pendingSwitch && windowListLoaded)
     [[[[RACSignal
     combineLatest:@[RACObserve(self, pendingSwitch), RACObserve(self, windowListLoaded)]

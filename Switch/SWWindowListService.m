@@ -89,7 +89,7 @@ static NSMutableSet *loggedWindows;
 
 + (NSOrderedSet *)filterInfoDictionariesToWindowObjects:(NSArray *)infoDicts;
 {
-    return [NSOrderedSet orderedSetWithArray:[[infoDicts nn_filter:(nn_filter_block_t)^bool(NSDictionary *windowInfo) {
+    return [NSOrderedSet orderedSetWithArray:[[infoDicts nn_filter:(nn_filter_block_t)^(NSDictionary *windowInfo) {
         NSString *applicationName = windowInfo[(__bridge NSString *)kCGWindowOwnerName];
         
         // Non-normal windows are filtered out as the accuracy of their ordering in the window list cannot be guaranteed.
@@ -103,7 +103,7 @@ static NSMutableSet *loggedWindows;
         BOOL isolatorShield = isolatorWindow && ([windowInfo[(__bridge NSString *)kCGWindowAlpha] doubleValue] < 0.9);
 
         return normalWindow && !transparentWindow && !badMSWordWindow && !isolatorShield;
-    }] nn_map:(nn_map_block_t)^id(NSDictionary *windowInfo) {
+    }] nn_map:(nn_map_block_t)^(NSDictionary *windowInfo) {
         return [SWWindow windowWithDescription:windowInfo];
     }]];
 }

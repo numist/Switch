@@ -17,7 +17,6 @@
 #import "NSScreen+SWAdditions.h"
 #import "SWAccessibilityService.h"
 #import "SWApplication.h"
-#import "SWCoreWindowController.h"
 #import "SWEventTap.h"
 #import "SWInterfaceController.h"
 #import "SWPreferencesService.h"
@@ -31,7 +30,7 @@ static NSTimeInterval const kWindowDisplayDelay = 0.2;
 static int const kScrollThreshold = 50;
 
 
-@interface SWCoreWindowService () <SWCoreWindowControllerDelegate, SWWindowListSubscriber, SWStateMachineDelegate, SWInterfaceControllerDelegate>
+@interface SWCoreWindowService () <SWWindowListSubscriber, SWStateMachineDelegate, SWInterfaceControllerDelegate>
 
 #pragma mark - State machine inputs
 @property (nonatomic, strong) NSTimer *displayTimer;
@@ -253,20 +252,6 @@ static int const kScrollThreshold = 50;
     [super stopService];
 }
 
-#pragma mark - SWCoreWindowControllerDelegate
-
-- (void)coreWindowController:(SWCoreWindowController *)controller didSelectWindow:(SWWindow *)window;
-{
-    [self.stateMachine selectWindow:window];
-    [self.scroller reset];
-}
-
-- (void)coreWindowController:(SWCoreWindowController *)controller didActivateWindow:(SWWindow *)window;
-{
-    [self.stateMachine activateWindow:window];
-    [self.scroller reset];
-}
-
 #pragma mark - SWWindowListSubscriber
 
 - (oneway void)windowListService:(SWWindowListService *)service updatedList:(NSOrderedSet *)windows;
@@ -366,11 +351,13 @@ static int const kScrollThreshold = 50;
 - (void)interfaceController:(SWInterfaceController *)controller didSelectWindow:(SWWindow *)window;
 {
     [self.stateMachine selectWindow:window];
+    [self.scroller reset];
 }
 
 - (void)interfaceController:(SWInterfaceController *)controller didActivateWindow:(SWWindow *)window;
 {
     [self.stateMachine activateWindow:window];
+    [self.scroller reset];
 }
 
 #pragma mark - Private callbacks
