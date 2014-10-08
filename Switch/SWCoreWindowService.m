@@ -191,7 +191,7 @@ static int const kScrollThreshold = 50;
             @strongify(self);
             [self.stateMachine closeWindow];
         });
-        return !self.stateMachine.active;
+        return !self.stateMachine.interfaceVisible;
     }];
 
     // Showing the preferences is bound to option-, when the interface is open. This action closes the interface.

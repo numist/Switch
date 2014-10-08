@@ -48,9 +48,9 @@ typedef NS_ENUM(uint8_t, SWIncrementDirection) {
 
 #pragma mark - Keyboard interactions
 // Key events return whether the event should be allowed to propagate.
-- (_Bool)incrementWithInvoke:(_Bool)invokesInterface direction:(SWIncrementDirection)direction isRepeating:(_Bool)autorepeat;
-- (_Bool)closeWindow;
-- (_Bool)cancelInvocation;
+- (void)incrementWithInvoke:(_Bool)invokesInterface direction:(SWIncrementDirection)direction isRepeating:(_Bool)autorepeat;
+- (void)closeWindow;
+- (void)cancelInvocation;
 - (void)endInvocation;
 
 #pragma mark - GUI interactions

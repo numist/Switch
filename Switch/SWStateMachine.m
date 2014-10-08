@@ -188,7 +188,7 @@
 
 #pragma mark - Keyboard interactions
 
-- (_Bool)incrementWithInvoke:(_Bool)invokesInterface direction:(SWIncrementDirection)direction isRepeating:(_Bool)autorepeat;
+- (void)incrementWithInvoke:(_Bool)invokesInterface direction:(SWIncrementDirection)direction isRepeating:(_Bool)autorepeat;
 {
     StateLog(@"State machine key event with invoke:%@ direction:%@ repeating:%@",
           invokesInterface ? @"true" : @"false",
@@ -204,10 +204,6 @@
         self.pendingSwitch = false;
     }
     
-    if (!self.invoked) {
-        return true;
-    }
-    
     if (autorepeat) {
         self.selector = direction == SWIncrementDirectionIncreasing ? self.selector.incrementWithoutWrapping : self.selector.decrementWithoutWrapping;
     } else {
@@ -215,11 +211,9 @@
     }
     
     self.scrollOffset = 0;
-    
-    return false;
 }
 
-- (_Bool)closeWindow;
+- (void)closeWindow;
 {
     StateLog(@"State machine event close window");
 
@@ -228,12 +222,10 @@
             id<SWStateMachineDelegate> delegate = self.delegate;
             [delegate stateMachine:self wantsWindowClosed:self.selectedWindow];
         }
-        return false;
     }
-    return true;
 }
 
-- (_Bool)cancelInvocation;
+- (void)cancelInvocation;
 {
     StateLog(@"State machine event cancel invocation");
 
@@ -242,9 +234,7 @@
 
     if (self.invoked) {
         self.invoked = false;
-        return false;
     }
-    return true;
 }
 
 - (void)endInvocation;

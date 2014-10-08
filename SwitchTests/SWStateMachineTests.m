@@ -916,7 +916,7 @@ static SWWindow *(^rwg)() = ^{
 
 - (void)testNonInvokingEventKeyEventIncreasingNonRepeating;
 {
-    XCTAssertTrue([self.stateMachineUnderTest incrementWithInvoke:false direction:SWIncrementDirectionIncreasing isRepeating:false]);
+    XCTAssertNoThrow([self.stateMachineUnderTest incrementWithInvoke:false direction:SWIncrementDirectionIncreasing isRepeating:false]);
     
     XCTAssertNil(self.stateMachineUnderTest.windowList);
     XCTAssertNil(self.stateMachineUnderTest.selectedWindow);
@@ -928,7 +928,7 @@ static SWWindow *(^rwg)() = ^{
 
 - (void)testNonInvokingEventKeyEventIncreasingRepeating;
 {
-    XCTAssertTrue([self.stateMachineUnderTest incrementWithInvoke:false direction:SWIncrementDirectionIncreasing isRepeating:true]);
+    XCTAssertNoThrow([self.stateMachineUnderTest incrementWithInvoke:false direction:SWIncrementDirectionIncreasing isRepeating:true]);
     
     XCTAssertNil(self.stateMachineUnderTest.windowList);
     XCTAssertNil(self.stateMachineUnderTest.selectedWindow);
@@ -940,7 +940,7 @@ static SWWindow *(^rwg)() = ^{
 
 - (void)testNonInvokingEventKeyEventDecreasingNonRepeating;
 {
-    XCTAssertTrue([self.stateMachineUnderTest incrementWithInvoke:false direction:SWIncrementDirectionDecreasing isRepeating:false]);
+    XCTAssertNoThrow([self.stateMachineUnderTest incrementWithInvoke:false direction:SWIncrementDirectionDecreasing isRepeating:false]);
     
     XCTAssertNil(self.stateMachineUnderTest.windowList);
     XCTAssertNil(self.stateMachineUnderTest.selectedWindow);
@@ -952,7 +952,7 @@ static SWWindow *(^rwg)() = ^{
 
 - (void)testNonInvokingEventKeyEventDecreasingRepeating;
 {
-    XCTAssertTrue([self.stateMachineUnderTest incrementWithInvoke:false direction:SWIncrementDirectionDecreasing isRepeating:true]);
+    XCTAssertNoThrow([self.stateMachineUnderTest incrementWithInvoke:false direction:SWIncrementDirectionDecreasing isRepeating:true]);
     
     XCTAssertNil(self.stateMachineUnderTest.windowList);
     XCTAssertNil(self.stateMachineUnderTest.selectedWindow);
@@ -964,7 +964,7 @@ static SWWindow *(^rwg)() = ^{
 
 - (void)testNonInvokingEventKeyEventCancelInvocation;
 {
-    XCTAssertTrue([self.stateMachineUnderTest cancelInvocation]);
+    XCTAssertNoThrow([self.stateMachineUnderTest cancelInvocation]);
     
     XCTAssertNil(self.stateMachineUnderTest.windowList);
     XCTAssertNil(self.stateMachineUnderTest.selectedWindow);
@@ -976,7 +976,7 @@ static SWWindow *(^rwg)() = ^{
 
 - (void)testNonInvokingEventKeyEventCloseWindow;
 {
-    XCTAssertTrue([self.stateMachineUnderTest closeWindow]);
+    XCTAssertNoThrow([self.stateMachineUnderTest closeWindow]);
     
     XCTAssertNil(self.stateMachineUnderTest.windowList);
     XCTAssertNil(self.stateMachineUnderTest.selectedWindow);

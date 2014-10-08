@@ -21,6 +21,10 @@
 #import "SWWindowListService.h"
 
 
+@interface SWAppDelegate () <BITHockeyManagerDelegate>
+@end
+
+
 @implementation SWAppDelegate
 
 #pragma mark - NSApplicationDelegate
@@ -29,7 +33,7 @@
 {
     [[NNServiceManager sharedManager] registerAllPossibleServices];
  
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"81d830d8a7181d7e0df6eeb805bb9728"];
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"81d830d8a7181d7e0df6eeb805bb9728" delegate:self];
     [[BITHockeyManager sharedHockeyManager] startManager];
     
     SWLog(@"Launched %@ %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:(__bridge id)kCFBundleNameKey], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]);
