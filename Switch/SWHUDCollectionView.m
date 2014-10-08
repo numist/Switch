@@ -110,6 +110,13 @@
 
 - (void)mouseDown:(NSEvent *)theEvent;
 {
+    if ([self _indexForCellAtPoint:theEvent.locationInWindow] == NSNotFound) {
+        id<SWHUDCollectionViewDelegate> delegate = self.delegate;
+        if ([delegate respondsToSelector:@selector(HUDCollectionViewClickOutsideCollection:)]) {
+            [delegate HUDCollectionViewClickOutsideCollection:self];
+        }
+    }
+
     // Do not pass this event up the responder chain.
     return;
 }

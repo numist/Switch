@@ -50,5 +50,6 @@
 - (void)HUDCollectionView:(SWHUDCollectionView *)view willSelectCellAtIndex:(NSUInteger)index;
 - (void)HUDCollectionView:(SWHUDCollectionView *)view didSelectCellAtIndex:(NSUInteger)index;
 - (void)HUDCollectionView:(SWHUDCollectionView *)view activateCellAtIndex:(NSUInteger)index;
+- (void)HUDCollectionViewClickOutsideCollection:(SWHUDCollectionView *)view;
 
 @end

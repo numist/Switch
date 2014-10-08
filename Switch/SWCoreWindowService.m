@@ -360,6 +360,11 @@ static int const kScrollThreshold = 50;
     [self.scroller reset];
 }
 
+- (void)interfaceControllerDidClickOutsideInterface:(SWInterfaceController *)controller;
+{
+    [self.stateMachine cancelInvocation];
+}
+
 #pragma mark - Private callbacks
 
 - (void)_displayTimerFired:(NSTimer *)timer;
