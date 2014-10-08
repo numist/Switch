@@ -39,7 +39,7 @@ static NSMutableSet *loggedWindows;
 
 - (id)init;
 {
-    NSAssert([NSThread isMainThread], @"Boundary call was not made on main thread");
+    Assert([NSThread isMainThread]);
 
     if (!(self = [super init])) { return nil; }
     
@@ -62,7 +62,7 @@ static NSMutableSet *loggedWindows;
 
 - (void)startService;
 {
-    NSAssert([NSThread isMainThread], @"Boundary call was not made on main thread");
+    Assert([NSThread isMainThread]);
 
     [super startService];
     
@@ -74,8 +74,8 @@ static NSMutableSet *loggedWindows;
 
 - (void)stopService;
 {
-    NSAssert([NSThread isMainThread], @"Boundary call was not made on main thread");
-    
+    Assert([NSThread isMainThread]);
+
     loggedWindows = nil;
     self.worker = nil;
     self.windows = nil;
@@ -172,8 +172,8 @@ static NSMutableSet *loggedWindows;
 
 - (void)_workerUpdatedWindowList:(NSNotification *)notification;
 {
-    NSAssert([NSThread isMainThread], @"Boundary call was not made on main thread");
-    
+    Assert([NSThread isMainThread]);
+
     if (notification.object != self.worker) { return; }
     
     NSParameterAssert([notification.userInfo[@"windows"] isKindOfClass:[NSArray class]]);

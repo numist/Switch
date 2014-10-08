@@ -113,7 +113,10 @@
 
 - (NSImage *)contentForWindow:(SWWindow *)window;
 {
-    _SWWindowContentContainer *contentContainerObject = [self.contentContainers objectForKey:@(window.windowID)];
+    __block _SWWindowContentContainer *contentContainerObject;
+    dispatch_sync(self.queue, ^{
+        contentContainerObject = [self.contentContainers objectForKey:@(window.windowID)];
+    });
     return contentContainerObject.content;
 }
 
@@ -121,7 +124,9 @@
 
 - (oneway void)windowListService:(SWWindowListService *)service updatedList:(NSOrderedSet *)windowList;
 {
+    @weakify(self);
     dispatch_async(self.queue, ^{
+        @strongify(self);
         // Flatten the window group hierarchy into an unordered set of windows.
         NSMutableSet *existingWindows = [NSMutableSet new];
         for (SWWindowGroup *windowGroup in windowList) {
@@ -156,8 +161,10 @@
 {
     SWWindowWorker *worker = notification.object;
     NSImage *content = notification.userInfo[@"content"];
-    
+
+    @weakify(self);
     dispatch_async(self.queue, ^{
+        @strongify(self);
         _SWWindowContentContainer *contentContainerObject = [self.contentContainers objectForKey:@(worker.windowID)];
         if (!contentContainerObject) {
             return;
@@ -168,8 +175,11 @@
         }
         
         contentContainerObject.content = content;
-        
-        [(id<SWWindowContentsSubscriber>)self.subscriberDispatcher windowContentService:self updatedContent:content forWindow:contentContainerObject.window];
+
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            @strongify(self);
+            [(id<SWWindowContentsSubscriber>)self.subscriberDispatcher windowContentService:self updatedContent:content forWindow:contentContainerObject.window];
+        });
     });
 }
 

@@ -79,7 +79,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
 
 - (void)registerHotKey:(SWHotKey *)hotKey object:(id)owner block:(SWEventTapKeyFilter)eventFilter;
 {
-    NSAssert([[NSThread currentThread] isMainThread], @"%@ must be called from the main thread", [self class]);
+    Assert([NSThread isMainThread]);
 
     if (!self.keyFilters[hotKey]) {
         self.keyFilters[hotKey] = [NSMutableDictionary new];
@@ -88,7 +88,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
     NSNumber *ownerKey = @((uintptr_t)owner);
     
     // I don't love this limitation, but removing it is complicated and enables questionable functionality anyway.
-    NSAssert(!self.keyFilters[hotKey][ownerKey], @"Tried to register a block for an already-existing keybinding.");
+    Assert(!self.keyFilters[hotKey][ownerKey]);
     
     [self.keyFilters[hotKey] setObject:eventFilter forKey:ownerKey];
 }
@@ -100,7 +100,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
 
 - (void)registerModifier:(SWHotKeyModifierKey)modifiers object:(id)owner block:(SWEventTapModifierCallback)eventCallback;
 {
-    NSAssert([[NSThread currentThread] isMainThread], @"%@ must be called from the main thread", [self class]);
+    Assert([NSThread isMainThread]);
 
     if (!self.modifierCallbacks[@(modifiers)]) {
         self.modifierCallbacks[@(modifiers)] = [NSMutableDictionary new];
@@ -109,7 +109,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
     NSNumber *ownerKey = @((uintptr_t)owner);
     
     // I don't love this limitation, but removing it is complicated and enables questionable functionality anyway.
-    NSAssert(!self.modifierCallbacks[@(modifiers)][ownerKey], @"Tried to register a block for an already-existing keybinding.");
+    Assert(!self.modifierCallbacks[@(modifiers)][ownerKey]);
     
     [self.modifierCallbacks[@(modifiers)] setObject:eventCallback forKey:@((uintptr_t)owner)];
 }
@@ -121,7 +121,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
 
 - (void)registerForEventsWithType:(CGEventType)eventType object:(id)owner block:(SWEventTapCallback)eventCallback;
 {
-    NSAssert([[NSThread currentThread] isMainThread], @"%@ must be called from the main thread", [self class]);
+    Assert([NSThread isMainThread]);
 
     if (!self.eventTypeCallbacks[@(eventType)]) {
         self.eventTypeCallbacks[@(eventType)] = [NSMutableDictionary new];
@@ -130,7 +130,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
     NSNumber *ownerKey = @((uintptr_t)owner);
     
     // I don't love this limitation, but removing it is complicated and enables questionable functionality anyway.
-    NSAssert(!self.eventTypeCallbacks[@(eventType)][ownerKey], @"Tried to register a block for an already-existing keybinding.");
+    Assert(!self.eventTypeCallbacks[@(eventType)][ownerKey]);
     
     [self.eventTypeCallbacks[@(eventType)] setObject:eventCallback forKey:@((uintptr_t)owner)];
 }
