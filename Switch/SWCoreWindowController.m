@@ -81,6 +81,7 @@
     switcherWindow.hasShadow = NO;
     switcherWindow.opaque = NO;
     switcherWindow.backgroundColor = [NSColor clearColor];
+    switcherWindow.ignoresMouseEvents = NO;
     switcherWindow.level = NSPopUpMenuWindowLevel;
     self.window = switcherWindow;
     
@@ -176,6 +177,12 @@
     }
     id<SWCoreWindowControllerDelegate> delegate = self.delegate;
     [delegate coreWindowController:self didActivateWindow:self.windowList[index]];
+}
+
+- (void)HUDCollectionViewClickOutsideCollection:(SWHUDCollectionView *)view;
+{
+    id<SWCoreWindowControllerDelegate> delegate = self.delegate;
+    [delegate coreWindowControllerDidClickOutsideInterface:self];
 }
 
 #pragma mark - Private
