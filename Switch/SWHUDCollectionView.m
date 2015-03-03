@@ -47,10 +47,7 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
-    self = [super initWithFrame:frame];
-    if (!self) {
-        return nil;
-    }
+    BailUnless(self = [super initWithFrame:frame], nil);
     
     _cells = [NSMutableArray new];
     _hud = [[SWHUDView alloc] initWithFrame:CGRectZero];

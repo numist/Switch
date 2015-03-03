@@ -32,7 +32,7 @@ static NSInteger const kMaxThreshold = NSIntegerMax / 2;
 
 - (instancetype)initWithThreshold:(NSInteger)threshold incHandler:(dispatch_block_t)incBlock decHandler:(dispatch_block_t)decBlock;
 {
-    if (!(self = [super init])) { return nil; }
+    BailUnless(self = [super init], nil);
 
     self->_inc = incBlock;
     self->_dec = decBlock;

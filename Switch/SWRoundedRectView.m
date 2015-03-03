@@ -19,9 +19,9 @@
 
 #pragma mark - Initialization
 
-- (instancetype)initWithFrame:(CGRect)frameRect;
+- (instancetype)initWithFrame:(CGRect)frame;
 {
-    if (!(self = [super initWithFrame:frameRect])) { return nil; }
+    BailUnless(self = [super initWithFrame:frame], nil);
     
     [self setWantsLayer:YES];
     

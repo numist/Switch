@@ -37,7 +37,7 @@
 
 - (id)initWithScreen:(NSScreen *)screen;
 {
-    if (!(self = [super initWithWindow:nil])) { return nil; }
+    BailUnless(self = [super initWithWindow:nil], nil);
     
     _collectionCells = [NSMutableDictionary new];
     _screen = screen;

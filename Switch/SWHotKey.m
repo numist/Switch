@@ -106,7 +106,7 @@ static NSDictionary *specialKeys = nil;
 
 - (instancetype)initWithKeycode:(CGKeyCode)code modifiers:(SWHotKeyModifierKey)modifiers;
 {
-    if (!(self = [super init])) { return nil; }
+    BailUnless(self = [super init], nil);
     
     _modifiers = modifiers;
     _code = code;

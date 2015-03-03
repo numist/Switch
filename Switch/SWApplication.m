@@ -41,7 +41,7 @@
 
 - (instancetype)initWithPID:(pid_t)pid name:(NSString *)name;
 {
-    if (!(self = [super init])) { return nil; }
+    BailUnless(self = [super init], nil);
     
     _pid = pid;
     _runningApplication = [NSRunningApplication runningApplicationWithProcessIdentifier:pid];

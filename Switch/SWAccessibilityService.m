@@ -41,7 +41,7 @@
 
 - (instancetype)init;
 {
-    if (!(self = [super init])) { return nil; }
+    BailUnless(self = [super init], nil);
     
     _haxQueue = dispatch_queue_create("foo", DISPATCH_QUEUE_SERIAL);
     

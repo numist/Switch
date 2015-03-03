@@ -33,7 +33,7 @@
 
 - (instancetype)initWithDescription:(NSDictionary *)description;
 {
-    if (!(self = [super init])) { return nil; }
+    BailUnless(self = [super init], nil);
     
     if (!description) {
         return nil;

@@ -45,7 +45,7 @@ static NSString const * const kSWShowStatusItemKey = @"showStatusItem";
 
 - (instancetype)init;
 {
-    if (!(self = [super init])) { return nil; }
+    BailUnless(self = [super init], nil);
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:self._defaultValues];
 

@@ -82,7 +82,7 @@
 
 - (instancetype)initWithDelegate:(id<SWStateMachineDelegate>) delegate;
 {
-    if (!(self = [super init])) { return nil; }
+    BailUnless(self = [super init], nil);
     
     self.delegate = delegate;
     

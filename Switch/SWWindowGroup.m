@@ -25,8 +25,7 @@
 - (instancetype)initWithWindows:(NSOrderedSet *)windows mainWindow:(SWWindow *)mainWindow;
 {
     NSParameterAssert([windows containsObject:mainWindow]);
-
-    if (!(self = [super init])) { return nil; }
+    BailUnless(self = [super init], nil);
     
     _windows = [windows copy];
     _mainWindow = mainWindow;

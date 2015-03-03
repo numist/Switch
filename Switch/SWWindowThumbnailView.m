@@ -47,7 +47,7 @@
 
 - (id)initWithFrame:(CGRect)frame window:(SWWindow *)windowGroup;
 {
-    if (!(self = [super initWithFrame:frame])) { return nil; }
+    BailUnless(self = [super initWithFrame:frame], nil);
     
     //
     // Data initialization

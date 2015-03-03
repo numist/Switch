@@ -59,7 +59,7 @@
 
 - (id)init;
 {
-    if (!(self = [super init])) { return nil; }
+    BailUnless(self = [super init], nil);
     
     _contentContainers = [NSMutableDictionary new];
     _queue = dispatch_queue_create([[NSString stringWithFormat:@""] UTF8String], DISPATCH_QUEUE_SERIAL);

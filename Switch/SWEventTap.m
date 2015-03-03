@@ -40,7 +40,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
 
 - (instancetype)init;
 {
-    if (!(self = [super init])) { return nil; }
+    BailUnless(self = [super init], nil);
     
     _eventTypeCallbacks = [NSMutableDictionary new];
     _modifierCallbacks = [NSMutableDictionary new];

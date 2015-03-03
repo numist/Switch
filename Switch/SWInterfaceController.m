@@ -39,7 +39,7 @@
 
 - (instancetype)initWithDelegate:(id<SWInterfaceControllerDelegate>)delegate;
 {
-    BailUnless((self = [super init]), nil);
+    BailUnless(self = [super init], nil);
 
     self->_delegate = delegate;
 

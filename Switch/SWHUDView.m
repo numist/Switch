@@ -21,7 +21,7 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
-    if (!(self = [super initWithFrame:frame])) { return nil; }
+    BailUnless(self = [super initWithFrame:frame], nil);
 
     self.border = 0.0;
     self.radius = kNNWindowRoundRectRadius;

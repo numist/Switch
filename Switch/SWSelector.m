@@ -21,7 +21,7 @@
 
 - (instancetype)initWithWindowList:(NSOrderedSet *)windowList selectedIndex:(NSInteger)index;
 {
-    if (!(self = [super init])) { return nil; }
+    BailUnless(self = [super init], nil);
     
     if ((windowList && !windowList.count) || index == NSNotFound) {
         Check(index == NSNotFound);

@@ -50,7 +50,7 @@ static int const kScrollThreshold = 50;
 
 - (instancetype)init;
 {
-    if (!(self = [super init])) { return nil; }
+    BailUnless(self = [super init], nil);
 
     self->_stateMachine = [SWStateMachine stateMachineWithDelegate:self];
 
