@@ -34,6 +34,7 @@
 
 static NSString const * const kSWFirstLaunchKey = @"firstLaunch";
 static NSString const * const kSWMultimonInterfaceKey = @"multimonInterface";
+static NSString const * const kSWMultimonGroupByMonitorKey = @"multimonGroupByMonitor";
 static NSString const * const kSWShowStatusItemKey = @"showStatusItem";
 
 
@@ -113,6 +114,7 @@ generateObjectPropertyMethods(GENERATED_obj_##setter, GENERATED_obj_##property, 
 - (_Bool)property; { return [[self GENERATED_obj_##property] boolValue]; }
 
 generateBoolPropertyMethods(setMultimonInterface:, multimonInterface, kSWMultimonInterfaceKey)
+generateBoolPropertyMethods(setMultimonGroupByMonitor:, multimonGroupByMonitor, kSWMultimonGroupByMonitorKey)
 generateBoolPropertyMethods(setShowStatusItem:, showStatusItem, kSWShowStatusItemKey)
 
 #pragma mark Preferences: default values
@@ -125,6 +127,7 @@ generateBoolPropertyMethods(setShowStatusItem:, showStatusItem, kSWShowStatusIte
         _defaultValues = @{
             kSWFirstLaunchKey : @YES,
             kSWMultimonInterfaceKey : @YES,
+            kSWMultimonGroupByMonitorKey : @NO,
             kSWShowStatusItemKey : @YES,
         };
     });

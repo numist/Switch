@@ -17,6 +17,7 @@
 #import <NNKit/NNService+Protected.h>
 
 #import "SWApplication.h"
+#import "SWPreferencesService.h"
 #import "SWWindow.h"
 #import "SWWindowGroup.h"
 #import "SWWindowListWorker.h"
@@ -167,6 +168,51 @@ static NSMutableSet *loggedWindows;
     return [mutableWindowGroupList reversedOrderedSet];
 }
 
+// XXX: This cannot be tested unless SW provides a type that encapsulates an NSScreen
++ (NSOrderedSet *)sortedWindowGroups:(NSOrderedSet *)windowGroups;
+{
+    // Default behaviour is to order by recency
+    NSOrderedSet *result = windowGroups;
+
+    // Grouping windows by monitor, then recency
+    SWPreferencesService *prefs = [SWPreferencesService sharedService];
+    if (prefs.multimonInterface && prefs.multimonGroupByMonitor) {
+        // I actually want an ordered dictionary here, order: screen by recency, key: screen ID, value: ordered collection of windows
+        NSMutableArray *orderedDisplayIDs = [NSMutableArray new];
+        NSMutableDictionary *windowsByDisplayID = [NSMutableDictionary new];
+
+        // Break up the windows into separate lists by screen
+        for (SWWindowGroup *windowGroup in windowGroups) {
+            // TODO: SW wrapper for NSScreen because this is gross.
+            CGDirectDisplayID displayID = [windowGroup.screen.deviceDescription[@"NSScreenNumber"] unsignedIntValue];
+
+            if (!windowsByDisplayID[@(displayID)]) {
+                [orderedDisplayIDs addObject:@(displayID)];
+                windowsByDisplayID[@(displayID)] = [NSMutableArray new];
+            }
+
+            [windowsByDisplayID[@(displayID)] addObject:windowGroup];
+        }
+
+        // Don't bother with this extra work if there's only one display
+        if (orderedDisplayIDs.count > 1) {
+            // Recombine the windows into one list grouped by screen
+            NSMutableOrderedSet *mutableWindowGroupList = [NSMutableOrderedSet new];
+            for (NSNumber *boxedDisplayID in orderedDisplayIDs) {
+                for (SWWindowGroup *windowGroup in windowsByDisplayID[boxedDisplayID]) {
+                    [mutableWindowGroupList addObject:windowGroup];
+                }
+            }
+
+            NSLog(@"Grouped windows by recency in %ld screens", orderedDisplayIDs.count);
+
+            result = mutableWindowGroupList;
+        }
+    }
+
+    return result;
+}
+
 #pragma mark - Internal
 
 - (void)private_workerUpdatedWindowList:(NSNotification *)notification;
@@ -185,10 +231,11 @@ static NSMutableSet *loggedWindows;
     BailUnless(windowInfoList,);
     NSOrderedSet *windowObjectList = [[self class] filterInfoDictionariesToWindowObjects:windowInfoList];
     NSOrderedSet *windowGroupList = [[self class] filterWindowObjectsToWindowGroups:windowObjectList];
+    NSOrderedSet *sortedWindowGroupList = [[self class] sortedWindowGroups:windowGroupList];
     
     // This probably needs to change for #105 to get fixed properly as well—there are two views of equality, window order and window order and activation.
-    if (![self.windows isEqualToOrderedSet:windowGroupList]) {
-        self.windows = windowGroupList;
+    if (![self.windows isEqualToOrderedSet:sortedWindowGroupList]) {
+        self.windows = sortedWindowGroupList;
         [(id<SWWindowListSubscriber>)self.subscriberDispatcher windowListService:self updatedList:self.windows];
     }
 }

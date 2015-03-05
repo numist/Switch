@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SWAdvancedPreferencesViewController">
             <connections>
-                <outlet property="menubarBox" destination="xKd-yj-Vm0" id="pVZ-Hv-IBI"/>
-                <outlet property="multimonBox" destination="wYW-xd-bWb" id="BKa-wt-kOt"/>
+                <outlet property="groupByMonBox" destination="NMM-fB-tlq" id="Hcz-5I-uBY"/>
+                <outlet property="groupByMonLabel" destination="0sd-eP-L76" id="VFO-Gt-SfX"/>
+                <outlet property="multimonBox" destination="Gci-Md-tOE" id="VNq-bC-lYD"/>
+                <outlet property="statusItemBox" destination="xKd-yj-Vm0" id="uX8-gN-NlN"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="Hz6-mo-xeY">
-            <rect key="frame" x="0.0" y="0.0" width="494" height="116"/>
+            <rect key="frame" x="0.0" y="0.0" width="436" height="158"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="Gci-Md-tOE">
-                    <rect key="frame" x="18" y="80" width="209" height="18"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <rect key="frame" x="18" y="122" width="400" height="18"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="14" id="7Hq-wI-tOq"/>
                     </constraints>
@@ -32,20 +34,18 @@
                     </connections>
                 </button>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gXM-MN-Osb">
-                    <rect key="frame" x="38" y="62" width="438" height="14"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <rect key="frame" x="38" y="104" width="380" height="14"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="14" id="JOh-Su-9Ax"/>
                     </constraints>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="If disabled, Switch only shows its interface on the main screen" id="Dba-t2-E9A">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="If disabled, Switch only shows its interface on the main screen." id="Dba-t2-E9A">
                         <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="xKd-yj-Vm0">
-                    <rect key="frame" x="18" y="38" width="210" height="18"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <rect key="frame" x="18" y="38" width="400" height="18"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="14" id="NfV-a1-jmT"/>
                     </constraints>
@@ -58,12 +58,35 @@
                     </connections>
                 </button>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="f65-5M-B2f">
-                    <rect key="frame" x="38" y="20" width="438" height="14"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <rect key="frame" x="38" y="20" width="380" height="14"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="14" id="dLe-el-XsM"/>
                     </constraints>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="You can always get back to this window by pressing , when the interface is active." id="3bA-L1-pjc">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Press the comma key when the interface is active to show preferences." id="3bA-L1-pjc">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="NMM-fB-tlq">
+                    <rect key="frame" x="38" y="80" width="380" height="18"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="14" id="1Z5-CT-aUy"/>
+                    </constraints>
+                    <buttonCell key="cell" type="check" title="Group windows by screen" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="nxP-Ty-uMU">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="groupByMonChanged:" target="-2" id="IMM-mK-BCJ"/>
+                    </connections>
+                </button>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="0sd-eP-L76">
+                    <rect key="frame" x="58" y="62" width="360" height="14"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="14" id="B2C-v5-X22"/>
+                    </constraints>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="If disabled, Switch orders window selection based on last use." id="sRY-WQ-s7k">
                         <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -76,13 +99,22 @@
                 <constraint firstItem="Gci-Md-tOE" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="20" id="7dZ-Tr-tDh"/>
                 <constraint firstItem="Gci-Md-tOE" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" id="8c2-YJ-ec7"/>
                 <constraint firstAttribute="bottom" secondItem="f65-5M-B2f" secondAttribute="bottom" constant="20" id="DR7-7u-zgj"/>
+                <constraint firstItem="0sd-eP-L76" firstAttribute="top" secondItem="NMM-fB-tlq" secondAttribute="bottom" constant="6" id="GyD-fd-MLU"/>
                 <constraint firstItem="f65-5M-B2f" firstAttribute="top" secondItem="xKd-yj-Vm0" secondAttribute="bottom" constant="6" id="J8w-tb-VgF"/>
                 <constraint firstItem="gXM-MN-Osb" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="40" id="Jb6-gx-7ZI"/>
                 <constraint firstAttribute="trailing" secondItem="f65-5M-B2f" secondAttribute="trailing" constant="20" id="KVg-as-Exv"/>
-                <constraint firstItem="xKd-yj-Vm0" firstAttribute="top" secondItem="gXM-MN-Osb" secondAttribute="bottom" constant="8" id="jNY-ph-DyR"/>
+                <constraint firstAttribute="trailing" secondItem="0sd-eP-L76" secondAttribute="trailing" constant="20" id="Kfu-GL-EFc"/>
+                <constraint firstAttribute="trailing" secondItem="Gci-Md-tOE" secondAttribute="trailing" constant="20" id="fnF-ks-7m7"/>
+                <constraint firstAttribute="trailing" secondItem="NMM-fB-tlq" secondAttribute="trailing" constant="20" id="m5G-p7-fwN"/>
                 <constraint firstItem="xKd-yj-Vm0" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" id="nzg-9I-SQm"/>
+                <constraint firstAttribute="trailing" secondItem="xKd-yj-Vm0" secondAttribute="trailing" constant="20" id="oJL-36-nP2"/>
                 <constraint firstItem="gXM-MN-Osb" firstAttribute="top" secondItem="Gci-Md-tOE" secondAttribute="bottom" constant="6" id="r6c-Ti-wLl"/>
+                <constraint firstItem="NMM-fB-tlq" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="40" id="rHV-IL-md9"/>
+                <constraint firstItem="0sd-eP-L76" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="60" id="tfj-76-R8W"/>
+                <constraint firstItem="NMM-fB-tlq" firstAttribute="top" secondItem="gXM-MN-Osb" secondAttribute="bottom" constant="8" id="uPn-XT-Xe0"/>
+                <constraint firstItem="xKd-yj-Vm0" firstAttribute="top" secondItem="0sd-eP-L76" secondAttribute="bottom" constant="8" id="xeE-4p-F2A"/>
             </constraints>
+            <point key="canvasLocation" x="402" y="207"/>
         </customView>
     </objects>
 </document>

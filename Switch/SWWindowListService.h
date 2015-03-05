@@ -29,6 +29,7 @@
 
 + (NSOrderedSet *)filterInfoDictionariesToWindowObjects:(NSArray *)infoDicts;
 + (NSOrderedSet *)filterWindowObjectsToWindowGroups:(NSOrderedSet *)rawWindowList;
++ (NSOrderedSet *)sortedWindowGroups:(NSOrderedSet *)windowGroups;
 
 @property (nonatomic, copy, readonly) NSOrderedSet *windows;
 

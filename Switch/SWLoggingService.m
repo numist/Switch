@@ -79,8 +79,8 @@
     }();
     
     NSOrderedSet *windowList = [SWWindowListService filterInfoDictionariesToWindowObjects:rawList];
-    
     NSOrderedSet *windowGroupList = [SWWindowListService filterWindowObjectsToWindowGroups:windowList];
+    NSOrderedSet *sortedGroupList = [SWWindowListService sortedWindowGroups:windowGroupList];
     
     NSString *snapshotDir = [[self logDirectoryPath] stringByAppendingPathComponent:[NSString stringWithFormat:@"snapshot-%llu", (uint64_t)[[NSDate date] timeIntervalSince1970]]];
     BailUnless([self private_createDirectory:snapshotDir],);
@@ -96,14 +96,19 @@
     BailWithBlockUnless(handle, ^{
         Log(@"Failed to open %@ for writing", listFile);
     });
+
     [handle writeData:[@"Raw list:\n" dataUsingEncoding:NSUTF8StringEncoding]];
     [handle writeData:[[self private_formattedWindowList:rawList] dataUsingEncoding:NSUTF8StringEncoding]];
     [handle writeData:[@"\nWindow list:\n" dataUsingEncoding:NSUTF8StringEncoding]];
     [handle writeData:[[windowList debugDescription] dataUsingEncoding:NSUTF8StringEncoding]];
     [handle writeData:[@"\n\nWindow group list:\n" dataUsingEncoding:NSUTF8StringEncoding]];
     [handle writeData:[[windowGroupList debugDescription] dataUsingEncoding:NSUTF8StringEncoding]];
+    [handle writeData:[@"\n\nSorted window group list:\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [handle writeData:[[sortedGroupList debugDescription] dataUsingEncoding:NSUTF8StringEncoding]];
     [handle writeData:[@"\n\n" dataUsingEncoding:NSUTF8StringEncoding]];
     
+    // TODO: log screen information as well
+
     for (NSDictionary *description in rawList) {
         CGWindowID windowID = (CGWindowID)[[description objectForKey:(__bridge NSString *)kCGWindowNumber] unsignedLongValue];
         CGImageRef cgContents = NNCFAutorelease(CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, windowID, kCGWindowImageBoundsIgnoreFraming));
