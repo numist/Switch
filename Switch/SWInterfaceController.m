@@ -81,9 +81,9 @@
     self->_showInterface = showInterface;
 
     if (showInterface ) {
-        [self _showInterface];
+        [self private_showInterface];
     } else {
-        [self _hideInterface];
+        [self private_hideInterface];
     }
 }
 
@@ -95,7 +95,7 @@
 
     if (!self.showingInterface) { return; }
 
-    [self _updateWindowList];
+    [self private_updateWindowList];
 }
 
 - (void)selectWindow:(SWWindow *)window;
@@ -106,7 +106,7 @@
 
     if (!self.showingInterface) { return; }
 
-    [self _updateSelection];
+    [self private_updateSelection];
 }
 
 - (void)disableWindow:(SWWindow *)window;
@@ -125,7 +125,7 @@
 
 #pragma mark - Private
 
-- (void)_updateSelection;
+- (void)private_updateSelection;
 {
     Check([NSThread isMainThread]);
 
@@ -134,7 +134,7 @@
     Check(selectedWindow);
 }
 
-- (void)_updateWindowList;
+- (void)private_updateWindowList;
 {
     Check([NSThread isMainThread]);
 
@@ -179,7 +179,7 @@
     }
 }
 
-- (void)_showInterface;
+- (void)private_showInterface;
 {
     Check([NSThread isMainThread]);
     Check(self.windowList);
@@ -228,8 +228,8 @@
     }();
 
     // Populate window controllers with the data that's already on hand.
-    [self _updateWindowList];
-    [self _updateSelection];
+    [self private_updateWindowList];
+    [self private_updateSelection];
 
     // layoutSubviewsIfNeeded isn't instant due to Auto Layout magic, so let everything take effect before showing the window.
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -241,7 +241,7 @@
     });
 }
 
-- (void)_hideInterface;
+- (void)private_hideInterface;
 {
     Check([NSThread isMainThread]);
     Check(self.windowControllersByScreenID);
@@ -253,7 +253,7 @@
     }
 
     self.windowList = nil;
-    [self _updateWindowList];
+    [self private_updateWindowList];
 
     self.windowControllersByScreenID = nil;
     self.windowControllerDispatcher = nil;

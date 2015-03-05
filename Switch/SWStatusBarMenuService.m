@@ -52,7 +52,7 @@
             return statusItem;
         }
 
-        return [self _newStatusItem];
+        return [self private_newStatusItem];
     }];
     
     return self;
@@ -92,7 +92,7 @@
 
 #pragma mark - Internal
 
-- (NSStatusItem *)_newStatusItem;
+- (NSStatusItem *)private_newStatusItem;
 {
     NSStatusItem *statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSSquareStatusItemLength];
     statusItem.image = [[NSBundle mainBundle] imageForResource:@"weave"];

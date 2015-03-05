@@ -17,7 +17,7 @@
 
 @interface SWWindowListService (Internal)
 
-- (void)_updateWindowList:(NSArray *)windowInfoList;
+- (void)private_updateWindowList:(NSArray *)windowInfoList;
 
 @end
 
@@ -34,7 +34,7 @@
     XCTAssertNil(self.listService.windows, @"");
 
     [self measureBlock:^{
-        [self.listService _updateWindowList:@[]];
+        [self.listService private_updateWindowList:@[]];
     }];
     XCTAssertEqualObjects(self.listService.windows, [NSOrderedSet new], @"");
 }
@@ -637,7 +637,7 @@
     ];
 
     [self measureBlock:^{
-        [self.listService _updateWindowList:windowInfoList];
+        [self.listService private_updateWindowList:windowInfoList];
     }];
 
     XCTAssertEqual(6, self.listService.windows.count);

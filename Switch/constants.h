@@ -33,5 +33,5 @@ extern const NSTimeInterval delayBeforePresentingSwitcherWindow;
 NSString *NNStringFromCGWindowLevel(long level);
 
 // Helper macros
-#define CLASS_CAST(Classname, value) ((Classname *)_CLASS_CAST([Classname class], (value)))
-id _CLASS_CAST(Class class, id value);
+#define CLASS_CAST(Classname, value) ((Classname *)CLASS_CAST_IMPL([Classname class], (value)))
+id CLASS_CAST_IMPL(Class class, id value);

@@ -73,7 +73,7 @@
         [[NSNotificationCenter defaultCenter] removeObserver:self name:SWAPIEnabledWorker.notificationName object:_worker];
     }
     if (worker) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:NNSelfSelector1(_accessibilityAPIAvailabilityChangedNotification:) name:SWAPIEnabledWorker.notificationName object:self.worker];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:NNSelfSelector1(private_accessibilityAPIAvailabilityChangedNotification:) name:SWAPIEnabledWorker.notificationName object:self.worker];
     }
     _worker = worker;
 }
@@ -117,7 +117,7 @@
 
 #pragma mark - Internal
 
-- (void)_accessibilityAPIAvailabilityChangedNotification:(NSNotification *)notification;
+- (void)private_accessibilityAPIAvailabilityChangedNotification:(NSNotification *)notification;
 {
     BOOL accessibilityEnabled = [notification.userInfo[SWAXAPIEnabledKey] boolValue];
     

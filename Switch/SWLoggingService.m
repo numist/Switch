@@ -44,11 +44,11 @@
 
 - (void)rotateLogIfNecessary;
 {
-    if (![self _dayChanged]) { return; }
+    if (![self private_dayChanged]) { return; }
     
     // In theory this code is running a race against other invocations of -rotateLogIfNecessary, but -_dayChanged returns YES so infrequently that it's not worth worrying about. The worst possible race condition is if the first time this is called in the program's lifetime is at 23:59:59.9999 and then again at 00:00:00.
     NSString *logDir = [self logDirectoryPath];
-    BailUnless([self _createDirectory:logDir],);
+    BailUnless([self private_createDirectory:logDir],);
     
     // Remove old log files.
     NSTimeInterval longTime = 671993.28;
@@ -68,7 +68,7 @@
     
     // Do not redirect output if attached to a console.
     if (isatty(STDERR_FILENO)) { return; }
-    freopen([[self _logFilePath] cStringUsingEncoding:NSASCIIStringEncoding], "a+", stderr);
+    freopen([[self private_logFilePath] cStringUsingEncoding:NSASCIIStringEncoding], "a+", stderr);
 }
 
 - (void)takeWindowListSnapshot;
@@ -83,7 +83,7 @@
     NSOrderedSet *windowGroupList = [SWWindowListService filterWindowObjectsToWindowGroups:windowList];
     
     NSString *snapshotDir = [[self logDirectoryPath] stringByAppendingPathComponent:[NSString stringWithFormat:@"snapshot-%llu", (uint64_t)[[NSDate date] timeIntervalSince1970]]];
-    BailUnless([self _createDirectory:snapshotDir],);
+    BailUnless([self private_createDirectory:snapshotDir],);
     
     NSString *listFile = [snapshotDir stringByAppendingPathComponent:@"windowlist.txt"];
     
@@ -97,7 +97,7 @@
         Log(@"Failed to open %@ for writing", listFile);
     });
     [handle writeData:[@"Raw list:\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    [handle writeData:[[self _formattedWindowList:rawList] dataUsingEncoding:NSUTF8StringEncoding]];
+    [handle writeData:[[self private_formattedWindowList:rawList] dataUsingEncoding:NSUTF8StringEncoding]];
     [handle writeData:[@"\nWindow list:\n" dataUsingEncoding:NSUTF8StringEncoding]];
     [handle writeData:[[windowList debugDescription] dataUsingEncoding:NSUTF8StringEncoding]];
     [handle writeData:[@"\n\nWindow group list:\n" dataUsingEncoding:NSUTF8StringEncoding]];
@@ -138,7 +138,7 @@
 
 #pragma mark - Internal
 
-- (NSString *)_logFilePath;
+- (NSString *)private_logFilePath;
 {
     Assert(self.logDate);
     
@@ -146,7 +146,7 @@
     return [[self logDirectoryPath] stringByAppendingPathComponent:filename];
 }
 
-- (BOOL)_dayChanged;
+- (BOOL)private_dayChanged;
 {
     @synchronized(self) {
         NSDateComponents *todaysComponents = ^{
@@ -168,7 +168,7 @@
     }
 }
 
-- (BOOL)_createDirectory:(NSString *)path;
+- (BOOL)private_createDirectory:(NSString *)path;
 {
     NSFileManager *manager = [NSFileManager defaultManager];
 
@@ -190,7 +190,7 @@
     return YES;
 }
 
-- (NSString *)_formattedWindowList:(NSArray *)rawList;
+- (NSString *)private_formattedWindowList:(NSArray *)rawList;
 {
     NSMutableString *result = [@"@[\n" mutableCopy];
     

@@ -49,10 +49,10 @@
     [[SWEventTap sharedService] registerForEventsWithType:kCGEventMouseMoved object:self block:^(CGEventRef event) {
         dispatch_async(dispatch_get_main_queue(), ^{
             @strongify(self);
-            
-            NSPoint windowLocation = [self.window convertScreenToBase:[NSEvent mouseLocation]];
-            if(NSPointInRect([self.collectionView convertPoint:windowLocation fromView:nil], [self.collectionView bounds])) {
-                NSEvent *mouseEvent = [NSEvent mouseEventWithType:NSMouseMoved location:windowLocation modifierFlags:NSAlternateKeyMask timestamp:(NSTimeInterval)0 windowNumber:self.window.windowNumber context:(NSGraphicsContext *)nil eventNumber:0 clickCount:0 pressure:1.0];
+
+            NSPoint mouseLocationInWindow = [self private_pointInWindowFromScreen:[NSEvent mouseLocation]];
+            if(NSPointInRect([self.collectionView convertPoint:mouseLocationInWindow fromView:nil], [self.collectionView bounds])) {
+                NSEvent *mouseEvent = [NSEvent mouseEventWithType:NSMouseMoved location:mouseLocationInWindow modifierFlags:NSAlternateKeyMask timestamp:(NSTimeInterval)0 windowNumber:self.window.windowNumber context:(NSGraphicsContext *)nil eventNumber:0 clickCount:0 pressure:1.0];
                 [self.collectionView mouseMoved:mouseEvent];
             }
         });
@@ -122,14 +122,14 @@
 {
     if (![self.windowList containsObject:window]) { return; }
     
-    [self _thumbnailForWindow:window].active = NO;
+    [self private_thumbnailForWindow:window].active = NO;
 }
 
 - (void)enableWindow:(SWWindow *)window;
 {
     if (![self.windowList containsObject:window]) { return; }
     
-    [self _thumbnailForWindow:window].active = YES;
+    [self private_thumbnailForWindow:window].active = YES;
 }
 
 #pragma mark - SWHUDCollectionViewDataSource
@@ -187,7 +187,7 @@
 
 #pragma mark - Private
 
-- (SWWindowThumbnailView *)_thumbnailForWindow:(SWWindow *)window;
+- (SWWindowThumbnailView *)private_thumbnailForWindow:(SWWindow *)window;
 {
     NSUInteger index = [self.windowList indexOfObject:window];
 
@@ -202,6 +202,18 @@
     }
 
     BailUnless(NO, nil);
+}
+
+- (NSPoint)private_pointInWindowFromScreen:(NSPoint)point;
+{
+    NSRect inputRect = {
+        .origin.x = point.x,
+        .origin.y = point.y,
+        .size.width = 0,
+        .size.height = 0
+    };
+
+    return [self.window convertRectFromScreen:inputRect].origin;
 }
 
 @end

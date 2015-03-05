@@ -45,7 +45,7 @@
     currentVersionCell.title = [NSString stringWithFormat:@"Currently using version %@", [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"]];
     
     NSButton *autoLaunchEnabled = self.autoLaunchEnabledBox;
-    autoLaunchEnabled.state = [self _isAutoLaunchEnabled] ? NSOnState : NSOffState;
+    autoLaunchEnabled.state = [self private_isAutoLaunchEnabled] ? NSOnState : NSOffState;
 
     NSButtonCell *buttonCell = self.automaticUpdateCell;
     buttonCell.enabled = NO;
@@ -84,9 +84,9 @@
 
 - (IBAction)autoLaunchChanged:(NSButton *)sender {
     if (sender.state == NSOnState) {
-        [self _enableAutoLaunch];
+        [self private_enableAutoLaunch];
     } else {
-        [self _disableAutolaunch];
+        [self private_disableAutolaunch];
     }
 }
 
@@ -121,12 +121,12 @@
 // See http://www.delitestudio.com/2011/10/25/start-dockless-apps-at-login-with-app-sandbox-enabled/ for more info.
 //
 
-- (BOOL)_isAutoLaunchEnabled;
+- (BOOL)private_isAutoLaunchEnabled;
 {
-    return !![self _selfFromLSSharedFileList];
+    return !![self private_selfFromLSSharedFileList];
 }
 
-- (void)_enableAutoLaunch;
+- (void)private_enableAutoLaunch;
 {
 	NSURL *url = [NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]];
     
@@ -137,9 +137,9 @@
 	}
 }
 
-- (void)_disableAutolaunch;
+- (void)private_disableAutolaunch;
 {
-    LSSharedFileListItemRef itemRef = [self _selfFromLSSharedFileList];
+    LSSharedFileListItemRef itemRef = [self private_selfFromLSSharedFileList];
     Check(itemRef);
     if (itemRef) {
         LSSharedFileListRef loginItems = NNCFAutorelease(LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL));
@@ -147,7 +147,7 @@
     }
 }
 
-- (LSSharedFileListItemRef)_selfFromLSSharedFileList;
+- (LSSharedFileListItemRef)private_selfFromLSSharedFileList;
 {
 	LSSharedFileListRef loginItems = NNCFAutorelease(LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL));
     BailUnless(loginItems, NULL);

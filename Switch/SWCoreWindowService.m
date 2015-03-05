@@ -92,9 +92,9 @@ static int const kScrollThreshold = 50;
     distinctUntilChanged] skip:1]
     subscribeNext:^(NSNumber *interfaceVisible) {
         if ([interfaceVisible boolValue]) {
-            [self _showInterface];
+            [self private_showInterface];
         } else {
-            [self _hideInterface];
+            [self private_hideInterface];
         }
     }];
     // set [SWEventTap sharedService].suppressKeyEvents = self.stateMachine.invoked;
@@ -263,7 +263,7 @@ static int const kScrollThreshold = 50;
 
 - (void)stateMachineWantsDisplayTimerStarted:(SWStateMachine *)stateMachine;
 {
-    self.displayTimer = [NSTimer scheduledTimerWithTimeInterval:kWindowDisplayDelay target:self selector:NNSelfSelector1(_displayTimerFired:) userInfo:nil repeats:NO];
+    self.displayTimer = [NSTimer scheduledTimerWithTimeInterval:kWindowDisplayDelay target:self selector:NNSelfSelector1(private_displayTimerFired:) userInfo:nil repeats:NO];
 }
 
 - (void)stateMachineWantsDisplayTimerInvalidated:(SWStateMachine *)stateMachine;
@@ -367,7 +367,7 @@ static int const kScrollThreshold = 50;
 
 #pragma mark - Private callbacks
 
-- (void)_displayTimerFired:(NSTimer *)timer;
+- (void)private_displayTimerFired:(NSTimer *)timer;
 {
     if (![timer isEqual:self.displayTimer]) {
         return;
@@ -377,7 +377,7 @@ static int const kScrollThreshold = 50;
     self.displayTimer = nil;
 }
 
-- (void)_showInterface;
+- (void)private_showInterface;
 {
     @weakify(self);
     [[SWEventTap sharedService] registerForEventsWithType:kCGEventScrollWheel object:self block:^(CGEventRef event) {
@@ -397,7 +397,7 @@ static int const kScrollThreshold = 50;
     [self.interface shouldShowInterface:true];
 }
 
-- (void)_hideInterface;
+- (void)private_hideInterface;
 {
     [[SWEventTap sharedService] removeBlockForEventsWithType:kCGEventScrollWheel object:self];
 

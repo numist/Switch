@@ -66,7 +66,7 @@
 
 - (void)mouseMoved:(NSEvent *)theEvent;
 {
-    NSUInteger i = [self _indexForCellAtPoint:theEvent.locationInWindow];
+    NSUInteger i = [self private_indexForCellAtPoint:theEvent.locationInWindow];
     
     if (i < self.numberOfCells && self.selectedIndex != i) {
         id<SWHUDCollectionViewDelegate> delegate = self.delegate;
@@ -89,7 +89,7 @@
 
 - (void)mouseUp:(NSEvent *)theEvent;
 {
-    NSUInteger i = [self _indexForCellAtPoint:theEvent.locationInWindow];
+    NSUInteger i = [self private_indexForCellAtPoint:theEvent.locationInWindow];
     
     if (i < self.numberOfCells) {
         id<SWHUDCollectionViewDelegate> delegate = self.delegate;
@@ -107,7 +107,7 @@
 
 - (void)mouseDown:(NSEvent *)theEvent;
 {
-    if ([self _indexForCellAtPoint:theEvent.locationInWindow] == NSNotFound) {
+    if ([self private_indexForCellAtPoint:theEvent.locationInWindow] == NSNotFound) {
         id<SWHUDCollectionViewDelegate> delegate = self.delegate;
         if ([delegate respondsToSelector:@selector(HUDCollectionViewClickOutsideCollection:)]) {
             [delegate HUDCollectionViewClickOutsideCollection:self];
@@ -139,11 +139,11 @@
 - (void)updateConstraints;
 {
     if (!self.collectionConstraints) {
-        [self _updateConstraintsForCollection];
+        [self private_updateConstraintsForCollection];
     }
 
     if (!self.selectionBoxConstraints) {
-        [self _updateConstraintsForSelectionBox];
+        [self private_updateConstraintsForSelectionBox];
     }
     [super updateConstraints];
 }
@@ -163,7 +163,7 @@
     Assert([NSThread isMainThread]);
 
     // Flush pending reloadData
-    [self _reloadDataIfNeeded];
+    [self private_reloadDataIfNeeded];
 
     if (index < [self.cells count]) {
         return [self.cells objectAtIndex:index];
@@ -179,7 +179,7 @@
     self.selectedIndex = index;
     
     if (self.selectedIndex < self.numberOfCells) {
-        [self _constraintsForSelectionBoxNeedUpdate];
+        [self private_constraintsForSelectionBoxNeedUpdate];
     } else if ([self.hud.subviews containsObject:self.selectionBox]) {
         [self.selectionBox removeFromSuperview];
     }
@@ -198,14 +198,14 @@
         self.reloading = YES;
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self _reloadDataIfNeeded];
+            [self private_reloadDataIfNeeded];
         });
     }
 }
 
 #pragma mark - Internal
 
-- (NSUInteger)_indexForCellAtPoint:(NSPoint)point;
+- (NSUInteger)private_indexForCellAtPoint:(NSPoint)point;
 {
     for (NSUInteger i = 0; i < self.numberOfCells; ++i) {
         NSPoint relativePoint = [self convertPoint:point toView:self.cells[i]];
@@ -219,7 +219,7 @@
     return NSNotFound;
 }
 
-- (void)_reloadDataIfNeeded;
+- (void)private_reloadDataIfNeeded;
 {
     if (!self.reloading) { return; }
     
@@ -260,11 +260,11 @@
         [self.hud addSubview:self.selectionBox positioned:NSWindowBelow relativeTo:nil];
     }
     
-    [self _constraintsForCollectionNeedUpdate];
-    [self _constraintsForSelectionBoxNeedUpdate];
+    [self private_constraintsForCollectionNeedUpdate];
+    [self private_constraintsForSelectionBoxNeedUpdate];
 }
 
-- (void)_constraintsForCollectionNeedUpdate;
+- (void)private_constraintsForCollectionNeedUpdate;
 {
     if (self.collectionConstraints) {
         [self removeConstraints:self.collectionConstraints];
@@ -273,7 +273,7 @@
     [self setNeedsUpdateConstraints:YES];
 }
 
-- (void)_updateConstraintsForCollection;
+- (void)private_updateConstraintsForCollection;
 {
     if (!Check(!self.collectionConstraints.count)) {
         [self removeConstraints:self.collectionConstraints];
@@ -359,7 +359,7 @@
     [self addConstraints:self.collectionConstraints];
 }
 
-- (void)_constraintsForSelectionBoxNeedUpdate;
+- (void)private_constraintsForSelectionBoxNeedUpdate;
 {
     if (self.selectionBoxConstraints) {
         [self removeConstraints:self.selectionBoxConstraints];
@@ -368,7 +368,7 @@
     [self setNeedsUpdateConstraints:YES];
 }
 
-- (void)_updateConstraintsForSelectionBox;
+- (void)private_updateConstraintsForSelectionBox;
 {
     if (!Check(!self.selectionBoxConstraints.count)) {
         [self removeConstraints:self.selectionBoxConstraints];

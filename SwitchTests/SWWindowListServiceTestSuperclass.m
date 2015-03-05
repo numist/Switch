@@ -17,7 +17,7 @@
 
 @interface SWWindowListService (Internal)
 
-- (void)_updateWindowList:(NSArray *)windowInfoList;
+- (void)private_updateWindowList:(NSArray *)windowInfoList;
 
 @end
 
@@ -40,7 +40,7 @@
 
 - (void)updateListServiceWithInfoList:(NSArray *)infoList;
 {
-    [self.listService _updateWindowList:infoList];
+    [self.listService private_updateWindowList:infoList];
 }
 
 @end

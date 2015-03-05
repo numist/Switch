@@ -75,12 +75,12 @@
     self.translatesAutoresizingMaskIntoConstraints = NO;
     [self setWantsLayer:YES];
     self.layerContentsRedrawPolicy = NSViewLayerContentsRedrawOnSetNeedsDisplay;
-    [self _createLayers];
+    [self private_createLayers];
     
     for (SWWindow *window in _windowGroup.windows) {
         NSImage *content = [[SWWindowContentsService sharedService] contentForWindow:window];
         if (content) {
-            [self _sublayerForWindow:window].contents = content;
+            [self private_sublayerForWindow:window].contents = content;
         }
     }
     
@@ -129,7 +129,7 @@
     
     for (NSUInteger i = 0; i < self.windowGroup.windows.count; i++) {
         SWWindow *window = self.windowGroup.windows[i];
-        CALayer *layer = [self _sublayerForWindow:window];
+        CALayer *layer = [self private_sublayerForWindow:window];
         CGRect frame = window.frame;
         
         // Move the frame's origin to be anchored at the "bottom left" of the windowFrame.
@@ -149,7 +149,7 @@
         layer.frame = frame;
     }
     
-    [self _updateIconLayout];
+    [self private_updateIconLayout];
 }
 
 #pragma mark - SWWindowThumbnailView
@@ -239,12 +239,12 @@
         [self setNeedsLayout:YES];
     }
     
-    [self _sublayerForWindow:window].contents = content;
+    [self private_sublayerForWindow:window].contents = content;
 }
 
 #pragma mark - Internal
 
-- (void)_createLayers;
+- (void)private_createLayers;
 {
     CALayer *(^newLayer)() = ^{
         CALayer *result = [CALayer layer];
@@ -268,7 +268,7 @@
     [self.layer addSublayer:self.iconLayer];
 }
 
-- (void)_updateIconLayout;
+- (void)private_updateIconLayout;
 {
     CGRect thumbFrame = self.bounds;
     CGFloat thumbSize = thumbFrame.size.width;
@@ -289,7 +289,7 @@
     };
 }
 
-- (CALayer *)_sublayerForWindow:(SWWindow *)window;
+- (CALayer *)private_sublayerForWindow:(SWWindow *)window;
 {
     NSUInteger windowCount = self.windowGroup.windows.count;
     

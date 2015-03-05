@@ -119,7 +119,7 @@
     }]
     subscribeNext:^(NSNumber *shouldRaise) {
         @strongify(self);
-        [self _raiseSelectedWindow];
+        [self private_raiseSelectedWindow];
     }];
     
     return self;
@@ -150,7 +150,7 @@
         self.windowListUpdates = true;
     } else {
         self.windowListUpdates = false;
-        [self _updateWindowList:nil];
+        [self private_updateWindowList:nil];
         Check(!self.windowList.count);
         Check(!self.windowListLoaded);
         
@@ -169,7 +169,7 @@
     self->_interfaceVisible = interfaceVisible;
 
     if (interfaceVisible) {
-        [self _adjustSelector];
+        [self private_adjustSelector];
     }
 }
 
@@ -255,7 +255,7 @@
 
     if (!self.windowList) { return; }
 
-    [self _adjustSelector];
+    [self private_adjustSelector];
 
     NSUInteger index = [self.selector.windowList indexOfObject:window];
     Check(index < self.selector.windowList.count || index == NSNotFound);
@@ -285,12 +285,12 @@
 {
     StateLog(@"State machine update window groups: %@", windowList);
 
-    [self _updateWindowList:windowList];
+    [self private_updateWindowList:windowList];
 }
 
 #pragma mark - Internal
 
-- (void)_adjustSelector;
+- (void)private_adjustSelector;
 {
     if (!self.selectorAdjusted) {
         Check(self.windowListLoaded);
@@ -303,7 +303,7 @@
     }
 }
 
-- (void)_updateWindowList:(NSOrderedSet *)windowList;
+- (void)private_updateWindowList:(NSOrderedSet *)windowList;
 {
     // A nil update means clean up, we're shutting down until the next invocation.
     if (!windowList || !self.active) {
@@ -333,11 +333,11 @@
     }
 }
 
-- (void)_raiseSelectedWindow;
+- (void)private_raiseSelectedWindow;
 {
     BailUnless(self.pendingSwitch && self.windowListLoaded,);
     
-    [self _adjustSelector];
+    [self private_adjustSelector];
     
     SWWindow *selectedWindow = self.selector.selectedWindow;
     _Bool noSelection = !selectedWindow;

@@ -22,7 +22,17 @@
 #import "SWGeneralPreferencesViewController.h"
 #import "SWKeyboardPreferencesViewController.h"
 
-static NSString *kSWFirstLaunchKey = @"firstLaunch";
+
+/**
+ * Defining new preferences:
+ *     • Put a property in the header. Do not set a fancy getter or setter or you'll have to define shim methods yourself.
+ *     • Add a key to the list below.
+ *     • Generate a getter/setter under the "Preferences: setters" pragma.
+ *     • Set a default value in -defaultValues
+ */
+
+
+static NSString const * const kSWFirstLaunchKey = @"firstLaunch";
 static NSString const * const kSWMultimonInterfaceKey = @"multimonInterface";
 static NSString const * const kSWShowStatusItemKey = @"showStatusItem";
 
@@ -47,11 +57,8 @@ static NSString const * const kSWShowStatusItemKey = @"showStatusItem";
 {
     BailUnless(self = [super init], nil);
     
-    [[NSUserDefaults standardUserDefaults] registerDefaults:self._defaultValues];
+    [[NSUserDefaults standardUserDefaults] registerDefaults:self.defaultValues];
 
-    _multimonInterface = [[self _objectForKey:kSWMultimonInterfaceKey] boolValue];
-    _showStatusItem = [[self _objectForKey:kSWShowStatusItemKey] boolValue];
-    
     return self;
 }
 
@@ -66,7 +73,7 @@ static NSString const * const kSWShowStatusItemKey = @"showStatusItem";
         BOOL resetDefaults = NO;
         
         if (resetDefaults) {
-            for (NSString *key in self._defaultValues.allKeys) {
+            for (NSString *key in self.defaultValues.allKeys) {
                 [defaults removeObjectForKey:key];
             }
         }
@@ -84,8 +91,8 @@ static NSString const * const kSWShowStatusItemKey = @"showStatusItem";
     
     self.preferencesWindowController = [[MASPreferencesWindowController alloc] initWithViewControllers:controllers title:title];
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:kSWFirstLaunchKey] && [SWAPIEnabledWorker isAPIEnabled]) {
-        [self _setObject:@NO forKey:kSWFirstLaunchKey];
+    if ([defaults boolForKey:[kSWFirstLaunchKey copy]] && [SWAPIEnabledWorker isAPIEnabled]) {
+        [self private_setObject:@NO forKey:kSWFirstLaunchKey];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self showPreferencesWindow:self];
         });
@@ -94,40 +101,23 @@ static NSString const * const kSWShowStatusItemKey = @"showStatusItem";
     [defaults synchronize];
 }
 
-#pragma mark - SWPreferencesService
+#pragma mark - Preferences: setters
 
-- (void)setMultimonInterface:(BOOL)multimonInterface;
-{
-    _multimonInterface = multimonInterface;
-    [self _setObject:@(multimonInterface) forKey:kSWMultimonInterfaceKey];
-}
+#define generateObjectPropertyMethods(setter, property, key) \
+- (void)setter(id)property; { [self private_setObject:property forKey:key]; } \
+- (id)property; { return [self private_objectForKey:key]; }
 
-- (void)setShowStatusItem:(BOOL)showStatusItem;
-{
-    _showStatusItem = showStatusItem;
-    [self _setObject:@(showStatusItem) forKey:kSWShowStatusItemKey];
-}
+#define generateBoolPropertyMethods(setter, property, key) \
+generateObjectPropertyMethods(GENERATED_obj_##setter, GENERATED_obj_##property, key) \
+- (void)setter(_Bool)property; { [self GENERATED_obj_##setter@(property)]; } \
+- (_Bool)property; { return [[self GENERATED_obj_##property] boolValue]; }
 
-- (void)showPreferencesWindow:(id)sender;
-{
-    [self.preferencesWindowController showWindow:sender];
-    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
-    [self.preferencesWindowController.window makeKeyAndOrderFront:sender];
-}
+generateBoolPropertyMethods(setMultimonInterface:, multimonInterface, kSWMultimonInterfaceKey)
+generateBoolPropertyMethods(setShowStatusItem:, showStatusItem, kSWShowStatusItemKey)
 
-- (void)_setObject:(id)object forKey:(NSString const * const)key;
-{
-    [[NSUserDefaults standardUserDefaults] setObject:object forKey:[key copy]];
-}
+#pragma mark Preferences: default values
 
-- (id)_objectForKey:(NSString const * const)key;
-{
-    return [[NSUserDefaults standardUserDefaults] objectForKey:[key copy]];
-}
-
-#pragma mark - Internal
-
-- (NSDictionary *)_defaultValues;
+- (NSDictionary *)defaultValues;
 {
     static NSDictionary *_defaultValues = nil;
     static dispatch_once_t onceToken;
@@ -139,6 +129,27 @@ static NSString const * const kSWShowStatusItemKey = @"showStatusItem";
         };
     });
     return _defaultValues;
+}
+
+#pragma mark - SWPreferencesService
+
+- (void)showPreferencesWindow:(id)sender;
+{
+    [self.preferencesWindowController showWindow:sender];
+    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+    [self.preferencesWindowController.window makeKeyAndOrderFront:sender];
+}
+
+#pragma mark - Internal
+
+- (void)private_setObject:(id)object forKey:(NSString const * const)key;
+{
+    [[NSUserDefaults standardUserDefaults] setObject:object forKey:[key copy]];
+}
+
+- (id)private_objectForKey:(NSString const * const)key;
+{
+    return [[NSUserDefaults standardUserDefaults] objectForKey:[key copy]];
 }
 
 @end

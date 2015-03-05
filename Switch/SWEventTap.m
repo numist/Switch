@@ -51,7 +51,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
 
 - (void)dealloc;
 {
-    [self _removeEventTap];
+    [self private_removeEventTap];
 }
 
 #pragma mark - NNService
@@ -65,12 +65,12 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
 {
     [super startService];
     
-    [self _insertEventTap];
+    [self private_insertEventTap];
 }
 
 - (void)stopService;
 {
-    [self _removeEventTap];
+    [self private_removeEventTap];
     
     [super stopService];
 }
@@ -143,7 +143,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
 #pragma mark - Internal
 
 // Called from dealloc, use direct ivar access.
-- (void)_removeEventTap;
+- (void)private_removeEventTap;
 {
     if (self->_runLoopSource) {
         CFRunLoopRemoveSource(CFRunLoopGetCurrent(), self->_runLoopSource, kCFRunLoopCommonModes);
@@ -155,7 +155,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
     }
 }
 
-- (BOOL)_insertEventTap;
+- (BOOL)private_insertEventTap;
 {
     Assert(!self.eventTap);
     
@@ -177,7 +177,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
     // XXX: why does calling the property setter here tickle the static analyzer the wrong way, but setting the ivar directly doesn't?
     self->_runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, self.eventTap, 0);
     BailWithBlockUnless(self.runLoopSource, ^{
-        [self _removeEventTap];
+        [self private_removeEventTap];
         return NO;
     });
     

@@ -64,7 +64,7 @@
     _contentContainers = [NSMutableDictionary new];
     _queue = dispatch_queue_create([[NSString stringWithFormat:@""] UTF8String], DISPATCH_QUEUE_SERIAL);
     
-    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:NNSelfSelector1(_windowUpdateNotification:) name:[SWWindowWorker notificationName] object:nil];
+    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:NNSelfSelector1(private_windowUpdateNotification:) name:[SWWindowWorker notificationName] object:nil];
     
     return self;
 }
@@ -157,7 +157,7 @@
 
 #pragma mark - Internal
 
-- (void)_windowUpdateNotification:(NSNotification *)notification;
+- (void)private_windowUpdateNotification:(NSNotification *)notification;
 {
     SWWindowWorker *worker = notification.object;
     NSImage *content = notification.userInfo[@"content"];

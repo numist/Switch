@@ -42,7 +42,7 @@ static NSMutableSet *loggedWindows;
     Assert([NSThread isMainThread]);
     BailUnless(self = [super init], nil);
     
-    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:NNSelfSelector1(_workerUpdatedWindowList:) name:[SWWindowListWorker notificationName] object:nil];
+    [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:NNSelfSelector1(private_workerUpdatedWindowList:) name:[SWWindowListWorker notificationName] object:nil];
     
     return self;
 }
@@ -169,7 +169,7 @@ static NSMutableSet *loggedWindows;
 
 #pragma mark - Internal
 
-- (void)_workerUpdatedWindowList:(NSNotification *)notification;
+- (void)private_workerUpdatedWindowList:(NSNotification *)notification;
 {
     Assert([NSThread isMainThread]);
 
@@ -177,10 +177,10 @@ static NSMutableSet *loggedWindows;
     
     NSParameterAssert([notification.userInfo[@"windows"] isKindOfClass:[NSArray class]]);
     
-    [self _updateWindowList:notification.userInfo[@"windows"]];
+    [self private_updateWindowList:notification.userInfo[@"windows"]];
 }
 
-- (void)_updateWindowList:(NSArray *)windowInfoList;
+- (void)private_updateWindowList:(NSArray *)windowInfoList;
 {
     BailUnless(windowInfoList,);
     NSOrderedSet *windowObjectList = [[self class] filterInfoDictionariesToWindowObjects:windowInfoList];

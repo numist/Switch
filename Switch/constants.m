@@ -86,7 +86,7 @@ __attribute__((const)) NSString *NNStringFromCGWindowLevel(long level)
     return @"kNNUnknownWindowLevel";
 }
 
-id _CLASS_CAST(Class class, id value) {
+id CLASS_CAST_IMPL(Class class, id value) {
     Check(!value || [value isKindOfClass:class]);
     return value;
 }
