@@ -33,7 +33,7 @@ static NSTimeInterval refreshInterval = 0.1;
 
 - (instancetype)init;
 {
-    if (!(self = [super initWithQueue:dispatch_get_global_queue(0, 0)])) { return nil; }
+    if (!(self = [super initWithQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)])) { return nil; }
     
     self.interval = refreshInterval;
 
