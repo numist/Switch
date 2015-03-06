@@ -48,23 +48,21 @@ static NSInteger const kMaxThreshold = NSIntegerMax / 2;
 
 - (void)feed:(NSInteger)numEvents;
 {
-    NSInteger units = numEvents / self.threshold;
-    numEvents -= (units * self.threshold);
+    NSInteger units = (numEvents / self.threshold);
+    numEvents %= self.threshold;
 
     self.offset += numEvents;
+    
     units += (self.offset / self.threshold);
+    self.offset %= self.threshold;
 
-    if (units != 0) {
-        self.offset = self.offset % self.threshold;
-
-        while (units > 0) {
-            self.inc();
-            units--;
-        }
-        while (units < 0) {
-            self.dec();
-            units++;
-        }
+    while (units > 0) {
+        self.inc();
+        units--;
+    }
+    while (units < 0) {
+        self.dec();
+        units++;
     }
 }
 

@@ -127,4 +127,29 @@
     XCTAssertNil(scroller);
 }
 
+- (void)testAccumulatorOverflowIncrementing;
+{
+    NSInteger const threshold = 50;
+    __block NSInteger units = 0;
+    SWScrollControl *scroller = [[SWScrollControl alloc] initWithThreshold:threshold incHandler:^{
+        ++units;
+    } decHandler:^{
+        --units;
+    }];
+    
+    units = 0;
+    [scroller reset];
+    for (int i = 0; i < 10; i++) {
+        [scroller feed:15];
+    }
+    XCTAssertEqual(3, units);
+
+    units = 0;
+    [scroller reset];
+    for (int i = 0; i < 10; i++) {
+        [scroller feed:-15];
+    }
+    XCTAssertEqual(-3, units);
+}
+
 @end
