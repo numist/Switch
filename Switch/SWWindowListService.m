@@ -233,7 +233,6 @@ static NSMutableSet *loggedWindows;
     NSOrderedSet *windowGroupList = [[self class] filterWindowObjectsToWindowGroups:windowObjectList];
     NSOrderedSet *sortedWindowGroupList = [[self class] sortedWindowGroups:windowGroupList];
     
-    // This probably needs to change for #105 to get fixed properly as well—there are two views of equality, window order and window order and activation.
     if (![self.windows isEqualToOrderedSet:sortedWindowGroupList]) {
         self.windows = sortedWindowGroupList;
         [(id<SWWindowListSubscriber>)self.subscriberDispatcher windowListService:self updatedList:self.windows];

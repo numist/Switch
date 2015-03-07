@@ -278,6 +278,8 @@ static int const kScrollThreshold = 50;
     if (!selectedWindow) {
         return;
     }
+    
+    NSUInteger selectedIndex = [self.stateMachine.windowList indexOfObject:self.stateMachine.selectedWindow];
 
     [self.interface disableWindow:selectedWindow];
 
@@ -286,12 +288,13 @@ static int const kScrollThreshold = 50;
         @strongify(self);
         if (error) {
             SWLog(@"Failed to raise window group %@: %@", selectedWindow, error);
-        } else if (self.stateMachine.pendingSwitch) {
-            // Sending a cancel invocation here is to work around #105
-            [self.stateMachine cancelInvocation];
-            Check(!self.stateMachine.wantsInterfaceVisible);
         }
 
+        // If the selected index was 0, this action won't change the window order so this code must replay the last update event.
+        if (selectedIndex == 0) {
+            [self.stateMachine updateWindowList:self.stateMachine.windowList];
+        }
+        
         [self.interface enableWindow:selectedWindow];
     }];
 }

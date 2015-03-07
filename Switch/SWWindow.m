@@ -63,6 +63,19 @@
     return ([object isKindOfClass:[self class]] && [[self windowDescription] isEqual:[object windowDescription]]);
 }
 
+- (BOOL)isSameWindow:(SWWindow *)window;
+{
+    if (window.windowID != self.windowID) {
+        return NO;
+    }
+    
+    if (![window.application.name isEqualToString:self.application.name]) {
+        return NO;
+    }
+    
+    return YES;
+}
+
 - (NSString *)description;
 {
     return [NSString stringWithFormat:@"%p <%u (%@)>", self, self.windowID, self.name];

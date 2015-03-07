@@ -13,6 +13,7 @@
 //
 
 #import "SWSelector.h"
+#import "SWWindow.h"
 
 
 @implementation SWSelector
@@ -140,6 +141,7 @@
 {
     // Carry over the current selected index by default.
     NSInteger newSelectedIndex = self.selectedIndex;
+    NSUInteger selectedWindowIndex;
     
     if (windowList && !windowList.count) {
         // Empty set? Selected window not found.
@@ -149,15 +151,34 @@
     } else if (self.windowList.count == 0) {
         // Previously empty list? Select the beginning.
         newSelectedIndex = 0;
-    } else if ([windowList containsObject:self.selectedWindow]) {
+    } else if ((selectedWindowIndex = [self private_indexOfWindow:self.selectedWindow inWindowList:windowList]) != NSNotFound) {
         // Select the same window group as was previously selected, if it's still there.
-        newSelectedIndex = (NSInteger)[windowList indexOfObject:self.selectedWindow];
+        newSelectedIndex = (NSInteger)selectedWindowIndex;
     } else if ((NSInteger)windowList.count <= newSelectedIndex) {
         // Clamp the selected index to the end of the window list.
         newSelectedIndex = (NSInteger)windowList.count - 1;
     }
     
     return [[[self class] alloc] initWithWindowList:windowList selectedIndex:newSelectedIndex];
+}
+
+- (NSUInteger)private_indexOfWindow:(id)selectedWindow inWindowList:(NSOrderedSet *)windowList;
+{
+    if (selectedWindow == nil) {
+        return NSNotFound;
+    }
+    if (windowList == nil) {
+        return NSNotFound;
+    }
+    
+    // Most of the unit tests for this class just shove NSNumbers into the collections instead of SWWindow objects
+    if (![selectedWindow respondsToSelector:NNTypedSelector1(SWWindow, isSameWindow:)]) {
+        return [windowList indexOfObject:selectedWindow];
+    }
+    
+    return [windowList indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+        return [selectedWindow isSameWindow:obj];
+    }];
 }
 
 @end

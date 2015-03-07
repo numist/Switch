@@ -17,7 +17,7 @@
 #import "SWStateMachine.h"
 #import "SWWindow.h"
 
-
+#define STATE_MACHINE_DEBUG
 #ifdef STATE_MACHINE_DEBUG
     #define StateLog NSLog
 #else
@@ -229,9 +229,6 @@
 {
     StateLog(@"State machine event cancel invocation");
 
-    // Setting pendingSwitch here is to work around #105
-    self.pendingSwitch = false;
-
     if (self.invoked) {
         self.invoked = false;
     }
@@ -313,11 +310,6 @@
         return;
     }
 
-    // I suspect this is the problem for #105
-    if (self.windowList.count == windowList.count && self.selectedWindow) {
-        Check([windowList containsObject:self.selectedWindow]);
-    }
-
     self.windowList = windowList;
     
     if (!self.windowListLoaded) {
@@ -328,7 +320,8 @@
         }
     }
 
-    if (self.pendingSwitch && [[windowList firstObject] isEqual:self.selectedWindow] && [self.selectedWindow.application isActiveApplication]) {
+    // #105 PERF: omitted from conditional:  && self.selectedWindow.application.isActiveApplication
+    if (self.pendingSwitch && [[windowList firstObject] isSameWindow:self.selectedWindow]) {
         self.pendingSwitch = NO;
     }
 }
@@ -347,8 +340,38 @@
         return;
     }
 
-    id<SWStateMachineDelegate> delegate = self.delegate;
-    [delegate stateMachine:self wantsWindowRaised:selectedWindow];
+    {
+        id<SWStateMachineDelegate> delegate = self.delegate;
+        [delegate stateMachine:self wantsWindowRaised:selectedWindow];
+    }
+    
+    // #105: Need a repeating hammer, to quit when self.pendingSwitch != YES. Store it in an ivar. Schedule it with a completion block from wantsWindowRaised with an error param.
+    // #105: While the ivar is non-nil, do not show the interface if it was already not visible! Maybe wait another second if that's easy enough to do.
+    @weakify(self);
+    int64_t delay = (int64_t)(0.1 * NSEC_PER_SEC);
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), dispatch_get_main_queue(), ^{
+        @strongify(self);
+        id<SWStateMachineDelegate> delegate = self.delegate;
+        if (self.pendingSwitch) {
+            [delegate stateMachine:self wantsWindowRaised:selectedWindow];
+        }
+    });
+    delay = (int64_t)(0.1 * NSEC_PER_SEC);
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), dispatch_get_main_queue(), ^{
+        @strongify(self);
+        id<SWStateMachineDelegate> delegate = self.delegate;
+        if (self.pendingSwitch) {
+            [delegate stateMachine:self wantsWindowRaised:selectedWindow];
+        }
+    });
+    delay = (int64_t)(0.1 * NSEC_PER_SEC);
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), dispatch_get_main_queue(), ^{
+        @strongify(self);
+        id<SWStateMachineDelegate> delegate = self.delegate;
+        if (self.pendingSwitch) {
+            [delegate stateMachine:self wantsWindowRaised:selectedWindow];
+        }
+    });
 }
 
 @end
