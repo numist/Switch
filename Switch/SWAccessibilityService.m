@@ -255,7 +255,7 @@
         NSString *haxTitle = haxWindow.title;
         
         // This should ultimately be flipped in Haxcessibility, per #89.
-        CGRect haxFrame = haxWindow.frame;
+        CGRect haxFrame = haxWindow.carbonFrame;
         haxFrame.origin.y = NSScreen.sw_totalScreenHeight - (haxFrame.origin.y + haxFrame.size.height);
         
         BOOL framesMatch = NNCGRectsEqual(window.frame, haxFrame);
