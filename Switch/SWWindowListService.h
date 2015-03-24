@@ -33,4 +33,6 @@
 
 @property (nonatomic, copy, readonly) NSOrderedSet *windows;
 
+- (void)refreshWindowList;
+
 @end

@@ -213,6 +213,11 @@ static NSMutableSet *loggedWindows;
     return result;
 }
 
+- (void)refreshWindowList;
+{
+    [self.worker refreshWindowList];
+}
+
 #pragma mark - Internal
 
 - (void)private_workerUpdatedWindowList:(NSNotification *)notification;

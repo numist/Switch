@@ -65,11 +65,6 @@ static int const kScrollThreshold = 50;
         [self.stateMachine incrementWithInvoke:false direction:SWIncrementDirectionDecreasing isRepeating:true];
     }];
 
-    // update window group UI state with the state machine's updates of window groups
-    [RACObserve(self, stateMachine.windowList) subscribeNext:^(NSOrderedSet *windowList) {
-        @strongify(self);
-        [self.interface updateWindowList:windowList];
-    }];
     // update the selected window group with the state machine's update of selector.selectedWindow
     [RACObserve(self, stateMachine.selectedWindow) subscribeNext:^(SWWindow *window) {
         @strongify(self);
@@ -257,6 +252,11 @@ static int const kScrollThreshold = 50;
 - (oneway void)windowListService:(SWWindowListService *)service updatedList:(NSOrderedSet *)windows;
 {
     [self.stateMachine updateWindowList:windows];
+    
+    // Do not update the interface if the state machine has an action pending.
+    if (!self.stateMachine.pendingSwitch) {
+        [self.interface updateWindowList:self.stateMachine.windowList];
+    }
 }
 
 #pragma mark - SWStateMachineDelegate
@@ -281,22 +281,14 @@ static int const kScrollThreshold = 50;
     
     NSUInteger selectedIndex = [self.stateMachine.windowList indexOfObject:self.stateMachine.selectedWindow];
 
+    if (selectedIndex == 0 && [((SWWindow *)self.stateMachine.windowList.firstObject).application isActiveApplication]) {
+        [self.stateMachine cancelInvocation];
+        return;
+    }
+    
     [self.interface disableWindow:selectedWindow];
 
-    @weakify(self);
-    [[SWAccessibilityService sharedService] raiseWindow:selectedWindow completion:^(NSError *error) {
-        @strongify(self);
-        if (error) {
-            SWLog(@"Failed to raise window group %@: %@", selectedWindow, error);
-        }
-
-        // If the selected index was 0, this action won't change the window order so this code must replay the last update event.
-        if (selectedIndex == 0) {
-            [self.stateMachine updateWindowList:self.stateMachine.windowList];
-        }
-        
-        [self.interface enableWindow:selectedWindow];
-    }];
+    [self private_raiseWindow];
 }
 
 - (void)stateMachine:(SWStateMachine *)stateMachine wantsWindowClosed:(SWWindow *)window;
@@ -376,8 +368,11 @@ static int const kScrollThreshold = 50;
         return;
     }
 
-    [self.stateMachine displayTimerCompleted];
-    self.displayTimer = nil;
+    // Do not show the interface if the state machine has an action pending.
+    if (!self.stateMachine.pendingSwitch) {
+        [self.stateMachine displayTimerCompleted];
+        self.displayTimer = nil;
+    }
 }
 
 - (void)private_showInterface;
@@ -405,6 +400,42 @@ static int const kScrollThreshold = 50;
     [[SWEventTap sharedService] removeBlockForEventsWithType:kCGEventScrollWheel object:self];
 
     [self.interface shouldShowInterface:false];
+}
+
+- (void)private_raiseWindow;
+{
+    SWWindow *selectedWindow = self.stateMachine.selectedWindow;
+    if (!selectedWindow) { return; }
+    
+    @weakify(self);
+    [[SWAccessibilityService sharedService] raiseWindow:selectedWindow completion:^(NSError *error) {
+        @strongify(self);
+        if (error) {
+            SWLog(@"Failed to raise window group %@: %@", selectedWindow, error);
+        }
+        
+        NSOrderedSet *windowList = self.stateMachine.windowList;
+        NSUInteger selectedIndex = [windowList indexOfObject:selectedWindow];
+
+        if (selectedIndex == 0) {
+            // If the selected index was 0, this action won't change the window order so this code must replay the last update event.
+            [self.stateMachine updateWindowList:self.stateMachine.windowList];
+        } else {
+            // Otherwise, force a window list reload.
+            [[SWWindowListService sharedService] refreshWindowList];
+        }
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            @strongify(self);
+            if (self.stateMachine.pendingSwitch) {
+                NSLog(@"Attempt to raise window failed, trying again...");
+                [self private_raiseWindow];
+            } else {
+                SWWindow *window = self.stateMachine.selectedWindow;
+                [self.interface enableWindow:window];
+            }
+        });
+    }];
 }
 
 @end

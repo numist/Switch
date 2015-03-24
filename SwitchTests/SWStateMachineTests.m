@@ -768,13 +768,13 @@ static SWWindow *(^rwg)() = ^{
             ^{
                 // -> windowlist (with selectedwindow not first/active) ->
                 NSMutableOrderedSet *windowList = rwgs();
+                // If selectedWindow is firstWindow, make inactiveWindow and updateWindows
                 if ([[windowList objectAtIndex:0] isEqual:self.stateMachineUnderTest.selectedWindow]) {
                     SWWindow *tmp = windowList[0];
                     [windowList removeObjectAtIndex:0];
                     ((SWTestApplication *)tmp.application).active = false;
                     [windowList insertObject:tmp atIndex:0];
                 }
-                // If selectedWindow is firstWindow, make inactiveWindow and updateWindows
                 XCTAssertNoThrow([self.stateMachineUnderTest updateWindowList:windowList]);
             },
             ^{

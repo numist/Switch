@@ -44,6 +44,13 @@ static NSTimeInterval refreshInterval = 0.1;
 
 - (oneway void)main;
 {
+    [self refreshWindowList];
+}
+
+#pragma mark - SWWindowListWorker
+
+- (void)refreshWindowList;
+{
     CFArrayRef cgWindowInfoList = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements,  kCGNullWindowID);
     NSArray *windowInfoList = CFBridgingRelease(cgWindowInfoList);
     if (![self.windowInfoList isEqualToArray:windowInfoList]) {
