@@ -43,7 +43,7 @@
 {
     BailUnless(self = [super init], nil);
     
-    _haxQueue = dispatch_queue_create("foo", DISPATCH_QUEUE_SERIAL);
+    _haxQueue = dispatch_queue_create("haxQueue", DISPATCH_QUEUE_SERIAL);
     
     return self;
 }
