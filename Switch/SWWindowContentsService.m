@@ -155,6 +155,11 @@
     });
 }
 
+- (oneway void)windowListServiceStopped:(SWWindowListService *)service;
+{
+    [self windowListService:nil updatedList:[NSOrderedSet orderedSet]];
+}
+
 #pragma mark - Internal
 
 - (void)private_windowUpdateNotification:(NSNotification *)notification;
