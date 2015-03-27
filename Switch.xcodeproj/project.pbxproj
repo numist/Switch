@@ -10,6 +10,7 @@
 		41276B53E71A45C1037E25FD /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 749F470D9C1D4385A8FAB252 /* libPods.a */; };
 		BC097E6419DB87BA00B5F447 /* SWScrollControl.m in Sources */ = {isa = PBXBuildFile; fileRef = BC097E6319DB87BA00B5F447 /* SWScrollControl.m */; };
 		BC097E6619DBDA0200B5F447 /* SWScrollControlTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC097E6519DBDA0200B5F447 /* SWScrollControlTests.m */; };
+		BC0AA2721AC60EEA0049375F /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC215F231AC60CE6003DFBDA /* HockeySDK.framework */; };
 		BC15C903191F446800595EAB /* debugger.c in Sources */ = {isa = PBXBuildFile; fileRef = BC15C901191F446800595EAB /* debugger.c */; };
 		BC19D3DA181436FB009CEC1F /* SWPreferencesService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3D9181436FB009CEC1F /* SWPreferencesService.m */; };
 		BC19D3DD18143AB1009CEC1F /* SWAccessibilityService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3DC18143AB1009CEC1F /* SWAccessibilityService.m */; };
@@ -27,7 +28,6 @@
 		BC275C3218CFD84000761247 /* relaunch in Resources */ = {isa = PBXBuildFile; fileRef = BC275C1018CFD3C900761247 /* relaunch */; };
 		BC301A8119D6325600E64ADF /* SWStateMachine.m in Sources */ = {isa = PBXBuildFile; fileRef = BC301A8019D6325600E64ADF /* SWStateMachine.m */; };
 		BC301A9019D6328100E64ADF /* SWStateMachineTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC301A8F19D6328100E64ADF /* SWStateMachineTests.m */; };
-		BC301A9619D6342C00E64ADF /* libPods-HockeySDK-Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BC301A9519D6342C00E64ADF /* libPods-HockeySDK-Mac.a */; };
 		BC301A9819D6343200E64ADF /* libPods-MASPreferences.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BC301A9719D6343200E64ADF /* libPods-MASPreferences.a */; };
 		BC301A9A19D6343E00E64ADF /* libPods-OCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BC301A9919D6343E00E64ADF /* libPods-OCMock.a */; };
 		BC3C78C4188262EB0021C244 /* SWMacVimTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC3C78C3188262EB0021C244 /* SWMacVimTests.m */; };
@@ -96,8 +96,8 @@
 		BCF5C4AB19DB5F8900E59B62 /* 1376.ar in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCF5C4A119DB5E0900E59B62 /* 1376.ar */; };
 		BCF5C4AC19DB5F8900E59B62 /* 5891.ar in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCF5C4A319DB5E0900E59B62 /* 5891.ar */; };
 		BCF5C4AD19DB5F8900E59B62 /* 5904.ar in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCF5C4A519DB5E0900E59B62 /* 5904.ar */; };
-		BCFB702E1AA9112A00D99F4C /* .framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCFB70271AA9110E00D99F4C /* .framework */; };
-		BCFB702F1AA9113B00D99F4C /* .framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCFB70271AA9110E00D99F4C /* .framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BCFB702E1AA9112A00D99F4C /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCFB70271AA9110E00D99F4C /* ReactiveCocoa.framework */; };
+		BCFB702F1AA9113B00D99F4C /* ReactiveCocoa.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCFB70271AA9110E00D99F4C /* ReactiveCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -259,7 +259,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				BCFB702F1AA9113B00D99F4C /* .framework in CopyFiles */,
+				BCFB702F1AA9113B00D99F4C /* ReactiveCocoa.framework in CopyFiles */,
 				BCD48A7B18AB3450002F3ACE /* Sparkle.framework in CopyFiles */,
 				BCCA7AB21807CD2B00CE36E5 /* NNKit.framework in CopyFiles */,
 				BCDDB2BE178EF16E00C22E47 /* Haxcessibility.framework in CopyFiles */,
@@ -303,6 +303,7 @@
 		BC1B46541911A77F00246529 /* SWAdvancedPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWAdvancedPreferencesViewController.h; sourceTree = "<group>"; };
 		BC1B46551911A77F00246529 /* SWAdvancedPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWAdvancedPreferencesViewController.m; sourceTree = "<group>"; };
 		BC1B46561911A77F00246529 /* SWAdvancedPreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SWAdvancedPreferencesViewController.xib; sourceTree = "<group>"; };
+		BC215F231AC60CE6003DFBDA /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = "Pods/HockeySDK-Mac/HockeySDK-Mac/HockeySDK.framework"; sourceTree = "<group>"; };
 		BC275C1018CFD3C900761247 /* relaunch */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = relaunch; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC275C1118CFD3C900761247 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BC275C1418CFD3CA00761247 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -312,9 +313,8 @@
 		BC301A7F19D6325600E64ADF /* SWStateMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SWStateMachine.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		BC301A8019D6325600E64ADF /* SWStateMachine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SWStateMachine.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		BC301A8F19D6328100E64ADF /* SWStateMachineTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SWStateMachineTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		BC301A9519D6342C00E64ADF /* libPods-HockeySDK-Mac.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-HockeySDK-Mac.a"; path = "../../Library/Developer/Xcode/DerivedData/Switch-givjlzqjqvehnlebwsbetlsmtwpk/Build/Products/Debug/libPods-HockeySDK-Mac.a"; sourceTree = "<group>"; };
-		BC301A9719D6343200E64ADF /* libPods-MASPreferences.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-MASPreferences.a"; path = "../../Library/Developer/Xcode/DerivedData/Switch-givjlzqjqvehnlebwsbetlsmtwpk/Build/Products/Debug/libPods-MASPreferences.a"; sourceTree = "<group>"; };
-		BC301A9919D6343E00E64ADF /* libPods-OCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-OCMock.a"; path = "../../Library/Developer/Xcode/DerivedData/Switch-givjlzqjqvehnlebwsbetlsmtwpk/Build/Products/Debug/libPods-OCMock.a"; sourceTree = "<group>"; };
+		BC301A9719D6343200E64ADF /* libPods-MASPreferences.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-MASPreferences.a"; path = "$(BUILT_PRODUCTS_DIR)/libPods-MASPreferences.a"; sourceTree = "<group>"; };
+		BC301A9919D6343E00E64ADF /* libPods-OCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-OCMock.a"; path = "$(BUILT_PRODUCTS_DIR)/libPods-OCMock.a"; sourceTree = "<group>"; };
 		BC3C78C3188262EB0021C244 /* SWMacVimTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SWMacVimTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		BC5A9796180E5A6F002ECD56 /* SWStatusBarMenuService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWStatusBarMenuService.h; sourceTree = "<group>"; };
 		BC5A9797180E5A6F002ECD56 /* SWStatusBarMenuService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWStatusBarMenuService.m; sourceTree = "<group>"; };
@@ -436,16 +436,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BCFB702E1AA9112A00D99F4C /* .framework in Frameworks */,
-				BC301A9819D6343200E64ADF /* libPods-MASPreferences.a in Frameworks */,
-				BC301A9619D6342C00E64ADF /* libPods-HockeySDK-Mac.a in Frameworks */,
-				BC79689E18A8555B00BB1CC5 /* Sparkle.framework in Frameworks */,
-				BCCA7A5F18076AF500CE36E5 /* NNKit.framework in Frameworks */,
 				BC63AB921756FBE400016B9E /* Carbon.framework in Frameworks */,
 				BCA734E116DAC53F00CD4C74 /* Cocoa.framework in Frameworks */,
-				BC63AB9A175701D900016B9E /* Haxcessibility.framework in Frameworks */,
 				BCA7353A16E14EF000CD4C74 /* QuartzCore.framework in Frameworks */,
+				BC63AB9A175701D900016B9E /* Haxcessibility.framework in Frameworks */,
+				BCCA7A5F18076AF500CE36E5 /* NNKit.framework in Frameworks */,
+				BCFB702E1AA9112A00D99F4C /* ReactiveCocoa.framework in Frameworks */,
+				BC79689E18A8555B00BB1CC5 /* Sparkle.framework in Frameworks */,
 				41276B53E71A45C1037E25FD /* libPods.a in Frameworks */,
+				BC301A9819D6343200E64ADF /* libPods-MASPreferences.a in Frameworks */,
+				BC0AA2721AC60EEA0049375F /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -652,9 +652,9 @@
 		BCA734DF16DAC53F00CD4C74 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BC215F231AC60CE6003DFBDA /* HockeySDK.framework */,
 				BC301A9919D6343E00E64ADF /* libPods-OCMock.a */,
 				BC301A9719D6343200E64ADF /* libPods-MASPreferences.a */,
-				BC301A9519D6342C00E64ADF /* libPods-HockeySDK-Mac.a */,
 				BC79688918A852E300BB1CC5 /* Sparkle */,
 				BC63AB93175701BA00016B9E /* Haxcessibility */,
 				BCCA7A4D18076AD700CE36E5 /* NNKit */,
@@ -847,9 +847,9 @@
 		BCFB70201AA9110D00D99F4C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				BCFB70271AA9110E00D99F4C /* .framework */,
+				BCFB70271AA9110E00D99F4C /* ReactiveCocoa.framework */,
 				BCFB70291AA9110E00D99F4C /* ReactiveCocoa-MacTests.xctest */,
-				BCFB702B1AA9110E00D99F4C /* .framework */,
+				BCFB702B1AA9110E00D99F4C /* ReactiveCocoa.framework */,
 				BCFB702D1AA9110E00D99F4C /* ReactiveCocoa-iOSTests.xctest */,
 			);
 			name = Products;
@@ -1052,10 +1052,9 @@
 			remoteRef = BCCA7A5B18076ADB00CE36E5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		BCFB70271AA9110E00D99F4C /* .framework */ = {
+		BCFB70271AA9110E00D99F4C /* ReactiveCocoa.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = .framework;
 			path = ReactiveCocoa.framework;
 			remoteRef = BCFB70261AA9110E00D99F4C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -1067,10 +1066,9 @@
 			remoteRef = BCFB70281AA9110E00D99F4C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		BCFB702B1AA9110E00D99F4C /* .framework */ = {
+		BCFB702B1AA9110E00D99F4C /* ReactiveCocoa.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = .framework;
 			path = ReactiveCocoa.framework;
 			remoteRef = BCFB702A1AA9110E00D99F4C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -1466,6 +1464,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Frameworks",
+					"$(PODS_ROOT)/HockeySDK-Mac/HockeySDK-Mac/",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Switch/Switch-Prefix.pch";
@@ -1480,25 +1479,8 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"${PODS_ROOT}/Headers/Public\"",
-					"\"${PODS_ROOT}/Headers/Public/HockeySDK-Mac\"",
-					"\"${PODS_ROOT}/Headers/Public/MASPreferences\"",
-					"\"${PODS_ROOT}/Headers/Public/OCMock\"",
-					"$(BUILD_ROOT)/../IntermediateBuildFilesPath/UninstalledProducts/include",
-				);
 				INFOPLIST_FILE = "Switch/Switch-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Switch-givjlzqjqvehnlebwsbetlsmtwpk/Build/Products/Debug",
-				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-l\"Pods-HockeySDK-Mac\"",
-					"-l\"Pods-MASPreferences\"",
-					"-framework",
-					"\"HockeySDK\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1526,6 +1508,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Frameworks",
+					"$(PODS_ROOT)/HockeySDK-Mac/HockeySDK-Mac/",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Switch/Switch-Prefix.pch";
@@ -1540,25 +1523,8 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"${PODS_ROOT}/Headers/Public\"",
-					"\"${PODS_ROOT}/Headers/Public/HockeySDK-Mac\"",
-					"\"${PODS_ROOT}/Headers/Public/MASPreferences\"",
-					"\"${PODS_ROOT}/Headers/Public/OCMock\"",
-					"$(BUILD_ROOT)/../IntermediateBuildFilesPath/UninstalledProducts/include",
-				);
 				INFOPLIST_FILE = "Switch/Switch-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Switch-givjlzqjqvehnlebwsbetlsmtwpk/Build/Products/Debug",
-				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-l\"Pods-HockeySDK-Mac\"",
-					"-l\"Pods-MASPreferences\"",
-					"-framework",
-					"\"HockeySDK\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1578,10 +1544,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Switch/Switch-Prefix.pch";
 				INFOPLIST_FILE = "SwitchTests/SwitchTests-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Switch-givjlzqjqvehnlebwsbetlsmtwpk/Build/Products/Debug",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-l\"Pods-OCMock\"",
@@ -1607,10 +1570,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Switch/Switch-Prefix.pch";
 				INFOPLIST_FILE = "SwitchTests/SwitchTests-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Switch-givjlzqjqvehnlebwsbetlsmtwpk/Build/Products/Debug",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-l\"Pods-OCMock\"",
