@@ -96,8 +96,8 @@
 		BCF5C4AB19DB5F8900E59B62 /* 1376.ar in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCF5C4A119DB5E0900E59B62 /* 1376.ar */; };
 		BCF5C4AC19DB5F8900E59B62 /* 5891.ar in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCF5C4A319DB5E0900E59B62 /* 5891.ar */; };
 		BCF5C4AD19DB5F8900E59B62 /* 5904.ar in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCF5C4A519DB5E0900E59B62 /* 5904.ar */; };
-		BCFB702E1AA9112A00D99F4C /* .framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCFB70271AA9110E00D99F4C /* .framework */; };
-		BCFB702F1AA9113B00D99F4C /* .framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCFB70271AA9110E00D99F4C /* .framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BCFB702E1AA9112A00D99F4C /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCFB70271AA9110E00D99F4C /* ReactiveCocoa.framework */; };
+		BCFB702F1AA9113B00D99F4C /* ReactiveCocoa.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BCFB70271AA9110E00D99F4C /* ReactiveCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -259,7 +259,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				BCFB702F1AA9113B00D99F4C /* .framework in CopyFiles */,
+				BCFB702F1AA9113B00D99F4C /* ReactiveCocoa.framework in CopyFiles */,
 				BCD48A7B18AB3450002F3ACE /* Sparkle.framework in CopyFiles */,
 				BCCA7AB21807CD2B00CE36E5 /* NNKit.framework in CopyFiles */,
 				BCDDB2BE178EF16E00C22E47 /* Haxcessibility.framework in CopyFiles */,
@@ -436,7 +436,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BCFB702E1AA9112A00D99F4C /* .framework in Frameworks */,
+				BCFB702E1AA9112A00D99F4C /* ReactiveCocoa.framework in Frameworks */,
 				BC301A9819D6343200E64ADF /* libPods-MASPreferences.a in Frameworks */,
 				BC301A9619D6342C00E64ADF /* libPods-HockeySDK-Mac.a in Frameworks */,
 				BC79689E18A8555B00BB1CC5 /* Sparkle.framework in Frameworks */,
@@ -847,9 +847,9 @@
 		BCFB70201AA9110D00D99F4C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				BCFB70271AA9110E00D99F4C /* .framework */,
+				BCFB70271AA9110E00D99F4C /* ReactiveCocoa.framework */,
 				BCFB70291AA9110E00D99F4C /* ReactiveCocoa-MacTests.xctest */,
-				BCFB702B1AA9110E00D99F4C /* .framework */,
+				BCFB702B1AA9110E00D99F4C /* ReactiveCocoa.framework */,
 				BCFB702D1AA9110E00D99F4C /* ReactiveCocoa-iOSTests.xctest */,
 			);
 			name = Products;
@@ -1052,10 +1052,9 @@
 			remoteRef = BCCA7A5B18076ADB00CE36E5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		BCFB70271AA9110E00D99F4C /* .framework */ = {
+		BCFB70271AA9110E00D99F4C /* ReactiveCocoa.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = .framework;
 			path = ReactiveCocoa.framework;
 			remoteRef = BCFB70261AA9110E00D99F4C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -1067,10 +1066,9 @@
 			remoteRef = BCFB70281AA9110E00D99F4C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		BCFB702B1AA9110E00D99F4C /* .framework */ = {
+		BCFB702B1AA9110E00D99F4C /* ReactiveCocoa.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = .framework;
 			path = ReactiveCocoa.framework;
 			remoteRef = BCFB702A1AA9110E00D99F4C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
