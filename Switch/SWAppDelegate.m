@@ -14,7 +14,10 @@
 
 #import "SWAppDelegate.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdocumentation-deprecated-sync"
 #import <HockeySDK/HockeySDK.h>
+#pragma clang diagnostic pop
 #import <Sparkle/Sparkle.h>
 
 #import "SWPreferencesService.h"
