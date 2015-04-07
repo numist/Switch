@@ -90,6 +90,8 @@
 {
     [super startService];
     
+    self->_contentContainers = [NSMutableDictionary new];
+    
     NSOrderedSet *windows = [SWWindowListService sharedService].windows;
     if (windows) {
         [self windowListService:nil updatedList:windows];
@@ -102,6 +104,7 @@
 {
     dispatch_async(self.queue, ^{
         [self.contentContainers removeAllObjects];
+        self->_contentContainers = nil;
     });
     
     [[NNServiceManager sharedManager] removeObserver:self forService:[SWWindowListService class]];
