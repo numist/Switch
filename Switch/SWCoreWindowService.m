@@ -368,11 +368,8 @@ static int const kScrollThreshold = 50;
         return;
     }
 
-    // Do not show the interface if the state machine has an action pending.
-    if (!self.stateMachine.pendingSwitch) {
-        [self.stateMachine displayTimerCompleted];
-        self.displayTimer = nil;
-    }
+    [self.stateMachine displayTimerCompleted];
+    self.displayTimer = nil;
 }
 
 - (void)private_showInterface;

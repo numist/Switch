@@ -183,8 +183,10 @@
 
 - (void)displayTimerCompleted;
 {
-    StateLog(@"State machine display timer completed");
-    self.displayTimer = false;
+    if (!self.pendingSwitch) {
+        StateLog(@"State machine display timer completed");
+        self.displayTimer = false;
+    }
 }
 
 #pragma mark - Keyboard interactions

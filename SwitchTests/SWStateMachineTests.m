@@ -1274,14 +1274,7 @@ static SWWindow *(^rwg)() = ^{
         [self _keyReleased];
     }];
 
-    // Remember: if (!showingUI) expectWantsDisplay
-    if (!self.stateMachineUnderTest.interfaceVisible) {
-        [self stateMachineExpectShowInterface:true block:^{
-            [self _timer];
-        }];
-    } else {
-        [self _timer];
-    }
+    [self _timer];
 }
 
 // invoke: -> keyEventModifierReleased -> windowlist -> raise -> timer -> wantsDisplay -> YYY
@@ -1294,14 +1287,7 @@ static SWWindow *(^rwg)() = ^{
         [self _windowList:nil];
     }];
 
-    // Remember: if (!showingUI) expectWantsDisplay
-    if (!self.stateMachineUnderTest.interfaceVisible) {
-        [self stateMachineExpectShowInterface:true block:^{
-            [self _timer];
-        }];
-    } else {
-        [self _timer];
-    }
+    [self _timer];
 }
 
 // invoke: -> keyEventModifierReleased -> timer -> windowlist -> wantsDisplay/raise -> YYY
@@ -1314,14 +1300,7 @@ static SWWindow *(^rwg)() = ^{
     [self _timer];
 
     [self stateMachineExpectRaise:^{
-        // Remember: if (!showingUI) expectWantsDisplay
-        if (!self.stateMachineUnderTest.interfaceVisible) {
-            [self stateMachineExpectShowInterface:true block:^{
-                [self _windowList:nil];
-            }];
-        } else {
-            [self _windowList:nil];
-        }
+        [self _windowList:nil];
     }];
 }
 
