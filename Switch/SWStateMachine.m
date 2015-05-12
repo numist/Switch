@@ -17,7 +17,7 @@
 #import "SWStateMachine.h"
 #import "SWWindow.h"
 
-#define STATE_MACHINE_DEBUG
+
 #ifdef STATE_MACHINE_DEBUG
     #define StateLog NSLog
 #else
