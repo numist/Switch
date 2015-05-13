@@ -160,6 +160,7 @@
         }
         
         self.selector = nil;
+        self.pendingSwitch = false;
     }
 }
 
@@ -182,8 +183,10 @@
 
 - (void)displayTimerCompleted;
 {
-    StateLog(@"State machine display timer completed");
-    self.displayTimer = false;
+    if (!self.pendingSwitch) {
+        StateLog(@"State machine display timer completed");
+        self.displayTimer = false;
+    }
 }
 
 #pragma mark - Keyboard interactions
@@ -228,9 +231,6 @@
 - (void)cancelInvocation;
 {
     StateLog(@"State machine event cancel invocation");
-
-    // Setting pendingSwitch here is to work around #105
-    self.pendingSwitch = false;
 
     if (self.invoked) {
         self.invoked = false;

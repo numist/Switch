@@ -62,7 +62,7 @@
     BailUnless(self = [super init], nil);
     
     _contentContainers = [NSMutableDictionary new];
-    _queue = dispatch_queue_create([[NSString stringWithFormat:@""] UTF8String], DISPATCH_QUEUE_SERIAL);
+    _queue = dispatch_queue_create([[NSString stringWithFormat:@"SWWindowContentsService"] UTF8String], DISPATCH_QUEUE_SERIAL);
     
     [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:NNSelfSelector1(private_windowUpdateNotification:) name:[SWWindowWorker notificationName] object:nil];
     
@@ -90,6 +90,8 @@
 {
     [super startService];
     
+    self->_contentContainers = [NSMutableDictionary new];
+    
     NSOrderedSet *windows = [SWWindowListService sharedService].windows;
     if (windows) {
         [self windowListService:nil updatedList:windows];
@@ -102,6 +104,7 @@
 {
     dispatch_async(self.queue, ^{
         [self.contentContainers removeAllObjects];
+        self->_contentContainers = nil;
     });
     
     [[NNServiceManager sharedManager] removeObserver:self forService:[SWWindowListService class]];
@@ -153,6 +156,11 @@
             }
         }
     });
+}
+
+- (oneway void)windowListServiceStopped:(SWWindowListService *)service;
+{
+    [self windowListService:nil updatedList:[NSOrderedSet orderedSet]];
 }
 
 #pragma mark - Internal

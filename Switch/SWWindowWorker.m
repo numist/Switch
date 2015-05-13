@@ -28,6 +28,7 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 
 @property (nonatomic, copy, readonly) SWWindow *window;
 
+@property (nonatomic, assign) _Bool firstUpdate;
 @property (nonatomic, strong) NSImage *previousCapture;
 
 @end
@@ -43,7 +44,9 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
     if (!(self = [super initWithQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)])) { return nil; }
     
     _window = window;
-    self.interval = NNPollingIntervalFast;
+    self.interval = NNPollingIntervalSlow;
+    
+    _firstUpdate = true;
     
     return self;
 }
@@ -85,7 +88,12 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
         if (!imageChanged) {
             self.interval = MIN(NNPollingIntervalSlow, self.interval * 2.0);
         } else {
-            self.interval = NNPollingIntervalFast;
+            if (self.firstUpdate) {
+                self.interval = NNPollingIntervalSlow;
+            } else {
+                self.interval = NNPollingIntervalFast;
+            }
+            
             self.previousCapture = image;
             
             [self postNotification:@{
@@ -99,6 +107,10 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
     } else {
         // Window does not exist. Stop the worker loop.
         self.interval = -1.0;
+    }
+    
+    if (self.firstUpdate) {
+        self.firstUpdate = false;
     }
 }
 
