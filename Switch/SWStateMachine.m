@@ -57,27 +57,7 @@
 
 + (instancetype)stateMachineWithDelegate:(id<SWStateMachineDelegate>) delegate;
 {
-    if ([NSThread isMainThread]) {
-        return [[self alloc] initWithDelegate:delegate];
-    }
-
-    __block SWStateMachine *result;
-    dispatch_group_t group = dispatch_group_create();
-    dispatch_group_enter(group);
-
-    [[RACScheduler scheduler] schedule:^{
-        result = [[self alloc] initWithDelegate:delegate];
-        dispatch_group_leave(group);
-    }];
-
-    dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-    Check(result);
-    return result;
-}
-
-- (instancetype)init;
-{
-    __builtin_trap();
+    return [[self alloc] initWithDelegate:delegate];
 }
 
 - (instancetype)initWithDelegate:(id<SWStateMachineDelegate>) delegate;
@@ -88,39 +68,41 @@
     
     @weakify(self);
     
-    // interfaceVisible = ((invoked || pendingSwitch) && displayTimer == nil && windowListLoaded)
-    RAC(self, interfaceVisible) = [[RACSignal
-    combineLatest:@[RACObserve(self, invoked), RACObserve(self, displayTimer), RACObserve(self, pendingSwitch), RACObserve(self, windowListLoaded)]
-    reduce:^(NSNumber *invoked, NSNumber *displayTimer, NSNumber *pendingSwitch, NSNumber *windowListLoaded){
-        return @((invoked.boolValue || pendingSwitch.boolValue) && !displayTimer.boolValue && windowListLoaded.boolValue);
-    }]
-    distinctUntilChanged];
-    
-    // Initial setup and final teardown of the switcher.
-    RAC(self, active) = [[RACSignal
-    combineLatest:@[RACObserve(self, invoked), RACObserve(self, pendingSwitch)]
-    reduce:^(NSNumber *invoked, NSNumber *pendingSwitch){
-        return @(invoked.boolValue || pendingSwitch.boolValue);
-    }]
-    distinctUntilChanged];
-    
-    // Update the selected cell in the collection view when the selector is updated.
-    RAC(self, selectedWindow) = RACObserve(self, selector.selectedWindow);
+    despatch_sync_main_reentrant(^{
+        // interfaceVisible = ((invoked || pendingSwitch) && displayTimer == nil && windowListLoaded)
+        RAC(self, interfaceVisible) = [[RACSignal
+        combineLatest:@[RACObserve(self, invoked), RACObserve(self, displayTimer), RACObserve(self, pendingSwitch), RACObserve(self, windowListLoaded)]
+        reduce:^(NSNumber *invoked, NSNumber *displayTimer, NSNumber *pendingSwitch, NSNumber *windowListLoaded){
+            return @((invoked.boolValue || pendingSwitch.boolValue) && !displayTimer.boolValue && windowListLoaded.boolValue);
+        }]
+        distinctUntilChanged];
+        
+        // Initial setup and final teardown of the switcher.
+        RAC(self, active) = [[RACSignal
+        combineLatest:@[RACObserve(self, invoked), RACObserve(self, pendingSwitch)]
+        reduce:^(NSNumber *invoked, NSNumber *pendingSwitch){
+            return @(invoked.boolValue || pendingSwitch.boolValue);
+        }]
+        distinctUntilChanged];
+        
+        // Update the selected cell in the collection view when the selector is updated.
+        RAC(self, selectedWindow) = RACObserve(self, selector.selectedWindow);
 
-    // raise when (pendingSwitch && windowListLoaded)
-    [[[[RACSignal
-    combineLatest:@[RACObserve(self, pendingSwitch), RACObserve(self, windowListLoaded)]
-    reduce:^(NSNumber *pendingSwitch, NSNumber *windowListLoaded){
-        return @(pendingSwitch.boolValue && windowListLoaded.boolValue);
-    }]
-    distinctUntilChanged]
-    filter:^(NSNumber *shouldRaise) {
-        return shouldRaise.boolValue;
-    }]
-    subscribeNext:^(NSNumber *shouldRaise) {
-        @strongify(self);
-        [self private_raiseSelectedWindow];
-    }];
+        // raise when (pendingSwitch && windowListLoaded)
+        [[[[RACSignal
+        combineLatest:@[RACObserve(self, pendingSwitch), RACObserve(self, windowListLoaded)]
+        reduce:^(NSNumber *pendingSwitch, NSNumber *windowListLoaded){
+            return @(pendingSwitch.boolValue && windowListLoaded.boolValue);
+        }]
+        distinctUntilChanged]
+        filter:^(NSNumber *shouldRaise) {
+            return shouldRaise.boolValue;
+        }]
+        subscribeNext:^(NSNumber *shouldRaise) {
+            @strongify(self);
+            [self private_raiseSelectedWindow];
+        }];
+    });
     
     return self;
 }

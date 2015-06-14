@@ -38,10 +38,13 @@ typedef NS_ENUM(uint8_t, SWIncrementDirection) {
 
 @interface SWStateMachine : NSObject
 
++ (instancetype)stateMachineWithDelegate:(id<SWStateMachineDelegate>) delegate;
+
 @property (nonatomic, readonly, assign, getter=wantsInterfaceVisible) _Bool interfaceVisible;
 @property (nonatomic, readonly, assign, getter=wantsWindowListUpdates) _Bool windowListUpdates;
 
-+ (instancetype)stateMachineWithDelegate:(id<SWStateMachineDelegate>) delegate;
+- (instancetype)initWithDelegate:(id<SWStateMachineDelegate>) delegate NS_DESIGNATED_INITIALIZER;
+- (instancetype)init UNAVAILABLE_ATTRIBUTE;
 
 #pragma mark - Delegate responses
 - (void)displayTimerCompleted;

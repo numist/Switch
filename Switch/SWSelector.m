@@ -52,8 +52,8 @@
 
 - (NSUInteger)selectedUIndex;
 {
-    if (!Check(self.selectedIndex >= 0)) {
-        return 0;
+    if (self.selectedIndex < 0) {
+        @throw [self private_exceptionForInvalidIndex:self.selectedIndex functionName:__PRETTY_FUNCTION__];
     }
     
     return (NSUInteger)self.selectedIndex;
@@ -120,13 +120,19 @@
     if (self.windowList) {
         if (!self.windowList.count) {
             Check(self.selectedIndex == NSNotFound);
-            Check(index == NSNotFound);
+            if (index != NSNotFound) {
+                @throw [self private_exceptionForInvalidIndex:index functionName:__PRETTY_FUNCTION__];
+            }
             index = NSNotFound;
         } else if (index > (NSInteger)self.windowList.count) {
-            Check(index == NSNotFound);
+            if (index != NSNotFound) {
+                @throw [self private_exceptionForInvalidIndex:index functionName:__PRETTY_FUNCTION__];
+            }
             index = NSNotFound;
         } else {
-            Check(index >= 0);
+            if (index < 0) {
+                @throw [self private_exceptionForInvalidIndex:index functionName:__PRETTY_FUNCTION__];
+            }
             index = MAX(index, 0);
             
             Check(index < (NSInteger)self.windowList.count);
@@ -148,9 +154,6 @@
         newSelectedIndex = NSNotFound;
     } else if (!Check(windowList) || !self.windowList) {
         newSelectedIndex = self.selectedIndex;
-    } else if (self.windowList.count == 0) {
-        // Previously empty list? Select the beginning.
-        newSelectedIndex = 0;
     } else if ((selectedWindowIndex = [self private_indexOfWindow:self.selectedWindow inWindowList:windowList]) != NSNotFound) {
         // Select the same window group as was previously selected, if it's still there.
         newSelectedIndex = (NSInteger)selectedWindowIndex;
@@ -167,7 +170,7 @@
     if (selectedWindow == nil) {
         return NSNotFound;
     }
-    if (windowList == nil) {
+    if (!Check(windowList != nil)) {
         return NSNotFound;
     }
     
@@ -179,6 +182,14 @@
     return [windowList indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
         return [selectedWindow isSameWindow:obj];
     }];
+}
+
+- (NSException *)private_exceptionForInvalidIndex:(NSInteger)index functionName:(const char *)functionName;
+{
+    if (self.windowList.count == 0) {
+        return [NSException exceptionWithName:NSRangeException reason:[NSString stringWithFormat:@"%s: index %lu out of bounds for empty window list", functionName, index] userInfo:nil];
+    }
+    return [NSException exceptionWithName:NSRangeException reason:[NSString stringWithFormat:@"%s: index %lu beyond bounds [%d .. %lu]", functionName, index, 0, self.windowList.count - 1] userInfo:nil];
 }
 
 @end

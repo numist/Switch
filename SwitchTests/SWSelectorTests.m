@@ -354,4 +354,39 @@
     XCTAssertEqual(selector.selectedIndex, 3);
 }
 
+- (void)testNoSelectedIndex;
+{
+    SWSelector *selector = [SWSelector new];
+    NSUInteger selectedUIndex = [selector selectedUIndex];
+    NSInteger selectedIndex = [selector selectedIndex];
+    XCTAssertEqual(selectedUIndex, 0);
+    XCTAssertEqual(selectedIndex, 0);
+}
+
+- (void)testEmptyList;
+{
+    SWSelector *selector = [SWSelector new];
+    selector = [selector updateWithWindowList:[NSOrderedSet orderedSet]];
+    selector = [selector increment];
+    XCTAssertEqual(selector.selectedIndex, NSNotFound);
+    selector = [selector decrement];
+    XCTAssertEqual(selector.selectedIndex, NSNotFound);
+}
+
+- (void)testSelectInvalidIndex;
+{
+    SWSelector *selector = [SWSelector new];
+    
+    selector = [selector decrement];
+    XCTAssertThrows(selector.selectedUIndex);
+    
+    selector = [selector updateWithWindowList:[NSOrderedSet orderedSet]];
+    XCTAssertThrows([selector selectIndex:0]);
+    selector = [selector updateWithWindowList:self.list0123];
+    XCTAssertThrows([selector selectIndex:-1]);
+    XCTAssertThrows([selector selectIndex:50]);
+    selector = [selector selectIndex:NSNotFound];
+    XCTAssertEqual(selector.selectedIndex, NSNotFound);
+}
+
 @end
