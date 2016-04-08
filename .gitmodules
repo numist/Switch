@@ -7,6 +7,3 @@
 [submodule "Frameworks/NNKit"]
 	path = Frameworks/NNKit
 	url = git://github.com/numist/NNKit.git
-[submodule "Frameworks/Sparkle"]
-	path = Frameworks/Sparkle
-	url = git://github.com/numist/Sparkle.git
