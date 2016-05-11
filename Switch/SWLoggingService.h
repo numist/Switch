@@ -40,5 +40,8 @@
         NSDate *start = [NSDate new]; \
         code \
         NSString *logmsg = [NSString stringWithFormat:fmt, ##__VA_ARGS__]; \
-        SWLog(@"%@ took %.3fs", logmsg, -[start timeIntervalSinceNow]); \
+        NSTimeInterval elapsed = -[start timeIntervalSinceNow]; \
+        if (elapsed > (1.0 / 60.0)) { \
+            SWLog(@"%@ took %.3fs", logmsg, elapsed); \
+        } \
     } while(0)
