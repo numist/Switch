@@ -193,7 +193,6 @@ task :test => [:build] do
   # RAC is still using OCUnit together with -Werror, which is not a good time right now.
   # test_scheme("ReactiveCocoa")
   test_scheme("NNKit")
-  test_scheme("Sparkle")
 end
 
 
