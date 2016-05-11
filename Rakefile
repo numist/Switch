@@ -149,7 +149,7 @@ task :pods => [PODS_PROJECT_FILE]
 file PODS_PROJECT_FILE => 'Podfile' do
   echo_step "Updating Pods"
   if not shell_non_fatal "pod install"
-    shell "pod repo update"
+    shell "pod repo update > /dev/null"
     shell "pod install"
   end
 end
