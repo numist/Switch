@@ -148,7 +148,10 @@ task :default => [:analyze, :test]
 task :pods => [PODS_PROJECT_FILE]
 file PODS_PROJECT_FILE => 'Podfile' do
   echo_step "Updating Pods"
-  shell "pod install"
+  if not shell_non_fatal "pod install" do
+    shell "pod repo update"
+    shell "pod install"
+  end
 end
 
 desc "Install/update dependencies required for building the project."
