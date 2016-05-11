@@ -155,7 +155,7 @@ desc "Install/update dependencies required for building the project."
 task :deps do
   echo_step "Installing/updating dependencies"
   # Rakefile deps
-  # TODO: check if xcpretty is already installed
+  # TODO: check if xcpretty gem is already installed
   shell "gem install xcpretty --no-ri --no-rdoc"
   
   # Submodules
@@ -163,7 +163,12 @@ task :deps do
   shell "git submodule update --init --recursive"
 
   # Pods
-  # TODO: check if cocoapods is already installed
+  # TODO: check if cocoapods gem is already installed
+
+  # Fetching: activesupport-5.0.0.rc1.gem (100%)
+  # ERROR:  Error installing cocoapods:
+  #     activesupport requires Ruby version >= 2.2.2.
+  shell "gem install activesupport --no-ri --no-rdoc --version 4.2.6"
   shell "gem install cocoapods --no-ri --no-rdoc"
   Rake::FileTask[PODS_PROJECT_FILE].invoke
 end
