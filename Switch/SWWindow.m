@@ -135,7 +135,7 @@
 
 - (NSString *)displayName;
 {
-    NSString *result = self.displayName;
+    NSString *result = self.name;
     if (result == nil || result.length == 0) {
         result = self.application.name;
     }
