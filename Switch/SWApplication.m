@@ -106,6 +106,10 @@ static NSCache *imageCache;
         id cacheKey = self.path;
         NSImage *result = [imageCache objectForKey:cacheKey];
         if (!result) {
+            if ([NSThread isMainThread]) {
+                SWLog(@"WARNING: -[%@ %@] was called on the main thread %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), [NSThread callStackSymbols]);
+            }
+
             result = [[NSWorkspace sharedWorkspace] iconForFile:self.path];
             [imageCache setObject:result forKey:cacheKey];
         }

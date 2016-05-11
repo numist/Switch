@@ -55,6 +55,10 @@ static const NSTimeInterval NNPollingIntervalSlow = 1.0;
 
 - (oneway void)main;
 {
+    if ([NSThread isMainThread]) {
+        SWLog(@"WARNING: -[%@ %@] was called on the main thread %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), [NSThread callStackSymbols]);
+    }
+
     CGImageRef cgImage = NNCFAutorelease(CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, self.window.windowID, kCGWindowImageBoundsIgnoreFraming));
     CGFloat width = CGImageGetWidth(cgImage);
     CGFloat height = CGImageGetHeight(cgImage);
