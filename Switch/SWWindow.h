@@ -34,6 +34,8 @@ typedef NSPoint NNVec2;
 - (NSScreen *)screen;
 - (CGWindowID)windowID;
 
+- (NSString *)displayName;
+
 - (BOOL)isSameWindow:(SWWindow *)window;
 - (BOOL)isRelatedToLowerWindow:(SWWindow *)window;
 - (NNVec2)offsetOfCenterToCenterOfWindow:(SWWindow *)window;

@@ -133,6 +133,15 @@
     return (CGWindowID)[[self.windowDescription objectForKey:(__bridge NSString *)kCGWindowNumber] unsignedLongValue];
 }
 
+- (NSString *)displayName;
+{
+    NSString *result = self.displayName;
+    if (result == nil || result.length == 0) {
+        result = self.application.name;
+    }
+    return result;
+}
+
 - (BOOL)isRelatedToLowerWindow:(SWWindow *)window;
 {
     NSParameterAssert(window.application.canBeActivated);

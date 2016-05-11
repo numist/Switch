@@ -59,7 +59,7 @@
 
 - (NSString *)description;
 {
-    return [NSString stringWithFormat:@"<%u (%@), %lu windows total>", self.mainWindow.windowID, self.mainWindow.name, self.windows.count];
+    return [NSString stringWithFormat:@"<%u (%@), %lu windows>", self.mainWindow.windowID, self.name, self.windows.count];
 }
 
 - (instancetype)copyWithZone:(NSZone *)zone;
@@ -77,7 +77,7 @@
 
 - (NSString *)name;
 {
-    return self.mainWindow.name;
+    return self.mainWindow.displayName;
 }
 
 - (CGRect)frame;
