@@ -20,6 +20,7 @@
 
 
 static NSCache *imageCache;
+static NSMapTable<NSNumber *, SWApplication *> *objectCache;
 
 
 @interface SWApplication ()
@@ -40,29 +41,30 @@ static NSCache *imageCache;
     dispatch_once(&onceToken, ^{
         imageCache = [[NSCache alloc] init];
         imageCache.name = @"Application Icon Cache";
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-            NSDate *start = [NSDate date];
-            NSArray *windowInfoList = CFBridgingRelease(CGWindowListCopyWindowInfo(kCGWindowListOptionAll, kCGNullWindowID));
-            NSMutableDictionary<NSNumber *, NSString *> *pids = [NSMutableDictionary new];
-            for (NSDictionary *windowInfo in windowInfoList) {
-                if (!([windowInfo[(__bridge NSString *)kCGWindowLayer] longValue] == kCGNormalWindowLevel)) { continue; }
-                pids[windowInfo[(__bridge NSString *)kCGWindowOwnerPID]] = windowInfo[(__bridge NSString *)kCGWindowOwnerName];
-            }
-            for (NSNumber *pid in [pids allKeys]) {
-                (void)[[SWApplication applicationWithPID:(pid_t)[pid intValue] name:pids[pid]] icon];
-            }
-            SWLog(@"icon cache preheating took %.2fs", -[start timeIntervalSinceNow]);
-        });
+        
+        objectCache = [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsWeakMemory];
     });
 }
 
 + (instancetype)applicationWithPID:(pid_t)pid name:(NSString *)name;
 {
-    Class factory = self;
-    if (NSClassFromString(@"SWTestApplication")) {
-        factory = NSClassFromString(@"SWTestApplication");
+    // Each application is represented by a single SWApplication object
+    @synchronized(objectCache) {
+        SWApplication *result = [objectCache objectForKey:@(pid)];
+        if (![result.name isEqualToString:name]) {
+            result = nil;
+            [objectCache removeObjectForKey:@(pid)];
+        }
+        if (!result) {
+            Class factory = self;
+            if (NSClassFromString(@"SWTestApplication")) {
+                factory = NSClassFromString(@"SWTestApplication");
+            }
+            result = [[factory alloc] initWithPID:pid name:name];
+            [objectCache setObject:result forKey:@(pid)];
+        }
+        return result;
     }
-    return [[factory alloc] initWithPID:pid name:name];
 }
 
 - (instancetype)initWithPID:(pid_t)pid name:(NSString *)name;
@@ -70,8 +72,7 @@ static NSCache *imageCache;
     BailUnless(self = [super init], nil);
     
     _pid = pid;
-    _runningApplication = [NSRunningApplication runningApplicationWithProcessIdentifier:pid];
-    _name = name ?: [_runningApplication localizedName];
+    _name = name ?: [self.runningApplication localizedName];
 
     return self;
 }
@@ -112,18 +113,28 @@ static NSCache *imageCache;
     return _path;
 }
 
-- (NSImage *)icon;
+- (NSImage *)cachedIcon;
 {
     @synchronized(imageCache) {
-        id path = self.path;
-        NSImage *result = [imageCache objectForKey:path];
-        if (!result && path) {
-            if ([NSThread isMainThread]) {
-                SWLog(@"WARNING: -[%@ %@] was called on the main thread %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), [NSThread callStackSymbols]);
-            }
+        return [imageCache objectForKey:self.path];
+    }
+}
+
+- (NSImage *)icon;
+{
+    @synchronized(self) {
+        NSImage *result = self.cachedIcon;
+        if (result) { return result; }
+
+        SWTimeTask(SWCodeBlock({
+            NSString *path = self.path;
+            SWLogBackgroundThreadOnly();
             result = [[NSWorkspace sharedWorkspace] iconForFile:path];
-            [imageCache setObject:result forKey:path];
-        }
+            @synchronized(imageCache) {
+                Check([imageCache objectForKey:self.path] == nil);
+                [imageCache setObject:result forKey:path];
+            }
+        }), @"Loading application icon for %@", self.name);
         return result;
     }
 }
@@ -142,6 +153,18 @@ static NSCache *imageCache;
 {
     NSApplicationActivationPolicy activationPolicy = self.runningApplication.activationPolicy;
     return activationPolicy == NSApplicationActivationPolicyRegular || activationPolicy == NSApplicationActivationPolicyAccessory;
+}
+
+@synthesize runningApplication = _runningApplication;
+
+- (NSRunningApplication *)runningApplication;
+{
+    @synchronized(self) {
+        if (_runningApplication == nil || _runningApplication.terminated) {
+            _runningApplication = [NSRunningApplication runningApplicationWithProcessIdentifier:self.pid];
+        }
+        return _runningApplication;
+    }
 }
 
 @end

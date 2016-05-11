@@ -235,7 +235,7 @@
     
     __strong __typeof__(self.dataSource) dataSource = self.dataSource;
     
-    if (!self.maxCellSize) {
+    if (self.maxCellSize == 0) {
         self.maxCellSize = [dataSource HUDCollectionViewMaximumCellSize:self];
         // dataSource side effect may have called reloadData, in which case it's not safe to continue anymore.
         BailWithBlockUnless(!self.reloading, cleanupData);

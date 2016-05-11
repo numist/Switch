@@ -154,32 +154,31 @@
         return;
     }
     
-    NSDate *start = [NSDate date];
-    
-    // First, raise the window
-    if (![haxWindow performAction:(__bridge NSString *)kAXRaiseAction error:&error]) {
-        SWLog(@"Raising %@ window %@ failed after %.3fs: %@", window.application.name, window, [[NSDate date] timeIntervalSinceDate:start], error);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            completionBlock(error);
-        });
-        return;
-    }
-    
-    // Then raise the application (if it's not already topmost)
-    if (![window.application isActiveApplication]) {
-        NSRunningApplication *runningApplication = [NSRunningApplication runningApplicationWithProcessIdentifier:window.application.pid];
-        if (![runningApplication activateWithOptions:NSApplicationActivateIgnoringOtherApps]) {
-            NSString *errorString = [NSString stringWithFormat:@"Raising application %@ failed.", window.application];
-            SWLog(@"%@", errorString);
-            error = [NSError errorWithDomain:@"SWAccessibilityServiceDomain" code:__LINE__ userInfo:@{NSLocalizedDescriptionKey : errorString}];
+    SWTimeTask(SWCodeBlock({
+        // First, raise the window
+        if (![haxWindow performAction:(__bridge NSString *)kAXRaiseAction error:&error]) {
+            SWLog(@"Raising %@ window %@ failed after %.3fs: %@", window.application.name, window, [[NSDate date] timeIntervalSinceDate:start], error);
             dispatch_async(dispatch_get_main_queue(), ^{
                 completionBlock(error);
             });
             return;
         }
-    }
-    
-    SWLog(@"Raising %@ window %@ took %.3fs", window.application.name, window, [[NSDate date] timeIntervalSinceDate:start]);
+        
+        // Then raise the application (if it's not already topmost)
+        if (![window.application isActiveApplication]) {
+            NSRunningApplication *runningApplication = [NSRunningApplication runningApplicationWithProcessIdentifier:window.application.pid];
+            if (![runningApplication activateWithOptions:NSApplicationActivateIgnoringOtherApps]) {
+                NSString *errorString = [NSString stringWithFormat:@"Raising application %@ failed.", window.application];
+                SWLog(@"%@", errorString);
+                error = [NSError errorWithDomain:@"SWAccessibilityServiceDomain" code:__LINE__ userInfo:@{NSLocalizedDescriptionKey : errorString}];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completionBlock(error);
+                });
+                return;
+            }
+        }
+    }), @"Raising %@ window %@", window.application.name, window);
+
     dispatch_async(dispatch_get_main_queue(), ^{
         completionBlock(nil);
     });
@@ -210,26 +209,25 @@
         return;
     }
     
-    NSDate *start = [NSDate date];
-    
-    HAXElement *element = [haxWindow elementOfClass:[HAXElement class] forKey:(__bridge NSString *)kAXCloseButtonAttribute error:&error];
-    if (!element) {
-        SWLog(@"Couldn't get close button for %@ window %@ after %.3fs: %@", window.application.name, window, [[NSDate date] timeIntervalSinceDate:start], error);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            completionBlock(error);
-        });
-        return;
-    }
-    
-    if (![element performAction:(__bridge NSString *)kAXPressAction error:&error]) {
-        SWLog(@"Closing %@ window %@ failed after %.3fs: %@", window.application.name, window, [[NSDate date] timeIntervalSinceDate:start], error);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            completionBlock(error);
-        });
-        return;
-    }
-    
-    SWLog(@"Closing %@ window %@ took %.3fs", window.application.name, self, [[NSDate date] timeIntervalSinceDate:start]);
+    SWTimeTask(SWCodeBlock({
+        HAXElement *element = [haxWindow elementOfClass:[HAXElement class] forKey:(__bridge NSString *)kAXCloseButtonAttribute error:&error];
+        if (!element) {
+            SWLog(@"Couldn't get close button for %@ window %@ after %.3fs: %@", window.application.name, window, [[NSDate date] timeIntervalSinceDate:start], error);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionBlock(error);
+            });
+            return;
+        }
+        
+        if (![element performAction:(__bridge NSString *)kAXPressAction error:&error]) {
+            SWLog(@"Closing %@ window %@ failed after %.3fs: %@", window.application.name, window, [[NSDate date] timeIntervalSinceDate:start], error);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionBlock(error);
+            });
+            return;
+        }
+    }), @"Closing %@ window %@", window.application.name, window);
+
     dispatch_async(dispatch_get_main_queue(), ^{
         completionBlock(nil);
     });

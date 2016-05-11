@@ -22,7 +22,6 @@
 
 #import "SWPreferencesService.h"
 #import "SWWindowListService.h"
-#import "SWApplication.h"
 
 
 @interface SWAppDelegate () <BITHockeyManagerDelegate>
@@ -41,7 +40,6 @@
     [[BITHockeyManager sharedHockeyManager] startManager];
     
     // Force call to +[SWApplicaton initialize]
-    [SWApplication self];
     
     SWLog(@"Launched %@ %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:(__bridge id)kCFBundleNameKey], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]);
 }

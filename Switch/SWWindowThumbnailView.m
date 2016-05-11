@@ -84,18 +84,14 @@
         }
     }
     
-    NSImage *icon;
-    {
-        icon = windowGroup.application.icon;
-
-        // This is necessary or the CALayer may draw a low resolution representation when a higher resolution is needed, and it's better to be too high-resolution than too low.
-        NSSize imageSize = icon.size;
-        CGFloat scale = kNNMaxApplicationIconSize / MAX(imageSize.width, imageSize.height);
-        icon.size = NSMakeSize(round(imageSize.width * scale), round(imageSize.height * scale));
+    if (!(self.icon = windowGroup.application.cachedIcon)) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSImage *icon = windowGroup.application.icon;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.icon = icon;
+            });
+        });
     }
-
-    _icon = icon;
-    _iconLayer.contents = icon;
     
     //
     // Configuration initialization
@@ -153,6 +149,22 @@
 }
 
 #pragma mark - SWWindowThumbnailView
+
+@synthesize icon = _icon;
+
+- (void)setIcon:(NSImage *)icon;
+{
+    if (icon) {
+        // This is necessary or the CALayer may draw a low resolution representation when a higher resolution is needed; it's better to be too high-resolution than too low.
+        NSSize imageSize = icon.size;
+        CGFloat scale = kNNMaxApplicationIconSize / MAX(imageSize.width, imageSize.height);
+        icon.size = NSMakeSize(round(imageSize.width * scale), round(imageSize.height * scale));
+    }
+
+    _icon = icon;
+    _iconLayer.contents = icon;
+    [self setNeedsLayout:YES];
+}
 
 - (void)setActive:(BOOL)active;
 {

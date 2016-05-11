@@ -27,3 +27,18 @@
         [[SWLoggingService sharedService] rotateLogIfNecessary]; \
         Log(fmt, ##__VA_ARGS__); \
     } while(0)
+
+#define SWLogBackgroundThreadOnly() do { \
+        if ([NSThread isMainThread]) { \
+            SWLog(@"WARNING: -[%@ %@] was called on the main thread %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), [NSThread callStackSymbols]); \
+        } \
+    } while(0)
+
+#define SWCodeBlock(...) __VA_ARGS__
+
+#define SWTimeTask(code, fmt, ...) do { \
+        NSDate *start = [NSDate new]; \
+        code \
+        NSString *logmsg = [NSString stringWithFormat:fmt, ##__VA_ARGS__]; \
+        SWLog(@"%@ took %.3fs", logmsg, -[start timeIntervalSinceNow]); \
+    } while(0)

@@ -32,7 +32,7 @@
 
 - (void)updateLayer;
 {
-    if (self.border) {
+    if (self.border > 0) {
         self.layer.borderWidth = self.border;
         self.layer.borderColor = [[[NSColor whiteColor] colorWithAlphaComponent:0.8] CGColor];
     }

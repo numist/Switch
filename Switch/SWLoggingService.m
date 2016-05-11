@@ -128,7 +128,7 @@
         [contents lockFocus];
         NSBitmapImageRep *bitmapContents = [[NSBitmapImageRep alloc] initWithFocusedViewRect:(CGRect){.origin = NSZeroPoint, .size = contents.size}];
         [contents unlockFocus];
-        NSData *pngContents = [bitmapContents representationUsingType:NSPNGFileType properties:nil];
+        NSData *pngContents = [bitmapContents representationUsingType:NSPNGFileType properties:@{}];
         if (!pngContents) {
             [handle writeData:[[NSString stringWithFormat:@"Failed to save window contents for window ID %u: conversion to png failed\n", windowID] dataUsingEncoding:NSUTF8StringEncoding]];
         }
@@ -159,10 +159,10 @@
             static NSCalendar *gregorian;
             static dispatch_once_t onceToken;
             dispatch_once(&onceToken, ^{
-                gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+                gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
                 gregorian.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
             });
-            return [gregorian components:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit) fromDate:today];
+            return [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay) fromDate:today];
         }();
         
         if (![todaysComponents isEqual:self.logDate]) {
