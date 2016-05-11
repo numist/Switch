@@ -19,9 +19,13 @@
 #import "SWWindow.h"
 
 
+static NSCache *imageCache;
+
+
 @interface SWApplication ()
 
 @property (nonatomic, strong, readonly) NSRunningApplication *runningApplication;
+@property (nonatomic, strong, readonly) NSString *path;
 
 @end
 
@@ -29,6 +33,16 @@
 @implementation SWApplication
 
 #pragma mark - Initialization
+
++ (void)initialize;
+{
+    // TODO(numist): first invocation will still be slow because the cache is cold.
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        imageCache = [[NSCache alloc] init];
+        imageCache.name = @"Application Icon Cache";
+    });
+}
 
 + (instancetype)applicationWithPID:(pid_t)pid name:(NSString *)name;
 {
@@ -76,10 +90,27 @@
 
 #pragma mark - SWApplication
 
+@synthesize path = _path;
+
+- (NSString *)path;
+{
+    if (!_path) {
+        _path = [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:[self.runningApplication bundleIdentifier]];
+    }
+    return _path;
+}
+
 - (NSImage *)icon;
 {
-    NSString *path = [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:[self.runningApplication bundleIdentifier]];
-    return [[NSWorkspace sharedWorkspace] iconForFile:path];
+    @synchronized(imageCache) {
+        id cacheKey = self.path;
+        NSImage *result = [imageCache objectForKey:cacheKey];
+        if (!result) {
+            result = [[NSWorkspace sharedWorkspace] iconForFile:self.path];
+            [imageCache setObject:result forKey:cacheKey];
+        }
+        return result;
+    }
 }
 
 - (BOOL)isActiveApplication;
