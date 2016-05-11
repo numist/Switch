@@ -23,6 +23,7 @@ static NSTimeInterval refreshInterval = 0.1;
 @interface SWWindowListWorker ()
 
 @property (nonatomic, copy, readwrite) NSArray *windowInfoList;
+@property (nonatomic, strong) dispatch_queue_t private_queue;
 
 @end
 
@@ -33,8 +34,10 @@ static NSTimeInterval refreshInterval = 0.1;
 
 - (instancetype)init;
 {
-    if (!(self = [super initWithQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)])) { return nil; }
+    dispatch_queue_t q = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    if (!(self = [super initWithQueue:q])) { return nil; }
     
+    self.private_queue = q;
     self.interval = refreshInterval;
 
     return self;
@@ -44,13 +47,23 @@ static NSTimeInterval refreshInterval = 0.1;
 
 - (oneway void)main;
 {
-    [self refreshWindowList];
+    [self private_refreshWindowList];
 }
 
 #pragma mark - SWWindowListWorker
 
 - (void)refreshWindowList;
 {
+    dispatch_async(self.private_queue, ^{
+        [self private_refreshWindowList];
+    });
+}
+
+- (void)private_refreshWindowList;
+{
+    if ([NSThread isMainThread]) {
+        SWLog(@"WARNING: -[%@ %@] was called on the main thread %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), [NSThread callStackSymbols]);
+    }
     CFArrayRef cgWindowInfoList = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements,  kCGNullWindowID);
     NSArray *windowInfoList = CFBridgingRelease(cgWindowInfoList);
     if (![self.windowInfoList isEqualToArray:windowInfoList]) {
