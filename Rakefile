@@ -56,6 +56,8 @@ DELIVERABLE_APP = File.absolute_path("#{BUILDDIR}/#{PRODUCT}.app")
 
 DELIVERABLE_ZIP = File.absolute_path("#{BUILDDIR}/#{PRODUCT}.zip")
 
+PODS_PROJECT_FILE = 'Pods/Pods.xcodeproj/project.pbxproj'
+
 def formatted_fail(message)
   fail Console.background_red(Console.white(message))
 end
@@ -74,8 +76,7 @@ def check_ruby_version
 end
 check_ruby_version
 
-# TODO: better way to get homedir here.
-CLOBBER.include(FileList["/Users/#{`whoami`.strip}/Library/Developer/Xcode/DerivedData/#{PRODUCT}-*"])
+CLOBBER.include(FileList["#{File.expand_path('~')}/Library/Developer/Xcode/DerivedData/#{PRODUCT}-*"])
 CLOBBER.include(DERIVEDDATA)
 
 CLEAN.include(FileList[BUILDDIR])
@@ -144,10 +145,17 @@ directory INTERMEDIATESDIR
 
 task :default => [:analyze, :test]
 
+task :pods => [PODS_PROJECT_FILE]
+file PODS_PROJECT_FILE => 'Podfile' do
+  echo_step "Updating Pods"
+  shell "pod install"
+end
+
 desc "Install/update dependencies required for building the project."
 task :deps do
   echo_step "Installing/updating dependencies"
   # Rakefile deps
+  # TODO: check if xcpretty is already installed
   shell "gem install xcpretty --no-ri --no-rdoc"
   
   # Submodules
@@ -155,8 +163,9 @@ task :deps do
   shell "git submodule update --init --recursive"
 
   # Pods
+  # TODO: check if cocoapods is already installed
   shell "gem install cocoapods --no-ri --no-rdoc"
-  shell "pod install"
+  Rake::FileTask[PODS_PROJECT_FILE].invoke
 end
 
 # XXX: can these just be tasks dependant on another task with an argument?
