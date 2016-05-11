@@ -36,11 +36,23 @@ static NSCache *imageCache;
 
 + (void)initialize;
 {
-    // TODO(numist): first invocation will still be slow because the cache is cold.
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         imageCache = [[NSCache alloc] init];
         imageCache.name = @"Application Icon Cache";
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            NSDate *start = [NSDate date];
+            NSArray *windowInfoList = CFBridgingRelease(CGWindowListCopyWindowInfo(kCGWindowListOptionAll, kCGNullWindowID));
+            NSMutableDictionary<NSNumber *, NSString *> *pids = [NSMutableDictionary new];
+            for (NSDictionary *windowInfo in windowInfoList) {
+                if (!([windowInfo[(__bridge NSString *)kCGWindowLayer] longValue] == kCGNormalWindowLevel)) { continue; }
+                pids[windowInfo[(__bridge NSString *)kCGWindowOwnerPID]] = windowInfo[(__bridge NSString *)kCGWindowOwnerName];
+            }
+            for (NSNumber *pid in [pids allKeys]) {
+                (void)[[SWApplication applicationWithPID:(pid_t)[pid intValue] name:pids[pid]] icon];
+            }
+            SWLog(@"icon cache preheating took %.2fs", -[start timeIntervalSinceNow]);
+        });
     });
 }
 
@@ -103,15 +115,14 @@ static NSCache *imageCache;
 - (NSImage *)icon;
 {
     @synchronized(imageCache) {
-        id cacheKey = self.path;
-        NSImage *result = [imageCache objectForKey:cacheKey];
-        if (!result) {
+        id path = self.path;
+        NSImage *result = [imageCache objectForKey:path];
+        if (!result && path) {
             if ([NSThread isMainThread]) {
                 SWLog(@"WARNING: -[%@ %@] was called on the main thread %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), [NSThread callStackSymbols]);
             }
-
-            result = [[NSWorkspace sharedWorkspace] iconForFile:self.path];
-            [imageCache setObject:result forKey:cacheKey];
+            result = [[NSWorkspace sharedWorkspace] iconForFile:path];
+            [imageCache setObject:result forKey:path];
         }
         return result;
     }
