@@ -425,7 +425,7 @@ static int const kScrollThreshold = 50;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             @strongify(self);
             if (self.stateMachine.pendingSwitch) {
-                NSLog(@"Attempt to raise window failed, trying again...");
+                SWLog(@"Attempt to raise %@ failed, trying again...", selectedWindow);
                 [self private_raiseWindow];
             } else {
                 SWWindow *window = self.stateMachine.selectedWindow;

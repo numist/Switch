@@ -128,11 +128,6 @@ static NSMutableSet *loggedWindows;
             [mutableWindowGroupList addObject:group];
             
             if (![loggedWindows containsObject:group]) {
-                if (!group.mainWindow.name) {
-                    SWLog(@"Window for application %@ is not named.", mainWindow.application);
-                } else if (!group.mainWindow.name.length) {
-                    SWLog(@"Window for application %@ has zero-length name.", mainWindow.application);
-                }
                 [loggedWindows addObject:group];
             }
 
