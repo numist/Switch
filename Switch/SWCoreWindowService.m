@@ -288,7 +288,7 @@ static int const kScrollThreshold = 50;
     
     [self.interface disableWindow:selectedWindow];
 
-    [self private_raiseWindow];
+    [self private_raiseWindowWithStartTime:nil];
 }
 
 - (void)stateMachine:(SWStateMachine *)stateMachine wantsWindowClosed:(SWWindow *)window;
@@ -399,10 +399,13 @@ static int const kScrollThreshold = 50;
     [self.interface shouldShowInterface:false];
 }
 
-- (void)private_raiseWindow;
+- (void)private_raiseWindowWithStartTime:(NSDate *)start;
 {
     SWWindow *selectedWindow = self.stateMachine.selectedWindow;
-    if (!selectedWindow) { return; }
+    if (!Check(selectedWindow)) { return; }
+    
+    BOOL firstTry = (start == nil);
+    if (start == nil) { start = [NSDate new]; }
     
     @weakify(self);
     [[SWAccessibilityService sharedService] raiseWindow:selectedWindow completion:^(NSError *error) {
@@ -417,22 +420,37 @@ static int const kScrollThreshold = 50;
         if (selectedIndex == 0) {
             // If the selected index was 0, this action won't change the window order so this code must replay the last update event.
             [self.stateMachine updateWindowList:self.stateMachine.windowList];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                @strongify(self);
+                [self private_verifyRaiseWithStartTime:start window:selectedWindow error:error firstTry:firstTry];
+            });
         } else {
-            // Otherwise, force a window list reload.
-            [[SWWindowListService sharedService] refreshWindowList];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                // Otherwise, force a window list reload.
+                [[SWWindowListService sharedService] refreshWindowListAndWait];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    @strongify(self);
+                    [self private_verifyRaiseWithStartTime:start window:selectedWindow error:error firstTry:firstTry];
+                });
+            });
         }
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            @strongify(self);
-            if (self.stateMachine.pendingSwitch) {
-                SWLog(@"Attempt to raise %@ failed, trying again...", selectedWindow);
-                [self private_raiseWindow];
-            } else {
-                SWWindow *window = self.stateMachine.selectedWindow;
-                [self.interface enableWindow:window];
-            }
-        });
     }];
+}
+
+- (void)private_verifyRaiseWithStartTime:(NSDate *)start window:(SWWindow *)selectedWindow error:(NSError *)error firstTry:(BOOL)firstTry;
+{
+    if (self.stateMachine.pendingSwitch) {
+        SWLog(@"Attempt to raise %@ %@, trying again...", selectedWindow, (error ? [NSString stringWithFormat:@"failed (%@)", error] : @"was ineffective"));
+        [self private_raiseWindowWithStartTime:start];
+    } else {
+        SWWindow *window = self.stateMachine.selectedWindow;
+        [self.interface enableWindow:window];
+        
+        NSTimeInterval elapsed = -[start timeIntervalSinceNow];
+        if (elapsed > (1.0/60.0) || !firstTry) {
+            SWLog(@"Raising window %@ took %.3fs", selectedWindow, elapsed);
+        }
+    }
 }
 
 @end

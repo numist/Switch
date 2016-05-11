@@ -208,9 +208,9 @@ static NSMutableSet *loggedWindows;
     return result;
 }
 
-- (void)refreshWindowList;
+- (void)refreshWindowListAndWait;
 {
-    [self.worker refreshWindowList];
+    [self.worker refreshWindowListAndWait];
 }
 
 #pragma mark - Internal

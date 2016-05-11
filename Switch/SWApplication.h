@@ -23,7 +23,7 @@
 @property (nonatomic, copy, readonly) NSImage *cachedIcon;
 @property (nonatomic, strong, readonly) NSString *name;
 
-- (NSImage *)icon;
+- (NSImage *)loadIcon;
 
 - (BOOL)isActiveApplication;
 - (BOOL)isCurrentApplication;

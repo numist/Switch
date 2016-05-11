@@ -33,6 +33,7 @@
 
 @property (nonatomic, copy, readonly) NSOrderedSet *windows;
 
-- (void)refreshWindowList;
+// Background threads only!
+- (void)refreshWindowListAndWait;
 
 @end

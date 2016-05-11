@@ -123,7 +123,7 @@
     #define Check(exp) _InternalCheck((exp), __FILE__, __LINE__, #exp)
     static inline _Bool _InternalCheck(_Bool result, char *filename, unsigned lineno, char *expr) {
         if (!result) {
-            Log(@"%s:%u: Failed check `%s`", filename, lineno, expr);
+            Log(@"%s:%u: Failed check `%s` %@", filename, lineno, expr, [NSThread callStackSymbols]);
             DebugBreak();
         }
         return result;

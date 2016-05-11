@@ -75,36 +75,40 @@
 
 - (void)loadWindow;
 {
-    CGRect contentRect = self.screen.frame;
-    NSWindow *switcherWindow = [[NSWindow alloc] initWithContentRect:contentRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO screen:self.screen];
-    switcherWindow.movableByWindowBackground = NO;
-    switcherWindow.hasShadow = NO;
-    switcherWindow.opaque = NO;
-    switcherWindow.backgroundColor = [NSColor clearColor];
-    switcherWindow.ignoresMouseEvents = NO;
-    switcherWindow.level = NSPopUpMenuWindowLevel;
-    self.window = switcherWindow;
-    
-    CGRect displayRect = [switcherWindow convertRectFromScreen:contentRect];
-    SWHUDCollectionView *collectionView = [[SWHUDCollectionView alloc] initWithFrame:displayRect];
-    collectionView.dataSource = self;
-    collectionView.delegate = self;
-    self.collectionView = collectionView;
-    
-    self.window.contentView = self.collectionView;
-    self.interfaceLoaded = YES;
+    SWTimeTask(SWCodeBlock({
+        CGRect contentRect = self.screen.frame;
+        NSWindow *switcherWindow = [[NSWindow alloc] initWithContentRect:contentRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO screen:self.screen];
+        switcherWindow.movableByWindowBackground = NO;
+        switcherWindow.hasShadow = NO;
+        switcherWindow.opaque = NO;
+        switcherWindow.backgroundColor = [NSColor clearColor];
+        switcherWindow.ignoresMouseEvents = NO;
+        switcherWindow.level = NSPopUpMenuWindowLevel;
+        self.window = switcherWindow;
+        
+        CGRect displayRect = [switcherWindow convertRectFromScreen:contentRect];
+        SWHUDCollectionView *collectionView = [[SWHUDCollectionView alloc] initWithFrame:displayRect];
+        collectionView.dataSource = self;
+        collectionView.delegate = self;
+        self.collectionView = collectionView;
+        
+        self.window.contentView = self.collectionView;
+        self.interfaceLoaded = YES;
+    }), @"Setting up switcher window");
 }
 
 #pragma mark - SWCoreWindowController
 
 - (void)updateWindowList:(NSOrderedSet *)windowList;
 {
-    // Throw out any cells that aren't needed anymore.
-    NSSet *removedWindows = [[NSSet setWithArray:self.collectionCells.allKeys] sw_minusSet:windowList.set];
-    [self.collectionCells removeObjectsForKeys:removedWindows.allObjects];
+    SWTimeTask(SWCodeBlock({
+        // Throw out any cells that aren't needed anymore.
+        NSSet *removedWindows = [[NSSet setWithArray:self.collectionCells.allKeys] sw_minusSet:windowList.set];
+        [self.collectionCells removeObjectsForKeys:removedWindows.allObjects];
 
-    _windowList = windowList;
-    [self.collectionView reloadData];
+        _windowList = windowList;
+        [self.collectionView reloadData];
+    }), @"Updating switcher window list");
 }
 
 - (void)selectWindow:(SWWindow *)window;

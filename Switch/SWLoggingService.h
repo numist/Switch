@@ -36,12 +36,12 @@
 
 #define SWCodeBlock(...) __VA_ARGS__
 
-#define SWTimeTask(code, fmt, ...) do { \
+#define SWTimeTask(codeBlock, fmt, ...) do { \
         NSDate *start = [NSDate new]; \
-        code \
+        codeBlock \
         NSString *logmsg = [NSString stringWithFormat:fmt, ##__VA_ARGS__]; \
         NSTimeInterval elapsed = -[start timeIntervalSinceNow]; \
-        if (elapsed > (1.0 / 60.0)) { \
+        if (elapsed > (1.0 / ([NSThread isMainThread] ? 60.0 : 10.0))) { \
             SWLog(@"%@ took %.3fs", logmsg, elapsed); \
         } \
     } while(0)

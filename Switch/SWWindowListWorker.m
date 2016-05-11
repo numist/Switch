@@ -52,24 +52,25 @@ static NSTimeInterval refreshInterval = 0.1;
 
 #pragma mark - SWWindowListWorker
 
-- (void)refreshWindowList;
+- (void)refreshWindowListAndWait;
 {
-    dispatch_async(self.private_queue, ^{
+    dispatch_sync(self.private_queue, ^{
         [self private_refreshWindowList];
     });
 }
 
 - (void)private_refreshWindowList;
 {
-    if ([NSThread isMainThread]) {
-        SWLog(@"WARNING: -[%@ %@] was called on the main thread %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), [NSThread callStackSymbols]);
-    }
-    CFArrayRef cgWindowInfoList = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements,  kCGNullWindowID);
-    NSArray *windowInfoList = CFBridgingRelease(cgWindowInfoList);
-    if (![self.windowInfoList isEqualToArray:windowInfoList]) {
-        self.windowInfoList = windowInfoList;
-        [self postNotification:@{@"windows" : self.windowInfoList}];
-    }
+    SWLogBackgroundThreadOnly();
+    
+    SWTimeTask(SWCodeBlock({
+        CFArrayRef cgWindowInfoList = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements,  kCGNullWindowID);
+        NSArray *windowInfoList = CFBridgingRelease(cgWindowInfoList);
+        if (![self.windowInfoList isEqualToArray:windowInfoList]) {
+            self.windowInfoList = windowInfoList;
+            [self postNotification:@{@"windows" : self.windowInfoList}];
+        }
+    }), @"Copying window info list");
 }
 
 @end

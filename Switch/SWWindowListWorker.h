@@ -14,6 +14,6 @@
 
 @interface SWWindowListWorker : NNPollingObject
 
-- (void)refreshWindowList;
+- (void)refreshWindowListAndWait;
 
 @end

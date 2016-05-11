@@ -86,7 +86,7 @@
     
     if (!(self.icon = windowGroup.application.cachedIcon)) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSImage *icon = windowGroup.application.icon;
+            NSImage *icon = windowGroup.application.loadIcon;
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.icon = icon;
             });

@@ -157,7 +157,7 @@
     SWTimeTask(SWCodeBlock({
         // First, raise the window
         if (![haxWindow performAction:(__bridge NSString *)kAXRaiseAction error:&error]) {
-            SWLog(@"Raising %@ window %@ failed after %.3fs: %@", window.application.name, window, [[NSDate date] timeIntervalSinceDate:start], error);
+            SWLog(@"Raise operation for %@ failed after %.3fs: %@", window, [[NSDate date] timeIntervalSinceDate:start], error);
             dispatch_async(dispatch_get_main_queue(), ^{
                 completionBlock(error);
             });
@@ -168,7 +168,7 @@
         if (![window.application isActiveApplication]) {
             NSRunningApplication *runningApplication = [NSRunningApplication runningApplicationWithProcessIdentifier:window.application.pid];
             if (![runningApplication activateWithOptions:NSApplicationActivateIgnoringOtherApps]) {
-                NSString *errorString = [NSString stringWithFormat:@"Raising application %@ failed.", window.application];
+                NSString *errorString = [NSString stringWithFormat:@"Raise operation for %@ failed.", window.application];
                 SWLog(@"%@", errorString);
                 error = [NSError errorWithDomain:@"SWAccessibilityServiceDomain" code:__LINE__ userInfo:@{NSLocalizedDescriptionKey : errorString}];
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -177,7 +177,7 @@
                 return;
             }
         }
-    }), @"Raising %@ window %@", window.application.name, window);
+    }), @"Raise operation for %@", window);
 
     dispatch_async(dispatch_get_main_queue(), ^{
         completionBlock(nil);

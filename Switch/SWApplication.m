@@ -120,7 +120,7 @@ static NSMapTable<NSNumber *, SWApplication *> *objectCache;
     }
 }
 
-- (NSImage *)icon;
+- (NSImage *)loadIcon;
 {
     @synchronized(self) {
         NSImage *result = self.cachedIcon;
