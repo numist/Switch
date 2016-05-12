@@ -439,13 +439,14 @@ static int const kScrollThreshold = 50;
 
 - (void)private_verifyRaiseWithStartTime:(NSDate *)start window:(SWWindow *)selectedWindow error:(NSError *)error firstTry:(BOOL)firstTry;
 {
-    if (self.stateMachine.pendingSwitch) {
-        SWLog(@"Attempt to raise %@ %@, trying again...", selectedWindow, (error ? [NSString stringWithFormat:@"failed (%@)", error] : @"was ineffective"));
+    if (self.stateMachine.pendingSwitch ) {
+        if (selectedWindow != self.stateMachine.selectedWindow) {
+            SWLog(@"User no longer wants to raise %@, giving up after %.3fs", selectedWindow, -[start timeIntervalSinceNow]);
+            return;
+        }
+        SWLog(@"Attempt to raise %@ %@, trying again...", selectedWindow, (error ? [NSString stringWithFormat:@"failed (%@)", error] : @"may have been ineffective"));
         [self private_raiseWindowWithStartTime:start];
     } else {
-        SWWindow *window = self.stateMachine.selectedWindow;
-        [self.interface enableWindow:window];
-        
         NSTimeInterval elapsed = -[start timeIntervalSinceNow];
         if (elapsed > (1.0/60.0) || !firstTry) {
             SWLog(@"Raising window %@ took %.3fs", selectedWindow, elapsed);
