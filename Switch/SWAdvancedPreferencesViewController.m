@@ -23,6 +23,8 @@
 @property (nonatomic, weak) IBOutlet NSButton *groupByMonBox;
 @property (nonatomic, weak) IBOutlet NSButton *statusItemBox;
 
+@property (nonatomic, weak) IBOutlet NSTextField *groupByMonLabel;
+
 @end
 
 
@@ -81,7 +83,9 @@
 {
     NSButton *multimonBox = self.multimonBox;
     NSButton *groupByMonBox = self.groupByMonBox;
+    NSTextField *groupByMonLabel = self.groupByMonLabel;
 
+    groupByMonLabel.textColor = (multimonBox.state == NSOnState) ? [NSColor disabledControlTextColor] : [[NSColor disabledControlTextColor] colorWithAlphaComponent:0.5] ;
     groupByMonBox.enabled = (multimonBox.state == NSOnState);
     groupByMonBox.state = (multimonBox.state == NSOnState && [SWPreferencesService sharedService].multimonGroupByMonitor) ? NSOnState : NSOffState;
 }
