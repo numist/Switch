@@ -161,6 +161,11 @@
         return NO;
     }
     
+    // Windows on different screens are not equal
+    if (![self.screen isEqual:window.screen]) {
+        return NO;
+    }
+    
     // This is a special case for catching the shadow opening for sheets
     if (self.frame.size.height < 20.0 && [self.windowDescription[(__bridge NSString *)kCGWindowAlpha] floatValue] < 1.0) {
         return YES;
@@ -173,11 +178,19 @@
         return NO;
     }
     
-    if (![self enclosedByWindow:window]) {
-        return NO;
+    // This is intended to fix some window grouping issues around full-screen applications (such as Xcode).
+    if (
+        // higher window and lower window have the same origin.x, and
+        self.frame.origin.x == window.frame.origin.x &&
+        // higher window and lower window have the same size.width, and
+        self.frame.size.width == window.frame.size.width &&
+        // higer window and lower window intersect
+        !CGRectIsNull(CGRectIntersection(self.frame, window.frame))
+    ) {
+        return YES;
     }
     
-    return YES;
+    return [self enclosedByWindow:window];
 }
 
 - (NNVec2)offsetOfCenterToCenterOfWindow:(SWWindow *)window;

@@ -26,7 +26,7 @@
 - (NSImage *)loadIcon;
 
 - (BOOL)isActiveApplication;
-- (BOOL)isCurrentApplication;
+- (BOOL)isLiveApplication;
 - (BOOL)canBeActivated;
 
 @end

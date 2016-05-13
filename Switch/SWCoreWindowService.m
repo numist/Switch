@@ -447,6 +447,12 @@ static int const kScrollThreshold = 50;
         SWLog(@"Attempt to raise %@ %@, trying again...", selectedWindow, (error ? [NSString stringWithFormat:@"failed (%@)", error] : @"may have been ineffective"));
         [self private_raiseWindowWithStartTime:start];
     } else {
+        SWWindow *window = self.stateMachine.selectedWindow;
+        // window will be nil unless the user has re-invoked the interface.
+        if (Unlikely(window)) {
+            [self.interface enableWindow:window];
+        }
+        
         NSTimeInterval elapsed = -[start timeIntervalSinceNow];
         if (elapsed > (1.0/60.0) || !firstTry) {
             SWLog(@"Raising window %@ took %.3fs", selectedWindow, elapsed);

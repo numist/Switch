@@ -11,6 +11,9 @@
 		B0AB657ABC91AAC1D332D080 /* libPods-Switch-SwitchTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1E510FB1A0E68F4315B2D76 /* libPods-Switch-SwitchTests.a */; };
 		BC097E6419DB87BA00B5F447 /* SWScrollControl.m in Sources */ = {isa = PBXBuildFile; fileRef = BC097E6319DB87BA00B5F447 /* SWScrollControl.m */; };
 		BC097E6619DBDA0200B5F447 /* SWScrollControlTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC097E6519DBDA0200B5F447 /* SWScrollControlTests.m */; };
+		BC0BBE8A1CE64224000AB84E /* SWXcodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC0BBE891CE64224000AB84E /* SWXcodeTests.m */; };
+		BC0BBE921CE64BD9000AB84E /* SWFinderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC0BBE911CE64BD9000AB84E /* SWFinderTests.m */; };
+		BC0BBE941CE65263000AB84E /* SWSanityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC0BBE931CE65263000AB84E /* SWSanityTests.m */; };
 		BC15C903191F446800595EAB /* debugger.c in Sources */ = {isa = PBXBuildFile; fileRef = BC15C901191F446800595EAB /* debugger.c */; };
 		BC19D3DA181436FB009CEC1F /* SWPreferencesService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3D9181436FB009CEC1F /* SWPreferencesService.m */; };
 		BC19D3DD18143AB1009CEC1F /* SWAccessibilityService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3DC18143AB1009CEC1F /* SWAccessibilityService.m */; };
@@ -242,6 +245,9 @@
 		BC097E6219DB87BA00B5F447 /* SWScrollControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWScrollControl.h; sourceTree = "<group>"; };
 		BC097E6319DB87BA00B5F447 /* SWScrollControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWScrollControl.m; sourceTree = "<group>"; };
 		BC097E6519DBDA0200B5F447 /* SWScrollControlTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWScrollControlTests.m; sourceTree = "<group>"; };
+		BC0BBE891CE64224000AB84E /* SWXcodeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWXcodeTests.m; sourceTree = "<group>"; };
+		BC0BBE911CE64BD9000AB84E /* SWFinderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWFinderTests.m; sourceTree = "<group>"; };
+		BC0BBE931CE65263000AB84E /* SWSanityTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWSanityTests.m; sourceTree = "<group>"; };
 		BC15C901191F446800595EAB /* debugger.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = debugger.c; sourceTree = "<group>"; };
 		BC15C902191F446800595EAB /* debugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debugger.h; sourceTree = "<group>"; };
 		BC19D3D8181436FB009CEC1F /* SWPreferencesService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWPreferencesService.h; sourceTree = "<group>"; };
@@ -533,14 +539,17 @@
 			children = (
 				BC8E07AB188C890400C208D4 /* SWChromeTests.m */,
 				BCA5E9AC187A4020004D70EE /* SWDashTests.m */,
+				BC0BBE911CE64BD9000AB84E /* SWFinderTests.m */,
 				BCCE8CF818093037006B0059 /* SWGithubTests.m */,
 				BC1B463F1911A56100246529 /* SWIsolatorTests.m */,
 				BC3C78C3188262EB0021C244 /* SWMacVimTests.m */,
 				BCCE8CF618092CDF006B0059 /* SWPowerboxTests.m */,
 				BCCE8CF21809266A006B0059 /* SWSafariTests.m */,
+				BC0BBE931CE65263000AB84E /* SWSanityTests.m */,
 				BCCE8CF41809297B006B0059 /* SWSheetTests.m */,
 				BCCE8CEF18091F75006B0059 /* SWTweetbotTests.m */,
 				BCA8AD5A18AC5E3F0059F253 /* SWWordTests.m */,
+				BC0BBE891CE64224000AB84E /* SWXcodeTests.m */,
 			);
 			name = Regression;
 			sourceTree = "<group>";
@@ -1171,10 +1180,13 @@
 				BC301A9019D6328100E64ADF /* SWStateMachineTests.m in Sources */,
 				BCCE8CF018091F75006B0059 /* SWTweetbotTests.m in Sources */,
 				BCA5E9AA187A3CCA004D70EE /* SWWindowListServiceTestSuperclass.m in Sources */,
+				BC0BBE8A1CE64224000AB84E /* SWXcodeTests.m in Sources */,
 				BC8E07AC188C890400C208D4 /* SWChromeTests.m in Sources */,
 				BC1B46401911A56100246529 /* SWIsolatorTests.m in Sources */,
 				BCCE8CEB18091A4F006B0059 /* NSWindow+NNScreenCapture.m in Sources */,
+				BC0BBE921CE64BD9000AB84E /* SWFinderTests.m in Sources */,
 				BCCE8CF51809297B006B0059 /* SWSheetTests.m in Sources */,
+				BC0BBE941CE65263000AB84E /* SWSanityTests.m in Sources */,
 				BCF5C4A019DB5B7A00E59B62 /* SWImageComparisonTests.m in Sources */,
 				BCA8AD5B18AC5E3F0059F253 /* SWWordTests.m in Sources */,
 				BCCE8CF718092CDF006B0059 /* SWPowerboxTests.m in Sources */,

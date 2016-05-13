@@ -160,6 +160,13 @@ static NSMutableSet *loggedWindows;
         addWindowGroup();
     }
     
+    // Hacky filter to remove Finder Quicklook windows
+    for (SWWindowGroup *group in [mutableWindowGroupList copy]) {
+        if (group.windows.count == 1 && [group.application.name isEqualToString:@"Finder"] && group.mainWindow.name.length == 0 && !group.application.isActiveApplication) {
+            [mutableWindowGroupList removeObject:group];
+        }
+    }
+    
     return [mutableWindowGroupList reversedOrderedSet];
 }
 

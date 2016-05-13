@@ -15,12 +15,23 @@
 #import "SWTestApplication.h"
 
 
+@interface SWTestApplication ()
+
+@property (nonatomic, assign, readwrite) pid_t pid;
+@property (nonatomic, copy, readwrite) NSImage *icon;
+@property (nonatomic, strong, readwrite) NSString *name;
+@property (nonatomic, assign, readwrite, getter=isLiveApplication) BOOL liveApplication;
+@property (nonatomic, assign, readwrite) BOOL canBeActivated;
+
+@end
+
+
 @implementation SWTestApplication
 
 @synthesize pid = _pid;
 @synthesize icon = _icon;
 @synthesize name = _name;
-@synthesize currentApplication = _currentApplication;
+@synthesize liveApplication = _liveApplication;
 @synthesize canBeActivated = _canBeActivated;
 
 - (instancetype)initWithPID:(pid_t)pid name:(NSString *)name;
@@ -29,7 +40,8 @@
 
     self->_pid = pid;
     self->_name = name;
-    self->_currentApplication = [name isEqualToString:@"Switch"];
+    self->_active = [name isEqualToString:@"Switch"];
+    self->_liveApplication = YES;
     self->_canBeActivated = ^{
         NSArray *applicationNamesThatCannotBeActivated = @[
             @"com.apple.security.pboxd",

@@ -17,11 +17,6 @@
 
 @interface SWTestApplication : SWApplication
 
-@property (nonatomic, assign, readwrite) pid_t pid;
-@property (nonatomic, copy, readwrite) NSImage *icon;
-@property (nonatomic, strong, readwrite) NSString *name;
 @property (nonatomic, assign, readwrite, getter=isActiveApplication) BOOL active;
-@property (nonatomic, assign, readwrite, getter=isCurrentApplication) BOOL currentApplication;
-@property (nonatomic, assign, readwrite) BOOL canBeActivated;
 
 @end

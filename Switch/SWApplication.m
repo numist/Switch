@@ -144,7 +144,7 @@ static NSMapTable<NSNumber *, SWApplication *> *objectCache;
     return self.runningApplication.active;
 }
 
-- (BOOL)isCurrentApplication;
+- (BOOL)isLiveApplication;
 {
     return self.pid == [[NSProcessInfo processInfo] processIdentifier];
 }

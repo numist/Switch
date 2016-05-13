@@ -91,7 +91,7 @@
 {
     dispatch_async(self.haxQueue, ^{
         // If sending events to Switch itself, we have to use the main thread!
-        if ([window.application isCurrentApplication]) {
+        if ([window.application isLiveApplication]) {
             dispatch_sync(dispatch_get_main_queue(), ^{
                 [self _raiseWindow:window completion:completionBlock];
             });
@@ -105,7 +105,7 @@
 {
     dispatch_async(self.haxQueue, ^{
         // If sending events to Switch itself, we have to use the main thread!
-        if ([window.application isCurrentApplication]) {
+        if ([window.application isLiveApplication]) {
             dispatch_sync(dispatch_get_main_queue(), ^{
                 [self _closeWindow:window completion:completionBlock];
             });

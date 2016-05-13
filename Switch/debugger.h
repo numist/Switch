@@ -213,6 +213,9 @@
         } while(0)
 #endif // DEBUG
 
+#define Likely(x)      __builtin_expect(!!(x), 1)
+#define Unlikely(x)    __builtin_expect(!!(x), 0)
+
 #endif // _DEBUGGER_H_
 
 #endif // __OBJC__
