@@ -14,9 +14,11 @@
 
 #import "SWWindowListServiceTestSuperclass.h"
 
+
 @interface SWWordTests : SWWindowListServiceTestSuperclass
 
 @end
+
 
 @implementation SWWordTests
 
