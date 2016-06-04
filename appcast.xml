@@ -4,126 +4,140 @@
       <title>Switch Updates</title>
       <link>https://raw.github.com/numist/Switch/develop/appcast.xml</link>
       <language>en</language>
+      <item>
+        <title>0.0.9 (β)</title>
+        <pubDate>Sat, 4 Jun 2016 14:59:29 -0800</pubDate>
+        <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.9</sparkle:releaseNotesLink>
+        <enclosure
+          length="2162815"
+          sparkle:dsaSignature="MC0CFQD6meO/1LMMcSEaaKt+bFBiDgctGwIUIOs/PQJ0oLi5Z2w01WztkaGOHVg="
+          sparkle:shortVersionString="0.0.9 (β)"
+          sparkle:version="0.0.9"
+          type="application/octet-stream"
+          url="https://github.com/numist/Switch/releases/download/0.0.9/Switch.zip"
+        />
+        <sparkle:minimumSystemVersion>10.10.0</sparkle:minimumSystemVersion>
+      </item>
+  
+      <item>
+        <title>0.0.8 (β)</title>
+        <pubDate>Sun, 11 May 2014 07:18:12 -0500</pubDate>
+        <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.8</sparkle:releaseNotesLink>
+        <enclosure
+          length="1691802"
+          sparkle:dsaSignature="MCwCFHKGmnjYu9HDSRNn9ymUak4qbRGLAhRRcYPXwxs1LOhQSo+BeCclARcX8A=="
+          sparkle:shortVersionString="0.0.8 (β)"
+          sparkle:version="0.0.8"
+          type="application/octet-stream"
+          url="https://github.com/numist/Switch/releases/download/0.0.8/Switch.zip"
+        />
+        <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
+      </item>
 
-          <item>
-            <title>0.0.8 (β)</title>
-            <pubDate>Sun, 11 May 2014 07:18:12 -0500</pubDate>
-            <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.8</sparkle:releaseNotesLink>
-            <enclosure
-              length="1691802"
-              sparkle:dsaSignature="MCwCFHKGmnjYu9HDSRNn9ymUak4qbRGLAhRRcYPXwxs1LOhQSo+BeCclARcX8A=="
-              sparkle:shortVersionString="0.0.8 (β)"
-              sparkle:version="0.0.8"
-              type="application/octet-stream"
-              url="https://github.com/numist/Switch/releases/download/0.0.8/Switch.zip"
-            />
-            <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
-          </item>
+    <item>
+      <title>0.0.7 (β)</title>
+      <pubDate>Tue, 11 Feb 2014 23:04:43 -0700</pubDate>
+      <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.7</sparkle:releaseNotesLink>
+      <enclosure
+        length="1572758"
+        sparkle:dsaSignature="MCwCFDncLlS3DbVa1kqp563TMwK1AmkkAhQqnpECz1Oxv5lCbLzsaQ5tPdrjdw=="
+        sparkle:shortVersionString="0.0.7 (β)"
+        sparkle:version="0.0.7"
+        type="application/octet-stream"
+        url="https://github.com/numist/Switch/releases/download/0.0.7/Switch.zip"
+      />
+      <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
+    </item>
 
-        <item>
-          <title>0.0.7 (β)</title>
-          <pubDate>Tue, 11 Feb 2014 23:04:43 -0700</pubDate>
-          <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.7</sparkle:releaseNotesLink>
-          <enclosure
-            length="1572758"
-            sparkle:dsaSignature="MCwCFDncLlS3DbVa1kqp563TMwK1AmkkAhQqnpECz1Oxv5lCbLzsaQ5tPdrjdw=="
-            sparkle:shortVersionString="0.0.7 (β)"
-            sparkle:version="0.0.7"
-            type="application/octet-stream"
-            url="https://github.com/numist/Switch/releases/download/0.0.7/Switch.zip"
-          />
-          <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
-        </item>
+    <item>
+      <title>0.0.6 (β)</title>
+      <pubDate>Sun, 19 Jan 2014 16:59:45 -0800</pubDate>
+      <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.6</sparkle:releaseNotesLink>
+      <enclosure
+        length="2385715"
+        sparkle:dsaSignature="MCwCFBV2LUqtPBL+wh6BnCLuApm2DBDiAhQdMMPgpLZud2FgYEjbkF1JFV0ARA=="
+        sparkle:shortVersionString="0.0.6 (β)"
+        sparkle:version="0.0.6"
+        type="application/octet-stream"
+        url="https://github.com/numist/Switch/releases/download/0.0.6/Switch.zip"
+      />
+      <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
+    </item>
 
-        <item>
-          <title>0.0.6 (β)</title>
-          <pubDate>Sun, 19 Jan 2014 16:59:45 -0800</pubDate>
-          <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.6</sparkle:releaseNotesLink>
-          <enclosure
-            length="2385715"
-            sparkle:dsaSignature="MCwCFBV2LUqtPBL+wh6BnCLuApm2DBDiAhQdMMPgpLZud2FgYEjbkF1JFV0ARA=="
-            sparkle:shortVersionString="0.0.6 (β)"
-            sparkle:version="0.0.6"
-            type="application/octet-stream"
-            url="https://github.com/numist/Switch/releases/download/0.0.6/Switch.zip"
-          />
-          <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
-        </item>
+    <item>
+      <title>0.0.5 (β)</title>
+      <pubDate>Thu, 31 Oct 2013 20:20:20 -0700</pubDate>
+      <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.5</sparkle:releaseNotesLink>
+      <enclosure
+        length="2285821"
+        sparkle:dsaSignature="MC0CFD1aVV04JvWrkoHHnOK8KOwbcUfBAhUA3ey3JQMl14XOoW8A8ce2yigGi54="
+        sparkle:shortVersionString="0.0.5 (β)"
+        sparkle:version="0.0.5"
+        type="application/octet-stream"
+        url="https://github.com/numist/Switch/releases/download/0.0.5/Switch.zip"
+      />
+      <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
+    </item>
 
-        <item>
-          <title>0.0.5 (β)</title>
-          <pubDate>Thu, 31 Oct 2013 20:20:20 -0700</pubDate>
-          <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.5</sparkle:releaseNotesLink>
-          <enclosure
-            length="2285821"
-            sparkle:dsaSignature="MC0CFD1aVV04JvWrkoHHnOK8KOwbcUfBAhUA3ey3JQMl14XOoW8A8ce2yigGi54="
-            sparkle:shortVersionString="0.0.5 (β)"
-            sparkle:version="0.0.5"
-            type="application/octet-stream"
-            url="https://github.com/numist/Switch/releases/download/0.0.5/Switch.zip"
-          />
-          <sparkle:minimumSystemVersion>10.9.0</sparkle:minimumSystemVersion>
-        </item>
+    <item>
+      <title>0.0.4 (α)</title>
+      <pubDate>Mon, 14 Oct 2013 22:39:32 -0700</pubDate>
+      <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.4</sparkle:releaseNotesLink>
+      <enclosure
+        length="2263450"
+        sparkle:dsaSignature="MC0CFFAaOWoV0Rsq79oVEhDwQyFQEk4+AhUA1HzhMPg+CqVazVaX9YFoz5VxgPQ="
+        sparkle:shortVersionString="0.0.4 (α)"
+        sparkle:version="0.0.4"
+        type="application/octet-stream"
+        url="https://github.com/numist/Switch/releases/download/0.0.4/Switch.zip"
+      />
+      <sparkle:minimumSystemVersion>10.8.0</sparkle:minimumSystemVersion>
+    </item>
 
-        <item>
-          <title>0.0.4 (α)</title>
-          <pubDate>Mon, 14 Oct 2013 22:39:32 -0700</pubDate>
-          <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.4</sparkle:releaseNotesLink>
-          <enclosure
-            length="2263450"
-            sparkle:dsaSignature="MC0CFFAaOWoV0Rsq79oVEhDwQyFQEk4+AhUA1HzhMPg+CqVazVaX9YFoz5VxgPQ="
-            sparkle:shortVersionString="0.0.4 (α)"
-            sparkle:version="0.0.4"
-            type="application/octet-stream"
-            url="https://github.com/numist/Switch/releases/download/0.0.4/Switch.zip"
-          />
-          <sparkle:minimumSystemVersion>10.8.0</sparkle:minimumSystemVersion>
-        </item>
+    <item>
+      <title>0.0.3 (α)</title>
+      <pubDate>Fri, 11 Oct 2013 11:25:32 -0700</pubDate>
+      <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.3</sparkle:releaseNotesLink>
+      <enclosure
+        length="2202265"
+        sparkle:dsaSignature="MCwCFGyY+uFqv2f45zWG2chbTXQTGlgLAhQH47Jh8/u4Ip4ySyBUDUxZRgsBaw=="
+        sparkle:shortVersionString="0.0.3 (α)"
+        sparkle:version="0.0.3"
+        type="application/octet-stream"
+        url="https://github.com/numist/Switch/releases/download/0.0.3/Switch.zip"
+      />
+      <sparkle:minimumSystemVersion>10.8.0</sparkle:minimumSystemVersion>
+    </item>
 
-        <item>
-          <title>0.0.3 (α)</title>
-          <pubDate>Fri, 11 Oct 2013 11:25:32 -0700</pubDate>
-          <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.3</sparkle:releaseNotesLink>
-          <enclosure
-            length="2202265"
-            sparkle:dsaSignature="MCwCFGyY+uFqv2f45zWG2chbTXQTGlgLAhQH47Jh8/u4Ip4ySyBUDUxZRgsBaw=="
-            sparkle:shortVersionString="0.0.3 (α)"
-            sparkle:version="0.0.3"
-            type="application/octet-stream"
-            url="https://github.com/numist/Switch/releases/download/0.0.3/Switch.zip"
-          />
-          <sparkle:minimumSystemVersion>10.8.0</sparkle:minimumSystemVersion>
-        </item>
+    <item>
+      <title>0.0.2 (α)</title>
+      <pubDate>Wed, 7 Aug 2013 12:50:36 -0700</pubDate>
+      <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.2</sparkle:releaseNotesLink>
+      <enclosure
+        length="2030535"
+        sparkle:dsaSignature="MC4CFQDroYQ9CK4iTnzcVG5iR2SAEf4B9QIVAMiaOSpL5+WG9QhctIoFX7e+NzAX"
+        sparkle:shortVersionString="0.0.2 (α)"
+        sparkle:version="0.0.2"
+        type="application/octet-stream"
+        url="https://github.com/numist/Switch/releases/download/0.0.2/Switch.zip"
+      />
+      <sparkle:minimumSystemVersion>10.8.0</sparkle:minimumSystemVersion>
+    </item>
 
-        <item>
-          <title>0.0.2 (α)</title>
-          <pubDate>Wed, 7 Aug 2013 12:50:36 -0700</pubDate>
-          <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.2</sparkle:releaseNotesLink>
-          <enclosure
-            length="2030535"
-            sparkle:dsaSignature="MC4CFQDroYQ9CK4iTnzcVG5iR2SAEf4B9QIVAMiaOSpL5+WG9QhctIoFX7e+NzAX"
-            sparkle:shortVersionString="0.0.2 (α)"
-            sparkle:version="0.0.2"
-            type="application/octet-stream"
-            url="https://github.com/numist/Switch/releases/download/0.0.2/Switch.zip"
-          />
-          <sparkle:minimumSystemVersion>10.8.0</sparkle:minimumSystemVersion>
-        </item>
-
-         <item>
-            <title>0.0.1 (α)</title>
-            <pubDate>Wed, 17 Jul 2013 23:15:04 -0700</pubDate>
-            <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.1</sparkle:releaseNotesLink>
-            <enclosure
-              length="2028382"
-              sparkle:dsaSignature="MC0CFQC3jSGqaCJeUhXgQUZt9zbQupe+lAIUZH7o3EGzkm0IbYJxrhHUIyJMr44="
-              sparkle:shortVersionString="0.0.1 (α)"
-              sparkle:version="0.0.1"
-              type="application/octet-stream"
-              url="https://github.com/numist/Switch/releases/download/0.0.1/Switch.zip"
-            />
-            <sparkle:minimumSystemVersion>10.8.0</sparkle:minimumSystemVersion>
-         </item>
+     <item>
+        <title>0.0.1 (α)</title>
+        <pubDate>Wed, 17 Jul 2013 23:15:04 -0700</pubDate>
+        <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.1</sparkle:releaseNotesLink>
+        <enclosure
+          length="2028382"
+          sparkle:dsaSignature="MC0CFQC3jSGqaCJeUhXgQUZt9zbQupe+lAIUZH7o3EGzkm0IbYJxrhHUIyJMr44="
+          sparkle:shortVersionString="0.0.1 (α)"
+          sparkle:version="0.0.1"
+          type="application/octet-stream"
+          url="https://github.com/numist/Switch/releases/download/0.0.1/Switch.zip"
+        />
+        <sparkle:minimumSystemVersion>10.8.0</sparkle:minimumSystemVersion>
+     </item>
 
    </channel>
 </rss>
