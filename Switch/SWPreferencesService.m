@@ -36,6 +36,7 @@ static NSString const * const kSWFirstLaunchKey = @"firstLaunch";
 static NSString const * const kSWMultimonInterfaceKey = @"multimonInterface";
 static NSString const * const kSWMultimonGroupByMonitorKey = @"multimonGroupByMonitor";
 static NSString const * const kSWShowStatusItemKey = @"showStatusItem";
+static NSString const * const kSWAppcastURLKey = @"SUFeedURL";
 
 
 @interface SWPreferencesService ()
@@ -116,6 +117,7 @@ generateObjectPropertyMethods(GENERATED_obj_##setter, GENERATED_obj_##property, 
 generateBoolPropertyMethods(setMultimonInterface:, multimonInterface, kSWMultimonInterfaceKey)
 generateBoolPropertyMethods(setMultimonGroupByMonitor:, multimonGroupByMonitor, kSWMultimonGroupByMonitorKey)
 generateBoolPropertyMethods(setShowStatusItem:, showStatusItem, kSWShowStatusItemKey)
+generateObjectPropertyMethods(setAppcastURL:, appcastURL, kSWAppcastURLKey)
 
 #pragma mark Preferences: default values
 
@@ -129,6 +131,7 @@ generateBoolPropertyMethods(setShowStatusItem:, showStatusItem, kSWShowStatusIte
             kSWMultimonInterfaceKey : @YES,
             kSWMultimonGroupByMonitorKey : @NO,
             kSWShowStatusItemKey : @YES,
+            kSWAppcastURLKey : @"https://raw.github.com/numist/Switch/develop/appcast.xml",
         };
     });
     return _defaultValues;
@@ -147,6 +150,9 @@ generateBoolPropertyMethods(setShowStatusItem:, showStatusItem, kSWShowStatusIte
 
 - (void)private_setObject:(id)object forKey:(NSString const * const)key;
 {
+    if (object == nil) {
+        object = self.defaultValues[key];
+    }
     [[NSUserDefaults standardUserDefaults] setObject:object forKey:[key copy]];
 }
 

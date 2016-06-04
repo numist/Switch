@@ -35,11 +35,17 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification;
 {
     [[NNServiceManager sharedManager] registerAllPossibleServices];
+    
+    NSURL *feedURL = [NSURL URLWithString:[SWPreferencesService sharedService].appcastURL];
+    if (!feedURL) {
+        [SWPreferencesService sharedService].appcastURL = nil;
+        feedURL = [NSURL URLWithString:[SWPreferencesService sharedService].appcastURL];
+    }
+    Assert(feedURL);
+    [SUUpdater sharedUpdater].feedURL = feedURL;
  
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"81d830d8a7181d7e0df6eeb805bb9728" delegate:self];
     [[BITHockeyManager sharedHockeyManager] startManager];
-    
-    // Force call to +[SWApplicaton initialize]
     
     SWLog(@"Launched %@ %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:(__bridge id)kCFBundleNameKey], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]);
 }

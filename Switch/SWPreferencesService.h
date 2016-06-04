@@ -23,7 +23,8 @@
 @property (nonatomic, assign, readwrite) _Bool multimonInterface;
 @property (nonatomic, assign, readwrite) _Bool multimonGroupByMonitor;
 @property (nonatomic, assign, readwrite) _Bool showStatusItem;
+@property (nonatomic, strong, readwrite, null_resettable) NSString *appcastURL;
 
-- (void)showPreferencesWindow:(id)sender;
+- (void)showPreferencesWindow:(nonnull id)sender;
 
 @end
