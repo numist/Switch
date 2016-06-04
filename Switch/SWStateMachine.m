@@ -66,44 +66,6 @@
     
     self.delegate = delegate;
     
-    @weakify(self);
-    
-    despatch_sync_main_reentrant(^{
-        // interfaceVisible = ((invoked || pendingSwitch) && displayTimer == nil && windowListLoaded)
-        RAC(self, interfaceVisible) = [[RACSignal
-        combineLatest:@[RACObserve(self, invoked), RACObserve(self, displayTimer), RACObserve(self, pendingSwitch), RACObserve(self, windowListLoaded)]
-        reduce:^(NSNumber *invoked, NSNumber *displayTimer, NSNumber *pendingSwitch, NSNumber *windowListLoaded){
-            return @((invoked.boolValue || pendingSwitch.boolValue) && !displayTimer.boolValue && windowListLoaded.boolValue);
-        }]
-        distinctUntilChanged];
-        
-        // Initial setup and final teardown of the switcher.
-        RAC(self, active) = [[RACSignal
-        combineLatest:@[RACObserve(self, invoked), RACObserve(self, pendingSwitch)]
-        reduce:^(NSNumber *invoked, NSNumber *pendingSwitch){
-            return @(invoked.boolValue || pendingSwitch.boolValue);
-        }]
-        distinctUntilChanged];
-        
-        // Update the selected cell in the collection view when the selector is updated.
-        RAC(self, selectedWindow) = RACObserve(self, selector.selectedWindow);
-
-        // raise when (pendingSwitch && windowListLoaded)
-        [[[[RACSignal
-        combineLatest:@[RACObserve(self, pendingSwitch), RACObserve(self, windowListLoaded)]
-        reduce:^(NSNumber *pendingSwitch, NSNumber *windowListLoaded){
-            return @(pendingSwitch.boolValue && windowListLoaded.boolValue);
-        }]
-        distinctUntilChanged]
-        filter:^(NSNumber *shouldRaise) {
-            return shouldRaise.boolValue;
-        }]
-        subscribeNext:^(NSNumber *shouldRaise) {
-            @strongify(self);
-            [self private_raiseSelectedWindow];
-        }];
-    });
-    
     return self;
 }
 
@@ -130,7 +92,11 @@
         Check(!self.windowList.count);
         Check(!self.windowListLoaded);
         self.windowListUpdates = true;
-    } else {
+    }
+
+    [self private_updateInterfaceVisible];
+
+    if (!active) {
         self.windowListUpdates = false;
         [self private_updateWindowList:nil];
         Check(!self.windowList.count);
@@ -152,13 +118,55 @@
     self->_interfaceVisible = interfaceVisible;
 
     if (interfaceVisible) {
-        [self private_adjustSelector];
+        [self private_adjustSelectorIfNecessary];
     }
 }
 
-- (void)setInvoked:(_Bool)invoked;
-{
-    self->_invoked = invoked;
+- (void)setInvoked:(bool)invoked {
+    if (invoked == _invoked) {
+        return;
+    }
+    _invoked = invoked;
+    
+    [self private_updateActive];
+}
+
+- (void)setPendingSwitch:(bool)pendingSwitch {
+    if (pendingSwitch == _pendingSwitch) {
+        return;
+    }
+    _pendingSwitch = pendingSwitch;
+    
+    [self private_updateActive];
+    [self private_raiseWindowIfNeeded];
+}
+
+- (void)setDisplayTimer:(bool)displayTimer {
+    if (displayTimer == _displayTimer) {
+        return;
+    }
+    _displayTimer = displayTimer;
+    
+    [self private_updateInterfaceVisible];
+}
+
+- (void)setWindowListLoaded:(bool)windowListLoaded {
+    if (windowListLoaded == _windowListLoaded) {
+        return;
+    }
+    _windowListLoaded = windowListLoaded;
+
+    [self private_updateInterfaceVisible];
+    [self private_raiseWindowIfNeeded];
+}
+
+- (void)setSelector:(SWSelector *)selector {
+    if (selector == _selector) {
+        return;
+    }
+    _selector = selector;
+
+    [self private_updateSelectedWindow];
 }
 
 #pragma mark - Feedback
@@ -237,7 +245,7 @@
 
     if (!self.windowList) { return; }
 
-    [self private_adjustSelector];
+    [self private_adjustSelectorIfNecessary];
 
     NSUInteger index = [self.selector.windowList indexOfObject:window];
     Check(index < self.selector.windowList.count || index == NSNotFound);
@@ -272,11 +280,11 @@
 
 #pragma mark - Internal
 
-- (void)private_adjustSelector;
+- (void)private_adjustSelectorIfNecessary;
 {
     if (!self.selectorAdjusted) {
-        Check(self.windowListLoaded);
-        Check(self.selector.windowList == nil);
+        Assert(self.windowListLoaded);
+        Assert(self.selector.windowList == nil);
         if (self.selector.selectedIndex == 1 && [self.windowList count] > 1 && ![CLASS_CAST(SWWindow, [self.windowList objectAtIndex:0]).application isActiveApplication]) {
             self.selector = [[SWSelector new] updateWithWindowList:self.windowList];
         }
@@ -304,10 +312,8 @@
     
     if (!self.windowListLoaded) {
         self.windowListLoaded = true;
-    } else {
-        if (self.selectorAdjusted) {
-            self.selector = [self.selector updateWithWindowList:windowList];
-        }
+    } else if (self.selectorAdjusted) {
+        self.selector = [self.selector updateWithWindowList:windowList];
     }
 
     if (self.pendingSwitch && [[windowList firstObject] isEqual:self.selectedWindow] && [self.selectedWindow.application isActiveApplication]) {
@@ -319,7 +325,7 @@
 {
     BailUnless(self.pendingSwitch && self.windowListLoaded,);
     
-    [self private_adjustSelector];
+    [self private_adjustSelectorIfNecessary];
     
     SWWindow *selectedWindow = self.selector.selectedWindow;
     _Bool noSelection = !selectedWindow;
@@ -331,6 +337,35 @@
 
     id<SWStateMachineDelegate> delegate = self.delegate;
     [delegate stateMachine:self wantsWindowRaised:selectedWindow];
+}
+
+#pragma mark Computed property updaters
+
+- (void)private_updateInterfaceVisible {
+    _Bool interfaceVisible = (_invoked || _pendingSwitch) && !_displayTimer && _windowListLoaded;
+    if (self.interfaceVisible != interfaceVisible) {
+        self.interfaceVisible = interfaceVisible;
+    }
+}
+
+- (void)private_updateActive {
+    _Bool active = _invoked || _pendingSwitch;
+    if (self.active != active) {
+        self.active = active;
+    }
+}
+
+- (void)private_updateSelectedWindow {
+    SWWindow *selectedWindow = _selector.selectedWindow;
+    if (self.selectedWindow != selectedWindow) {
+        self.selectedWindow = selectedWindow;
+    }
+}
+
+- (void)private_raiseWindowIfNeeded {
+    if (_pendingSwitch && _windowListLoaded) {
+        [self private_raiseSelectedWindow];
+    }
 }
 
 @end
