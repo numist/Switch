@@ -1,0 +1,58 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "7813A842645BE7C2797044B106DF61000B777F23",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "7813A842645BE7C2797044B106DF61000B777F23" : 0,
+    "EF1CF5E1F342919DE309B5C9DAEDDCF1D12D0402" : 0,
+    "56E0DF09841938382F9CA71E053221BC4F783ED8" : 0,
+    "615520525A98A7462B4E8E35B54D08692DEA59B9" : 0,
+    "51B210D0D41486D3ADD6940D57E4480BBD4DE4C5" : 0,
+    "E084C86B03F81D63323C9E7510697EA528A758C7" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "4ADD4D6C-2128-42F3-BA31-26DE2DC414D7",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "7813A842645BE7C2797044B106DF61000B777F23" : "Switch",
+    "EF1CF5E1F342919DE309B5C9DAEDDCF1D12D0402" : "SwitchFrameworks\/Sparkle",
+    "56E0DF09841938382F9CA71E053221BC4F783ED8" : "SwitchFrameworks\/Haxcessibility",
+    "615520525A98A7462B4E8E35B54D08692DEA59B9" : "SwitchFrameworks\/NNKit",
+    "51B210D0D41486D3ADD6940D57E4480BBD4DE4C5" : "SwitchFrameworks\/ReactiveCocoa",
+    "E084C86B03F81D63323C9E7510697EA528A758C7" : "SwitchFrameworks\/ReactiveCocoa\/Carthage\/Checkouts\/xcconfigs"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Switch",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 203,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Switch.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "git:\/\/github.com\/numist\/ReactiveCocoa.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "51B210D0D41486D3ADD6940D57E4480BBD4DE4C5"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "git:\/\/github.com\/numist\/Haxcessibility.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "56E0DF09841938382F9CA71E053221BC4F783ED8"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "git:\/\/github.com\/numist\/NNKit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "615520525A98A7462B4E8E35B54D08692DEA59B9"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:numist\/Switch.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "7813A842645BE7C2797044B106DF61000B777F23"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/jspahrsummers\/xcconfigs.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E084C86B03F81D63323C9E7510697EA528A758C7"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "git:\/\/github.com\/numist\/Sparkle.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "EF1CF5E1F342919DE309B5C9DAEDDCF1D12D0402"
+    }
+  ]
+}
