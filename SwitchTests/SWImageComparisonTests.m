@@ -53,38 +53,38 @@
 
 - (void)testTIFFComparisonDifferent {
     [self measureBlock:^{
-        (void)imagesDifferByCachedTIFFComparison(self.imageA, self.imageB);
+        XCTAssertTrue(imagesDifferByCachedTIFFComparison(self.imageA, self.imageB));
     }];
 }
 
 - (void)testTIFFComparisonSame {
     [self measureBlock:^{
-        (void)imagesDifferByCachedTIFFComparison(self.imageA, self.imageAA);
+        XCTAssertFalse(imagesDifferByCachedTIFFComparison(self.imageA, self.imageAA));
     }];
 }
 
 - (void)testCGDataProviderComparisonDifferent {
     [self measureBlock:^{
-        (void)imagesDifferByCGDataProviderComparison(self->cgImageA, self->cgImageB);
+        XCTAssertTrue(imagesDifferByCGDataProviderComparison(self->cgImageA, self->cgImageB));
 
     }];
 }
 
 - (void)testCGDataProviderComparisonSame {
     [self measureBlock:^{
-        (void)imagesDifferByCGDataProviderComparison(self->cgImageA, self->cgImageAA);
+        XCTAssertFalse(imagesDifferByCGDataProviderComparison(self->cgImageA, self->cgImageAA));
     }];
 }
 
 - (void)testBitmapContextComparisonDifferent {
     [self measureBlock:^{
-        (void)imagesDifferByCachedBitmapContextComparison(self.imageA, self.imageB);
+        XCTAssertTrue(imagesDifferByCachedBitmapContextComparison(self.imageA, self.imageB));
     }];
 }
 
 - (void)testBitmapContextComparisonSame {
     [self measureBlock:^{
-        (void)imagesDifferByCachedBitmapContextComparison(self.imageA, self.imageAA);
+        XCTAssertFalse(imagesDifferByCachedBitmapContextComparison(self.imageA, self.imageAA));
     }];
 }
 
