@@ -286,6 +286,8 @@ end
 
 desc "Build release zip and submit symbols to Hockey."
 task :release => [:release_ready?, :analyze, :test, :zip] do
+  shell("git push")
+  
   # The zip build step might succeed without a code signature, but a deliverable for release must be signed!
   verify_codesign DELIVERABLE_APP
 
