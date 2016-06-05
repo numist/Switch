@@ -5,16 +5,16 @@
       <link>https://raw.github.com/numist/Switch/develop/appcast.xml</link>
       <language>en</language>
       <item>
-        <title>0.0.9 (β)</title>
-        <pubDate>Sat, 4 Jun 2016 14:59:29 -0800</pubDate>
-        <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.9</sparkle:releaseNotesLink>
+        <title>0.0.10 (β)</title>
+        <pubDate>Sat, 4 Jun 2016 17:02:29 -0800</pubDate>
+        <sparkle:releaseNotesLink>https://github.com/numist/Switch/releases/tag/0.0.10</sparkle:releaseNotesLink>
         <enclosure
-          length="2162815"
-          sparkle:dsaSignature="MC0CFQD6meO/1LMMcSEaaKt+bFBiDgctGwIUIOs/PQJ0oLi5Z2w01WztkaGOHVg="
-          sparkle:shortVersionString="0.0.9 (β)"
-          sparkle:version="0.0.9"
+          length="2167552"
+          sparkle:dsaSignature="MCwCFELSP7KYedKq/Gvn0ppOJMB8bOkEAhQ9J6YFctx87seVYj3IR2lx8wwDug=="
+          sparkle:shortVersionString="0.0.10 (β)"
+          sparkle:version="0.0.10"
           type="application/octet-stream"
-          url="https://github.com/numist/Switch/releases/download/0.0.9/Switch.zip"
+          url="https://github.com/numist/Switch/releases/download/0.0.10/Switch.zip"
         />
         <sparkle:minimumSystemVersion>10.10.0</sparkle:minimumSystemVersion>
       </item>
