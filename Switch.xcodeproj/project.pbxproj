@@ -851,7 +851,6 @@
 				BCA734F916DAC54000CD4C74 /* Frameworks */,
 				BCA734FA16DAC54000CD4C74 /* Resources */,
 				BCF5C4AA19DB5F7800E59B62 /* CopyFiles */,
-				BCA734FB16DAC54000CD4C74 /* ShellScript */,
 				E7757EEB278E9CE9F20BA6B0 /* [CP] Embed Pods Frameworks */,
 				325CC820A31A55BDD3144CAA /* [CP] Copy Pods Resources */,
 			);
@@ -1053,19 +1052,6 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Switch-SwitchTests/Pods-Switch-SwitchTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
-		};
-		BCA734FB16DAC54000CD4C74 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
 		};
 		CFF945A4CDD95BF4C674EF7F /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
