@@ -189,14 +189,7 @@ end
 desc "Run project unit tests."
 task :test => [:build] do
   echo_step("Testing #{PRODUCT}")
-  def test_scheme(scheme)
-    prettify_xcode_task("xcodebuild -scheme \"#{scheme}\" -workspace \"#{PRODUCT}.xcworkspace\" -derivedDataPath \"#{DERIVEDDATA}\" test", true)
-  end
-
-  test_scheme("Switch")
-  # RAC is still using OCUnit together with -Werror, which is not a good time right now.
-  # test_scheme("ReactiveCocoa")
-  test_scheme("NNKit")
+  prettify_xcode_task("xcodebuild -scheme \"#{PRODUCT}\" -workspace \"#{PRODUCT}.xcworkspace\" -derivedDataPath \"#{DERIVEDDATA}\" test", true)
 end
 
 
