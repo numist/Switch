@@ -406,14 +406,12 @@ static int const kScrollThreshold = 50;
     
     BOOL firstTry = (start == nil);
     if (start == nil) { start = [NSDate new]; }
+    Check(-[start timeIntervalSinceNow] < 5.0);
     
     @weakify(self);
     [[SWAccessibilityService sharedService] raiseWindow:selectedWindow completion:^(NSError *error) {
         @strongify(self);
-        if (error) {
-            SWLog(@"Failed to raise window group %@: %@", selectedWindow, error);
-        }
-        
+
         NSOrderedSet *windowList = self.stateMachine.windowList;
         NSUInteger selectedIndex = [windowList indexOfObject:selectedWindow];
 
@@ -425,10 +423,12 @@ static int const kScrollThreshold = 50;
                 [self private_verifyRaiseWithStartTime:start window:selectedWindow error:error firstTry:firstTry];
             });
         } else {
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                // Otherwise, force a window list reload.
+            // Otherwise, force a window list reload to verify.
+            // Wait a bit since Accessibility returns before the action has actually propagated.
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                // Waiting guarantees that the state machine is updated before this method returns.
                 [[SWWindowListService sharedService] refreshWindowListAndWait];
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                dispatch_async(dispatch_get_main_queue(), ^{
                     @strongify(self);
                     [self private_verifyRaiseWithStartTime:start window:selectedWindow error:error firstTry:firstTry];
                 });
@@ -439,23 +439,27 @@ static int const kScrollThreshold = 50;
 
 - (void)private_verifyRaiseWithStartTime:(NSDate *)start window:(SWWindow *)selectedWindow error:(NSError *)error firstTry:(BOOL)firstTry;
 {
+    NSTimeInterval elapsed = -[start timeIntervalSinceNow];
+    Check(elapsed < 1.0);
+
     if (self.stateMachine.pendingSwitch ) {
         if (selectedWindow != self.stateMachine.selectedWindow) {
-            SWLog(@"User no longer wants to raise %@, giving up after %.3fs", selectedWindow, -[start timeIntervalSinceNow]);
+            SWLog(@"User no longer wants to raise %@, giving up (elapsed: %0.3fs)", selectedWindow, elapsed);
             return;
         }
-        SWLog(@"Attempt to raise %@ %@, trying again...", selectedWindow, (error ? [NSString stringWithFormat:@"failed (%@)", error] : @"may have been ineffective"));
-        [self private_raiseWindowWithStartTime:start];
+        if ([self.stateMachine.windowList containsObject:selectedWindow]) {
+            SWLog(@"Attempt to raise %@ %@, trying again... (elapsed: %0.3fs)", selectedWindow, (error ? [NSString stringWithFormat:@"failed (%@)", error] : @"may have been ineffective"), elapsed);
+            [self private_raiseWindowWithStartTime:start];
+        } else {
+            SWLog(@"Window %@ is gone, giving up (elapsed: %0.3fs)", selectedWindow, elapsed);
+        }
     } else {
-        SWWindow *window = self.stateMachine.selectedWindow;
-        // window will be nil unless the user has re-invoked the interface.
-        if (Unlikely(window)) {
-            [self.interface enableWindow:window];
+        if (Unlikely(self.stateMachine.interfaceVisible) && [self.stateMachine.windowList containsObject:selectedWindow]) {
+            [self.interface enableWindow:selectedWindow];
         }
         
-        NSTimeInterval elapsed = -[start timeIntervalSinceNow];
         if (elapsed > (1.0/60.0) || !firstTry) {
-            SWLog(@"Raising window %@ took %.3fs", selectedWindow, elapsed);
+            SWLog(@"Raise operation ended for %@ (elapsed: %.3fs)", selectedWindow, elapsed);
         }
     }
 }
