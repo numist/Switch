@@ -152,7 +152,7 @@
 
 - (void)setDataSource:(id<SWHUDCollectionViewDataSource>)dataSource;
 {
-    Assert([NSThread isMainThread]);
+    SWLogMainThreadOnly();
     _dataSource = dataSource;
     
     [self reloadData];
@@ -160,7 +160,7 @@
 
 - (NSView *)cellForIndex:(NSUInteger)index;
 {
-    Assert([NSThread isMainThread]);
+    SWLogMainThreadOnly();
 
     // Flush pending reloadData
     [self private_reloadDataIfNeeded];
@@ -173,7 +173,7 @@
 
 - (void)selectCellAtIndex:(NSUInteger)index;
 {
-    Assert([NSThread isMainThread]);
+    SWLogMainThreadOnly();
     Check(self.selectionBox);
     
     self.selectedIndex = index;
@@ -192,7 +192,7 @@
 
 - (void)reloadData;
 {
-    Assert([NSThread isMainThread]);
+    SWLogMainThreadOnly();
 
     if (!self.reloading) {
         self.reloading = YES;

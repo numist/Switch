@@ -40,7 +40,7 @@ static NSMutableSet *loggedWindows;
 
 - (id)init;
 {
-    Assert([NSThread isMainThread]);
+    SWLogMainThreadOnly();
     BailUnless(self = [super init], nil);
     
     [[NSNotificationCenter defaultCenter] addWeakObserver:self selector:NNSelfSelector1(private_workerUpdatedWindowList:) name:[SWWindowListWorker notificationName] object:nil];
@@ -62,7 +62,7 @@ static NSMutableSet *loggedWindows;
 
 - (void)startService;
 {
-    Assert([NSThread isMainThread]);
+    SWLogMainThreadOnly();
 
     [super startService];
     
@@ -74,7 +74,7 @@ static NSMutableSet *loggedWindows;
 
 - (void)stopService;
 {
-    Assert([NSThread isMainThread]);
+    SWLogMainThreadOnly();
 
     loggedWindows = nil;
     self.worker = nil;
@@ -217,6 +217,7 @@ static NSMutableSet *loggedWindows;
 
 - (void)refreshWindowListAndWait;
 {
+    SWLogBackgroundThreadOnly();
     [self.worker refreshWindowListAndWait];
 }
 
@@ -224,7 +225,7 @@ static NSMutableSet *loggedWindows;
 
 - (void)private_workerUpdatedWindowList:(NSNotification *)notification;
 {
-    Assert([NSThread isMainThread]);
+    SWLogMainThreadOnly();
 
     if (notification.object != self.worker) { return; }
     

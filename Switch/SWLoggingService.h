@@ -30,7 +30,15 @@
 
 #define SWLogBackgroundThreadOnly() do { \
         if ([NSThread isMainThread]) { \
-            SWLog(@"WARNING: -[%@ %@] was called on the main thread %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), [NSThread callStackSymbols]); \
+            SWLog(@"ERROR: -[%@ %@] was called on the main thread %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), [NSThread callStackSymbols]); \
+            Assert(![NSThread isMainThread]); \
+        } \
+    } while(0)
+
+#define SWLogMainThreadOnly() do { \
+        if (![NSThread isMainThread]) { \
+            SWLog(@"ERROR: -[%@ %@] was called on a background thread %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), [NSThread callStackSymbols]); \
+            Assert([NSThread isMainThread]); \
         } \
     } while(0)
 

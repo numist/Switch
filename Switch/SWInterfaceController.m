@@ -53,21 +53,21 @@
 
 - (void)coreWindowController:(SWCoreWindowController *)controller didSelectWindow:(SWWindow *)window;
 {
-    Check([NSThread isMainThread]);
+    SWLogMainThreadOnly();
     id<SWInterfaceControllerDelegate> delegate = self.delegate;
     [delegate interfaceController:self didSelectWindow:window];
 }
 
 - (void)coreWindowController:(SWCoreWindowController *)controller didActivateWindow:(SWWindow *)window;
 {
-    Check([NSThread isMainThread]);
+    SWLogMainThreadOnly();
     id<SWInterfaceControllerDelegate> delegate = self.delegate;
     [delegate interfaceController:self didActivateWindow:window];
 }
 
 - (void)coreWindowControllerDidClickOutsideInterface:(SWCoreWindowController *)controller;
 {
-    Check([NSThread isMainThread]);
+    SWLogMainThreadOnly();
     id<SWInterfaceControllerDelegate> delegate = self.delegate;
     [delegate interfaceControllerDidClickOutsideInterface:self];
 }
@@ -76,7 +76,7 @@
 
 - (void)shouldShowInterface:(_Bool)showInterface;
 {
-    Check([NSThread isMainThread]);
+    SWLogMainThreadOnly();
     if (showInterface == self->_showInterface) { return; }
     self->_showInterface = showInterface;
 
@@ -89,7 +89,7 @@
 
 - (void)updateWindowList:(NSOrderedSet *)windowList;
 {
-    Check([NSThread isMainThread]);
+    SWLogMainThreadOnly();
 
     self.windowList = windowList;
 
@@ -100,7 +100,7 @@
 
 - (void)selectWindow:(SWWindow *)window;
 {
-    Check([NSThread isMainThread]);
+    SWLogMainThreadOnly();
 
     self.selectedWindow = window;
 
@@ -111,14 +111,14 @@
 
 - (void)disableWindow:(SWWindow *)window;
 {
-    Check([NSThread isMainThread]);
+    SWLogMainThreadOnly();
 
     [self.windowControllerDispatcher disableWindow:window];
 }
 
 - (void)enableWindow:(SWWindow *)window;
 {
-    Check([NSThread isMainThread]);
+    SWLogMainThreadOnly();
 
     [self.windowControllerDispatcher enableWindow:window];
 }
@@ -127,7 +127,7 @@
 
 - (void)private_updateSelection;
 {
-    Check([NSThread isMainThread]);
+    SWLogMainThreadOnly();
 
     SWWindow *selectedWindow = self.selectedWindow;
     [self.windowControllerDispatcher selectWindow:(SWWindow *)selectedWindow];
@@ -136,7 +136,7 @@
 
 - (void)private_updateWindowList;
 {
-    Check([NSThread isMainThread]);
+    SWLogMainThreadOnly();
 
     NSOrderedSet *windowList = self.windowList;
 
@@ -181,7 +181,7 @@
 
 - (void)private_showInterface;
 {
-    Check([NSThread isMainThread]);
+    SWLogMainThreadOnly();
     Check(self.windowList);
     Check(!self.windowControllersByScreenID);
 
@@ -243,7 +243,7 @@
 
 - (void)private_hideInterface;
 {
-    Check([NSThread isMainThread]);
+    SWLogMainThreadOnly();
     Check(self.windowControllersByScreenID);
 
     // Hide all the windows

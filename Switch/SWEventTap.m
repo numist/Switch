@@ -79,7 +79,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
 
 - (void)registerHotKey:(SWHotKey *)hotKey object:(id)owner block:(SWEventTapKeyFilter)eventFilter;
 {
-    Assert([NSThread isMainThread]);
+    SWLogMainThreadOnly();
 
     if (!self.keyFilters[hotKey]) {
         self.keyFilters[hotKey] = [NSMutableDictionary new];
@@ -100,7 +100,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
 
 - (void)registerModifier:(SWHotKeyModifierKey)modifiers object:(id)owner block:(SWEventTapModifierCallback)eventCallback;
 {
-    Assert([NSThread isMainThread]);
+    SWLogMainThreadOnly();
 
     if (!self.modifierCallbacks[@(modifiers)]) {
         self.modifierCallbacks[@(modifiers)] = [NSMutableDictionary new];
@@ -121,7 +121,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
 
 - (void)registerForEventsWithType:(CGEventType)eventType object:(id)owner block:(SWEventTapCallback)eventCallback;
 {
-    Assert([NSThread isMainThread]);
+    SWLogMainThreadOnly();
 
     if (!self.eventTypeCallbacks[@(eventType)]) {
         self.eventTypeCallbacks[@(eventType)] = [NSMutableDictionary new];
@@ -193,7 +193,7 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
 static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon)
 {
     #if DEBUG
-        Check([NSThread isMainThread]);
+        SWLogMainThreadOnly();
     #endif
     
     SWEventTap *eventTap = (__bridge SWEventTap *)refcon;

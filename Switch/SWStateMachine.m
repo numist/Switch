@@ -71,6 +71,7 @@
 
 - (void)setActive:(_Bool)active;
 {
+    SWLogMainThreadOnly();
     if (active == self.active) { return; }
     self->_active = active;
 
@@ -114,6 +115,7 @@
 
 - (void)setInterfaceVisible:(_Bool)interfaceVisible;
 {
+    SWLogMainThreadOnly();
     if (interfaceVisible == self.interfaceVisible) { return; }
     self->_interfaceVisible = interfaceVisible;
 
@@ -123,6 +125,7 @@
 }
 
 - (void)setInvoked:(bool)invoked {
+    SWLogMainThreadOnly();
     if (invoked == _invoked) {
         return;
     }
@@ -132,6 +135,7 @@
 }
 
 - (void)setPendingSwitch:(bool)pendingSwitch {
+    SWLogMainThreadOnly();
     if (pendingSwitch == _pendingSwitch) {
         return;
     }
@@ -142,6 +146,7 @@
 }
 
 - (void)setDisplayTimer:(bool)displayTimer {
+    SWLogMainThreadOnly();
     if (displayTimer == _displayTimer) {
         return;
     }
@@ -151,6 +156,7 @@
 }
 
 - (void)setWindowListLoaded:(bool)windowListLoaded {
+    SWLogMainThreadOnly();
     if (windowListLoaded == _windowListLoaded) {
         return;
     }
@@ -161,6 +167,7 @@
 }
 
 - (void)setSelector:(SWSelector *)selector {
+    SWLogMainThreadOnly();
     if (selector == _selector) {
         return;
     }
@@ -173,6 +180,7 @@
 
 - (void)displayTimerCompleted;
 {
+    SWLogMainThreadOnly();
     if (!self.pendingSwitch) {
         StateLog(@"State machine display timer completed");
         self.displayTimer = false;
@@ -183,6 +191,7 @@
 
 - (void)incrementWithInvoke:(_Bool)invokesInterface direction:(SWIncrementDirection)direction isRepeating:(_Bool)autorepeat;
 {
+    SWLogMainThreadOnly();
     StateLog(@"State machine key event with invoke:%@ direction:%@ repeating:%@",
           invokesInterface ? @"true" : @"false",
           direction == SWIncrementDirectionIncreasing ? @"increasing" : @"decreasing",
@@ -208,6 +217,7 @@
 
 - (void)closeWindow;
 {
+    SWLogMainThreadOnly();
     StateLog(@"State machine event close window");
 
     if (self.interfaceVisible) {
@@ -220,6 +230,7 @@
 
 - (void)cancelInvocation;
 {
+    SWLogMainThreadOnly();
     StateLog(@"State machine event cancel invocation");
 
     if (self.invoked) {
@@ -229,6 +240,7 @@
 
 - (void)endInvocation;
 {
+    SWLogMainThreadOnly();
     StateLog(@"State machine event end invocation");
 
     if (self.invoked) {
@@ -241,6 +253,7 @@
 
 - (void)selectWindow:(SWWindow *)window;
 {
+    SWLogMainThreadOnly();
     StateLog(@"State machine mouse select window group: %@", window);
 
     if (!self.windowList) { return; }
@@ -254,6 +267,7 @@
 
 - (void)activateWindow:(SWWindow *)window;
 {
+    SWLogMainThreadOnly();
     StateLog(@"State machine mouse activate window group: %@", window);
 
     if (!self.windowList) { return; }
@@ -273,6 +287,7 @@
 
 - (void)updateWindowList:(NSOrderedSet *)windowList;
 {
+    SWLogMainThreadOnly();
     StateLog(@"State machine update window groups: %@", windowList);
 
     [self private_updateWindowList:windowList];
@@ -282,6 +297,7 @@
 
 - (void)private_adjustSelectorIfNecessary;
 {
+    SWLogMainThreadOnly();
     if (!self.selectorAdjusted) {
         Assert(self.windowListLoaded);
         Assert(self.selector.windowList == nil);
@@ -295,6 +311,7 @@
 
 - (void)private_updateWindowList:(NSOrderedSet *)windowList;
 {
+    SWLogMainThreadOnly();
     // A nil update means clean up, we're shutting down until the next invocation.
     if (!windowList || !self.active) {
         self.windowList = nil;
@@ -323,6 +340,7 @@
 
 - (void)private_raiseSelectedWindow;
 {
+    SWLogMainThreadOnly();
     BailUnless(self.pendingSwitch && self.windowListLoaded,);
     
     [self private_adjustSelectorIfNecessary];
