@@ -144,7 +144,7 @@
 
     NSError *error = nil;
     HAXWindow *haxWindow = [self _haxWindowForWindow:window];
-    if (!Check(haxWindow)) {
+    if (!haxWindow) {
         NSString *errorString = [NSString stringWithFormat:@"Failed to get accessibility object for window %@", window];
         SWLog(@"%@", errorString);
         error = [NSError errorWithDomain:@"SWAccessibilityServiceDomain" code:__LINE__ userInfo:@{NSLocalizedDescriptionKey : errorString}];
