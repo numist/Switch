@@ -252,11 +252,7 @@ static int const kScrollThreshold = 50;
 - (oneway void)windowListService:(SWWindowListService *)service updatedList:(NSOrderedSet *)windows;
 {
     [self.stateMachine updateWindowList:windows];
-    
-    // Do not update the interface if the state machine has an action pending.
-    if (!self.stateMachine.pendingSwitch) {
-        [self.interface updateWindowList:self.stateMachine.windowList];
-    }
+    [self.interface updateWindowList:self.stateMachine.windowList];
 }
 
 #pragma mark - SWStateMachineDelegate
@@ -459,7 +455,7 @@ static int const kScrollThreshold = 50;
         }
         
         if (elapsed > (1.0/60.0) || !firstTry) {
-            SWLog(@"Raise operation ended for %@ (elapsed: %.3fs)", selectedWindow, elapsed);
+            SWLog(@"Raise operation %@ for %@ (elapsed: %.3fs)", (error ? [NSString stringWithFormat:@"failed (%@)", error] : @"succeeded"), selectedWindow, elapsed);
         }
     }
 }

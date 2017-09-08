@@ -192,9 +192,9 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
 
 static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon)
 {
-    #if DEBUG
-        SWLogMainThreadOnly();
-    #endif
+#if DEBUG
+    Assert([NSThread isMainThread]);
+#endif
     
     SWEventTap *eventTap = (__bridge SWEventTap *)refcon;
 

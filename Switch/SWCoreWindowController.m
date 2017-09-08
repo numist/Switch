@@ -49,6 +49,8 @@
     [[SWEventTap sharedService] registerForEventsWithType:kCGEventMouseMoved object:self block:^(CGEventRef event) {
         dispatch_async(dispatch_get_main_queue(), ^{
             @strongify(self);
+            
+            if (!self.window.visible) { return; }
 
             NSPoint mouseLocationInWindow = [self private_pointInWindowFromScreen:[NSEvent mouseLocation]];
             if(NSPointInRect([self.collectionView convertPoint:mouseLocationInWindow fromView:nil], [self.collectionView bounds])) {
