@@ -177,6 +177,8 @@
         Check(windowController);
         windowController.windowList = windowsByScreen[screenNumber];
     }
+
+    [self private_updateSelection];
 }
 
 - (void)private_showInterface;
@@ -229,7 +231,6 @@
 
     // Populate window controllers with the data that's already on hand.
     [self private_updateWindowList];
-    [self private_updateSelection];
 
     // layoutSubviewsIfNeeded isn't instant due to Auto Layout magic, so let everything take effect before showing the window.
     dispatch_async(dispatch_get_main_queue(), ^{
