@@ -445,7 +445,7 @@ static int const kScrollThreshold = 50;
     Check(elapsed < 1.0);
 
     if (self.stateMachine.pendingSwitch ) {
-        if (selectedWindow != self.stateMachine.selectedWindow) {
+        if (![selectedWindow isEqual:self.stateMachine.selectedWindow]) {
             if (Unlikely(self.stateMachine.interfaceVisible) && [self.stateMachine.windowList containsObject:selectedWindow]) {
                 [self.interface enableWindow:selectedWindow];
             }
