@@ -400,8 +400,14 @@ static int const kScrollThreshold = 50;
     SWWindow *selectedWindow = self.stateMachine.selectedWindow;
     if (!Check(selectedWindow)) { return; }
     
-    BOOL firstTry = (start == nil);
-    if (start == nil) { start = [NSDate new]; }
+    BOOL firstTry;
+    if (start == nil) {
+        firstTry = YES;
+        start = [NSDate new];
+        SWLog(@"Raising window %@", selectedWindow);
+    } else {
+        firstTry = NO;
+    }
     Check(-[start timeIntervalSinceNow] < 5.0);
     
     @weakify(self);
@@ -440,10 +446,12 @@ static int const kScrollThreshold = 50;
 
     if (self.stateMachine.pendingSwitch ) {
         if (selectedWindow != self.stateMachine.selectedWindow) {
-            SWLog(@"User no longer wants to raise %@, giving up (elapsed: %0.3fs)", selectedWindow, elapsed);
-            return;
-        }
-        if ([self.stateMachine.windowList containsObject:selectedWindow]) {
+            if (Unlikely(self.stateMachine.interfaceVisible) && [self.stateMachine.windowList containsObject:selectedWindow]) {
+                [self.interface enableWindow:selectedWindow];
+            }
+
+            SWLog(@"User no longer wants to raise %@, has selected %@ instead (elapsed: %0.3fs)", selectedWindow, self.stateMachine.selectedWindow, elapsed);
+        } else if ([self.stateMachine.windowList containsObject:selectedWindow]) {
             SWLog(@"Attempt to raise %@ %@, trying again... (elapsed: %0.3fs)", selectedWindow, (error ? [NSString stringWithFormat:@"failed (%@)", error] : @"may have been ineffective"), elapsed);
             [self private_raiseWindowWithStartTime:start];
         } else {

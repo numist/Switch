@@ -320,11 +320,6 @@
         return;
     }
 
-    // I suspect this is the problem for #105
-    if (self.windowList.count == windowList.count && self.selectedWindow) {
-        Check([windowList containsObject:self.selectedWindow]);
-    }
-
     self.windowList = windowList;
     
     if (!self.windowListLoaded) {
