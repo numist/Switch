@@ -252,7 +252,10 @@ static int const kScrollThreshold = 50;
 - (oneway void)windowListService:(SWWindowListService *)service updatedList:(NSOrderedSet *)windows;
 {
     [self.stateMachine updateWindowList:windows];
-    [self.interface updateWindowList:self.stateMachine.windowList];
+    // Do not update the interface if the state machine has an action pending.
+    if (!self.stateMachine.pendingSwitch) {
+        [self.interface updateWindowList:self.stateMachine.windowList];
+    }	
 }
 
 #pragma mark - SWStateMachineDelegate
