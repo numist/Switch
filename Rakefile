@@ -212,8 +212,8 @@ task DELIVERABLE_APP => [DELIVERABLE_ARCHIVE, File.dirname(DELIVERABLE_APP)] do
   
   FileUtils.rm_r DELIVERABLE_APP if File.exist? DELIVERABLE_APP
   
-  app_path = DELIVERABLE_APP.slice(0..(DELIVERABLE_APP.rindex('.') - 1))
-  shell "xcodebuild -exportArchive -exportFormat APP -archivePath \"#{DELIVERABLE_ARCHIVE}\" -exportPath \"#{app_path}\""
+  app_path = DELIVERABLE_APP.slice(0..(DELIVERABLE_APP.rindex('/') - 1))
+  shell "xcodebuild -exportArchive -exportOptionsPlist exportOptionsApp.plist -archivePath \"#{DELIVERABLE_ARCHIVE}\" -exportPath \"#{app_path}\""
   
   verify_deliverable DELIVERABLE_APP
 
