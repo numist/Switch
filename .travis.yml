@@ -1,7 +1,7 @@
 language: objective-c
 xcode_project: Switch.xcodeproj
 xcode_scheme: Switch
-# osx_image: all should work
+osx_image: xcode9
 
 before_script:
     - export LANG=en_US.UTF-8
