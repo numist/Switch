@@ -159,7 +159,7 @@ task :deps do
   echo_step "Installing/updating dependencies"
   # Rakefile deps
   # TODO: check if xcpretty gem is already installed
-  shell "gem install xcpretty --no-ri --no-rdoc"  if not shell_non_fatal "which xcpretty"
+  shell "gem install xcpretty"  if not shell_non_fatal "which xcpretty"
   
   # Submodules
   shell "git submodule sync"
@@ -168,7 +168,7 @@ task :deps do
   # Pods
   # TODO: check if cocoapods gem is already installed
 
-  shell "gem install cocoapods --no-ri --no-rdoc" if not shell_non_fatal "which pod"
+  shell "gem install cocoapods" if not shell_non_fatal "which pod"
   Rake::FileTask[PODS_PROJECT_FILE].invoke
 end
 

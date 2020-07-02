@@ -14,17 +14,13 @@
 
 #import "SWAppDelegate.h"
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdocumentation-deprecated-sync"
-#import <HockeySDK/HockeySDK.h>
-#pragma clang diagnostic pop
 #import <Sparkle/Sparkle.h>
 
 #import "SWPreferencesService.h"
 #import "SWWindowListService.h"
 
 
-@interface SWAppDelegate () <BITHockeyManagerDelegate>
+@interface SWAppDelegate ()
 @end
 
 
@@ -44,9 +40,6 @@
     Assert(feedURL);
     [SUUpdater sharedUpdater].feedURL = feedURL;
  
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"81d830d8a7181d7e0df6eeb805bb9728" delegate:self];
-    [[BITHockeyManager sharedHockeyManager] startManager];
-    
     SWLog(@"Launched %@ %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:(__bridge id)kCFBundleNameKey], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]);
 }
 

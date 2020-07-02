@@ -1,21 +1,24 @@
 PODS:
-  - HockeySDK-Mac (3.0)
   - MASPreferences (1.1.4)
   - OCMock (3.1.2)
   - Sparkle (1.14.0)
 
 DEPENDENCIES:
-  - HockeySDK-Mac
   - MASPreferences
   - OCMock
   - Sparkle
 
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - MASPreferences
+    - OCMock
+    - Sparkle
+
 SPEC CHECKSUMS:
-  HockeySDK-Mac: 6a2885523851be147bbff1fcb6553dd4e06cd384
   MASPreferences: 7bdcfe891d7840453cf48f95fa866c3e152ace7a
   OCMock: a10ea9f0a6e921651f96f78b6faee95ebc813b92
   Sparkle: ccd95233b12a3e3d4eeb55ff01dd4c8bb8188b07
 
-PODFILE CHECKSUM: f0ad9dab02f39be4d56bc177c7270615453c3f24
+PODFILE CHECKSUM: f98179f647f587219a5246f66f8624262c7dd81d
 
-COCOAPODS: 1.2.1
+COCOAPODS: 1.9.3
