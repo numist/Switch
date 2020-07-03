@@ -5,21 +5,21 @@ Switch is a window-based (as opposed to application-based) context switcher. By 
 
 ![Interface Screenshot](http://numist.net/random/switch.png)
 
-This project is functional, but not finished. I'm using it every day, but I could use your help.
+This project is functional, but not finished. That said, I've been using it every day.
 
-Contributions in the form of [beers](mailto:numist@numist.net?cc=pay@square.com&subject=Here%27s%20%245&body=For%20a%20Switch%20beer%21), [patches](https://github.com/numist/Switch/pull/new), and [issues](https://github.com/numist/Switch/issues) are appreciated. If a window is being improperly shown or omitted from the interface, please include a [snapshot](https://github.com/numist/Switch/wiki/About-Snapshots).
+[Patches](https://github.com/numist/Switch/pull/new) and [issues](https://github.com/numist/Switch/issues) are welcome. If a window is being improperly shown or omitted from the interface, please include a [snapshot](https://github.com/numist/Switch/wiki/About-Snapshots).
 
 Getting Started
 ---------------
 
 Download the [latest release](https://github.com/numist/Switch/releases), put the application bundle in your `/Applications` or `~/Applications` directory, and run it! It will check for updates automatically so you can stay up to date as the project develops.
 
-Switch requires Mac OS X version 10.9 or newer and is still in development. For a list of known issues, check out the [bug tag](https://github.com/numist/Switch/issues?labels=bug&state=open) for general badness and the [quirk tag](https://github.com/numist/Switch/issues?labels=quirk&state=open) for windows being improperly shown or omitted from the interface.
+Switch requires Mac OS X version 10.14 or newer and is still in development. For a list of known issues, check out the [bug tag](https://github.com/numist/Switch/issues?labels=bug&state=open) for general badness and the [quirk tag](https://github.com/numist/Switch/issues?labels=quirk&state=open) for windows being improperly shown or omitted from the interface.
 
 Contributing
 ------------
 
-[![Stories in Ready](https://badge.waffle.io/numist/switch.png?label=ready&title=Ready)](http://waffle.io/numist/switch) [![Build Status](https://travis-ci.org/numist/Switch.png?branch=develop)](https://travis-ci.org/numist/Switch)
+[![Build Status](https://travis-ci.org/numist/Switch.png?branch=develop)](https://travis-ci.org/numist/Switch)
 
 To check out the project, its submodules, and open in Xcode:
 
