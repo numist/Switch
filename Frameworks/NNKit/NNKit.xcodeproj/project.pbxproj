@@ -1,0 +1,1065 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		BC12437F183AEFAC00461433 /* NNCleanupProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = BC12437D183AEFAC00461433 /* NNCleanupProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BC124380183AEFAC00461433 /* NNCleanupProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = BC12437D183AEFAC00461433 /* NNCleanupProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BC124381183AEFAC00461433 /* NNCleanupProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = BC12437E183AEFAC00461433 /* NNCleanupProxy.m */; };
+		BC124382183AEFAC00461433 /* NNCleanupProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = BC12437E183AEFAC00461433 /* NNCleanupProxy.m */; };
+		BC14BF031D038F230041DAC2 /* NNWeakSet.h in Headers */ = {isa = PBXBuildFile; fileRef = BC14BF011D038F230041DAC2 /* NNWeakSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BC14BF041D038F230041DAC2 /* NNWeakSet.h in Headers */ = {isa = PBXBuildFile; fileRef = BC14BF011D038F230041DAC2 /* NNWeakSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BC14BF051D038F230041DAC2 /* NNWeakSet.m in Sources */ = {isa = PBXBuildFile; fileRef = BC14BF021D038F230041DAC2 /* NNWeakSet.m */; };
+		BC14BF061D038F230041DAC2 /* NNWeakSet.m in Sources */ = {isa = PBXBuildFile; fileRef = BC14BF021D038F230041DAC2 /* NNWeakSet.m */; };
+		BC14BF081D0390C70041DAC2 /* NNWeakSetTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC14BF071D0390C70041DAC2 /* NNWeakSetTests.m */; };
+		BC14BF091D0390C70041DAC2 /* NNWeakSetTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC14BF071D0390C70041DAC2 /* NNWeakSetTests.m */; };
+		BC14BF0E1D03911D0041DAC2 /* _NNWeakArrayTombstone.h in Headers */ = {isa = PBXBuildFile; fileRef = BC14BF0A1D03911D0041DAC2 /* _NNWeakArrayTombstone.h */; };
+		BC14BF0F1D03911D0041DAC2 /* _NNWeakArrayTombstone.h in Headers */ = {isa = PBXBuildFile; fileRef = BC14BF0A1D03911D0041DAC2 /* _NNWeakArrayTombstone.h */; };
+		BC14BF101D03911D0041DAC2 /* _NNWeakArrayTombstone.m in Sources */ = {isa = PBXBuildFile; fileRef = BC14BF0B1D03911D0041DAC2 /* _NNWeakArrayTombstone.m */; };
+		BC14BF111D03911D0041DAC2 /* _NNWeakArrayTombstone.m in Sources */ = {isa = PBXBuildFile; fileRef = BC14BF0B1D03911D0041DAC2 /* _NNWeakArrayTombstone.m */; };
+		BC14BF121D03911D0041DAC2 /* _NNWeakSetEnumerator.h in Headers */ = {isa = PBXBuildFile; fileRef = BC14BF0C1D03911D0041DAC2 /* _NNWeakSetEnumerator.h */; };
+		BC14BF131D03911D0041DAC2 /* _NNWeakSetEnumerator.h in Headers */ = {isa = PBXBuildFile; fileRef = BC14BF0C1D03911D0041DAC2 /* _NNWeakSetEnumerator.h */; };
+		BC14BF141D03911D0041DAC2 /* _NNWeakSetEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = BC14BF0D1D03911D0041DAC2 /* _NNWeakSetEnumerator.m */; };
+		BC14BF151D03911D0041DAC2 /* _NNWeakSetEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = BC14BF0D1D03911D0041DAC2 /* _NNWeakSetEnumerator.m */; };
+		BC19D3651810C6C3009CEC1F /* NNService.h in Headers */ = {isa = PBXBuildFile; fileRef = BC19D3631810C6C3009CEC1F /* NNService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BC19D3661810C6C3009CEC1F /* NNService.h in Headers */ = {isa = PBXBuildFile; fileRef = BC19D3631810C6C3009CEC1F /* NNService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BC19D3671810C6C3009CEC1F /* NNService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3641810C6C3009CEC1F /* NNService.m */; };
+		BC19D3681810C6C3009CEC1F /* NNService.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3641810C6C3009CEC1F /* NNService.m */; };
+		BC19D3711810C85B009CEC1F /* NNServiceManager.h in Headers */ = {isa = PBXBuildFile; fileRef = BC19D36F1810C85B009CEC1F /* NNServiceManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BC19D3721810C85B009CEC1F /* NNServiceManager.h in Headers */ = {isa = PBXBuildFile; fileRef = BC19D36F1810C85B009CEC1F /* NNServiceManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BC19D3731810C85B009CEC1F /* NNServiceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3701810C85B009CEC1F /* NNServiceManager.m */; };
+		BC19D3741810C85B009CEC1F /* NNServiceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D3701810C85B009CEC1F /* NNServiceManager.m */; };
+		BC19D3A01811BBC9009CEC1F /* NNServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D39F1811BBC9009CEC1F /* NNServiceTests.m */; };
+		BC19D3A11811BBC9009CEC1F /* NNServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC19D39F1811BBC9009CEC1F /* NNServiceTests.m */; };
+		BC275C0A18CE9D9D00761247 /* NSInvocation+NNCopying.m in Sources */ = {isa = PBXBuildFile; fileRef = BC275C0918CE9D1A00761247 /* NSInvocation+NNCopying.m */; };
+		BC275C0B18CE9DA200761247 /* NSInvocation+NNCopying.h in Headers */ = {isa = PBXBuildFile; fileRef = BC275C0818CE9D1A00761247 /* NSInvocation+NNCopying.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BC275C7618CFE4BD00761247 /* NNComprehensionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC275C7518CFE4BD00761247 /* NNComprehensionTests.m */; };
+		BC275C7718CFE4BD00761247 /* NNComprehensionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC275C7518CFE4BD00761247 /* NNComprehensionTests.m */; };
+		BC82B3C9183C1BC300FDD3B9 /* NNCleanupProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC82B3C8183C1BC300FDD3B9 /* NNCleanupProxyTests.m */; };
+		BC82B3CA183C1BC300FDD3B9 /* NNCleanupProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC82B3C8183C1BC300FDD3B9 /* NNCleanupProxyTests.m */; };
+		BC82B3D5183C29B600FDD3B9 /* NNMultiDispatchManager.h in Headers */ = {isa = PBXBuildFile; fileRef = BC82B3D3183C29B600FDD3B9 /* NNMultiDispatchManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BC82B3D6183C29B600FDD3B9 /* NNMultiDispatchManager.h in Headers */ = {isa = PBXBuildFile; fileRef = BC82B3D3183C29B600FDD3B9 /* NNMultiDispatchManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BC82B3D7183C29B600FDD3B9 /* NNMultiDispatchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BC82B3D4183C29B600FDD3B9 /* NNMultiDispatchManager.m */; };
+		BC82B3D8183C29B600FDD3B9 /* NNMultiDispatchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BC82B3D4183C29B600FDD3B9 /* NNMultiDispatchManager.m */; };
+		BC82B3DA183C317000FDD3B9 /* NNMultiDispatchManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC82B3D9183C317000FDD3B9 /* NNMultiDispatchManagerTests.m */; };
+		BC82B3DB183C317000FDD3B9 /* NNMultiDispatchManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC82B3D9183C317000FDD3B9 /* NNMultiDispatchManagerTests.m */; };
+		BC82B3DD183C37E500FDD3B9 /* NNService+Protected.h in Headers */ = {isa = PBXBuildFile; fileRef = BC82B3DC183C37E500FDD3B9 /* NNService+Protected.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BC82B3DE183C37E500FDD3B9 /* NNService+Protected.h in Headers */ = {isa = PBXBuildFile; fileRef = BC82B3DC183C37E500FDD3B9 /* NNService+Protected.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BC85E88E18E78331001DF986 /* NSInvocation+NNCopying.m in Sources */ = {isa = PBXBuildFile; fileRef = BC275C0918CE9D1A00761247 /* NSInvocation+NNCopying.m */; };
+		BC85E89318E78519001DF986 /* NSInvocation+NNCopying.h in Headers */ = {isa = PBXBuildFile; fileRef = BC275C0818CE9D1A00761247 /* NSInvocation+NNCopying.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BC961A8418BDB377009F3F94 /* macros.h in Headers */ = {isa = PBXBuildFile; fileRef = BC961A8318BDB377009F3F94 /* macros.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BC961A8518BDB377009F3F94 /* macros.h in Headers */ = {isa = PBXBuildFile; fileRef = BC961A8318BDB377009F3F94 /* macros.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCABC3831B3A3CB90099CAC5 /* NNSynthesizedObjectStorageTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCABC3821B3A3CB90099CAC5 /* NNSynthesizedObjectStorageTests.m */; };
+		BCABC3861B3A43980099CAC5 /* memoize.m in Sources */ = {isa = PBXBuildFile; fileRef = BCABC3851B3A43980099CAC5 /* memoize.m */; };
+		BCB1DBA6183D14B50081107F /* NNTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = BCB1DBA5183D14B50081107F /* NNTestCase.m */; };
+		BCB1DBA7183D14B50081107F /* NNTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = BCB1DBA5183D14B50081107F /* NNTestCase.m */; };
+		BCB1DBA9183D196E0081107F /* nn_autofreeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCB1DBA8183D196E0081107F /* nn_autofreeTests.m */; };
+		BCB1DBAA183D196E0081107F /* nn_autofreeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCB1DBA8183D196E0081107F /* nn_autofreeTests.m */; };
+		BCB8A26B18BDBB5000E4AC18 /* NSCollections+NNComprehensions.h in Headers */ = {isa = PBXBuildFile; fileRef = BCB8A26918BDBB5000E4AC18 /* NSCollections+NNComprehensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCB8A26C18BDBB5000E4AC18 /* NSCollections+NNComprehensions.h in Headers */ = {isa = PBXBuildFile; fileRef = BCB8A26918BDBB5000E4AC18 /* NSCollections+NNComprehensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCB8A26D18BDBB5000E4AC18 /* NSCollections+NNComprehensions.m in Sources */ = {isa = PBXBuildFile; fileRef = BCB8A26A18BDBB5000E4AC18 /* NSCollections+NNComprehensions.m */; };
+		BCB8A26E18BDBB5000E4AC18 /* NSCollections+NNComprehensions.m in Sources */ = {isa = PBXBuildFile; fileRef = BCB8A26A18BDBB5000E4AC18 /* NSCollections+NNComprehensions.m */; };
+		BCCA79F518075C6F00CE36E5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCCA79F418075C6F00CE36E5 /* Foundation.framework */; };
+		BCCA7A1E1807608600CE36E5 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCD1D54117D9471A00A3EBD4 /* XCTest.framework */; };
+		BCCA7A1F1807608600CE36E5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCCA79F418075C6F00CE36E5 /* Foundation.framework */; };
+		BCCA7A201807608600CE36E5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCCA7A0418075C6F00CE36E5 /* UIKit.framework */; };
+		BCCA7A301807622200CE36E5 /* NNPollingObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D59B17D9BAB000A3EBD4 /* NNPollingObjectTests.m */; };
+		BCCA7A311807622200CE36E5 /* NNSelfInvalidatingObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D56717D963E000A3EBD4 /* NNSelfInvalidatingObjectTests.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		BCCA7A321807622200CE36E5 /* NNDelegateProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D56917D96C4500A3EBD4 /* NNDelegateProxyTests.m */; };
+		BCCA7A331807622200CE36E5 /* NNStrongifiedPropertiesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D57F17D9818500A3EBD4 /* NNStrongifiedPropertiesTests.m */; };
+		BCCA7A341807622200CE36E5 /* nn_isaSwizzlingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D59117D9A34D00A3EBD4 /* nn_isaSwizzlingTests.m */; };
+		BCCA7A351807626200CE36E5 /* despatch.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D5A617D9C72F00A3EBD4 /* despatch.m */; };
+		BCCA7A361807626200CE36E5 /* runtime.c in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D5A717D9C72F00A3EBD4 /* runtime.c */; };
+		BCCA7A371807626200CE36E5 /* NNPollingObject.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D5AE17D9C79F00A3EBD4 /* NNPollingObject.m */; };
+		BCCA7A381807626200CE36E5 /* NNSelfInvalidatingObject.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D5B117D9C79F00A3EBD4 /* NNSelfInvalidatingObject.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		BCCA7A391807626200CE36E5 /* NNDelegateProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D5B817D9C84000A3EBD4 /* NNDelegateProxy.m */; };
+		BCCA7A3A1807626200CE36E5 /* NNStrongifiedProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D5BC17D9C88F00A3EBD4 /* NNStrongifiedProperties.m */; };
+		BCCA7A3B1807626200CE36E5 /* nn_autofree.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D5C017DECC8E00A3EBD4 /* nn_autofree.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		BCCA7A3C1807626200CE36E5 /* nn_isaSwizzling.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D58917D9A14300A3EBD4 /* nn_isaSwizzling.m */; };
+		BCCA7A3D1807626200CE36E5 /* NNISASwizzledObject.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D58B17D9A14300A3EBD4 /* NNISASwizzledObject.m */; };
+		BCCA7A3E1807626200CE36E5 /* NNKit.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D53A17D9471A00A3EBD4 /* NNKit.m */; };
+		BCCA7A401807628B00CE36E5 /* despatch.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D5A517D9C72F00A3EBD4 /* despatch.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCCA7A411807629100CE36E5 /* runtime.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D5A817D9C72F00A3EBD4 /* runtime.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCCA7A421807629700CE36E5 /* NNPollingObject.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D5AD17D9C79F00A3EBD4 /* NNPollingObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCCA7A431807629C00CE36E5 /* NNPollingObject+Protected.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D5AF17D9C79F00A3EBD4 /* NNPollingObject+Protected.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCCA7A44180762A200CE36E5 /* NNSelfInvalidatingObject.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D5B017D9C79F00A3EBD4 /* NNSelfInvalidatingObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCCA7A45180762A800CE36E5 /* NNDelegateProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D5B717D9C84000A3EBD4 /* NNDelegateProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCCA7A46180762AF00CE36E5 /* NNStrongifiedProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D5BB17D9C88F00A3EBD4 /* NNStrongifiedProperties.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCCA7A47180762B500CE36E5 /* nn_autofree.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D5BF17DECC8E00A3EBD4 /* nn_autofree.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCCA7A48180762BB00CE36E5 /* nn_isaSwizzling_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D58717D9A14300A3EBD4 /* nn_isaSwizzling_Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		BCCA7A49180762C000CE36E5 /* nn_isaSwizzling.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D58817D9A14300A3EBD4 /* nn_isaSwizzling.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCCA7A4A180762C700CE36E5 /* NNISASwizzledObject.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D58A17D9A14300A3EBD4 /* NNISASwizzledObject.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		BCCA7A4B180762CC00CE36E5 /* NNKit.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D53917D9471A00A3EBD4 /* NNKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCCA7A4C180765D800CE36E5 /* libNNKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BCCA79F318075C6F00CE36E5 /* libNNKit.a */; };
+		BCCB1BF31835F3E80029EBF6 /* NSNotificationCenter+NNAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = BCCB1BF11835F3E80029EBF6 /* NSNotificationCenter+NNAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCCB1BF41835F3E80029EBF6 /* NSNotificationCenter+NNAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = BCCB1BF11835F3E80029EBF6 /* NSNotificationCenter+NNAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCCB1BF51835F3E80029EBF6 /* NSNotificationCenter+NNAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCB1BF21835F3E80029EBF6 /* NSNotificationCenter+NNAdditions.m */; };
+		BCCB1BF61835F3E80029EBF6 /* NSNotificationCenter+NNAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCB1BF21835F3E80029EBF6 /* NSNotificationCenter+NNAdditions.m */; };
+		BCCB1BFE1835FD9A0029EBF6 /* NNWeakObserverTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCB1BFD1835FD9A0029EBF6 /* NNWeakObserverTests.m */; };
+		BCCB1BFF1835FD9A0029EBF6 /* NNWeakObserverTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCB1BFD1835FD9A0029EBF6 /* NNWeakObserverTests.m */; };
+		BCD1D52D17D9471A00A3EBD4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCD1D52C17D9471A00A3EBD4 /* Cocoa.framework */; };
+		BCD1D53B17D9471A00A3EBD4 /* NNKit.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D53A17D9471A00A3EBD4 /* NNKit.m */; };
+		BCD1D54217D9471A00A3EBD4 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCD1D54117D9471A00A3EBD4 /* XCTest.framework */; };
+		BCD1D54317D9471A00A3EBD4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCD1D52C17D9471A00A3EBD4 /* Cocoa.framework */; };
+		BCD1D54617D9471A00A3EBD4 /* NNKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCD1D52917D9471A00A3EBD4 /* NNKit.framework */; };
+		BCD1D55717D9472D00A3EBD4 /* NNKit.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D53917D9471A00A3EBD4 /* NNKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCD1D56817D963E000A3EBD4 /* NNSelfInvalidatingObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D56717D963E000A3EBD4 /* NNSelfInvalidatingObjectTests.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		BCD1D56A17D96C4500A3EBD4 /* NNDelegateProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D56917D96C4500A3EBD4 /* NNDelegateProxyTests.m */; };
+		BCD1D58017D9818500A3EBD4 /* NNStrongifiedPropertiesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D57F17D9818500A3EBD4 /* NNStrongifiedPropertiesTests.m */; };
+		BCD1D58C17D9A14300A3EBD4 /* nn_isaSwizzling_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D58717D9A14300A3EBD4 /* nn_isaSwizzling_Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		BCD1D58D17D9A14300A3EBD4 /* nn_isaSwizzling.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D58817D9A14300A3EBD4 /* nn_isaSwizzling.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCD1D58E17D9A14300A3EBD4 /* nn_isaSwizzling.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D58917D9A14300A3EBD4 /* nn_isaSwizzling.m */; };
+		BCD1D58F17D9A14300A3EBD4 /* NNISASwizzledObject.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D58A17D9A14300A3EBD4 /* NNISASwizzledObject.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		BCD1D59017D9A14300A3EBD4 /* NNISASwizzledObject.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D58B17D9A14300A3EBD4 /* NNISASwizzledObject.m */; };
+		BCD1D59217D9A34D00A3EBD4 /* nn_isaSwizzlingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D59117D9A34D00A3EBD4 /* nn_isaSwizzlingTests.m */; };
+		BCD1D59C17D9BAB000A3EBD4 /* NNPollingObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D59B17D9BAB000A3EBD4 /* NNPollingObjectTests.m */; };
+		BCD1D5A917D9C72F00A3EBD4 /* despatch.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D5A517D9C72F00A3EBD4 /* despatch.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCD1D5AA17D9C72F00A3EBD4 /* despatch.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D5A617D9C72F00A3EBD4 /* despatch.m */; };
+		BCD1D5AB17D9C72F00A3EBD4 /* runtime.c in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D5A717D9C72F00A3EBD4 /* runtime.c */; };
+		BCD1D5AC17D9C72F00A3EBD4 /* runtime.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D5A817D9C72F00A3EBD4 /* runtime.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCD1D5B217D9C79F00A3EBD4 /* NNPollingObject.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D5AD17D9C79F00A3EBD4 /* NNPollingObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCD1D5B317D9C79F00A3EBD4 /* NNPollingObject.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D5AE17D9C79F00A3EBD4 /* NNPollingObject.m */; };
+		BCD1D5B417D9C79F00A3EBD4 /* NNPollingObject+Protected.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D5AF17D9C79F00A3EBD4 /* NNPollingObject+Protected.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCD1D5B517D9C79F00A3EBD4 /* NNSelfInvalidatingObject.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D5B017D9C79F00A3EBD4 /* NNSelfInvalidatingObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCD1D5B617D9C79F00A3EBD4 /* NNSelfInvalidatingObject.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D5B117D9C79F00A3EBD4 /* NNSelfInvalidatingObject.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		BCD1D5B917D9C84000A3EBD4 /* NNDelegateProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D5B717D9C84000A3EBD4 /* NNDelegateProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCD1D5BA17D9C84000A3EBD4 /* NNDelegateProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D5B817D9C84000A3EBD4 /* NNDelegateProxy.m */; };
+		BCD1D5BD17D9C88F00A3EBD4 /* NNStrongifiedProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D5BB17D9C88F00A3EBD4 /* NNStrongifiedProperties.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCD1D5BE17D9C88F00A3EBD4 /* NNStrongifiedProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D5BC17D9C88F00A3EBD4 /* NNStrongifiedProperties.m */; };
+		BCD1D5C117DECC8E00A3EBD4 /* nn_autofree.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD1D5BF17DECC8E00A3EBD4 /* nn_autofree.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCD1D5C217DECC8E00A3EBD4 /* nn_autofree.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD1D5C017DECC8E00A3EBD4 /* nn_autofree.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BCCA7A2A1807608700CE36E5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BCD1D52017D9471A00A3EBD4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BCCA79F218075C6F00CE36E5;
+			remoteInfo = "NNKit iOS";
+		};
+		BCD1D54417D9471A00A3EBD4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BCD1D52017D9471A00A3EBD4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BCD1D52817D9471A00A3EBD4;
+			remoteInfo = NNKit;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		BC12437D183AEFAC00461433 /* NNCleanupProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NNCleanupProxy.h; path = Actors/NNCleanupProxy.h; sourceTree = "<group>"; };
+		BC12437E183AEFAC00461433 /* NNCleanupProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NNCleanupProxy.m; path = Actors/NNCleanupProxy.m; sourceTree = "<group>"; };
+		BC14BF011D038F230041DAC2 /* NNWeakSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NNWeakSet.h; path = Collections/NNWeakSet.h; sourceTree = "<group>"; };
+		BC14BF021D038F230041DAC2 /* NNWeakSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NNWeakSet.m; path = Collections/NNWeakSet.m; sourceTree = "<group>"; };
+		BC14BF071D0390C70041DAC2 /* NNWeakSetTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNWeakSetTests.m; sourceTree = "<group>"; };
+		BC14BF0A1D03911D0041DAC2 /* _NNWeakArrayTombstone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _NNWeakArrayTombstone.h; path = Collections/_NNWeakArrayTombstone.h; sourceTree = "<group>"; };
+		BC14BF0B1D03911D0041DAC2 /* _NNWeakArrayTombstone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _NNWeakArrayTombstone.m; path = Collections/_NNWeakArrayTombstone.m; sourceTree = "<group>"; };
+		BC14BF0C1D03911D0041DAC2 /* _NNWeakSetEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _NNWeakSetEnumerator.h; path = Collections/_NNWeakSetEnumerator.h; sourceTree = "<group>"; };
+		BC14BF0D1D03911D0041DAC2 /* _NNWeakSetEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _NNWeakSetEnumerator.m; path = Collections/_NNWeakSetEnumerator.m; sourceTree = "<group>"; };
+		BC19D3631810C6C3009CEC1F /* NNService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NNService.h; path = Services/NNService.h; sourceTree = "<group>"; };
+		BC19D3641810C6C3009CEC1F /* NNService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NNService.m; path = Services/NNService.m; sourceTree = "<group>"; };
+		BC19D36F1810C85B009CEC1F /* NNServiceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NNServiceManager.h; path = Services/NNServiceManager.h; sourceTree = "<group>"; };
+		BC19D3701810C85B009CEC1F /* NNServiceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NNServiceManager.m; path = Services/NNServiceManager.m; sourceTree = "<group>"; };
+		BC19D39F1811BBC9009CEC1F /* NNServiceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNServiceTests.m; sourceTree = "<group>"; };
+		BC275C0818CE9D1A00761247 /* NSInvocation+NNCopying.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSInvocation+NNCopying.h"; path = "API Extension/NSInvocation+NNCopying.h"; sourceTree = "<group>"; };
+		BC275C0918CE9D1A00761247 /* NSInvocation+NNCopying.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "NSInvocation+NNCopying.m"; path = "API Extension/NSInvocation+NNCopying.m"; sourceTree = "<group>"; };
+		BC275C7518CFE4BD00761247 /* NNComprehensionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNComprehensionTests.m; sourceTree = "<group>"; };
+		BC82B3C8183C1BC300FDD3B9 /* NNCleanupProxyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNCleanupProxyTests.m; sourceTree = "<group>"; };
+		BC82B3D3183C29B600FDD3B9 /* NNMultiDispatchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NNMultiDispatchManager.h; path = Actors/NNMultiDispatchManager.h; sourceTree = "<group>"; };
+		BC82B3D4183C29B600FDD3B9 /* NNMultiDispatchManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NNMultiDispatchManager.m; path = Actors/NNMultiDispatchManager.m; sourceTree = "<group>"; };
+		BC82B3D9183C317000FDD3B9 /* NNMultiDispatchManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NNMultiDispatchManagerTests.m; path = NNKitTests/NNMultiDispatchManagerTests.m; sourceTree = SOURCE_ROOT; };
+		BC82B3DC183C37E500FDD3B9 /* NNService+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NNService+Protected.h"; path = "Services/NNService+Protected.h"; sourceTree = "<group>"; };
+		BC961A8318BDB377009F3F94 /* macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = macros.h; sourceTree = "<group>"; };
+		BCABC3821B3A3CB90099CAC5 /* NNSynthesizedObjectStorageTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNSynthesizedObjectStorageTests.m; sourceTree = "<group>"; };
+		BCABC3841B3A438A0099CAC5 /* memoize.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = memoize.h; path = Hacks/memoize.h; sourceTree = "<group>"; };
+		BCABC3851B3A43980099CAC5 /* memoize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = memoize.m; path = Hacks/memoize.m; sourceTree = "<group>"; };
+		BCB1DBA4183D14B50081107F /* NNTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNTestCase.h; sourceTree = "<group>"; };
+		BCB1DBA5183D14B50081107F /* NNTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNTestCase.m; sourceTree = "<group>"; };
+		BCB1DBA8183D196E0081107F /* nn_autofreeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = nn_autofreeTests.m; sourceTree = "<group>"; };
+		BCB8A26918BDBB5000E4AC18 /* NSCollections+NNComprehensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSCollections+NNComprehensions.h"; path = "Collections/NSCollections+NNComprehensions.h"; sourceTree = "<group>"; };
+		BCB8A26A18BDBB5000E4AC18 /* NSCollections+NNComprehensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSCollections+NNComprehensions.m"; path = "Collections/NSCollections+NNComprehensions.m"; sourceTree = "<group>"; };
+		BCCA79F318075C6F00CE36E5 /* libNNKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libNNKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		BCCA79F418075C6F00CE36E5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		BCCA7A0418075C6F00CE36E5 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		BCCA7A1718075DDB00CE36E5 /* NNKit iOS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NNKit iOS-Prefix.pch"; sourceTree = "<group>"; };
+		BCCA7A1D1807608600CE36E5 /* NNKit iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NNKit iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BCCA7A2F180761DB00CE36E5 /* NNKit iOS Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NNKit iOS Tests-Info.plist"; sourceTree = "<group>"; };
+		BCCB1BF11835F3E80029EBF6 /* NSNotificationCenter+NNAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSNotificationCenter+NNAdditions.h"; path = "API Extension/NSNotificationCenter+NNAdditions.h"; sourceTree = "<group>"; };
+		BCCB1BF21835F3E80029EBF6 /* NSNotificationCenter+NNAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSNotificationCenter+NNAdditions.m"; path = "API Extension/NSNotificationCenter+NNAdditions.m"; sourceTree = "<group>"; };
+		BCCB1BFD1835FD9A0029EBF6 /* NNWeakObserverTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNWeakObserverTests.m; sourceTree = "<group>"; };
+		BCD1D52917D9471A00A3EBD4 /* NNKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NNKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BCD1D52C17D9471A00A3EBD4 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		BCD1D52F17D9471A00A3EBD4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		BCD1D53017D9471A00A3EBD4 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		BCD1D53117D9471A00A3EBD4 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		BCD1D53417D9471A00A3EBD4 /* NNKit-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NNKit-Info.plist"; sourceTree = "<group>"; };
+		BCD1D53817D9471A00A3EBD4 /* NNKit Mac-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NNKit Mac-Prefix.pch"; sourceTree = "<group>"; };
+		BCD1D53917D9471A00A3EBD4 /* NNKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NNKit.h; sourceTree = "<group>"; };
+		BCD1D53A17D9471A00A3EBD4 /* NNKit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NNKit.m; sourceTree = "<group>"; };
+		BCD1D54017D9471A00A3EBD4 /* NNKit Mac Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NNKit Mac Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BCD1D54117D9471A00A3EBD4 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		BCD1D54917D9471A00A3EBD4 /* NNKit Mac Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NNKit Mac Tests-Info.plist"; sourceTree = "<group>"; };
+		BCD1D56717D963E000A3EBD4 /* NNSelfInvalidatingObjectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NNSelfInvalidatingObjectTests.m; path = NNKitTests/NNSelfInvalidatingObjectTests.m; sourceTree = SOURCE_ROOT; };
+		BCD1D56917D96C4500A3EBD4 /* NNDelegateProxyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NNDelegateProxyTests.m; path = NNKitTests/NNDelegateProxyTests.m; sourceTree = SOURCE_ROOT; };
+		BCD1D57F17D9818500A3EBD4 /* NNStrongifiedPropertiesTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NNStrongifiedPropertiesTests.m; path = NNKitTests/NNStrongifiedPropertiesTests.m; sourceTree = SOURCE_ROOT; };
+		BCD1D58717D9A14300A3EBD4 /* nn_isaSwizzling_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nn_isaSwizzling_Private.h; path = Swizzling/nn_isaSwizzling_Private.h; sourceTree = "<group>"; };
+		BCD1D58817D9A14300A3EBD4 /* nn_isaSwizzling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nn_isaSwizzling.h; path = Swizzling/nn_isaSwizzling.h; sourceTree = "<group>"; };
+		BCD1D58917D9A14300A3EBD4 /* nn_isaSwizzling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = nn_isaSwizzling.m; path = Swizzling/nn_isaSwizzling.m; sourceTree = "<group>"; };
+		BCD1D58A17D9A14300A3EBD4 /* NNISASwizzledObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NNISASwizzledObject.h; path = Swizzling/NNISASwizzledObject.h; sourceTree = "<group>"; };
+		BCD1D58B17D9A14300A3EBD4 /* NNISASwizzledObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NNISASwizzledObject.m; path = Swizzling/NNISASwizzledObject.m; sourceTree = "<group>"; };
+		BCD1D59117D9A34D00A3EBD4 /* nn_isaSwizzlingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = nn_isaSwizzlingTests.m; path = NNKitTests/nn_isaSwizzlingTests.m; sourceTree = SOURCE_ROOT; };
+		BCD1D59B17D9BAB000A3EBD4 /* NNPollingObjectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NNPollingObjectTests.m; path = NNKitTests/NNPollingObjectTests.m; sourceTree = SOURCE_ROOT; };
+		BCD1D5A517D9C72F00A3EBD4 /* despatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = despatch.h; path = "API Extension/despatch.h"; sourceTree = "<group>"; };
+		BCD1D5A617D9C72F00A3EBD4 /* despatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = despatch.m; path = "API Extension/despatch.m"; sourceTree = "<group>"; };
+		BCD1D5A717D9C72F00A3EBD4 /* runtime.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = runtime.c; path = "API Extension/runtime.c"; sourceTree = "<group>"; };
+		BCD1D5A817D9C72F00A3EBD4 /* runtime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = runtime.h; path = "API Extension/runtime.h"; sourceTree = "<group>"; };
+		BCD1D5AD17D9C79F00A3EBD4 /* NNPollingObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NNPollingObject.h; path = Actors/NNPollingObject.h; sourceTree = "<group>"; };
+		BCD1D5AE17D9C79F00A3EBD4 /* NNPollingObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NNPollingObject.m; path = Actors/NNPollingObject.m; sourceTree = "<group>"; };
+		BCD1D5AF17D9C79F00A3EBD4 /* NNPollingObject+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NNPollingObject+Protected.h"; path = "Actors/NNPollingObject+Protected.h"; sourceTree = "<group>"; };
+		BCD1D5B017D9C79F00A3EBD4 /* NNSelfInvalidatingObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NNSelfInvalidatingObject.h; path = Actors/NNSelfInvalidatingObject.h; sourceTree = "<group>"; };
+		BCD1D5B117D9C79F00A3EBD4 /* NNSelfInvalidatingObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NNSelfInvalidatingObject.m; path = Actors/NNSelfInvalidatingObject.m; sourceTree = "<group>"; };
+		BCD1D5B717D9C84000A3EBD4 /* NNDelegateProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NNDelegateProxy.h; path = Concurrency/NNDelegateProxy.h; sourceTree = "<group>"; };
+		BCD1D5B817D9C84000A3EBD4 /* NNDelegateProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NNDelegateProxy.m; path = Concurrency/NNDelegateProxy.m; sourceTree = "<group>"; };
+		BCD1D5BB17D9C88F00A3EBD4 /* NNStrongifiedProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NNStrongifiedProperties.h; path = Hacks/NNStrongifiedProperties.h; sourceTree = "<group>"; };
+		BCD1D5BC17D9C88F00A3EBD4 /* NNStrongifiedProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NNStrongifiedProperties.m; path = Hacks/NNStrongifiedProperties.m; sourceTree = "<group>"; };
+		BCD1D5BF17DECC8E00A3EBD4 /* nn_autofree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nn_autofree.h; path = Hacks/nn_autofree.h; sourceTree = "<group>"; };
+		BCD1D5C017DECC8E00A3EBD4 /* nn_autofree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = nn_autofree.m; path = Hacks/nn_autofree.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BCCA79F018075C6F00CE36E5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCCA79F518075C6F00CE36E5 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BCCA7A1A1807608600CE36E5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCCA7A4C180765D800CE36E5 /* libNNKit.a in Frameworks */,
+				BCCA7A1E1807608600CE36E5 /* XCTest.framework in Frameworks */,
+				BCCA7A201807608600CE36E5 /* UIKit.framework in Frameworks */,
+				BCCA7A1F1807608600CE36E5 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BCD1D52517D9471A00A3EBD4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCD1D52D17D9471A00A3EBD4 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BCD1D53D17D9471A00A3EBD4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCD1D54317D9471A00A3EBD4 /* Cocoa.framework in Frameworks */,
+				BCD1D54217D9471A00A3EBD4 /* XCTest.framework in Frameworks */,
+				BCD1D54617D9471A00A3EBD4 /* NNKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		BC1243631837022700461433 /* Collections */ = {
+			isa = PBXGroup;
+			children = (
+				BC14BF0A1D03911D0041DAC2 /* _NNWeakArrayTombstone.h */,
+				BC14BF0B1D03911D0041DAC2 /* _NNWeakArrayTombstone.m */,
+				BC14BF0C1D03911D0041DAC2 /* _NNWeakSetEnumerator.h */,
+				BC14BF0D1D03911D0041DAC2 /* _NNWeakSetEnumerator.m */,
+				BC14BF011D038F230041DAC2 /* NNWeakSet.h */,
+				BC14BF021D038F230041DAC2 /* NNWeakSet.m */,
+				BCB8A26918BDBB5000E4AC18 /* NSCollections+NNComprehensions.h */,
+				BCB8A26A18BDBB5000E4AC18 /* NSCollections+NNComprehensions.m */,
+			);
+			name = Collections;
+			sourceTree = "<group>";
+		};
+		BC19D3621810C63E009CEC1F /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				BC19D3631810C6C3009CEC1F /* NNService.h */,
+				BC82B3DC183C37E500FDD3B9 /* NNService+Protected.h */,
+				BC19D3641810C6C3009CEC1F /* NNService.m */,
+				BC19D36F1810C85B009CEC1F /* NNServiceManager.h */,
+				BC19D3701810C85B009CEC1F /* NNServiceManager.m */,
+			);
+			name = Services;
+			sourceTree = "<group>";
+		};
+		BCD1D51F17D9471A00A3EBD4 = {
+			isa = PBXGroup;
+			children = (
+				BCD1D53217D9471A00A3EBD4 /* NNKit */,
+				BCD1D54717D9471A00A3EBD4 /* NNKitTests */,
+				BCD1D52B17D9471A00A3EBD4 /* Frameworks */,
+				BCD1D52A17D9471A00A3EBD4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		BCD1D52A17D9471A00A3EBD4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BCD1D52917D9471A00A3EBD4 /* NNKit.framework */,
+				BCD1D54017D9471A00A3EBD4 /* NNKit Mac Tests.xctest */,
+				BCCA79F318075C6F00CE36E5 /* libNNKit.a */,
+				BCCA7A1D1807608600CE36E5 /* NNKit iOS Tests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BCD1D52B17D9471A00A3EBD4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BCD1D52E17D9471A00A3EBD4 /* System Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		BCD1D52E17D9471A00A3EBD4 /* System Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BCD1D53117D9471A00A3EBD4 /* AppKit.framework */,
+				BCD1D52C17D9471A00A3EBD4 /* Cocoa.framework */,
+				BCD1D53017D9471A00A3EBD4 /* CoreData.framework */,
+				BCD1D52F17D9471A00A3EBD4 /* Foundation.framework */,
+				BCCA79F418075C6F00CE36E5 /* Foundation.framework */,
+				BCCA7A0418075C6F00CE36E5 /* UIKit.framework */,
+				BCD1D54117D9471A00A3EBD4 /* XCTest.framework */,
+			);
+			name = "System Frameworks";
+			sourceTree = "<group>";
+		};
+		BCD1D53217D9471A00A3EBD4 /* NNKit */ = {
+			isa = PBXGroup;
+			children = (
+				BCD1D53917D9471A00A3EBD4 /* NNKit.h */,
+				BCD1D53A17D9471A00A3EBD4 /* NNKit.m */,
+				BC961A8318BDB377009F3F94 /* macros.h */,
+				BCD1D58117D9940500A3EBD4 /* API extension */,
+				BCD1D56D17D9776400A3EBD4 /* Actors */,
+				BC1243631837022700461433 /* Collections */,
+				BCD1D55817D9474600A3EBD4 /* Concurrency */,
+				BCD1D57617D97CB100A3EBD4 /* Hacks */,
+				BC19D3621810C63E009CEC1F /* Services */,
+				BCD1D58617D9A0AF00A3EBD4 /* Swizzling */,
+				BCD1D53317D9471A00A3EBD4 /* Supporting Files */,
+			);
+			path = NNKit;
+			sourceTree = "<group>";
+		};
+		BCD1D53317D9471A00A3EBD4 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				BCCA7A1718075DDB00CE36E5 /* NNKit iOS-Prefix.pch */,
+				BCD1D53817D9471A00A3EBD4 /* NNKit Mac-Prefix.pch */,
+				BCD1D53417D9471A00A3EBD4 /* NNKit-Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BCD1D54717D9471A00A3EBD4 /* NNKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				BCABC3821B3A3CB90099CAC5 /* NNSynthesizedObjectStorageTests.m */,
+				BCD1D59117D9A34D00A3EBD4 /* nn_isaSwizzlingTests.m */,
+				BCD1D56917D96C4500A3EBD4 /* NNDelegateProxyTests.m */,
+				BC82B3D9183C317000FDD3B9 /* NNMultiDispatchManagerTests.m */,
+				BCB1DBA8183D196E0081107F /* nn_autofreeTests.m */,
+				BCD1D59B17D9BAB000A3EBD4 /* NNPollingObjectTests.m */,
+				BCD1D56717D963E000A3EBD4 /* NNSelfInvalidatingObjectTests.m */,
+				BC19D39F1811BBC9009CEC1F /* NNServiceTests.m */,
+				BCD1D57F17D9818500A3EBD4 /* NNStrongifiedPropertiesTests.m */,
+				BCCB1BFD1835FD9A0029EBF6 /* NNWeakObserverTests.m */,
+				BC14BF071D0390C70041DAC2 /* NNWeakSetTests.m */,
+				BCD1D54817D9471A00A3EBD4 /* Supporting Files */,
+				BC82B3C8183C1BC300FDD3B9 /* NNCleanupProxyTests.m */,
+				BC275C7518CFE4BD00761247 /* NNComprehensionTests.m */,
+			);
+			path = NNKitTests;
+			sourceTree = "<group>";
+		};
+		BCD1D54817D9471A00A3EBD4 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				BCB1DBA4183D14B50081107F /* NNTestCase.h */,
+				BCB1DBA5183D14B50081107F /* NNTestCase.m */,
+				BCCA7A2F180761DB00CE36E5 /* NNKit iOS Tests-Info.plist */,
+				BCD1D54917D9471A00A3EBD4 /* NNKit Mac Tests-Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BCD1D55817D9474600A3EBD4 /* Concurrency */ = {
+			isa = PBXGroup;
+			children = (
+				BCD1D5B717D9C84000A3EBD4 /* NNDelegateProxy.h */,
+				BCD1D5B817D9C84000A3EBD4 /* NNDelegateProxy.m */,
+			);
+			name = Concurrency;
+			sourceTree = "<group>";
+		};
+		BCD1D56D17D9776400A3EBD4 /* Actors */ = {
+			isa = PBXGroup;
+			children = (
+				BC12437D183AEFAC00461433 /* NNCleanupProxy.h */,
+				BC12437E183AEFAC00461433 /* NNCleanupProxy.m */,
+				BC82B3D3183C29B600FDD3B9 /* NNMultiDispatchManager.h */,
+				BC82B3D4183C29B600FDD3B9 /* NNMultiDispatchManager.m */,
+				BCD1D5AD17D9C79F00A3EBD4 /* NNPollingObject.h */,
+				BCD1D5AF17D9C79F00A3EBD4 /* NNPollingObject+Protected.h */,
+				BCD1D5AE17D9C79F00A3EBD4 /* NNPollingObject.m */,
+				BCD1D5B017D9C79F00A3EBD4 /* NNSelfInvalidatingObject.h */,
+				BCD1D5B117D9C79F00A3EBD4 /* NNSelfInvalidatingObject.m */,
+			);
+			name = Actors;
+			sourceTree = "<group>";
+		};
+		BCD1D57617D97CB100A3EBD4 /* Hacks */ = {
+			isa = PBXGroup;
+			children = (
+				BCD1D5BF17DECC8E00A3EBD4 /* nn_autofree.h */,
+				BCD1D5C017DECC8E00A3EBD4 /* nn_autofree.m */,
+				BCD1D5BB17D9C88F00A3EBD4 /* NNStrongifiedProperties.h */,
+				BCD1D5BC17D9C88F00A3EBD4 /* NNStrongifiedProperties.m */,
+				BCABC3841B3A438A0099CAC5 /* memoize.h */,
+				BCABC3851B3A43980099CAC5 /* memoize.m */,
+			);
+			name = Hacks;
+			sourceTree = "<group>";
+		};
+		BCD1D58117D9940500A3EBD4 /* API extension */ = {
+			isa = PBXGroup;
+			children = (
+				BC275C0818CE9D1A00761247 /* NSInvocation+NNCopying.h */,
+				BC275C0918CE9D1A00761247 /* NSInvocation+NNCopying.m */,
+				BCD1D5A517D9C72F00A3EBD4 /* despatch.h */,
+				BCD1D5A617D9C72F00A3EBD4 /* despatch.m */,
+				BCD1D5A817D9C72F00A3EBD4 /* runtime.h */,
+				BCD1D5A717D9C72F00A3EBD4 /* runtime.c */,
+				BCCB1BF11835F3E80029EBF6 /* NSNotificationCenter+NNAdditions.h */,
+				BCCB1BF21835F3E80029EBF6 /* NSNotificationCenter+NNAdditions.m */,
+			);
+			name = "API extension";
+			sourceTree = "<group>";
+		};
+		BCD1D58617D9A0AF00A3EBD4 /* Swizzling */ = {
+			isa = PBXGroup;
+			children = (
+				BCD1D58817D9A14300A3EBD4 /* nn_isaSwizzling.h */,
+				BCD1D58717D9A14300A3EBD4 /* nn_isaSwizzling_Private.h */,
+				BCD1D58917D9A14300A3EBD4 /* nn_isaSwizzling.m */,
+				BCD1D58A17D9A14300A3EBD4 /* NNISASwizzledObject.h */,
+				BCD1D58B17D9A14300A3EBD4 /* NNISASwizzledObject.m */,
+			);
+			name = Swizzling;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		BCCA7A3F1807627C00CE36E5 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCCA7A401807628B00CE36E5 /* despatch.h in Headers */,
+				BCCA7A47180762B500CE36E5 /* nn_autofree.h in Headers */,
+				BCCA7A44180762A200CE36E5 /* NNSelfInvalidatingObject.h in Headers */,
+				BCCB1BF41835F3E80029EBF6 /* NSNotificationCenter+NNAdditions.h in Headers */,
+				BCCA7A421807629700CE36E5 /* NNPollingObject.h in Headers */,
+				BC14BF131D03911D0041DAC2 /* _NNWeakSetEnumerator.h in Headers */,
+				BCCA7A49180762C000CE36E5 /* nn_isaSwizzling.h in Headers */,
+				BCCA7A4A180762C700CE36E5 /* NNISASwizzledObject.h in Headers */,
+				BC82B3DE183C37E500FDD3B9 /* NNService+Protected.h in Headers */,
+				BC82B3D6183C29B600FDD3B9 /* NNMultiDispatchManager.h in Headers */,
+				BCCA7A431807629C00CE36E5 /* NNPollingObject+Protected.h in Headers */,
+				BC961A8518BDB377009F3F94 /* macros.h in Headers */,
+				BCCA7A45180762A800CE36E5 /* NNDelegateProxy.h in Headers */,
+				BCCA7A48180762BB00CE36E5 /* nn_isaSwizzling_Private.h in Headers */,
+				BC19D3661810C6C3009CEC1F /* NNService.h in Headers */,
+				BC19D3721810C85B009CEC1F /* NNServiceManager.h in Headers */,
+				BCCA7A4B180762CC00CE36E5 /* NNKit.h in Headers */,
+				BCCA7A46180762AF00CE36E5 /* NNStrongifiedProperties.h in Headers */,
+				BC14BF0F1D03911D0041DAC2 /* _NNWeakArrayTombstone.h in Headers */,
+				BC14BF041D038F230041DAC2 /* NNWeakSet.h in Headers */,
+				BCB8A26C18BDBB5000E4AC18 /* NSCollections+NNComprehensions.h in Headers */,
+				BC124380183AEFAC00461433 /* NNCleanupProxy.h in Headers */,
+				BC85E89318E78519001DF986 /* NSInvocation+NNCopying.h in Headers */,
+				BCCA7A411807629100CE36E5 /* runtime.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BCD1D52617D9471A00A3EBD4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCD1D58D17D9A14300A3EBD4 /* nn_isaSwizzling.h in Headers */,
+				BCD1D58F17D9A14300A3EBD4 /* NNISASwizzledObject.h in Headers */,
+				BCD1D5B917D9C84000A3EBD4 /* NNDelegateProxy.h in Headers */,
+				BCCB1BF31835F3E80029EBF6 /* NSNotificationCenter+NNAdditions.h in Headers */,
+				BCD1D5C117DECC8E00A3EBD4 /* nn_autofree.h in Headers */,
+				BC14BF121D03911D0041DAC2 /* _NNWeakSetEnumerator.h in Headers */,
+				BCD1D5B417D9C79F00A3EBD4 /* NNPollingObject+Protected.h in Headers */,
+				BCD1D5BD17D9C88F00A3EBD4 /* NNStrongifiedProperties.h in Headers */,
+				BC82B3DD183C37E500FDD3B9 /* NNService+Protected.h in Headers */,
+				BC82B3D5183C29B600FDD3B9 /* NNMultiDispatchManager.h in Headers */,
+				BC275C0B18CE9DA200761247 /* NSInvocation+NNCopying.h in Headers */,
+				BCD1D5AC17D9C72F00A3EBD4 /* runtime.h in Headers */,
+				BC961A8418BDB377009F3F94 /* macros.h in Headers */,
+				BCD1D5A917D9C72F00A3EBD4 /* despatch.h in Headers */,
+				BCD1D58C17D9A14300A3EBD4 /* nn_isaSwizzling_Private.h in Headers */,
+				BC19D3651810C6C3009CEC1F /* NNService.h in Headers */,
+				BC19D3711810C85B009CEC1F /* NNServiceManager.h in Headers */,
+				BCD1D5B517D9C79F00A3EBD4 /* NNSelfInvalidatingObject.h in Headers */,
+				BC14BF0E1D03911D0041DAC2 /* _NNWeakArrayTombstone.h in Headers */,
+				BC14BF031D038F230041DAC2 /* NNWeakSet.h in Headers */,
+				BCD1D55717D9472D00A3EBD4 /* NNKit.h in Headers */,
+				BCB8A26B18BDBB5000E4AC18 /* NSCollections+NNComprehensions.h in Headers */,
+				BC12437F183AEFAC00461433 /* NNCleanupProxy.h in Headers */,
+				BCD1D5B217D9C79F00A3EBD4 /* NNPollingObject.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		BCCA79F218075C6F00CE36E5 /* NNKit iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BCCA7A1118075C6F00CE36E5 /* Build configuration list for PBXNativeTarget "NNKit iOS" */;
+			buildPhases = (
+				BCCA7A3F1807627C00CE36E5 /* Headers */,
+				BCCA79EF18075C6F00CE36E5 /* Sources */,
+				BCCA79F018075C6F00CE36E5 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "NNKit iOS";
+			productName = "NNKit iOS";
+			productReference = BCCA79F318075C6F00CE36E5 /* libNNKit.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		BCCA7A1C1807608600CE36E5 /* NNKit iOS Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BCCA7A2C1807608700CE36E5 /* Build configuration list for PBXNativeTarget "NNKit iOS Tests" */;
+			buildPhases = (
+				BCCA7A191807608600CE36E5 /* Sources */,
+				BCCA7A1A1807608600CE36E5 /* Frameworks */,
+				BCCA7A1B1807608600CE36E5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BCCA7A2B1807608700CE36E5 /* PBXTargetDependency */,
+			);
+			name = "NNKit iOS Tests";
+			productName = "NNKit iOS Tests";
+			productReference = BCCA7A1D1807608600CE36E5 /* NNKit iOS Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		BCD1D52817D9471A00A3EBD4 /* NNKit Mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BCD1D55117D9471A00A3EBD4 /* Build configuration list for PBXNativeTarget "NNKit Mac" */;
+			buildPhases = (
+				BCD1D52617D9471A00A3EBD4 /* Headers */,
+				BCD1D52417D9471A00A3EBD4 /* Sources */,
+				BCD1D52517D9471A00A3EBD4 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "NNKit Mac";
+			productName = NNKit;
+			productReference = BCD1D52917D9471A00A3EBD4 /* NNKit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		BCD1D53F17D9471A00A3EBD4 /* NNKit Mac Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BCD1D55417D9471A00A3EBD4 /* Build configuration list for PBXNativeTarget "NNKit Mac Tests" */;
+			buildPhases = (
+				BCD1D53C17D9471A00A3EBD4 /* Sources */,
+				BCD1D53D17D9471A00A3EBD4 /* Frameworks */,
+				BCD1D53E17D9471A00A3EBD4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BCD1D54517D9471A00A3EBD4 /* PBXTargetDependency */,
+			);
+			name = "NNKit Mac Tests";
+			productName = NNKitTests;
+			productReference = BCD1D54017D9471A00A3EBD4 /* NNKit Mac Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BCD1D52017D9471A00A3EBD4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0600;
+				ORGANIZATIONNAME = "Scott Perry";
+				TargetAttributes = {
+					BCCA7A1C1807608600CE36E5 = {
+						TestTargetID = BCD1D52817D9471A00A3EBD4;
+					};
+				};
+			};
+			buildConfigurationList = BCD1D52317D9471A00A3EBD4 /* Build configuration list for PBXProject "NNKit" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				en,
+			);
+			mainGroup = BCD1D51F17D9471A00A3EBD4;
+			productRefGroup = BCD1D52A17D9471A00A3EBD4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BCD1D52817D9471A00A3EBD4 /* NNKit Mac */,
+				BCD1D53F17D9471A00A3EBD4 /* NNKit Mac Tests */,
+				BCCA79F218075C6F00CE36E5 /* NNKit iOS */,
+				BCCA7A1C1807608600CE36E5 /* NNKit iOS Tests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BCCA7A1B1807608600CE36E5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BCD1D53E17D9471A00A3EBD4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BCCA79EF18075C6F00CE36E5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BC85E88E18E78331001DF986 /* NSInvocation+NNCopying.m in Sources */,
+				BCCA7A351807626200CE36E5 /* despatch.m in Sources */,
+				BCCA7A361807626200CE36E5 /* runtime.c in Sources */,
+				BCCA7A371807626200CE36E5 /* NNPollingObject.m in Sources */,
+				BC82B3D8183C29B600FDD3B9 /* NNMultiDispatchManager.m in Sources */,
+				BCCB1BF61835F3E80029EBF6 /* NSNotificationCenter+NNAdditions.m in Sources */,
+				BC14BF151D03911D0041DAC2 /* _NNWeakSetEnumerator.m in Sources */,
+				BCCA7A381807626200CE36E5 /* NNSelfInvalidatingObject.m in Sources */,
+				BC124382183AEFAC00461433 /* NNCleanupProxy.m in Sources */,
+				BCCA7A391807626200CE36E5 /* NNDelegateProxy.m in Sources */,
+				BC19D3681810C6C3009CEC1F /* NNService.m in Sources */,
+				BCB8A26E18BDBB5000E4AC18 /* NSCollections+NNComprehensions.m in Sources */,
+				BCCA7A3A1807626200CE36E5 /* NNStrongifiedProperties.m in Sources */,
+				BC14BF061D038F230041DAC2 /* NNWeakSet.m in Sources */,
+				BCCA7A3B1807626200CE36E5 /* nn_autofree.m in Sources */,
+				BCCA7A3C1807626200CE36E5 /* nn_isaSwizzling.m in Sources */,
+				BCCA7A3D1807626200CE36E5 /* NNISASwizzledObject.m in Sources */,
+				BC19D3741810C85B009CEC1F /* NNServiceManager.m in Sources */,
+				BCCA7A3E1807626200CE36E5 /* NNKit.m in Sources */,
+				BC14BF111D03911D0041DAC2 /* _NNWeakArrayTombstone.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BCCA7A191807608600CE36E5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCCA7A301807622200CE36E5 /* NNPollingObjectTests.m in Sources */,
+				BCCA7A311807622200CE36E5 /* NNSelfInvalidatingObjectTests.m in Sources */,
+				BCB1DBA7183D14B50081107F /* NNTestCase.m in Sources */,
+				BC82B3CA183C1BC300FDD3B9 /* NNCleanupProxyTests.m in Sources */,
+				BCCB1BFF1835FD9A0029EBF6 /* NNWeakObserverTests.m in Sources */,
+				BCCA7A321807622200CE36E5 /* NNDelegateProxyTests.m in Sources */,
+				BC82B3DB183C317000FDD3B9 /* NNMultiDispatchManagerTests.m in Sources */,
+				BC19D3A11811BBC9009CEC1F /* NNServiceTests.m in Sources */,
+				BCCA7A331807622200CE36E5 /* NNStrongifiedPropertiesTests.m in Sources */,
+				BCCA7A341807622200CE36E5 /* nn_isaSwizzlingTests.m in Sources */,
+				BC275C7718CFE4BD00761247 /* NNComprehensionTests.m in Sources */,
+				BC14BF091D0390C70041DAC2 /* NNWeakSetTests.m in Sources */,
+				BCB1DBAA183D196E0081107F /* nn_autofreeTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BCD1D52417D9471A00A3EBD4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCABC3861B3A43980099CAC5 /* memoize.m in Sources */,
+				BC275C0A18CE9D9D00761247 /* NSInvocation+NNCopying.m in Sources */,
+				BCD1D5AA17D9C72F00A3EBD4 /* despatch.m in Sources */,
+				BCD1D5BE17D9C88F00A3EBD4 /* NNStrongifiedProperties.m in Sources */,
+				BC14BF051D038F230041DAC2 /* NNWeakSet.m in Sources */,
+				BCD1D53B17D9471A00A3EBD4 /* NNKit.m in Sources */,
+				BC82B3D7183C29B600FDD3B9 /* NNMultiDispatchManager.m in Sources */,
+				BCCB1BF51835F3E80029EBF6 /* NSNotificationCenter+NNAdditions.m in Sources */,
+				BCD1D5AB17D9C72F00A3EBD4 /* runtime.c in Sources */,
+				BC124381183AEFAC00461433 /* NNCleanupProxy.m in Sources */,
+				BCD1D5C217DECC8E00A3EBD4 /* nn_autofree.m in Sources */,
+				BC19D3671810C6C3009CEC1F /* NNService.m in Sources */,
+				BCB8A26D18BDBB5000E4AC18 /* NSCollections+NNComprehensions.m in Sources */,
+				BCD1D5B317D9C79F00A3EBD4 /* NNPollingObject.m in Sources */,
+				BCD1D5B617D9C79F00A3EBD4 /* NNSelfInvalidatingObject.m in Sources */,
+				BC14BF141D03911D0041DAC2 /* _NNWeakSetEnumerator.m in Sources */,
+				BC14BF101D03911D0041DAC2 /* _NNWeakArrayTombstone.m in Sources */,
+				BCD1D59017D9A14300A3EBD4 /* NNISASwizzledObject.m in Sources */,
+				BCD1D5BA17D9C84000A3EBD4 /* NNDelegateProxy.m in Sources */,
+				BC19D3731810C85B009CEC1F /* NNServiceManager.m in Sources */,
+				BCD1D58E17D9A14300A3EBD4 /* nn_isaSwizzling.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BCD1D53C17D9471A00A3EBD4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCD1D56817D963E000A3EBD4 /* NNSelfInvalidatingObjectTests.m in Sources */,
+				BCD1D59217D9A34D00A3EBD4 /* nn_isaSwizzlingTests.m in Sources */,
+				BCB1DBA6183D14B50081107F /* NNTestCase.m in Sources */,
+				BC82B3C9183C1BC300FDD3B9 /* NNCleanupProxyTests.m in Sources */,
+				BCCB1BFE1835FD9A0029EBF6 /* NNWeakObserverTests.m in Sources */,
+				BCD1D58017D9818500A3EBD4 /* NNStrongifiedPropertiesTests.m in Sources */,
+				BCABC3831B3A3CB90099CAC5 /* NNSynthesizedObjectStorageTests.m in Sources */,
+				BC82B3DA183C317000FDD3B9 /* NNMultiDispatchManagerTests.m in Sources */,
+				BC14BF081D0390C70041DAC2 /* NNWeakSetTests.m in Sources */,
+				BC19D3A01811BBC9009CEC1F /* NNServiceTests.m in Sources */,
+				BCD1D56A17D96C4500A3EBD4 /* NNDelegateProxyTests.m in Sources */,
+				BCD1D59C17D9BAB000A3EBD4 /* NNPollingObjectTests.m in Sources */,
+				BC275C7618CFE4BD00761247 /* NNComprehensionTests.m in Sources */,
+				BCB1DBA9183D196E0081107F /* nn_autofreeTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BCCA7A2B1807608700CE36E5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BCCA79F218075C6F00CE36E5 /* NNKit iOS */;
+			targetProxy = BCCA7A2A1807608700CE36E5 /* PBXContainerItemProxy */;
+		};
+		BCD1D54517D9471A00A3EBD4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BCD1D52817D9471A00A3EBD4 /* NNKit Mac */;
+			targetProxy = BCD1D54417D9471A00A3EBD4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		BCCA7A1218075C6F00CE36E5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				DSTROOT = /tmp/NNKit_iOS.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "NNKit/$(TARGET_NAME)-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRIVATE_HEADERS_FOLDER_PATH = "/usr/local/include/$(PROJECT_NAME)/Private";
+				PUBLIC_HEADERS_FOLDER_PATH = "/usr/local/include/$(PROJECT_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		BCCA7A1318075C6F00CE36E5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				DSTROOT = /tmp/NNKit_iOS.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "NNKit/$(TARGET_NAME)-Prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRIVATE_HEADERS_FOLDER_PATH = "/usr/local/include/$(PROJECT_NAME)/Private";
+				PUBLIC_HEADERS_FOLDER_PATH = "/usr/local/include/$(PROJECT_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		BCCA7A2D1807608700CE36E5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/libNNKit.a";
+				CLANG_ENABLE_MODULES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "NNKit/NNKit iOS-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "NNKitTests/NNKit iOS Tests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					XCTest,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		BCCA7A2E1807608700CE36E5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/libNNKit.a";
+				CLANG_ENABLE_MODULES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "NNKit/NNKit iOS-Prefix.pch";
+				INFOPLIST_FILE = "NNKitTests/NNKit iOS Tests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					XCTest,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+		BCD1D54F17D9471A00A3EBD4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				OTHER_CFLAGS = "-Wno-incompatible-pointer-types";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(PROJECT_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		BCD1D55017D9471A00A3EBD4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				OTHER_CFLAGS = "-Wno-incompatible-pointer-types";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(PROJECT_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		BCD1D55217D9471A00A3EBD4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "NNKit/$(TARGET_NAME)-Prefix.pch";
+				INFOPLIST_FILE = "NNKit/NNKit-Info.plist";
+				INSTALL_PATH = "@rpath";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_PATH)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Debug;
+		};
+		BCD1D55317D9471A00A3EBD4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "NNKit/$(TARGET_NAME)-Prefix.pch";
+				INFOPLIST_FILE = "NNKit/NNKit-Info.plist";
+				INSTALL_PATH = "@rpath";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_PATH)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		BCD1D55517D9471A00A3EBD4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "NNKit/NNKit Mac-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "NNKitTests/NNKit Mac Tests-Info.plist";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		BCD1D55617D9471A00A3EBD4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "NNKit/NNKit Mac-Prefix.pch";
+				INFOPLIST_FILE = "NNKitTests/NNKit Mac Tests-Info.plist";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BCCA7A1118075C6F00CE36E5 /* Build configuration list for PBXNativeTarget "NNKit iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BCCA7A1218075C6F00CE36E5 /* Debug */,
+				BCCA7A1318075C6F00CE36E5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BCCA7A2C1807608700CE36E5 /* Build configuration list for PBXNativeTarget "NNKit iOS Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BCCA7A2D1807608700CE36E5 /* Debug */,
+				BCCA7A2E1807608700CE36E5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BCD1D52317D9471A00A3EBD4 /* Build configuration list for PBXProject "NNKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BCD1D54F17D9471A00A3EBD4 /* Debug */,
+				BCD1D55017D9471A00A3EBD4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BCD1D55117D9471A00A3EBD4 /* Build configuration list for PBXNativeTarget "NNKit Mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BCD1D55217D9471A00A3EBD4 /* Debug */,
+				BCD1D55317D9471A00A3EBD4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BCD1D55417D9471A00A3EBD4 /* Build configuration list for PBXNativeTarget "NNKit Mac Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BCD1D55517D9471A00A3EBD4 /* Debug */,
+				BCD1D55617D9471A00A3EBD4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BCD1D52017D9471A00A3EBD4 /* Project object */;
+}
