@@ -169,7 +169,9 @@ static CGEventRef eventCallback(CGEventTapProxy proxy, CGEventType type, CGEvent
         CGEventMaskBit(kCGEventMouseMoved) |
         CGEventMaskBit(kCGEventScrollWheel) |
     0);
-    
+
+    // apps may check the authorization status without triggering the approval prompt, using the IOHIDCheckAccess function with the kIOHIDRequestTypeListenEvent parameter
+    // apps can request an approval dialog to be displayed without creating an event tap or trying to post an event by using the IOHIDRequestAccess function, again with the same parameter
     self.eventTap = CGEventTapCreate(kCGAnnotatedSessionEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault, eventMask, eventCallback, (__bridge void *)(self));
     BailUnless(self.eventTap, NO);
     
