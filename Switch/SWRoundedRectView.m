@@ -34,11 +34,15 @@
 {
     if (self.border > 0) {
         self.layer.borderWidth = self.border;
-        self.layer.borderColor = [[[NSColor whiteColor] colorWithAlphaComponent:0.8] CGColor];
-    }
-    
-    self.layer.cornerRadius = self.radius;
-    self.layer.backgroundColor = [[[NSColor blackColor] colorWithAlphaComponent:0.3] CGColor];
+        self.layer.borderColor = [[[NSColor whiteColor] colorWithAlphaComponent:1.0] CGColor];
+		self.layer.cornerRadius = self.radius;
+		self.layer.backgroundColor = [[[NSColor blackColor] colorWithAlphaComponent:0.75] CGColor];
+    }else{
+        self.border = self.layer.borderWidth = 5;
+        self.layer.borderColor = [[[NSColor yellowColor] colorWithAlphaComponent:1.0] CGColor];
+		self.layer.cornerRadius = self.radius;
+		self.layer.backgroundColor = [[[NSColor blackColor] colorWithAlphaComponent:1.0] CGColor];
+	}
 }
 
 @end
