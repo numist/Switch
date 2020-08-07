@@ -1,0 +1,33 @@
+language: objective-c
+osx_image: xcode10.3
+before_install:
+  - brew update
+  - brew outdated carthage || brew upgrade carthage
+  - gem install cocoapods -v '>= 1.8'
+  - pod --version
+script:
+  - xcodebuild -verbose -project ShortcutRecorder.xcodeproj -scheme ShortcutRecorder.framework -destination 'platform=macOS' build test
+  - sed "s#  s\.source =.*#  s\.source = \{ \:git => 'file://$(pwd)' \}#" ShortcutRecorder.podspec > /tmp/ShortcutRecorder.podspec
+  - pod spec lint /tmp/ShortcutRecorder.podspec --allow-warnings --fail-fast --verbose
+  - carthage build --no-skip-current --verbose
+  - file Carthage/Build/Mac/ShortcutRecorder.framework
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+before_deploy:
+  - carthage archive ShortcutRecorder
+deploy:
+  - provider: releases
+    skip_cleanup: true
+    api_key:
+      secure: pfPyGI+2ocmKugULnUDyjd5SgBaF1xAZfZj6MvJYNXiJBlzjGxvLez8w5qxIFsm/0l63Aql0s8cWpeGfN22ssOhnjQrSpSsHWbQw+fnY7mkfR9UEbuSwVDlDM9mZbGC1HCZBnsZPMI0/h1QUVwRnVsZgK0N7OrnUasXXfNuY3hA=
+    file: ShortcutRecorder.framework.zip
+    on:
+      repo: Kentzo/ShortcutRecorder
+      branch: master
+      tags: true
+  - provider: script
+    script: pod trunk push ShortcutRecorder.podspec
+    on:
+      repo: Kentzo/ShortcutRecorder
+      branch: master
+      tags: true
