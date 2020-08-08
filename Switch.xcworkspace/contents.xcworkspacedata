@@ -4,10 +4,4 @@
    <FileRef
       location = "group:Switch/Switch.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:Dependencies/Haxcessibility/Haxcessibility.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:Dependencies/ShortcutRecorder/ShortcutRecorder.xcodeproj">
-   </FileRef>
 </Workspace>
