@@ -194,6 +194,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = BCD18FF924DD41C900941A86 /* Build configuration list for PBXNativeTarget "Switch" */;
 			buildPhases = (
+				BC56728524E093E100206A39 /* ShellScript */,
 				BCD18FCC24DD41C000941A86 /* Sources */,
 				BCD18FCD24DD41C000941A86 /* Frameworks */,
 				BCD18FCE24DD41C000941A86 /* Resources */,
@@ -311,6 +312,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		BC56728524E093E100206A39 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		BCD18FCC24DD41C000941A86 /* Sources */ = {

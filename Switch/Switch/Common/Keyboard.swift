@@ -3,7 +3,7 @@ import OSLog
 
 class Keyboard {
   struct Modifiers: OptionSet, Hashable, CustomStringConvertible {
-    let rawValue: Int;
+    let rawValue: Int
 
     static let shift = Modifiers(rawValue: shiftKey)
     static let control = Modifiers(rawValue: controlKey)
@@ -171,7 +171,7 @@ class Keyboard {
     case unknown         = 0xFF
   }
 
-  struct HotKey : Hashable, CustomStringConvertible {
+  struct HotKey: Hashable, CustomStringConvertible {
     let modifiers: Modifiers
     let code: KeyCode
 
@@ -195,9 +195,9 @@ class Keyboard {
 // Would have used CGSSetGlobalHotKeyOperatingMode & co.,
 // but then I wouldn't be able to do shenanigans with ⌘Q and ⌘⇥
 extension Keyboard {
-  private static var eventTap: EventTap? = nil
+  private static var eventTap: EventTap?
 
-  private static var callbacks = [HotKey:(Bool)->Bool]()
+  private static var callbacks = [HotKey: (Bool)->Bool]()
 
   private static func keyboardEvent(_ type: CGEventType, _ event: CGEvent) -> CGEvent? {
     precondition(type == .keyUp || type == .keyDown)

@@ -28,7 +28,7 @@ enum Service {
 }
 
 class ServiceManager {
-  private static var runningServices = [Service:Any]()
+  private static var runningServices = [Service: Any]()
 
   static func start(_ service: Service) {
     assert(runningServices[service] == nil)

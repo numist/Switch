@@ -1,12 +1,17 @@
 import Carbon
 import OSLog
 
-fileprivate func eventCallback(_: CGEventTapProxy, type: CGEventType, event: CGEvent, userInfo: UnsafeMutableRawPointer?) -> Unmanaged<CGEvent>? {
+private func eventCallback(
+  _: CGEventTapProxy,
+  type: CGEventType,
+  event: CGEvent,
+  userInfo: UnsafeMutableRawPointer?
+) -> Unmanaged<CGEvent>? {
   let this = Unmanaged<EventTap>.fromOpaque(userInfo!).takeUnretainedValue()
 
   if type == .tapDisabledByTimeout {
     os_log(.fault, "tap disabled: tapDisabledByTimeout")
-    CGEvent.tapEnable(tap: this.eventTap!, enable: true);
+    CGEvent.tapEnable(tap: this.eventTap!, enable: true)
     return Unmanaged.passRetained(event)
   } else if type == .tapDisabledByUserInput {
     os_log(.fault, "tap disabled: tapDisabledByUserInput")
@@ -44,20 +49,28 @@ class EventTap {
     static let otherMouseDragged = EventTypes(rawValue: 1 << CGEventType.otherMouseDragged.rawValue)
   }
 
-  private var runLoopSource: CFRunLoopSource? = nil
-  fileprivate var eventTap: CFMachPort? = nil
+  private var runLoopSource: CFRunLoopSource?
+  fileprivate var eventTap: CFMachPort?
   fileprivate let callback: (CGEventType, CGEvent) -> CGEvent?
 
   init(observing: EventTypes, callback: @escaping (CGEventType, CGEvent) -> CGEvent?) throws {
     self.callback = callback
-    let eventTap = CGEvent.tapCreate(tap: .cgSessionEventTap, place: .headInsertEventTap, options: .defaultTap, eventsOfInterest: CGEventMask(observing.rawValue), callback: eventCallback, userInfo: Unmanaged.passRetained(self).toOpaque())
+    let eventTap = CGEvent.tapCreate(
+      tap: .cgSessionEventTap,
+      place: .headInsertEventTap,
+      options: .defaultTap,
+      eventsOfInterest: CGEventMask(observing.rawValue),
+      callback: eventCallback,
+      userInfo: Unmanaged.passRetained(self).toOpaque()
+    )
     if let eventTap = eventTap {
       self.eventTap = eventTap
     } else {
       throw EventTap.Error()
     }
     runLoopSource = CFMachPortCreateRunLoopSource(nil, eventTap, 0)
-    // TODO: Might be a good idea to use something other than CFRunLoopGetCurrent since that's bound to the current (main) thread, but we want this to be user-interactive and this will work for now
+    // TODO: Might be a good idea to use something other than CFRunLoopGetCurrent since that's
+    // bound to the current (main) thread, but we want this to be user-interactive and this will work for now
     CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, .commonModes)
   }
 
