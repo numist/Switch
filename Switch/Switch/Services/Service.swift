@@ -4,10 +4,12 @@ import Combine
 enum Service {
   case axPoller
   case longCmdQ
+  case pasteboardHistory
 
   fileprivate func implementation() -> Any {
     switch self {
     case .longCmdQ: return LongCmdQ()
+    case .pasteboardHistory: return PasteboardHistory()
     case .axPoller:
       return Timer.publish(every: 0.25, on: .main, in: .common)
         .autoconnect()
