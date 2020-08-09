@@ -2,7 +2,7 @@ import Cocoa
 import OSLog
 import SQLite
 
-extension Set {
+private extension Set {
   func intersects(_ other: Self) -> Bool {
     let smaller = self.count < other.count ? self : other
     let larger = self.count < other.count ? other : self
@@ -68,7 +68,7 @@ class PasteboardHistory {
       return
     }
 
-    // TODO: NSStringPboardType but also maybe others? Options include:
+    // Other available types include:
     // NSPasteboard.PasteboardType.string
     // NSPasteboard.PasteboardType.pdf
     // NSPasteboard.PasteboardType.tiff
@@ -87,12 +87,15 @@ class PasteboardHistory {
     // NSPasteboard.PasteboardType.fileURL
     // But for now we'll just grab NSStringPboardType, if available.
     guard let item = pasteboard.string(forType: .string) else {
-      os_log(.info, "no item for type NSStringPboardType")
+      os_log(.info, "no item for type NSStringPboardType, skipping")
       return
     }
-    // TODO: filter whitespace strings
+    if item.allSatisfy({ $0.isWhitespace }) {
+      os_log(.info, "item is all whitespace, skipping")
+      return
+    }
     if item.count > sizeLimit {
-      os_log(.info, "item too big, skipping")
+      os_log(.info, "item is too big, skipping")
       return
     }
 
@@ -100,13 +103,17 @@ class PasteboardHistory {
     let frontmostApp = NSWorkspace.shared.frontmostApplication!
     let appName = frontmostApp.localizedName ?? "(unknown)"
     let appBundle = frontmostApp.bundleIdentifier ?? "(unknown)"
-    do {
-      try insertStmt.run(appName, appBundle, item)
-    } catch {
-      // TODO: error handling, SQLITE_FULL and maybe the results of ~shenanigans~ in which case whatever crash
-      print("Unexpected error: \(error)")
-      // TODO: in fact, most of these exits should be crashes so a crash report gets generated
-      exit(1)
+    // Get off the main thread when doing I/O
+    DispatchQueue.global(qos: .userInitiated).async {
+      do {
+        try self.insertStmt.run(appName, appBundle, item)
+      } catch {
+        // TODO: unify logging shenanigans (macOS 11.0?)
+        print("Unexpected error inserting item: \(error)")
+        // Drop item.
+        return
+      }
+      os_log(.info, "recorded pasteboard item")
     }
   }
 
@@ -129,7 +136,9 @@ class PasteboardHistory {
         try fileManager.createDirectory(at: appSup, withIntermediateDirectories: true, attributes: nil)
       }
       db = try SQLite.Connection(appSup.appendingPathComponent("Pasteboard History.sqlite").path)
+      db.busyTimeout = 1.0
       try db.execute("PRAGMA user_version=1")
+      try db.execute("PRAGMA journal_mode=wal")
       try db.execute("""
         CREATE TABLE IF NOT EXISTS pasteboardItems (
           appname  STRING,
