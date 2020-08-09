@@ -1,10 +1,3 @@
-//
-//  SwitchTests.swift
-//  SwitchTests
-//
-//  Created by Scott Perry on 8/7/20.
-//
-
 import XCTest
 @testable import Switch
 

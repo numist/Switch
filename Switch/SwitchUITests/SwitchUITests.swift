@@ -1,10 +1,3 @@
-//
-//  SwitchUITests.swift
-//  SwitchUITests
-//
-//  Created by Scott Perry on 8/7/20.
-//
-
 import XCTest
 
 class SwitchUITests: XCTestCase {

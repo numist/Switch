@@ -7,12 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BC56727F24DFC84B00206A39 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC56727E24DFC84B00206A39 /* Service.swift */; };
 		BCD18FD424DD41C000941A86 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD18FD324DD41C000941A86 /* AppDelegate.swift */; };
 		BCD18FD824DD41C800941A86 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCD18FD724DD41C800941A86 /* Assets.xcassets */; };
 		BCD18FDB24DD41C800941A86 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCD18FDA24DD41C800941A86 /* Preview Assets.xcassets */; };
 		BCD18FDE24DD41C800941A86 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BCD18FDC24DD41C800941A86 /* Main.storyboard */; };
 		BCD18FEA24DD41C800941A86 /* SwitchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD18FE924DD41C800941A86 /* SwitchTests.swift */; };
 		BCD18FF524DD41C900941A86 /* SwitchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD18FF424DD41C900941A86 /* SwitchUITests.swift */; };
+		BCD1901324DF773100941A86 /* Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD1901224DF773100941A86 /* Keyboard.swift */; };
+		BCD1901724DF77B200941A86 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCD1901524DF77A700941A86 /* Carbon.framework */; };
+		BCD1901924DF83DB00941A86 /* EventTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD1901824DF83DB00941A86 /* EventTap.swift */; };
+		BCD1901B24DF9D1400941A86 /* LongCmdQ.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD1901A24DF9D1400941A86 /* LongCmdQ.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		BC56727E24DFC84B00206A39 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		BCD18FD024DD41C000941A86 /* Switch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Switch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCD18FD324DD41C000941A86 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BCD18FD724DD41C800941A86 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -45,6 +51,11 @@
 		BCD18FF024DD41C800941A86 /* SwitchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwitchUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCD18FF424DD41C900941A86 /* SwitchUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchUITests.swift; sourceTree = "<group>"; };
 		BCD18FF624DD41C900941A86 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BCD1901224DF773100941A86 /* Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keyboard.swift; sourceTree = "<group>"; };
+		BCD1901524DF77A700941A86 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		BCD1901824DF83DB00941A86 /* EventTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTap.swift; sourceTree = "<group>"; };
+		BCD1901A24DF9D1400941A86 /* LongCmdQ.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongCmdQ.swift; sourceTree = "<group>"; };
+		BCD1901D24DFB1AF00941A86 /* Switch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Switch.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BCD1901724DF77B200941A86 /* Carbon.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,6 +91,7 @@
 				BCD18FE824DD41C800941A86 /* SwitchTests */,
 				BCD18FF324DD41C900941A86 /* SwitchUITests */,
 				BCD18FD124DD41C000941A86 /* Products */,
+				BCD1901424DF77A700941A86 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -95,10 +108,13 @@
 		BCD18FD224DD41C000941A86 /* Switch */ = {
 			isa = PBXGroup;
 			children = (
+				BCD1901C24DF9D1B00941A86 /* Services */,
+				BCD1901124DF769700941A86 /* Common */,
 				BCD18FD324DD41C000941A86 /* AppDelegate.swift */,
 				BCD18FD724DD41C800941A86 /* Assets.xcassets */,
 				BCD18FDC24DD41C800941A86 /* Main.storyboard */,
 				BCD18FDF24DD41C800941A86 /* Info.plist */,
+				BCD1901D24DFB1AF00941A86 /* Switch.entitlements */,
 				BCD18FD924DD41C800941A86 /* Preview Content */,
 			);
 			path = Switch;
@@ -128,6 +144,32 @@
 				BCD18FF624DD41C900941A86 /* Info.plist */,
 			);
 			path = SwitchUITests;
+			sourceTree = "<group>";
+		};
+		BCD1901124DF769700941A86 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				BCD1901224DF773100941A86 /* Keyboard.swift */,
+				BCD1901824DF83DB00941A86 /* EventTap.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		BCD1901424DF77A700941A86 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BCD1901524DF77A700941A86 /* Carbon.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		BCD1901C24DF9D1B00941A86 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				BCD1901A24DF9D1400941A86 /* LongCmdQ.swift */,
+				BC56727E24DFC84B00206A39 /* Service.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -260,6 +302,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BCD1901324DF773100941A86 /* Keyboard.swift in Sources */,
+				BCD1901924DF83DB00941A86 /* EventTap.swift in Sources */,
+				BC56727F24DFC84B00206A39 /* Service.swift in Sources */,
+				BCD1901B24DF9D1400941A86 /* LongCmdQ.swift in Sources */,
 				BCD18FD424DD41C000941A86 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -427,6 +473,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Switch/${PRODUCT_NAME}.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Switch/Preview Content\"";
@@ -436,7 +483,6 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = net.numist.Switch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -448,6 +494,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Switch/${PRODUCT_NAME}.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Switch/Preview Content\"";
@@ -457,7 +504,6 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = net.numist.Switch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -477,7 +523,6 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = net.numist.SwitchTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -498,7 +543,6 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = net.numist.SwitchTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

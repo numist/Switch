@@ -4,4 +4,11 @@
    <FileRef
       location = "group:Switch/Switch.xcodeproj">
    </FileRef>
+   <Group
+      location = "container:Dependencies"
+      name = "Dependencies">
+      <FileRef
+         location = "group:Haxcessibility/Haxcessibility.xcodeproj">
+      </FileRef>
+   </Group>
 </Workspace>
