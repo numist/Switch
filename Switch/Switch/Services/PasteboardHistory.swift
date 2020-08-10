@@ -34,13 +34,12 @@ class PasteboardHistory {
   private var capacityLimit = 1024
   private var expiration = Date()
 
-  private var changeCount: Int
+  private var changeCount: Int!
   private var mouseClickEventTap: EventTap! = nil
 
   // SQLite stuff
-  // swiftlint:disable:next identifier_name
-  private var db: SQLite.Connection
-  private var insertStmt: SQLite.Statement
+  private var db: SQLite.Connection! // swiftlint:disable:this identifier_name
+  private var insertStmt: SQLite.Statement!
 
   private func recordPasteboard() {
     let pasteboard = NSPasteboard.general
@@ -123,40 +122,8 @@ class PasteboardHistory {
 
   init() {
     do {
-      let fileManager = FileManager.default
-      let appSup = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask)
-        .first!.appendingPathComponent(Bundle.main.bundleIdentifier!)
-      var isDir: ObjCBool = true
-      var exists = fileManager.fileExists(atPath: appSup.path, isDirectory: &isDir)
-      if exists && isDir.boolValue == false {
-        try fileManager.removeItem(at: appSup)
-        exists = false
-      }
-      if !exists {
-        try fileManager.createDirectory(at: appSup, withIntermediateDirectories: true, attributes: nil)
-      }
-      db = try SQLite.Connection(appSup.appendingPathComponent("Pasteboard History.sqlite").path)
-      db.busyTimeout = 1.0
-      try db.execute("PRAGMA user_version=1")
-      try db.execute("PRAGMA journal_mode=wal")
-      try db.execute("""
-        CREATE TABLE IF NOT EXISTS pasteboardItems (
-          appname  STRING,
-          bundleId STRING,
-          snippet  STRING UNIQUE,
-          created  INT8 DEFAULT (strftime('%s', 'now')),
-          used     INT8 DEFAULT (strftime('%s', 'now'))
-        )
-      """)
-      try db.execute("""
-        CREATE INDEX IF NOT EXISTS pasteboardItems_used ON pasteboardItems(used DESC)
-      """)
-      insertStmt = try db.prepare("""
-        INSERT INTO pasteboardItems (appname, bundleId, snippet)
-        VALUES(?, ?, ?)
-        ON CONFLICT(snippet) DO
-          UPDATE SET used = strftime('%s', 'now')
-      """)
+      let dir = try setUpAppSupportDir()
+      try setUpDatabase(in: dir)
     } catch {
       // TODO: error handling, especially db corruption but also filemanager stuff
       print("Unexpected error: \(error)")
@@ -197,5 +164,46 @@ class PasteboardHistory {
     Keyboard.deregister(.init(.command, .x))
     Keyboard.deregister(.init(.command, .c))
     Keyboard.deregister(.init([.command, .option], .v))
+  }
+
+  private func setUpAppSupportDir() throws -> URL {
+    let fileManager = FileManager.default
+    let appSup = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask)
+      .first!.appendingPathComponent(Bundle.main.bundleIdentifier!)
+    var isDir: ObjCBool = true
+    var exists = fileManager.fileExists(atPath: appSup.path, isDirectory: &isDir)
+    if exists && isDir.boolValue == false {
+      try fileManager.removeItem(at: appSup)
+      exists = false
+    }
+    if !exists {
+      try fileManager.createDirectory(at: appSup, withIntermediateDirectories: true, attributes: nil)
+    }
+    return appSup
+  }
+
+  private func setUpDatabase(in dir: URL) throws {
+    db = try SQLite.Connection(dir.appendingPathComponent("Pasteboard History.sqlite").path)
+    db.busyTimeout = 1.0
+    try db.execute("PRAGMA user_version=1")
+    try db.execute("PRAGMA journal_mode=wal")
+    try db.execute("""
+      CREATE TABLE IF NOT EXISTS pasteboardItems (
+        appname  STRING,
+        bundleId STRING,
+        snippet  STRING UNIQUE,
+        created  INT8 DEFAULT (strftime('%s', 'now')),
+        used     INT8 DEFAULT (strftime('%s', 'now'))
+      )
+    """)
+    try db.execute("""
+      CREATE INDEX IF NOT EXISTS pasteboardItems_used ON pasteboardItems(used DESC)
+    """)
+    insertStmt = try db.prepare("""
+      INSERT INTO pasteboardItems (appname, bundleId, snippet)
+      VALUES(?, ?, ?)
+      ON CONFLICT(snippet) DO
+        UPDATE SET used = strftime('%s', 'now')
+    """)
   }
 }
