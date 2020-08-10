@@ -77,7 +77,7 @@ extension WindowInfo {
     return (CGWindowListCopyWindowInfo(options, kCGNullWindowID) as! [[String: Any]])
     .filter({ $0[cgLayerKey] as! CGWindowLevel == kCGNormalWindowLevel })
     .map({ infoDict in
-
+      // Try to cons up a HAXWindow for this CGWindow
       let windowID = infoDict[kCGWindowNumber as String] as! CGWindowID
       let processID = infoDict[cgOwnerPIDKey] as! Int32
       guard let haxWindow = HAXApplication(pid: processID)?
@@ -88,7 +88,7 @@ extension WindowInfo {
         return WindowInfo(infoDict)
       }
 
-      // Annotate info dicts with extra keys from hax
+      // Add extra keys from hax to the info dict
       var haxInfo: [String: Any] = [
         cgDisplayIDKey: haxWindow.screen.deviceDescription[.init(rawValue: "NSScreenNumber")] as! CGDirectDisplayID,
         nsFrameKey: haxWindow.frame,
@@ -97,9 +97,12 @@ extension WindowInfo {
       if let title = haxWindow.title {
         haxInfo[cgNameKey] = title
       }
+
+      // Add extra keys from NSRunningApplication to the info dict
       if let runningApp = NSRunningApplication(processIdentifier: processID) {
         haxInfo[canActivateKey] = (runningApp.activationPolicy != .prohibited)
       }
+
       return WindowInfo(infoDict.merging(haxInfo as [String: Any], uniquingKeysWith: { $1 }))
     })
   }
@@ -108,5 +111,6 @@ extension WindowInfo {
 //extension WindowInfo: CustomStringConvertible {
 //  var description: String {
 // TODO: description should be directly pastable into a unit test to create a functionally identical WindowInfo instance
+// CGRectCreateDictionaryRepresentation
 //  }
 //}
