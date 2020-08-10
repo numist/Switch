@@ -18,6 +18,7 @@ private let cgBackingLocationVideoMemoryKey = "kCGWindowBackingLocationVideoMemo
 private let cgDisplayIDKey = "NSScreenNumber"
 private let nsFrameKey = "NSFrame"
 private let isFullscreenKey = "IsFullscreen"
+private let canActivateKey = "FriendlyActivationPolicy"
 
 // swiftlint:disable force_cast
 
@@ -38,6 +39,8 @@ struct WindowInfo {
   let cgDisplayID: CGDirectDisplayID?
   let nsFrame: NSRect?
   let isFullscreen: Bool?
+
+  let canActivate: Bool
 
   init(_ infoDict: [String: Any]) {
     // Required Window List Keys
@@ -62,6 +65,8 @@ struct WindowInfo {
     cgDisplayID = infoDict[cgDisplayIDKey] as? CGDirectDisplayID
     nsFrame = infoDict[nsFrameKey] as? NSRect
     isFullscreen = infoDict[isFullscreenKey] as? Bool
+
+    canActivate = infoDict[canActivateKey] as? Bool ?? false
   }
 }
 
@@ -74,11 +79,14 @@ extension WindowInfo {
     .map({ infoDict in
 
       let windowID = infoDict[kCGWindowNumber as String] as! CGWindowID
-      guard let haxWindow = HAXApplication(pid: infoDict[cgOwnerPIDKey] as! Int32)?
+      let processID = infoDict[cgOwnerPIDKey] as! Int32
+      guard let haxWindow = HAXApplication(pid: processID)?
         .windows
         .filter({ $0.cgWindowID() == windowID })
         .first
-      else { return WindowInfo(infoDict) }
+      else {
+        return WindowInfo(infoDict)
+      }
 
       // Annotate info dicts with extra keys from hax
       var haxInfo: [String: Any] = [
@@ -88,6 +96,9 @@ extension WindowInfo {
       ]
       if let title = haxWindow.title {
         haxInfo[cgNameKey] = title
+      }
+      if let runningApp = NSRunningApplication(processIdentifier: processID) {
+        haxInfo[canActivateKey] = (runningApp.activationPolicy != .prohibited)
       }
       return WindowInfo(infoDict.merging(haxInfo as [String: Any], uniquingKeysWith: { $1 }))
     })
