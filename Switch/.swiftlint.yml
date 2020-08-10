@@ -1,2 +1,4 @@
+disabled_rules:
+  - todo
 trailing_comma:
-    mandatory_comma: true
+  mandatory_comma: true

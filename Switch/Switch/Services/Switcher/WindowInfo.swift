@@ -7,14 +7,42 @@
 
 import Foundation
 import CoreGraphics
+import Haxcessibility
 
 // swiftlint:disable force_cast
 
 struct WindowInfo {
-  fileprivate let infoDict: [String: Any]
+  // Required Window List Keys
+  // https://developer.apple.com/documentation/coregraphics/quartz_window_services/required_window_list_keys
+  let number: CGWindowID
+  let storeType: CGWindowBackingType
+  let layer: CGWindowLevelKey
+  let bounds: CGRect
+  let sharingState: CGWindowSharingType
+  let alpha: Float
+  let ownerPID: pid_t
+  let memoryUsage: Int64
+
+  // Optional Window List Keys
+  // https://developer.apple.com/documentation/coregraphics/quartz_window_services/optional_window_list_keys
+  let ownerName: String?
+  let name: String?
+  let isOnscreen: Bool?
+  let backingLocationVideoMemory: Bool?
 
   init(_ infoDict: [String: Any]) {
-    self.infoDict = infoDict
+    number = infoDict[kCGWindowNumber as String] as! CGWindowID
+    storeType = CGWindowBackingType(rawValue: infoDict[kCGWindowNumber as String] as! UInt32)!
+    layer = CGWindowLevelKey.level(for: infoDict[kCGWindowLayer as String] as! CGWindowLevel)
+    bounds = CGRect(dictionaryRepresentation: infoDict[kCGWindowBounds as String] as! CFDictionary)!
+    sharingState = CGWindowSharingType(rawValue: infoDict[kCGWindowSharingState as String] as! UInt32)!
+    alpha = infoDict[kCGWindowAlpha as String] as! Float
+    ownerPID = infoDict[kCGWindowOwnerPID as String] as! Int32
+    memoryUsage = infoDict[kCGWindowMemoryUsage as String] as! Int64
+    ownerName = infoDict[kCGWindowOwnerName as String] as? String
+    name = infoDict[kCGWindowName as String] as? String
+    isOnscreen = infoDict[kCGWindowIsOnscreen as String] as? Bool
+    backingLocationVideoMemory = infoDict[kCGWindowBackingLocationVideoMemory as String] as? Bool
   }
 }
 
@@ -22,103 +50,20 @@ extension WindowInfo {
   static func get(onScreenOnly: Bool = true) -> [WindowInfo] {
     var options = CGWindowListOption.excludeDesktopElements
     if onScreenOnly { options.insert(.optionOnScreenOnly) }
-    return (CGWindowListCopyWindowInfo(options, kCGNullWindowID) as! [[String: Any]]).map { WindowInfo($0) }
-  }
-}
-
-extension WindowInfo {
-  /* kCGWindowNumber:
-   The value for this key is a CFNumber type (encoded as kCGWindowIDCFNumberType) that contains the window ID.
-   The window ID is unique within the current user session.
-   */
-  var number: CGWindowID {
-    return infoDict[kCGWindowNumber as String] as! CGWindowID
-  }
-
-  /* kCGWindowStoreType:
-   The value for this key is a CFNumber type (encoded as CFNumberType.intType) that contains one of the constants
-   defined in CGWindowBackingType.
-   */
-  var storeType: CGWindowBackingType {
-    return CGWindowBackingType(rawValue: infoDict[kCGWindowNumber as String] as! UInt32)!
-  }
-
-  /* kCGWindowLayer:
-   The value for this key is a CFNumber type (encoded as CFNumberType.intType) that contains the window layer number.
-   */
-  var layer: CGWindowLevelKey {
-    return CGWindowLevelKey.level(for: infoDict[kCGWindowLayer as String] as! CGWindowLevel)
-  }
-
-  /* kCGWindowBounds:
-   The value for this key is a CFDictionary type that must be decoded to a CGRect type using the
-   makeWithDictionaryRepresentation(_:) function. The coordinates of the rectangle are specified in screen space, where
-   the origin is in the upper-left corner of the main display.
-   */
-  var bounds: CGRect {
-    return CGRect(dictionaryRepresentation: infoDict[kCGWindowBounds as String] as! CFDictionary)!
-  }
-
-  /* kCGWindowSharingState:
-   The value for this key is a CFNumber type (encoded as CFNumberType.intType) that contains one of the constants
-   defined in CGWindowSharingType.
-   */
-  var sharingState: CGWindowSharingType {
-    return CGWindowSharingType(rawValue: infoDict[kCGWindowSharingState as String] as! UInt32)!
-  }
-
-  /* kCGWindowAlpha:
-   The value for this key is a CFNumber type (encoded as CFNumberType.floatType) that contains the window’s alpha fade
-   level. This number is in the range 0.0 to 1.0, where 0.0 is fully transparent and 1.0 is fully opaque.
-   */
-  var alpha: Float {
-    return infoDict[kCGWindowAlpha as String] as! Float
-  }
-
-  /* kCGWindowOwnerPID:
-   The value for this key is a CFNumber type (encoded as CFNumberType.intType) that contains the process ID of the
-   application that owns the window.
-   */
-  var ownerPID: pid_t {
-    return infoDict[kCGWindowOwnerPID as String] as! Int32
-  }
-
-  /* kCGWindowMemoryUsage:
-   The value for this key is a CFNumber type (encoded as CFNumberType.longLongType) that contains an estimate of the
-   amount of memory (measured in bytes) used by the window and its supporting data structures.
-   */
-  var memoryUsage: Int64 {
-    return infoDict[kCGWindowMemoryUsage as String] as! Int64
-  }
-
-  /* kCGWindowOwnerName:
-   The key that identifies the name of the application that owns the window. The value for this key is a CFString type.
-   */
-  var ownerName: String? {
-    return infoDict[kCGWindowOwnerName as String] as? String
-  }
-
-  /* kCGWindowName:
-   The key that identifies the name of the window, as configured in Quartz. The value for this key is a CFString type.
-   (Note that few applications set the Quartz window name.)
-   */
-  var name: String? {
-    return infoDict[kCGWindowName as String] as? String
-  }
-
-  /* kCGWindowIsOnscreen:
-   The key that identifies whether the window is currently onscreen. The value for this key is a CFBoolean type.
-   */
-  var isOnscreen: Bool? {
-    return infoDict[kCGWindowIsOnscreen as String] as? Bool
-  }
-
-  /* kCGWindowBackingLocationVideoMemory:
-   The key that identifies whether the window’s backing store is located in video memory.
-   The value for this key is a CFBoolean type.
-   */
-  var backingLocationVideoMemory: Bool? {
-    return infoDict[kCGWindowBackingLocationVideoMemory as String] as? Bool
+    return (CGWindowListCopyWindowInfo(options, kCGNullWindowID) as! [[String: Any]]).map({ infoDict in
+      // TODO: try CGSCopyWindowProperty first to avoid AX per https://stackoverflow.com/a/15237348
+      // My bet is it's the same as kCGWindowName
+      if infoDict[kCGWindowName as String] == nil {
+        // Try to get the window name from AX instead
+        let number = infoDict[kCGWindowNumber as String] as! CGWindowID
+        let ownerPID = infoDict[kCGWindowOwnerPID as String] as! Int32
+        let haxWindow = HAXApplication(pid: ownerPID)?.windows.filter({ $0.cgWindowID() == number }).first
+        if let haxName = haxWindow?.title {
+          return WindowInfo(infoDict.merging([(kCGWindowName as String): haxName], uniquingKeysWith: { $1 }))
+        }
+      }
+      return WindowInfo(infoDict)
+    })
   }
 }
 

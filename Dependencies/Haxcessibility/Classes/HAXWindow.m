@@ -5,6 +5,8 @@
 #import "HAXWindow.h"
 #import "HAXElement+Protected.h"
 
+extern AXError _AXUIElementGetWindow(AXUIElementRef, CGWindowID* out);
+
 @implementation HAXWindow
 
 -(NSArray *)views {
@@ -29,6 +31,16 @@
 -(BOOL)close {
 	HAXElement *element = [self elementOfClass:[HAXElement class] forKey:(__bridge NSString *)kAXCloseButtonAttribute error:NULL];
 	return [element performAction:(__bridge NSString *)kAXPressAction error:NULL];
+}
+
+// https://stackoverflow.com/a/9624565
+-(CGWindowID)cgWindowID {
+  CGWindowID result;
+  AXError err = _AXUIElementGetWindow(self.elementRef, &result);
+  if (err == kAXErrorSuccess) {
+    return result;
+  }
+  return kCGNullWindowID;
 }
 
 @end

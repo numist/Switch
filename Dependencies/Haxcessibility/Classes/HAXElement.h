@@ -6,15 +6,17 @@
 
 @protocol HAXElementDelegate;
 
+@class HAXButton;
+
 @interface HAXElement : NSObject
 
 @property (nonatomic, weak) id<HAXElementDelegate> delegate;
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) NSString *role;
 @property (nonatomic, readonly) BOOL hasChildren;
-@property (nonatomic, readonly) NSArray *children;
-@property (nonatomic, readonly) NSArray *attributeNames;
-@property (nonatomic, readonly) NSArray *buttons;
+@property (nonatomic, readonly) NSArray<HAXElement *> *children;
+@property (nonatomic, readonly) NSArray<NSString *> *attributeNames;
+@property (nonatomic, readonly) NSArray<HAXButton *> *buttons;
 
 -(BOOL)isEqualToElement:(HAXElement *)other;
 
