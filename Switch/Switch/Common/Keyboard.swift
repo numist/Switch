@@ -48,6 +48,8 @@ class Keyboard {
       return result
     }
   }
+
+  // swiftlint:disable identifier_name
   enum KeyCode: UInt16 {
     case a               = 0x00 // kVK_ANSI_A
     case s               = 0x01 // kVK_ANSI_S
@@ -170,6 +172,7 @@ class Keyboard {
     case kana            = 0x68 // kVK_JIS_Kana
     case unknown         = 0xFF
   }
+  // swiftlint:enable identifier_name
 
   struct HotKey: Hashable, CustomStringConvertible {
     let modifiers: Modifiers

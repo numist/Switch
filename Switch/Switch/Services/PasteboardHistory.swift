@@ -14,15 +14,14 @@ private extension Set {
 }
 
 /*
- Storage?:
-
- DELETE FROM pasteboardItems WHERE used < MAX(?, SELECT used FROM pasteboardItems ORDER BY used DESC LIMIT 1 OFFSET ?)
+ DELETE FROM pasteboardItems WHERE used < ?
  SELECT appName, bundleId, snippet,
    datetime(used, 'unixepoch', 'localtime') as used,
    datetime(created, 'unixepoch', 'localtime') AS created
  FROM pasteboardItems WHERE snippet LIKE '%?%' ORDER BY used DESC LIMIT ?
 
- What's the perf implication of super fuzzy search?
+ What's the perf implication of super fuzzy search? May as well allow wildcards in the query str
+
  [pasteboard setString: @"org.nspasteboard.SampleApp" forType: @"org.nspasteboard.source"];
 
  if let path = workspace.absolutePathForApplication(withBundleIdentifier:bundleId) {
@@ -39,6 +38,7 @@ class PasteboardHistory {
   private var mouseClickEventTap: EventTap! = nil
 
   // SQLite stuff
+  // swiftlint:disable:next identifier_name
   private var db: SQLite.Connection
   private var insertStmt: SQLite.Statement
 
@@ -182,10 +182,20 @@ class PasteboardHistory {
     }
     Keyboard.register(.init(.command, .x), asyncAndRecord)
     Keyboard.register(.init(.command, .c), asyncAndRecord)
+    Keyboard.register(.init([.command, .option], .v)) { keyDown in
+      if keyDown {
+        DispatchQueue.main.async {
+          // TODO: rubber, meet road
+          print("Want to paste from history")
+        }
+      }
+      return false
+    }
   }
 
   deinit {
     Keyboard.deregister(.init(.command, .x))
     Keyboard.deregister(.init(.command, .c))
+    Keyboard.deregister(.init([.command, .option], .v))
   }
 }

@@ -10,6 +10,7 @@
 		BC56727F24DFC84B00206A39 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC56727E24DFC84B00206A39 /* Service.swift */; };
 		BC56728224DFD27400206A39 /* PasteboardHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC56728124DFD27400206A39 /* PasteboardHistory.swift */; };
 		BC56728424E0807400206A39 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC56728324E0807400206A39 /* SQLite.framework */; };
+		BC56728724E0BABC00206A39 /* WindowInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC56728624E0BABC00206A39 /* WindowInfo.swift */; };
 		BCD18FD424DD41C000941A86 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD18FD324DD41C000941A86 /* AppDelegate.swift */; };
 		BCD18FD824DD41C800941A86 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCD18FD724DD41C800941A86 /* Assets.xcassets */; };
 		BCD18FDB24DD41C800941A86 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCD18FDA24DD41C800941A86 /* Preview Assets.xcassets */; };
@@ -43,6 +44,7 @@
 		BC56727E24DFC84B00206A39 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		BC56728124DFD27400206A39 /* PasteboardHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteboardHistory.swift; sourceTree = "<group>"; };
 		BC56728324E0807400206A39 /* SQLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SQLite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BC56728624E0BABC00206A39 /* WindowInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowInfo.swift; sourceTree = "<group>"; };
 		BCD18FD024DD41C000941A86 /* Switch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Switch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCD18FD324DD41C000941A86 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BCD18FD724DD41C800941A86 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -92,6 +94,7 @@
 		BC56728024DFD22C00206A39 /* Switcher */ = {
 			isa = PBXGroup;
 			children = (
+				BC56728624E0BABC00206A39 /* WindowInfo.swift */,
 			);
 			path = Switcher;
 			sourceTree = "<group>";
@@ -341,6 +344,7 @@
 				BCD1901324DF773100941A86 /* Keyboard.swift in Sources */,
 				BC56728224DFD27400206A39 /* PasteboardHistory.swift in Sources */,
 				BCD1901924DF83DB00941A86 /* EventTap.swift in Sources */,
+				BC56728724E0BABC00206A39 /* WindowInfo.swift in Sources */,
 				BC56727F24DFC84B00206A39 /* Service.swift in Sources */,
 				BCD1901B24DF9D1400941A86 /* LongCmdQ.swift in Sources */,
 				BCD18FD424DD41C000941A86 /* AppDelegate.swift in Sources */,
