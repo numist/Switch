@@ -1,3 +1,2 @@
-disabled_rules:
-  - identifier_name
-  - trailing_comma
+trailing_comma:
+    mandatory_comma: true
