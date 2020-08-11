@@ -112,7 +112,7 @@ extension WindowInfo: Identifiable, Hashable {}
 
 //extension WindowInfo: CustomStringConvertible {
 //  var description: String {
-// TODO: description should be directly pastable into a unit test to create a functionally identical WindowInfo instance
+// TODO(numist): description should be directly pastable into a unit test to create a functionally identical WindowInfo instance
 // CGRectCreateDictionaryRepresentation
 //  }
 //}

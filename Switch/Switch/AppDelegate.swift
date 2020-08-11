@@ -15,7 +15,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   func applicationDidFinishLaunching(_ aNotification: Notification) {
     // AX permissions shenanigans
     guard AXIsProcessTrustedWithOptions(nil) else {
-      // TODO: show some instructions
+      // TODO(numist): show some instructions
       os_log(.info, "Switch is not trusted, prompting for AX permissions")
       AXIsProcessTrustedWithOptions([kAXTrustedCheckOptionPrompt.takeUnretainedValue(): true] as CFDictionary)
       // axPoller monitors AX state and relaunches when the process becomes trusted

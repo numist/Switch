@@ -69,7 +69,7 @@ class EventTap {
       throw EventTap.Error()
     }
     runLoopSource = CFMachPortCreateRunLoopSource(nil, eventTap, 0)
-    // TODO: Might be a good idea to use something other than CFRunLoopGetCurrent since that's
+    // TODO(numist): Might be a good idea to use something other than CFRunLoopGetCurrent since that's
     // bound to the current (main) thread, but we want this to be user-interactive and this will work for now
     CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, .commonModes)
   }

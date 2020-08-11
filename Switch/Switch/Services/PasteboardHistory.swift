@@ -98,7 +98,7 @@ class PasteboardHistory {
       return
     }
 
-    // TODO: better app attribution for menu items and immediate-dismiss apps (like Dropbox menu)
+    // TODO(numist): better app attribution for menu items and immediate-dismiss apps (like Dropbox menu)
     let frontmostApp = NSWorkspace.shared.frontmostApplication!
     let appName = frontmostApp.localizedName ?? "(unknown)"
     let appBundle = frontmostApp.bundleIdentifier ?? "(unknown)"
@@ -107,7 +107,7 @@ class PasteboardHistory {
       do {
         try self.insertStmt.run(appName, appBundle, item)
       } catch {
-        // TODO: unify logging shenanigans (macOS 11.0?)
+        // TODO(numist): unify logging shenanigans (macOS 11.0?)
         print("Unexpected error inserting item: \(error)")
         // Drop item.
         return
@@ -125,7 +125,7 @@ class PasteboardHistory {
       let dir = try setUpAppSupportDir()
       try setUpDatabase(in: dir)
     } catch {
-      // TODO: error handling, especially db corruption but also filemanager stuff
+      // TODO(numist): error handling, especially db corruption but also filemanager stuff
       print("Unexpected error: \(error)")
       exit(1)
     }
@@ -152,7 +152,7 @@ class PasteboardHistory {
     Keyboard.register(.init([.command, .option], .v)) { keyDown in
       if keyDown {
         DispatchQueue.main.async {
-          // TODO: rubber, meet road
+          // TODO(numist): rubber, meet road
           print("Want to paste from history")
         }
       }

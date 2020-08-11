@@ -2,9 +2,9 @@ import Foundation
 import Carbon.HIToolbox
 import OSLog
 
-// TODO: UI
-// TODO: enable/disable based on pref
-// TODO: staticify, ServiceProtocol for enable/disable? gotta think of how prefs gonna drive behaviour here
+// TODO(numist): UI
+// TODO(numist): enable/disable based on pref
+// TODO(numist): staticify, ServiceProtocol for enable/disable? gotta think of how prefs gonna drive behaviour here
 
 class LongCmdQ {
   var timer: Timer?
