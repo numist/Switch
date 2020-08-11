@@ -6,7 +6,6 @@
 
 @interface HAXElement ()
 
-+(instancetype)elementWithElementRef:(AXUIElementRef)elementRef __attribute__((nonnull(1)));
 -(instancetype)initWithElementRef:(AXUIElementRef)elementRef __attribute__((nonnull(1)));
 
 @property (nonatomic, readonly) AXUIElementRef elementRef __attribute__((NSObject));

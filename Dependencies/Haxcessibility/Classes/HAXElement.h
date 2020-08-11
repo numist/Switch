@@ -17,6 +17,7 @@
 @property (nonatomic, readonly) NSArray<HAXElement *> *children;
 @property (nonatomic, readonly) NSArray<NSString *> *attributeNames;
 @property (nonatomic, readonly) NSArray<HAXButton *> *buttons;
+@property (nonatomic, readonly) pid_t processIdentifier;
 
 -(BOOL)isEqualToElement:(HAXElement *)other;
 

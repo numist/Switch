@@ -17,7 +17,7 @@ extern AXError _AXUIElementGetWindow(AXUIElementRef, CGWindowID* out);
     for (HAXElement * haxElementI in axChildren) {
         axRole = [haxElementI getAttributeValueForKey:(__bridge NSString *)kAXRoleAttribute error:NULL];
         if ([axRole isEqualToString:@"AXView"]) {
-            HAXView * haxView = [HAXView elementWithElementRef:(AXUIElementRef)haxElementI.elementRef];
+            HAXView * haxView = [[HAXView init] initWithElementRef:(AXUIElementRef)haxElementI.elementRef];
             [result addObject:haxView];
         }
     }
@@ -25,7 +25,16 @@ extern AXError _AXUIElementGetWindow(AXUIElementRef, CGWindowID* out);
 }
 
 -(BOOL)raise {
-	return [self performAction:(__bridge NSString *)kAXRaiseAction error:NULL];
+    if (![self performAction:(__bridge NSString *)kAXRaiseAction error:NULL]) { return NO; }
+    ProcessSerialNumber psn;
+    pid_t pid = self.processIdentifier;
+    if (pid && GetProcessForPID (pid, &psn) == 0) {
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        return noErr == SetFrontProcessWithOptions(&psn, kSetFrontProcessFrontWindowOnly);
+        #pragma clang diagnostic pop
+    }
+    return NO;
 }
 
 -(BOOL)close {

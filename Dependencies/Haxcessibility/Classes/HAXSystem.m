@@ -10,7 +10,7 @@
 
 +(instancetype)system {
 	AXUIElementRef element = AXUIElementCreateSystemWide();
-	HAXSystem *result = [self elementWithElementRef:element];
+	HAXSystem *result = [[HAXSystem alloc] initWithElementRef:element];
 	CFRelease(element);
 	return result;
 }

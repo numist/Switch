@@ -15,10 +15,6 @@
 
 @implementation HAXElement
 
-+(instancetype)elementWithElementRef:(AXUIElementRef)elementRef {
-	return [[self alloc] initWithElementRef:elementRef];
-}
-
 -(instancetype)initWithElementRef:(AXUIElementRef)elementRef {
 	if((self = [super init])) {
 		_elementRef = CFRetain(elementRef);
@@ -106,7 +102,7 @@
 	AXUIElementRef subelementRef = (AXUIElementRef)[self copyAttributeValueForKey:key error:error];
 	id result = nil;
 	if (subelementRef) {
-		result = [klass elementWithElementRef:subelementRef];
+		result = [[klass alloc] initWithElementRef:subelementRef];
 		CFRelease(subelementRef);
 		subelementRef = NULL;
 	}
@@ -177,7 +173,7 @@ static void axCallback(AXObserverRef observer, AXUIElementRef element, CFStringR
     if (axUIElements != nil) {
         result = [NSMutableArray arrayWithCapacity:[axUIElements count]];
         for (id elementI in axUIElements) {
-            [result addObject:[HAXElement  elementWithElementRef:(AXUIElementRef)(elementI)]];
+            [result addObject:[[HAXElement alloc] initWithElementRef:(AXUIElementRef)(elementI)]];
         }
     }
     
@@ -204,7 +200,7 @@ static void axCallback(AXObserverRef observer, AXUIElementRef element, CFStringR
             break;
         }
         if ([axRole isEqualToString:(__bridge NSString *)kAXButtonRole]) {
-            HAXButton *button = [HAXButton elementWithElementRef:(AXUIElementRef)haxElementI.elementRef];
+            HAXButton *button = [[HAXButton alloc] initWithElementRef:(AXUIElementRef)haxElementI.elementRef];
             [result addObject:button];
         }
     }
@@ -224,6 +220,12 @@ static void axCallback(AXObserverRef observer, AXUIElementRef element, CFStringR
     CFArrayRef attrNamesRef = NULL;
     AXUIElementCopyAttributeNames(_elementRef, &attrNamesRef);
     return attrNamesRef ? CFBridgingRelease(attrNamesRef) : nil;
+}
+
+-(pid_t)processIdentifier {
+  pid_t result;
+  if (AXUIElementGetPid (self.elementRef, &result) != kAXErrorSuccess) { return 0; }
+  return result;
 }
 
 @end

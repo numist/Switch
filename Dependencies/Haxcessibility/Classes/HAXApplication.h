@@ -11,8 +11,7 @@
 @property (nonatomic, readonly) HAXWindow *focusedWindow;
 @property (nonatomic, readonly) NSArray<HAXWindow *> *windows;
 @property (nonatomic, copy, readonly) NSString *localizedName;
-@property (nonatomic, readonly) pid_t processIdentifier;
 
-+(instancetype)applicationWithPID:(pid_t)pid;
++(HAXApplication *)applicationWithPID:(pid_t)pid;
 
 @end
