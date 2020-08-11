@@ -38,7 +38,7 @@ class PasteboardHistory {
   private var mouseClickEventTap: EventTap! = nil
 
   // SQLite stuff
-  private var db: SQLite.Connection! // swiftlint:disable:this identifier_name
+  fileprivate var db: SQLite.Connection! // swiftlint:disable:this identifier_name
   private var insertStmt: SQLite.Statement!
 
   private func recordPasteboard() {
@@ -205,5 +205,37 @@ class PasteboardHistory {
       ON CONFLICT(snippet) DO
         UPDATE SET used = strftime('%s', 'now')
     """)
+  }
+}
+
+struct PasteboardItem: Identifiable {
+  let id: Int64 // swiftlint:disable:this identifier_name
+  let appName: String
+  let appBundle: String
+  let snippet: String
+  let created: Date
+  let lastUsed: Date
+}
+
+// swiftlint:disable force_try
+// swiftlint:disable force_cast
+extension PasteboardHistory {
+  func getItems(for query: String) -> [PasteboardItem] {
+    let stmt = try! db.prepare("""
+    SELECT rowid, * FROM pasteboardItems WHERE snippet LIKE ? ORDER BY used DESC LIMIT 20
+    """)
+    var result = [PasteboardItem]()
+    for row in stmt.bind(query.isEmpty ? "%" : "%"+query+"%") {
+      print(row)
+      result.append(PasteboardItem(
+        id: row[0] as! Int64,
+        appName: row[1] as! String,
+        appBundle: row[2] as! String,
+        snippet: row[3] as! String,
+        created: Date(timeIntervalSince1970: TimeInterval(row[4] as! Int64)),
+        lastUsed: Date(timeIntervalSince1970: TimeInterval(row[5] as! Int64))
+      ))
+    }
+    return result
   }
 }
