@@ -13,7 +13,7 @@ import OSLog
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
   func applicationDidFinishLaunching(_ aNotification: Notification) {
-    if let _ = ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] {
+    if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != nil {
       // Don't set up the app when running for previews
       return
     }
