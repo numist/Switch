@@ -13,6 +13,7 @@
 		BC56728724E0BABC00206A39 /* WindowInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC56728624E0BABC00206A39 /* WindowInfo.swift */; };
 		BC56728924E0F0E200206A39 /* Haxcessibility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC56728824E0F0E200206A39 /* Haxcessibility.framework */; };
 		BC56728B24E1C66A00206A39 /* NSRect+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC56728A24E1C66A00206A39 /* NSRect+Extensions.swift */; };
+		BC56728E24E23BA300206A39 /* WindowInfoGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC56728D24E23BA300206A39 /* WindowInfoGroup.swift */; };
 		BCD18FD424DD41C000941A86 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD18FD324DD41C000941A86 /* AppDelegate.swift */; };
 		BCD18FD824DD41C800941A86 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCD18FD724DD41C800941A86 /* Assets.xcassets */; };
 		BCD18FDB24DD41C800941A86 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCD18FDA24DD41C800941A86 /* Preview Assets.xcassets */; };
@@ -49,6 +50,7 @@
 		BC56728624E0BABC00206A39 /* WindowInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowInfo.swift; sourceTree = "<group>"; };
 		BC56728824E0F0E200206A39 /* Haxcessibility.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Haxcessibility.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC56728A24E1C66A00206A39 /* NSRect+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSRect+Extensions.swift"; sourceTree = "<group>"; };
+		BC56728D24E23BA300206A39 /* WindowInfoGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowInfoGroup.swift; sourceTree = "<group>"; };
 		BCD18FD024DD41C000941A86 /* Switch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Switch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCD18FD324DD41C000941A86 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BCD18FD724DD41C800941A86 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 			isa = PBXGroup;
 			children = (
 				BC56728624E0BABC00206A39 /* WindowInfo.swift */,
+				BC56728D24E23BA300206A39 /* WindowInfoGroup.swift */,
 			);
 			path = Switcher;
 			sourceTree = "<group>";
@@ -356,6 +359,7 @@
 				BC56727F24DFC84B00206A39 /* Service.swift in Sources */,
 				BCD1901B24DF9D1400941A86 /* LongCmdQ.swift in Sources */,
 				BCD18FD424DD41C000941A86 /* AppDelegate.swift in Sources */,
+				BC56728E24E23BA300206A39 /* WindowInfoGroup.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
