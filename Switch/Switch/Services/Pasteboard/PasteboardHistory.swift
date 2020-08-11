@@ -142,7 +142,7 @@ class PasteboardHistory {
     })
 
     let asyncAndRecord: (Bool) -> Bool = { _ in
-      DispatchQueue.main.asyncAfter(deadline: .now()) {
+      DispatchQueue.main.async {
         self.recordPasteboard()
       }
       return true
