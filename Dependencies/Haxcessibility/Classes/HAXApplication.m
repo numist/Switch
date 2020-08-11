@@ -35,4 +35,11 @@
 	return [self getAttributeValueForKey:(NSString *)kAXTitleAttribute error:NULL];
 }
 
+-(HAXWindow *)windowWithID:(CGWindowID)cgWindowID {
+    for (HAXWindow *window in self.windows) {
+        if (window.cgWindowID == cgWindowID) { return window; }
+    }
+    return nil;
+}
+
 @end

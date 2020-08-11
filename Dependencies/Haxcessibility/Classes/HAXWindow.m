@@ -25,16 +25,22 @@ extern AXError _AXUIElementGetWindow(AXUIElementRef, CGWindowID* out);
 }
 
 -(BOOL)raise {
-    if (![self performAction:(__bridge NSString *)kAXRaiseAction error:NULL]) { return NO; }
-    ProcessSerialNumber psn;
+    __block BOOL success = NO;
     pid_t pid = self.processIdentifier;
-    if (pid && GetProcessForPID (pid, &psn) == 0) {
-        #pragma clang diagnostic push
-        #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        return noErr == SetFrontProcessWithOptions(&psn, kSetFrontProcessFrontWindowOnly);
-        #pragma clang diagnostic pop
+    if (pid == [NSProcessInfo processInfo].processIdentifier && ![NSThread isMainThread]) {
+        dispatch_sync(dispatch_get_main_queue(), ^{ success = [self raise]; });
+        return success;
     }
-    return NO;
+    if ([self performAction:(__bridge NSString *)kAXRaiseAction error:NULL]) {
+        ProcessSerialNumber psn;
+        if (pid && GetProcessForPID (pid, &psn) == 0) {
+            #pragma clang diagnostic push
+            #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+            success = (noErr == SetFrontProcessWithOptions(&psn, kSetFrontProcessFrontWindowOnly));
+            #pragma clang diagnostic pop
+        }
+    }
+    return success;
 }
 
 -(BOOL)close {

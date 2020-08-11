@@ -223,9 +223,9 @@ static void axCallback(AXObserverRef observer, AXUIElementRef element, CFStringR
 }
 
 -(pid_t)processIdentifier {
-  pid_t result;
-  if (AXUIElementGetPid (self.elementRef, &result) != kAXErrorSuccess) { return 0; }
-  return result;
+    pid_t result;
+    if (AXUIElementGetPid (self.elementRef, &result) != kAXErrorSuccess) { return 0; }
+    return result;
 }
 
 @end

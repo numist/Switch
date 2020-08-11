@@ -14,4 +14,6 @@
 
 +(HAXApplication *)applicationWithPID:(pid_t)pid;
 
+-(nullable HAXWindow *)windowWithID:(CGWindowID)cgWindowID;
+
 @end
