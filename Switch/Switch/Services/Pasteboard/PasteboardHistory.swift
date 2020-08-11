@@ -222,7 +222,7 @@ struct PasteboardItem: Identifiable {
 extension PasteboardHistory {
   func getItems(for query: String) -> [PasteboardItem] {
     let stmt = try! db.prepare("""
-    SELECT rowid, * FROM pasteboardItems WHERE snippet LIKE ? ORDER BY used DESC LIMIT 20
+    SELECT rowid, * FROM pasteboardItems WHERE snippet LIKE ? ORDER BY used DESC LIMIT 100
     """)
     var result = [PasteboardItem]()
     for row in stmt.bind(query.isEmpty ? "%" : "%"+query+"%") {
