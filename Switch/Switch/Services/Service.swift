@@ -22,6 +22,9 @@ enum Service {
         })
         .sink { _ in
           os_log(.info, "AX now trusts us, time to relaunch!")
+          if !amIBeingDebugged() {
+            // TODO(numist): time to relaunch!
+          }
         }
     }
   }
