@@ -1,6 +1,6 @@
 import Cocoa
 import OSLog
-import SQLite
+import CoreData
 
 private extension Set {
   func intersects(_ other: Self) -> Bool {
@@ -36,10 +36,6 @@ class PasteboardHistory {
 
   private var changeCount: Int!
   private var mouseClickEventTap: EventTap! = nil
-
-  // SQLite stuff
-  fileprivate var db: SQLite.Connection! // swiftlint:disable:this identifier_name
-  private var insertStmt: SQLite.Statement!
 
   private func recordPasteboard() {
     let pasteboard = NSPasteboard.general
@@ -85,33 +81,31 @@ class PasteboardHistory {
     // NSPasteboard.PasteboardType.URL
     // NSPasteboard.PasteboardType.fileURL
     // But for now we'll just grab NSStringPboardType, if available.
-    guard let item = pasteboard.string(forType: .string) else {
+    guard let snippet = pasteboard.string(forType: .string) else {
       os_log(.info, "no item for type NSStringPboardType, skipping")
       return
     }
-    if item.allSatisfy({ $0.isWhitespace }) {
+    if snippet.allSatisfy({ $0.isWhitespace }) {
       os_log(.info, "item is all whitespace, skipping")
       return
     }
-    if item.count > sizeLimit {
+    if snippet.count > sizeLimit {
       os_log(.info, "item is too big, skipping")
       return
     }
 
     // TODO(numist): better app attribution for menu items and immediate-dismiss apps (like Dropbox menu)
     let frontmostApp = NSWorkspace.shared.frontmostApplication!
-    let appName = frontmostApp.localizedName ?? "(unknown)"
-    let appBundle = frontmostApp.bundleIdentifier ?? "(unknown)"
+    let appBundle = frontmostApp.bundleIdentifier ?? "net.numist.bundle.unknown"
     // Get off the main thread when doing I/O
-    DispatchQueue.global(qos: .userInitiated).async {
-      do {
-        try self.insertStmt.run(appName, appBundle, item)
-      } catch {
-        // TODO(numist): unify logging shenanigans (macOS 11.0?)
-        print("Unexpected error inserting item: \(error)")
-        // Drop item.
-        return
-      }
+    PasteboardHistory.persistentContainer.performBackgroundTask { context in
+      context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+      let item = PasteboardItem(context: context)
+      item.appBundle = appBundle
+      item.snippet = snippet
+      item.lastUsed = Date()
+      // TODO(numist): possible for db corruption to manifest here and not anywhere else
+      try? context.save()
       os_log(.info, "recorded pasteboard item")
     }
   }
@@ -120,16 +114,29 @@ class PasteboardHistory {
     return false
   }
 
-  init() {
-    do {
-      let dir = try setUpAppSupportDir()
-      try setUpDatabase(in: dir)
-    } catch {
-      // TODO(numist): error handling, especially db corruption but also filemanager stuff
-      print("Unexpected error: \(error)")
-      exit(1)
-    }
+  static var persistentContainer: NSPersistentContainer = {
+    let container = NSPersistentContainer(name: "PasteboardHistory")
+    container.loadPersistentStores(completionHandler: { (_, error) in
+      if let error = error as NSError? {
+        // Replace this implementation with code to handle the error appropriately.
+        // fatalError() causes the application to generate a crash log and terminate.
+        // You should not use this function in a shipping application, although it may be useful during development.
 
+        /*
+         Typical reasons for an error here include:
+         * The parent directory does not exist, cannot be created, or disallows writing.
+         * The persistent store is not accessible, due to permissions or data protection when the device is locked.
+         * The device is out of space.
+         * The store could not be migrated to the current model version.
+         Check the error message to determine what the actual problem was.
+         */
+        fatalError("Unresolved error \(error), \(error.userInfo)")
+      }
+    })
+    return container
+  }()
+
+  init() {
     changeCount = NSPasteboard.general.changeCount
 
     mouseClickEventTap = try? EventTap(observing: .leftMouseUp, callback: { (_, event) -> CGEvent? in
@@ -158,6 +165,8 @@ class PasteboardHistory {
       }
       return false
     }
+
+    PasteboardHistory.persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
   }
 
   deinit {
@@ -165,77 +174,9 @@ class PasteboardHistory {
     Keyboard.deregister(.init(.command, .c))
     Keyboard.deregister(.init([.command, .option], .v))
   }
-
-  private func setUpAppSupportDir() throws -> URL {
-    let fileManager = FileManager.default
-    let appSup = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask)
-      .first!.appendingPathComponent(Bundle.main.bundleIdentifier!)
-    var isDir: ObjCBool = true
-    var exists = fileManager.fileExists(atPath: appSup.path, isDirectory: &isDir)
-    if exists && isDir.boolValue == false {
-      try fileManager.removeItem(at: appSup)
-      exists = false
-    }
-    if !exists {
-      try fileManager.createDirectory(at: appSup, withIntermediateDirectories: true, attributes: nil)
-    }
-    return appSup
-  }
-
-  private func setUpDatabase(in dir: URL) throws {
-    db = try SQLite.Connection(dir.appendingPathComponent("Pasteboard History.sqlite").path)
-    db.busyTimeout = 1.0
-    try db.execute("PRAGMA user_version=1")
-    try db.execute("PRAGMA journal_mode=wal")
-    try db.execute("""
-      CREATE TABLE IF NOT EXISTS pasteboardItems (
-        appname  STRING,
-        bundleId STRING,
-        snippet  STRING UNIQUE,
-        created  INT8 DEFAULT (strftime('%s', 'now')),
-        used     INT8 DEFAULT (strftime('%s', 'now'))
-      )
-    """)
-    try db.execute("""
-      CREATE INDEX IF NOT EXISTS pasteboardItems_used ON pasteboardItems(used DESC)
-    """)
-    insertStmt = try db.prepare("""
-      INSERT INTO pasteboardItems (appname, bundleId, snippet)
-      VALUES(?, ?, ?)
-      ON CONFLICT(snippet) DO
-        UPDATE SET used = strftime('%s', 'now')
-    """)
-  }
 }
 
-struct PasteboardItem: Identifiable {
-  let id: Int64 // swiftlint:disable:this identifier_name
-  let appName: String
-  let appBundle: String
-  let snippet: String
-  let created: Date
-  let lastUsed: Date
-}
-
-// swiftlint:disable force_try
-// swiftlint:disable force_cast
-extension PasteboardHistory {
-  func getItems(for query: String) -> [PasteboardItem] {
-    let stmt = try! db.prepare("""
-    SELECT rowid, * FROM pasteboardItems WHERE snippet LIKE ? ORDER BY used DESC LIMIT 100
-    """)
-    var result = [PasteboardItem]()
-    for row in stmt.bind(query.isEmpty ? "%" : "%"+query+"%") {
-      print(row)
-      result.append(PasteboardItem(
-        id: row[0] as! Int64,
-        appName: row[1] as! String,
-        appBundle: row[2] as! String,
-        snippet: row[3] as! String,
-        created: Date(timeIntervalSince1970: TimeInterval(row[4] as! Int64)),
-        lastUsed: Date(timeIntervalSince1970: TimeInterval(row[5] as! Int64))
-      ))
-    }
-    return result
-  }
+extension PasteboardItem {
+  var unwrappedSnippet: String { snippet! }
+  var unwrappedAppBundle: String { appBundle! }
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17183" systemVersion="19F101" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="PasteboardItem" representedClassName="PasteboardItem" syncable="YES" codeGenerationType="class">
+        <attribute name="appBundle" attributeType="String"/>
+        <attribute name="lastUsed" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="snippet" attributeType="String"/>
+        <fetchIndex name="byUsed">
+            <fetchIndexElement property="lastUsed" type="Binary" order="descending"/>
+        </fetchIndex>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="snippet"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <elements>
+        <element name="PasteboardItem" positionX="-63" positionY="-18" width="128" height="88"/>
+    </elements>
+</model>

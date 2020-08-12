@@ -9,9 +9,10 @@
 /* Begin PBXBuildFile section */
 		BC2121B424E25CE9009EAE3B /* PasteboardHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2121B324E25CE9009EAE3B /* PasteboardHistoryView.swift */; };
 		BC2121B624E29323009EAE3B /* Debugger Support.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2121B524E29323009EAE3B /* Debugger Support.swift */; };
+		BC2121B924E3B4AF009EAE3B /* PasteboardHistory.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BC2121B724E3B4AF009EAE3B /* PasteboardHistory.xcdatamodeld */; };
+		BC2121BB24E3B61E009EAE3B /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC2121BA24E3B61E009EAE3B /* CoreData.framework */; };
 		BC56727F24DFC84B00206A39 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC56727E24DFC84B00206A39 /* Service.swift */; };
 		BC56728224DFD27400206A39 /* PasteboardHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC56728124DFD27400206A39 /* PasteboardHistory.swift */; };
-		BC56728424E0807400206A39 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC56728324E0807400206A39 /* SQLite.framework */; };
 		BC56728724E0BABC00206A39 /* WindowInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC56728624E0BABC00206A39 /* WindowInfo.swift */; };
 		BC56728924E0F0E200206A39 /* Haxcessibility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC56728824E0F0E200206A39 /* Haxcessibility.framework */; };
 		BC56728E24E23BA300206A39 /* WindowInfoGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC56728D24E23BA300206A39 /* WindowInfoGroup.swift */; };
@@ -47,6 +48,8 @@
 /* Begin PBXFileReference section */
 		BC2121B324E25CE9009EAE3B /* PasteboardHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteboardHistoryView.swift; sourceTree = "<group>"; };
 		BC2121B524E29323009EAE3B /* Debugger Support.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Debugger Support.swift"; sourceTree = "<group>"; };
+		BC2121B824E3B4AF009EAE3B /* PasteboardHistory.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PasteboardHistory.xcdatamodel; sourceTree = "<group>"; };
+		BC2121BA24E3B61E009EAE3B /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		BC56727E24DFC84B00206A39 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		BC56728124DFD27400206A39 /* PasteboardHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteboardHistory.swift; sourceTree = "<group>"; };
 		BC56728324E0807400206A39 /* SQLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SQLite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -77,8 +80,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BC2121BB24E3B61E009EAE3B /* CoreData.framework in Frameworks */,
 				BC56728924E0F0E200206A39 /* Haxcessibility.framework in Frameworks */,
-				BC56728424E0807400206A39 /* SQLite.framework in Frameworks */,
 				BCD1901724DF77B200941A86 /* Carbon.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -105,6 +108,7 @@
 			children = (
 				BC56728124DFD27400206A39 /* PasteboardHistory.swift */,
 				BC2121B324E25CE9009EAE3B /* PasteboardHistoryView.swift */,
+				BC2121B724E3B4AF009EAE3B /* PasteboardHistory.xcdatamodeld */,
 			);
 			path = Pasteboard;
 			sourceTree = "<group>";
@@ -193,6 +197,7 @@
 		BCD1901424DF77A700941A86 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BC2121BA24E3B61E009EAE3B /* CoreData.framework */,
 				BC56728824E0F0E200206A39 /* Haxcessibility.framework */,
 				BC56728324E0807400206A39 /* SQLite.framework */,
 				BCD1901524DF77A700941A86 /* Carbon.framework */,
@@ -369,6 +374,7 @@
 				BC56728724E0BABC00206A39 /* WindowInfo.swift in Sources */,
 				BC2121B624E29323009EAE3B /* Debugger Support.swift in Sources */,
 				BC56727F24DFC84B00206A39 /* Service.swift in Sources */,
+				BC2121B924E3B4AF009EAE3B /* PasteboardHistory.xcdatamodeld in Sources */,
 				BCD1901B24DF9D1400941A86 /* LongCmdQ.swift in Sources */,
 				BCD18FD424DD41C000941A86 /* AppDelegate.swift in Sources */,
 				BC56728E24E23BA300206A39 /* WindowInfoGroup.swift in Sources */,
@@ -693,6 +699,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		BC2121B724E3B4AF009EAE3B /* PasteboardHistory.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				BC2121B824E3B4AF009EAE3B /* PasteboardHistory.xcdatamodel */,
+			);
+			currentVersion = BC2121B824E3B4AF009EAE3B /* PasteboardHistory.xcdatamodel */;
+			path = PasteboardHistory.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = BCD18FC824DD41C000941A86 /* Project object */;
 }

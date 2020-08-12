@@ -3,17 +3,16 @@ import Combine
 import SwiftUI
 
 struct PasteboardItemView: View {
+  @ObservedObject var item: PasteboardItem
   let index: Int?
   let selected: Bool
-  let bundleID: String
-  let snippet: String
 
   var icon: NSImage {
     let workspace = NSWorkspace.shared
-    if let path = workspace.absolutePathForApplication(withBundleIdentifier: bundleID) {
+    if let path = workspace.absolutePathForApplication(withBundleIdentifier: item.unwrappedAppBundle) {
       return workspace.icon(forFile: path)
     }
-    // TODO(numist): default app icon doesn't seem to be available via API, may have to copy the icns into the bundle
+    // TODO(numist): default app icon doesn't seem to be available via API, may have to copy an icns into the bundle
     return NSImage(named: NSImage.applicationIconName)!
   }
 
@@ -21,16 +20,19 @@ struct PasteboardItemView: View {
     HStack {
       Image(nsImage: icon)
         .resizable()
-        .frame(width: 16.0, height: 16.0)
+        .frame(
+          width: NSFont.systemFontSize,
+          height: NSFont.systemFontSize
+        )
       Text(
-        snippet
+        item.unwrappedSnippet
           .trimmingCharacters(in: .newlines)
           .replacingOccurrences(of: "\t", with: "⇥")
       )
         .lineLimit(1)
-        .font(.system(size: 16, design: .default))
       Spacer()
       Text(index==nil ? "" : "⌘\(index!)")
+        .opacity(0.5)
     }
     .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
 
@@ -38,31 +40,35 @@ struct PasteboardItemView: View {
 }
 
 struct PasteboardHistoryView: View {
-  @State var query = ""
-  @State private var selection: Int?
-  @State var items: [PasteboardItem]
+  @Environment(\.managedObjectContext)
+  var context
 
-  let isFocused = true
+  @FetchRequest(
+    sortDescriptors: [NSSortDescriptor(keyPath: \PasteboardItem.lastUsed, ascending: false)],
+    animation: .default
+  )
+  var items: FetchedResults<PasteboardItem>
+
+  @State private var query = ""
+  @State private var selection: Int?
 
   var body: some View {
     VStack(spacing: 6) {
       TextField("Filter…", text: $query)
         .lineLimit(1)
-        .font(.system(size: 20, design: .default))
         .textFieldStyle(RoundedBorderTextFieldStyle())
       HStack {
         List(selection: $selection) {
           ForEach(items.indices) { index in
             PasteboardItemView(
-              index: (index < 9 ? index + 1 : nil),
-              selected: index == selection,
-              bundleID: items[index].appBundle,
-              snippet: items[index].snippet
+              item: items[index],
+              index: (index < 10 ? (index + 1) % 10 : nil),
+              selected: index == selection
             )
           }
         }
         .frame(minWidth: 0, maxWidth: .infinity)
-        Text(selection==nil ? "" : items[selection!].snippet)
+        Text(selection==nil ? "" : items[selection!].snippet!)
           .allowsTightening(false)
           .lineSpacing(3.0)
           .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
@@ -73,6 +79,7 @@ struct PasteboardHistoryView: View {
 
 struct PasteboardHistoryView_Previews: PreviewProvider {
   static var previews: some View {
-    PasteboardHistoryView(items: PasteboardHistory().getItems(for: ""))
+    PasteboardHistoryView()
+    .environment(\.managedObjectContext, PasteboardHistory.persistentContainer.viewContext)
   }
 }

@@ -10,8 +10,5 @@
       <FileRef
          location = "group:Haxcessibility/Haxcessibility.xcodeproj">
       </FileRef>
-      <FileRef
-         location = "group:SQLite.swift/SQLite.xcodeproj">
-      </FileRef>
    </Group>
 </Workspace>
