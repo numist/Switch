@@ -43,10 +43,7 @@ struct PasteboardHistoryView: View {
   @Environment(\.managedObjectContext)
   var context
 
-  @FetchRequest(
-    sortDescriptors: [NSSortDescriptor(keyPath: \PasteboardItem.lastUsed, ascending: false)],
-    animation: .default
-  )
+  @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \PasteboardItem.lastUsed, ascending: false)])
   var items: FetchedResults<PasteboardItem>
 
   @State private var query = ""
@@ -59,7 +56,7 @@ struct PasteboardHistoryView: View {
         .textFieldStyle(RoundedBorderTextFieldStyle())
       HStack {
         List(selection: $selection) {
-          ForEach(items.indices) { index in
+          ForEach(items.indices, id: \.self) { index in
             PasteboardItemView(
               item: items[index],
               index: (index < 10 ? (index + 1) % 10 : nil),
@@ -72,6 +69,7 @@ struct PasteboardHistoryView: View {
           .allowsTightening(false)
           .lineSpacing(3.0)
           .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+          .padding(5)
       }.cornerRadius(6)
     }.padding(10).cornerRadius(16)
   }
@@ -79,7 +77,9 @@ struct PasteboardHistoryView: View {
 
 struct PasteboardHistoryView_Previews: PreviewProvider {
   static var previews: some View {
-    PasteboardHistoryView()
-    .environment(\.managedObjectContext, PasteboardHistory.persistentContainer.viewContext)
+    _ = PasteboardHistory.persistentContainer
+
+    return PasteboardHistoryView()
+      .environment(\.managedObjectContext, PasteboardHistory.persistentContainer.viewContext)
   }
 }
