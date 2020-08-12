@@ -14,6 +14,8 @@
 //  Inspiration from relaunch.m: https://github.com/andymatuschak/Sparkle/blob/7316a00e9c92f54c552076a44c38241c0f1bf975/relaunch.m
 //
 
+#import <AppKit/AppKit.h>
+
 @interface SWTerminationListener : NSObject
 
 - (id)initWithExecutablePath:(const char *)execPath parentProcessId:(pid_t)ppid;

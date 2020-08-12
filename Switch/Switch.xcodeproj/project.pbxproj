@@ -11,6 +11,10 @@
 		BC2121B624E29323009EAE3B /* Debugger Support.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2121B524E29323009EAE3B /* Debugger Support.swift */; };
 		BC2121B924E3B4AF009EAE3B /* PasteboardHistory.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BC2121B724E3B4AF009EAE3B /* PasteboardHistory.xcdatamodeld */; };
 		BC2121BB24E3B61E009EAE3B /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC2121BA24E3B61E009EAE3B /* CoreData.framework */; };
+		BC2121CD24E3DDD8009EAE3B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BC2121CC24E3DDD8009EAE3B /* main.m */; };
+		BC2121D424E3DE22009EAE3B /* SWTerminationListener.m in Sources */ = {isa = PBXBuildFile; fileRef = BC2121D224E3DE22009EAE3B /* SWTerminationListener.m */; };
+		BC2121D624E3DE80009EAE3B /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC2121D524E3DE80009EAE3B /* AppKit.framework */; };
+		BC2121DA24E3DEB5009EAE3B /* relaunch in CopyFiles */ = {isa = PBXBuildFile; fileRef = BC2121CA24E3DDD8009EAE3B /* relaunch */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		BC56727F24DFC84B00206A39 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC56727E24DFC84B00206A39 /* Service.swift */; };
 		BC56728224DFD27400206A39 /* PasteboardHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC56728124DFD27400206A39 /* PasteboardHistory.swift */; };
 		BC56728724E0BABC00206A39 /* WindowInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC56728624E0BABC00206A39 /* WindowInfo.swift */; };
@@ -29,6 +33,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		BC2121D724E3DE94009EAE3B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BCD18FC824DD41C000941A86 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BC2121C924E3DDD8009EAE3B;
+			remoteInfo = relaunch;
+		};
 		BCD18FE624DD41C800941A86 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BCD18FC824DD41C000941A86 /* Project object */;
@@ -45,11 +56,38 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		BC2121C824E3DDD8009EAE3B /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		BC2121D924E3DEA9009EAE3B /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				BC2121DA24E3DEB5009EAE3B /* relaunch in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		BC2121B324E25CE9009EAE3B /* PasteboardHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteboardHistoryView.swift; sourceTree = "<group>"; };
 		BC2121B524E29323009EAE3B /* Debugger Support.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Debugger Support.swift"; sourceTree = "<group>"; };
 		BC2121B824E3B4AF009EAE3B /* PasteboardHistory.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PasteboardHistory.xcdatamodel; sourceTree = "<group>"; };
 		BC2121BA24E3B61E009EAE3B /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		BC2121CA24E3DDD8009EAE3B /* relaunch */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = relaunch; sourceTree = BUILT_PRODUCTS_DIR; };
+		BC2121CC24E3DDD8009EAE3B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		BC2121D124E3DE22009EAE3B /* SWTerminationListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWTerminationListener.h; sourceTree = "<group>"; };
+		BC2121D224E3DE22009EAE3B /* SWTerminationListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWTerminationListener.m; sourceTree = "<group>"; };
+		BC2121D524E3DE80009EAE3B /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		BC56727E24DFC84B00206A39 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		BC56728124DFD27400206A39 /* PasteboardHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteboardHistory.swift; sourceTree = "<group>"; };
 		BC56728324E0807400206A39 /* SQLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SQLite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -76,6 +114,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		BC2121C724E3DDD8009EAE3B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BC2121D624E3DE80009EAE3B /* AppKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BCD18FCD24DD41C000941A86 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -113,6 +159,16 @@
 			path = Pasteboard;
 			sourceTree = "<group>";
 		};
+		BC2121CB24E3DDD8009EAE3B /* relaunch */ = {
+			isa = PBXGroup;
+			children = (
+				BC2121CC24E3DDD8009EAE3B /* main.m */,
+				BC2121D124E3DE22009EAE3B /* SWTerminationListener.h */,
+				BC2121D224E3DE22009EAE3B /* SWTerminationListener.m */,
+			);
+			path = relaunch;
+			sourceTree = "<group>";
+		};
 		BC56728024DFD22C00206A39 /* Switcher */ = {
 			isa = PBXGroup;
 			children = (
@@ -128,6 +184,7 @@
 				BCD18FD224DD41C000941A86 /* Switch */,
 				BCD18FE824DD41C800941A86 /* SwitchTests */,
 				BCD18FF324DD41C900941A86 /* SwitchUITests */,
+				BC2121CB24E3DDD8009EAE3B /* relaunch */,
 				BCD18FD124DD41C000941A86 /* Products */,
 				BCD1901424DF77A700941A86 /* Frameworks */,
 			);
@@ -139,6 +196,7 @@
 				BCD18FD024DD41C000941A86 /* Switch.app */,
 				BCD18FE524DD41C800941A86 /* SwitchTests.xctest */,
 				BCD18FF024DD41C800941A86 /* SwitchUITests.xctest */,
+				BC2121CA24E3DDD8009EAE3B /* relaunch */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -197,6 +255,7 @@
 		BCD1901424DF77A700941A86 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BC2121D524E3DE80009EAE3B /* AppKit.framework */,
 				BC2121BA24E3B61E009EAE3B /* CoreData.framework */,
 				BC56728824E0F0E200206A39 /* Haxcessibility.framework */,
 				BC56728324E0807400206A39 /* SQLite.framework */,
@@ -219,6 +278,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		BC2121C924E3DDD8009EAE3B /* relaunch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BC2121D024E3DDD8009EAE3B /* Build configuration list for PBXNativeTarget "relaunch" */;
+			buildPhases = (
+				BC2121C624E3DDD8009EAE3B /* Sources */,
+				BC2121C724E3DDD8009EAE3B /* Frameworks */,
+				BC2121C824E3DDD8009EAE3B /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = relaunch;
+			productName = relaunch;
+			productReference = BC2121CA24E3DDD8009EAE3B /* relaunch */;
+			productType = "com.apple.product-type.tool";
+		};
 		BCD18FCF24DD41C000941A86 /* Switch */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = BCD18FF924DD41C900941A86 /* Build configuration list for PBXNativeTarget "Switch" */;
@@ -227,10 +303,12 @@
 				BCD18FCC24DD41C000941A86 /* Sources */,
 				BCD18FCD24DD41C000941A86 /* Frameworks */,
 				BCD18FCE24DD41C000941A86 /* Resources */,
+				BC2121D924E3DEA9009EAE3B /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				BC2121D824E3DE94009EAE3B /* PBXTargetDependency */,
 			);
 			name = Switch;
 			productName = Switch;
@@ -282,6 +360,9 @@
 				LastSwiftUpdateCheck = 1200;
 				LastUpgradeCheck = 1200;
 				TargetAttributes = {
+					BC2121C924E3DDD8009EAE3B = {
+						CreatedOnToolsVersion = 12.0;
+					};
 					BCD18FCF24DD41C000941A86 = {
 						CreatedOnToolsVersion = 12.0;
 					};
@@ -311,6 +392,7 @@
 				BCD18FCF24DD41C000941A86 /* Switch */,
 				BCD18FE424DD41C800941A86 /* SwitchTests */,
 				BCD18FEF24DD41C800941A86 /* SwitchUITests */,
+				BC2121C924E3DDD8009EAE3B /* relaunch */,
 			);
 		};
 /* End PBXProject section */
@@ -363,6 +445,15 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		BC2121C624E3DDD8009EAE3B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BC2121D424E3DE22009EAE3B /* SWTerminationListener.m in Sources */,
+				BC2121CD24E3DDD8009EAE3B /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BCD18FCC24DD41C000941A86 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -400,6 +491,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		BC2121D824E3DE94009EAE3B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BC2121C924E3DDD8009EAE3B /* relaunch */;
+			targetProxy = BC2121D724E3DE94009EAE3B /* PBXContainerItemProxy */;
+		};
 		BCD18FE724DD41C800941A86 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = BCD18FCF24DD41C000941A86 /* Switch */;
@@ -424,6 +520,22 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		BC2121CE24E3DDD8009EAE3B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		BC2121CF24E3DDD8009EAE3B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		BCD18FF724DD41C900941A86 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -662,6 +774,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		BC2121D024E3DDD8009EAE3B /* Build configuration list for PBXNativeTarget "relaunch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BC2121CE24E3DDD8009EAE3B /* Debug */,
+				BC2121CF24E3DDD8009EAE3B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		BCD18FCB24DD41C000941A86 /* Build configuration list for PBXProject "Switch" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
