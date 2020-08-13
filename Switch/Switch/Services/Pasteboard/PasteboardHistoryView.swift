@@ -2,7 +2,7 @@ import Foundation
 import Combine
 import SwiftUI
 
-struct PasteboardItemView: View {
+private struct PasteboardItemRow: View {
   @ObservedObject var item: PasteboardItem
   let index: Int?
   let selected: Bool
@@ -12,30 +12,17 @@ struct PasteboardItemView: View {
     if let path = workspace.absolutePathForApplication(withBundleIdentifier: item.unwrappedAppBundle) {
       return workspace.icon(forFile: path)
     }
-    // TODO(numist): default app icon doesn't seem to be available via API, may have to copy an icns into the bundle
+    // TODO(numist): a default app icon doesn't seem to be available via API, copy a stand-in icns into the bundle
     return NSImage(named: NSImage.applicationIconName)!
   }
 
   var body: some View {
     HStack {
-      Image(nsImage: icon)
-        .resizable()
-        .frame(
-          width: NSFont.systemFontSize,
-          height: NSFont.systemFontSize
-        )
-      Text(
-        item.unwrappedSnippet
-          .trimmingCharacters(in: .newlines)
-          .replacingOccurrences(of: "\t", with: "⇥")
-      )
-        .lineLimit(1)
+      Image(nsImage: icon).resizable().frame(width: 16, height: 16)
+      Text(item.unwrappedSnippet.trimmingCharacters(in: .newlines)).lineLimit(1)
       Spacer()
-      Text(index==nil ? "" : "⌘\(index!)")
-        .opacity(0.5)
+      Text(index==nil ? "" : "⌘\(index!)").opacity(0.5)
     }
-    .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
-
   }
 }
 
@@ -54,29 +41,28 @@ struct PasteboardHistoryView: View {
       TextField("Filter…", text: $query)
         .lineLimit(1)
         .textFieldStyle(RoundedBorderTextFieldStyle())
+        .background(Color(NSColor.windowBackgroundColor).opacity(0.9)).cornerRadius(4)
       HStack {
         List(selection: $selection) {
           ForEach(items.indices, id: \.self) { index in
-            PasteboardItemView(
+            PasteboardItemRow(
               item: items[index],
               index: (index < 10 ? (index + 1) % 10 : nil),
               selected: index == selection
             )
           }
-        }
-        .frame(minWidth: 0, maxWidth: .infinity)
+        }.frame(minWidth: 0, maxWidth: .infinity)
         Text(selection==nil ? "" : items[selection!].snippet!)
-          .allowsTightening(false)
-          .lineSpacing(3.0)
           .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
           .padding(5)
-      }.cornerRadius(6)
-    }.padding(10).cornerRadius(16)
+      }.background(Color(NSColor.windowBackgroundColor)).cornerRadius(4)
+    }.padding(8).background(Color(NSColor.underPageBackgroundColor).opacity(0.9).cornerRadius(10))
   }
 }
 
 struct PasteboardHistoryView_Previews: PreviewProvider {
   static var previews: some View {
+    // Ensure the Core Data stack is loaded before the FetchRequest is initialized
     _ = PasteboardHistory.persistentContainer
 
     return PasteboardHistoryView()
