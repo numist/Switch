@@ -26,22 +26,22 @@ private struct PasteboardItemRow: View {
   }
 }
 
-struct PasteboardHistoryView: View {
-  @Environment(\.managedObjectContext)
-  var context
+private struct ResultsList: View {
+  @Environment(\.managedObjectContext) var context
 
-  @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \PasteboardItem.lastUsed, ascending: false)])
-  var items: FetchedResults<PasteboardItem>
-
-  @State private var query = ""
+  var fetchRequest: FetchRequest<PasteboardItem>
+  var items: FetchedResults<PasteboardItem> { fetchRequest.wrappedValue }
   @State private var selection: Int?
+
+  init(query: String) {
+    fetchRequest = FetchRequest(
+      sortDescriptors: [NSSortDescriptor(keyPath: \PasteboardItem.lastUsed, ascending: false)],
+      predicate: query != "" ? NSPredicate(format: "snippet LIKE %@", "*\(query)*") : nil
+    )
+  }
 
   var body: some View {
     VStack(spacing: 6) {
-      TextField("Filter…", text: $query)
-        .lineLimit(1)
-        .textFieldStyle(RoundedBorderTextFieldStyle())
-        .background(Color(NSColor.windowBackgroundColor).opacity(0.9)).cornerRadius(4)
       HStack {
         List(selection: $selection) {
           ForEach(items.indices, id: \.self) { index in
@@ -60,11 +60,25 @@ struct PasteboardHistoryView: View {
   }
 }
 
+struct PasteboardHistoryView: View {
+  @Environment(\.managedObjectContext)
+  var context
+
+  @State private var query = "ble"
+
+  var body: some View {
+    VStack(spacing: 6) {
+      TextField("Filter…", text: $query)
+        .lineLimit(1)
+        .textFieldStyle(RoundedBorderTextFieldStyle())
+        .background(Color(NSColor.windowBackgroundColor).opacity(0.9)).cornerRadius(4)
+      ResultsList(query: query)
+    }.padding(8).background(Color(NSColor.underPageBackgroundColor).opacity(0.9).cornerRadius(10))
+  }
+}
+
 struct PasteboardHistoryView_Previews: PreviewProvider {
   static var previews: some View {
-    // Ensure the Core Data stack is loaded before the FetchRequest is initialized
-    _ = PasteboardHistory.persistentContainer
-
     return PasteboardHistoryView()
       .environment(\.managedObjectContext, PasteboardHistory.persistentContainer.viewContext)
   }
