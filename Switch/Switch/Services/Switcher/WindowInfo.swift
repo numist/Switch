@@ -108,7 +108,7 @@ extension WindowInfo {
   }
 }
 
-extension WindowInfo: Identifiable, Equatable {}
+extension WindowInfo: Identifiable, Hashable {}
 
 //extension WindowInfo: CustomStringConvertible {
 //  var description: String {

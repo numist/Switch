@@ -36,8 +36,10 @@ private struct ResultsList: View {
   init(query: String) {
     fetchRequest = FetchRequest(
       sortDescriptors: [NSSortDescriptor(keyPath: \PasteboardItem.lastUsed, ascending: false)],
-      predicate: query != "" ? NSPredicate(format: "snippet LIKE %@", "*\(query)*") : nil
+      predicate: query.isEmpty ? nil : NSPredicate(format: "snippet LIKE %@", "*\(query)*")
     )
+    // TODO(numist): selection = (items.isEmpty ? nil : 0), but
+    // EXC_BAD_INSTRUCTION (code=EXC_I386_INVOP, subcode=0x0) in fetchRequest.wrappedValue
   }
 
   var body: some View {
@@ -64,7 +66,7 @@ struct PasteboardHistoryView: View {
   @Environment(\.managedObjectContext)
   var context
 
-  @State private var query = "ble"
+  @State private var query = ""
 
   var body: some View {
     VStack(spacing: 6) {

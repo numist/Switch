@@ -1,7 +1,7 @@
 import Foundation
 import CoreGraphics
 
-struct WindowInfoGroup: Equatable {
+struct WindowInfoGroup: Hashable {
   let mainWindow: WindowInfo
   let windows: [WindowInfo]
 }

@@ -15,6 +15,8 @@
 		BC2121D424E3DE22009EAE3B /* SWTerminationListener.m in Sources */ = {isa = PBXBuildFile; fileRef = BC2121D224E3DE22009EAE3B /* SWTerminationListener.m */; };
 		BC2121D624E3DE80009EAE3B /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC2121D524E3DE80009EAE3B /* AppKit.framework */; };
 		BC2121DA24E3DEB5009EAE3B /* relaunch in CopyFiles */ = {isa = PBXBuildFile; fileRef = BC2121CA24E3DDD8009EAE3B /* relaunch */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		BC2121DF24E63F7C009EAE3B /* SwitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2121DE24E63F7C009EAE3B /* SwitcherView.swift */; };
+		BC2121E124E669EB009EAE3B /* NSRect+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2121E024E669EB009EAE3B /* NSRect+Extensions.swift */; };
 		BC56727F24DFC84B00206A39 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC56727E24DFC84B00206A39 /* Service.swift */; };
 		BC56728224DFD27400206A39 /* PasteboardHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC56728124DFD27400206A39 /* PasteboardHistory.swift */; };
 		BC56728724E0BABC00206A39 /* WindowInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC56728624E0BABC00206A39 /* WindowInfo.swift */; };
@@ -88,6 +90,8 @@
 		BC2121D124E3DE22009EAE3B /* SWTerminationListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWTerminationListener.h; sourceTree = "<group>"; };
 		BC2121D224E3DE22009EAE3B /* SWTerminationListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWTerminationListener.m; sourceTree = "<group>"; };
 		BC2121D524E3DE80009EAE3B /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		BC2121DE24E63F7C009EAE3B /* SwitcherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitcherView.swift; sourceTree = "<group>"; };
+		BC2121E024E669EB009EAE3B /* NSRect+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSRect+Extensions.swift"; sourceTree = "<group>"; };
 		BC56727E24DFC84B00206A39 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		BC56728124DFD27400206A39 /* PasteboardHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteboardHistory.swift; sourceTree = "<group>"; };
 		BC56728324E0807400206A39 /* SQLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SQLite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -174,6 +178,7 @@
 			children = (
 				BC56728624E0BABC00206A39 /* WindowInfo.swift */,
 				BC56728D24E23BA300206A39 /* WindowInfoGroup.swift */,
+				BC2121DE24E63F7C009EAE3B /* SwitcherView.swift */,
 			);
 			path = Switcher;
 			sourceTree = "<group>";
@@ -248,6 +253,7 @@
 				BCD1901224DF773100941A86 /* Keyboard.swift */,
 				BCD1901824DF83DB00941A86 /* EventTap.swift */,
 				BC2121B524E29323009EAE3B /* Debugger Support.swift */,
+				BC2121E024E669EB009EAE3B /* NSRect+Extensions.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -459,6 +465,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				BCD1901324DF773100941A86 /* Keyboard.swift in Sources */,
+				BC2121DF24E63F7C009EAE3B /* SwitcherView.swift in Sources */,
+				BC2121E124E669EB009EAE3B /* NSRect+Extensions.swift in Sources */,
 				BC56728224DFD27400206A39 /* PasteboardHistory.swift in Sources */,
 				BC2121B424E25CE9009EAE3B /* PasteboardHistoryView.swift in Sources */,
 				BCD1901924DF83DB00941A86 /* EventTap.swift in Sources */,
