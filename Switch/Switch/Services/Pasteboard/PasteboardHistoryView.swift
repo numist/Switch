@@ -31,7 +31,19 @@ private struct ResultsList: View {
 
   var fetchRequest: FetchRequest<PasteboardItem>
   var items: FetchedResults<PasteboardItem> { fetchRequest.wrappedValue }
-  @State private var selection: Int?
+
+  // Still some problems around selected state being drawn in the list but this property wrapping appears to be
+  // effective at preventing out of bounds crashes when `items` shrinks
+  @State private var _selection: Int?
+  private var selection: Int? {
+    if let sel = _selection, sel >= items.count {
+      if items.isEmpty {
+        return nil
+      }
+      return min(sel, items.count - 1)
+    }
+    return _selection
+  }
 
   init(query: String) {
     fetchRequest = FetchRequest(
@@ -45,7 +57,7 @@ private struct ResultsList: View {
   var body: some View {
     VStack(spacing: 6) {
       HStack {
-        List(selection: $selection) {
+        List(selection: $_selection) {
           ForEach(items.indices, id: \.self) { index in
             PasteboardItemRow(
               item: items[index],
