@@ -200,18 +200,24 @@ class Keyboard {
 extension Keyboard {
   private static var eventTap: EventTap?
 
-  // TODO: thread safety for modifiers (optimized for fast reads)
+  private static var lock = os_unfair_lock_s()
   private static var callbacks = [HotKey: (Bool)->Bool]()
 
   private static func keyboardEvent(_ type: CGEventType, _ event: CGEvent) -> CGEvent? {
     precondition(type == .keyUp || type == .keyDown)
+
+    var result: CGEvent? = event
     let hotKey = HotKey(event)
-    if let callback = callbacks[hotKey] {
-      if !callback(type == .keyDown) {
-        return nil
-      }
+
+    os_unfair_lock_lock(&lock)
+    let callback = callbacks[hotKey]
+    os_unfair_lock_unlock(&lock)
+
+    // TODO: There's got to be a way to do this without writing `callback` so many times
+    if let callback = callback, !callback(type == .keyDown) {
+      result = nil
     }
-    return event
+    return result
   }
 
   static func enableHotKeys() throws {
@@ -223,10 +229,14 @@ extension Keyboard {
   }
 
   static func register(_ hotkey: HotKey, _ closure: @escaping (Bool) -> Bool) {
+    os_unfair_lock_lock(&lock)
     callbacks[hotkey] = closure
+    os_unfair_lock_unlock(&lock)
   }
 
   static func deregister(_ hotkey: HotKey) {
+    os_unfair_lock_lock(&lock)
     callbacks.removeValue(forKey: hotkey)
+    os_unfair_lock_unlock(&lock)
   }
 }
