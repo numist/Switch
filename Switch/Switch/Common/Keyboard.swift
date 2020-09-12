@@ -200,6 +200,7 @@ class Keyboard {
 extension Keyboard {
   private static var eventTap: EventTap?
 
+  // TODO: thread safety for modifiers (optimized for fast reads)
   private static var callbacks = [HotKey: (Bool)->Bool]()
 
   private static func keyboardEvent(_ type: CGEventType, _ event: CGEvent) -> CGEvent? {

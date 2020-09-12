@@ -11,7 +11,10 @@ private func eventCallback(
 
   if type == .tapDisabledByTimeout {
     os_log(.fault, "tap disabled: tapDisabledByTimeout")
-    CGEvent.tapEnable(tap: this.eventTap!, enable: true)
+    Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { _ in
+      os_log("Re-enabling event tap")
+      CGEvent.tapEnable(tap: this.eventTap, enable: true)
+    }
     return Unmanaged.passRetained(event)
   } else if type == .tapDisabledByUserInput {
     os_log(.fault, "tap disabled: tapDisabledByUserInput")
@@ -49,34 +52,41 @@ class EventTap {
     static let otherMouseDragged = EventTypes(rawValue: 1 << CGEventType.otherMouseDragged.rawValue)
   }
 
-  private var runLoopSource: CFRunLoopSource?
-  fileprivate var eventTap: CFMachPort?
   fileprivate let callback: (CGEventType, CGEvent) -> CGEvent?
+  fileprivate var eventTap: CFMachPort!
+  private var eventThread: Thread!
 
   init(observing: EventTypes, callback: @escaping (CGEventType, CGEvent) -> CGEvent?) throws {
     self.callback = callback
-    let eventTap = CGEvent.tapCreate(
+
+    guard let tap = CGEvent.tapCreate(
       tap: .cgSessionEventTap,
       place: .headInsertEventTap,
       options: .defaultTap,
       eventsOfInterest: CGEventMask(observing.rawValue),
       callback: eventCallback,
       userInfo: Unmanaged.passRetained(self).toOpaque()
-    )
-    if let eventTap = eventTap {
-      self.eventTap = eventTap
-    } else {
+    ) else {
       throw EventTap.Error()
     }
-    runLoopSource = CFMachPortCreateRunLoopSource(nil, eventTap, 0)
-    // TODO(numist): Might be a good idea to use something other than CFRunLoopGetCurrent since that's
-    // bound to the current (main) thread, but we want this to be user-interactive and this will work for now
-    CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, .commonModes)
+    eventTap = tap
+
+    let eventThread = Thread(block: {
+      let runLoop = RunLoop.current
+      runLoop.add(tap, forMode: .common)
+      runLoop.run()
+    })
+    eventThread.name = "EventTap event callback thread"
+    eventThread.qualityOfService = .userInteractive
+    eventThread.threadPriority = 1.0
+    eventThread.start()
   }
 
   deinit {
-    if let runLoopSource = runLoopSource {
-      CFRunLoopRemoveSource(CFRunLoopGetCurrent(), runLoopSource, .commonModes)
+    eventThread.sync {
+      CGEvent.tapEnable(tap: self.eventTap, enable: false)
+      RunLoop.current.remove(self.eventTap, forMode: .common)
     }
+    eventThread.cancel()
   }
 }
