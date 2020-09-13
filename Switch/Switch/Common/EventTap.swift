@@ -88,6 +88,7 @@ class EventTap {
   }
 
   deinit {
+    CGEvent.tapEnable(tap: eventTap, enable: false)
     EventTap.eventThread.sync {
       RunLoop.current.remove(self.eventTap, forMode: .common)
     }
