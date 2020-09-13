@@ -70,7 +70,7 @@ class Switcher {
 //    for _ in 0..<iterations {
 //      _ = WindowInfoGroup.list(from: WindowInfo.get())
 //    }
-//    print("Time to fetch windows: \(-start.timeIntervalSinceNow / Double(iterations))")
+//    print("Switcher: Time to fetch windows: \(-start.timeIntervalSinceNow / Double(iterations))")
 //    // It's about 20ms on average, and it varies enough to absolutely require async polling
   }
 
@@ -131,7 +131,7 @@ class Switcher {
       DispatchQueue.main.async { [weak self] in
         guard let self = self else { return }
         self.state.update(windows: windowList)
-        print("Updated window list (\(windowList.count) windows: \(windowList.map { $0.mainWindow.name ?? "" })")
+        print("Switcher: Updated window list (\(windowList.count) windows: \(windowList.map { $0.mainWindow.name ?? "" }))")
       }
     }
   }
