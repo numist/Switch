@@ -167,8 +167,8 @@
 			isa = PBXGroup;
 			children = (
 				BC56728124DFD27400206A39 /* PasteboardHistory.swift */,
-				BC2121B324E25CE9009EAE3B /* PasteboardHistoryView.swift */,
 				BC2121B724E3B4AF009EAE3B /* PasteboardHistory.xcdatamodeld */,
+				BC2121B324E25CE9009EAE3B /* PasteboardHistoryView.swift */,
 			);
 			path = Pasteboard;
 			sourceTree = "<group>";
@@ -186,11 +186,11 @@
 		BC56728024DFD22C00206A39 /* Switcher */ = {
 			isa = PBXGroup;
 			children = (
+				BCA9E28E250DF32A00EB5540 /* Switcher.swift */,
+				BCA9E289250DA35F00EB5540 /* SwitcherState.swift */,
+				BC2121DE24E63F7C009EAE3B /* SwitcherView.swift */,
 				BC56728624E0BABC00206A39 /* WindowInfo.swift */,
 				BC56728D24E23BA300206A39 /* WindowInfoGroup.swift */,
-				BC2121DE24E63F7C009EAE3B /* SwitcherView.swift */,
-				BCA9E289250DA35F00EB5540 /* SwitcherState.swift */,
-				BCA9E28E250DF32A00EB5540 /* Switcher.swift */,
 			);
 			path = Switcher;
 			sourceTree = "<group>";
@@ -262,9 +262,9 @@
 		BCD1901124DF769700941A86 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				BCD1901224DF773100941A86 /* Keyboard.swift */,
-				BCD1901824DF83DB00941A86 /* EventTap.swift */,
 				BC2121B524E29323009EAE3B /* Debugger Support.swift */,
+				BCD1901824DF83DB00941A86 /* EventTap.swift */,
+				BCD1901224DF773100941A86 /* Keyboard.swift */,
 				BC2121E024E669EB009EAE3B /* NSRect+Extensions.swift */,
 				BCA9E287250CB2A400EB5540 /* NSThread+Extensions.swift */,
 				BCA9E28C250DF2B000EB5540 /* Set+Extensions.swift */,
