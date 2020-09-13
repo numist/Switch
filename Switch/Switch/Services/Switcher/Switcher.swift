@@ -1,13 +1,16 @@
 import Foundation
+import Haxcessibility
 
 class Switcher {
-  private var state = SwitcherState()
-
+  private var state: SwitcherState!
   private var releaseTap: EventTap?
-  private func hotKeyDown(incrementing: Bool) {
+
+  private func setUpReleaseTapIfNeeded() {
     assert(Thread.isMainThread)
 
     if releaseTap == nil {
+      // TODO: support for closeWindow hotkey (registered here, deregistered when releaseTap is deactivated)
+
       // swiftlint:disable:next force_try
       releaseTap = try! EventTap(observing: .flagsChanged, callback: { [weak self] (_, event) -> CGEvent? in
         guard let self = self else { return event }
@@ -16,36 +19,117 @@ class Switcher {
           DispatchQueue.main.async {
             assert(self.releaseTap != nil)
             self.releaseTap = nil
-            print("switcher: dismissed (selection: \(String(describing: self.state.selection)))")
+            self.state.hotKeyReleased()
           }
           return nil
         }
         return event
       })
-
-      state = SwitcherState()
-      print("switcher: active")
-    }
-
-    if incrementing {
-      state.incrementSelection()
-      print("switcher: increment")
-    } else {
-      state.decrementSelection()
-      print("switcher: decrement")
     }
   }
 
   init() {
+    state = SwitcherState(
+      wantsTimerCallback: { [weak self] in self?.startTimer() },
+      wantsTimerCancelledCallback: { [weak self] in self?.stopTimer() },
+      wantsShowInterfaceCallback: { [weak self] in self?.showInterface() },
+      wantsHideInterfaceCallback: { [weak self] in self?.hideInterface() },
+      wantsStartWindowListUpdates: { [weak self] in self?.startWindowListPoller() },
+      wantsStopWindowListUpdates: { [weak self] in self?.stopWindowListPoller() },
+      wantsRaiseCallback: { windowGroup in
+        let selectedWindow = windowGroup.mainWindow
+        let haxApp = HAXApplication(pid: selectedWindow.ownerPID)
+        let haxWindow = haxApp?.window(withID: selectedWindow.id)
+        haxWindow?.raise()
+      }
+    )
+
     Keyboard.register(.init(.option, .tab)) { [weak self] keyDown -> Bool in
       guard let self = self else { return true }
-      if keyDown { DispatchQueue.main.async { self.hotKeyDown(incrementing: true) } }
+      if keyDown { DispatchQueue.main.async {
+        self.setUpReleaseTapIfNeeded()
+        self.state.incrementSelection()
+      } }
       return false
     }
     Keyboard.register(.init([.option, .shift], .tab)) { [weak self] keyDown -> Bool in
       guard let self = self else { return true }
-      if keyDown { DispatchQueue.main.async { self.hotKeyDown(incrementing: false) } }
+      if keyDown { DispatchQueue.main.async {
+        self.setUpReleaseTapIfNeeded()
+        self.state.decrementSelection()
+      } }
       return false
     }
+
+//    let iterations = 1000
+//    let start = Date()
+//    for _ in 0..<iterations {
+//      _ = WindowInfoGroup.list(from: WindowInfo.get())
+//    }
+//    print("Time to fetch windows: \(-start.timeIntervalSinceNow / Double(iterations))")
+//    // It's about 20ms on average, and it varies enough to absolutely require async polling
+  }
+
+  // MARK: -
+  // This section implements the state machine's callbacks
+
+  // MARK: Timer management
+  private var timer: Timer?
+  private func startTimer() {
+    assert(Thread.isMainThread)
+    assert(self.timer == nil)
+
+    self.timer = Timer.scheduledTimer(
+      withTimeInterval: 0.2,
+      repeats: false,
+      block: { [weak self] timer in
+        guard let self = self else { return }
+        guard self.timer == timer else { return }
+        self.state.timerFired()
+        self.timer = nil
+      }
+    )
+  }
+
+  private func stopTimer() {
+    assert(Thread.isMainThread)
+    assert(self.timer != nil)
+
+    if let timer = self.timer {
+      timer.invalidate()
+      self.timer = nil
+    }
+  }
+
+  // MARK: Interface management
+
+  private func showInterface() {
+    assert(Thread.isMainThread)
+    print("Switcher: show interface")
+  }
+
+  private func hideInterface() {
+    assert(Thread.isMainThread)
+    print("Switcher: hide interface")
+  }
+
+  // MARK: Window list polling
+
+  private func startWindowListPoller() {
+    assert(Thread.isMainThread)
+
+    // TODO: turn this into a more reliable polling situation
+    DispatchQueue.global(qos: .userInitiated).async {
+      let windowList = WindowInfoGroup.list(from: WindowInfo.get())
+      DispatchQueue.main.async { [weak self] in
+        guard let self = self else { return }
+        self.state.update(windows: windowList)
+        print("Updated window list (\(windowList.count) windows: \(windowList.map { $0.mainWindow.name ?? "" })")
+      }
+    }
+  }
+
+  private func stopWindowListPoller() {
+    assert(Thread.isMainThread)
   }
 }

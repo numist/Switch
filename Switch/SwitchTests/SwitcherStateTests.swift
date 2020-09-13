@@ -1,9 +1,12 @@
 import XCTest
 @testable import Switch
 
+// swiftlint:disable file_length
+// swiftlint:disable type_body_length
 class SwitcherStateTests: XCTestCase {
   func testBumpBackOnInactiveFrontmostWindowWhenIncrementing() {
-    let windowList = [
+    var raised = false
+    let windowGroupList = WindowInfoGroup.list(from: [
       WindowInfo([
         .cgNumber: UInt32(510),
         .cgLayer: Int32(0),
@@ -34,15 +37,23 @@ class SwitcherStateTests: XCTestCase {
         .canActivate: true,
         .isAppActive: false,
       ]),
-    ]
-    let state = SwitcherState()
+    ])
+    let state = SwitcherState(
+      wantsRaiseCallback: { windowGroup in
+        raised = true
+        XCTAssertEqual(windowGroup, windowGroupList[0])
+      }
+    )
     state.incrementSelection()
-    state.update(windows: WindowInfoGroup.list(from: windowList))
+    state.update(windows: windowGroupList)
     XCTAssertEqual(state.selection, 0)
+    state.hotKeyReleased()
+    XCTAssertTrue(raised)
   }
 
   func testNoBumpBackOnInactiveFrontmostWindowWhenDecrementing() {
-    let windowList = [
+    var raised = false
+    let windowGroupList = WindowInfoGroup.list(from: [
       WindowInfo([
         .cgNumber: UInt32(510),
         .cgLayer: Int32(0),
@@ -73,15 +84,23 @@ class SwitcherStateTests: XCTestCase {
         .canActivate: true,
         .isAppActive: false,
       ]),
-    ]
-    let state = SwitcherState()
+    ])
+    let state = SwitcherState(
+      wantsRaiseCallback: { windowGroup in
+        raised = true
+        XCTAssertEqual(windowGroup, windowGroupList[1])
+      }
+    )
     state.decrementSelection()
-    state.update(windows: WindowInfoGroup.list(from: windowList))
+    state.update(windows: windowGroupList)
     XCTAssertEqual(state.selection, 1)
+    state.hotKeyReleased()
+    XCTAssertTrue(raised)
   }
 
   func testNoBumpBackOnInactiveFrontmostWindowWhenNoChange() {
-    let windowList = [
+    var raised = false
+    let windowGroupList = WindowInfoGroup.list(from: [
       WindowInfo([
         .cgNumber: UInt32(510),
         .cgLayer: Int32(0),
@@ -112,9 +131,118 @@ class SwitcherStateTests: XCTestCase {
         .canActivate: true,
         .isAppActive: false,
       ]),
-    ]
+    ])
+    let state = SwitcherState(
+      wantsRaiseCallback: { windowGroup in
+        raised = true
+        XCTAssertEqual(windowGroup, windowGroupList[0])
+      }
+    )
+    state.incrementSelection(by: 0)
+    state.update(windows: windowGroupList)
+    XCTAssertEqual(state.selection, 0)
+    state.hotKeyReleased()
+    XCTAssertTrue(raised)
+  }
+
+  func testNoRaiseForActiveTopmost() {
+    var raised = false
+    let windowGroupList = WindowInfoGroup.list(from: [
+      WindowInfo([
+        .cgNumber: UInt32(510),
+        .cgLayer: Int32(0),
+        .cgBounds: CGRect(x: 0.0, y: 23.0, width: 668.0, height: 573.0).dictionaryRepresentation,
+        .cgAlpha: Float(1.0),
+        .cgOwnerPID: Int32(1426),
+        .cgOwnerName: "System Preferences",
+        .cgName: "Security & Privacy",
+        .cgIsOnscreen: true,
+        .cgDisplayID: UInt32(69732800),
+        .nsFrame: NSRect(x: 0.0, y: 304.0, width: 668.0, height: 573.0),
+        .isFullscreen: false,
+        .canActivate: true,
+        .isAppActive: true,
+      ]),
+      WindowInfo([
+        .cgNumber: UInt32(5275),
+        .cgLayer: Int32(0),
+        .cgBounds: CGRect(x: 61.0, y: 238.0, width: 720.0, height: 445.0).dictionaryRepresentation,
+        .cgAlpha: Float(1.0),
+        .cgOwnerPID: Int32(16649),
+        .cgOwnerName: "TextMate",
+        .cgName: "untitled 8",
+        .cgIsOnscreen: true,
+        .cgDisplayID: UInt32(69732800),
+        .nsFrame: NSRect(x: 61.0, y: 217.0, width: 720.0, height: 445.0),
+        .isFullscreen: false,
+        .canActivate: true,
+        .isAppActive: false,
+      ]),
+    ])
+    let state = SwitcherState(
+      wantsRaiseCallback: { _ in
+        raised = true
+      }
+    )
+    state.incrementSelection(by: 0)
+    state.update(windows: windowGroupList)
+    XCTAssertEqual(state.selection, 0)
+    state.hotKeyReleased()
+    XCTAssertFalse(raised)
+  }
+
+  func testNoRaiseOnEmptyWindowList() {
+    var raised = false
+    let windowGroupList = WindowInfoGroup.list(from: [])
+    let state = SwitcherState(
+      wantsRaiseCallback: { _ in raised = true }
+    )
+    state.incrementSelection(by: 0)
+    state.update(windows: windowGroupList)
+    XCTAssertNil(state.selection)
+    state.hotKeyReleased()
+    XCTAssertFalse(raised)
+  }
+
+  func testSelectionResetsOnRelease() {
+    let windowGroupList = WindowInfoGroup.list(from: [
+      WindowInfo([
+        .cgNumber: UInt32(510),
+        .cgLayer: Int32(0),
+        .cgBounds: CGRect(x: 0.0, y: 23.0, width: 668.0, height: 573.0).dictionaryRepresentation,
+        .cgAlpha: Float(1.0),
+        .cgOwnerPID: Int32(1426),
+        .cgOwnerName: "System Preferences",
+        .cgName: "Security & Privacy",
+        .cgIsOnscreen: true,
+        .cgDisplayID: UInt32(69732800),
+        .nsFrame: NSRect(x: 0.0, y: 304.0, width: 668.0, height: 573.0),
+        .isFullscreen: false,
+        .canActivate: true,
+        .isAppActive: true,
+      ]),
+      WindowInfo([
+        .cgNumber: UInt32(5275),
+        .cgLayer: Int32(0),
+        .cgBounds: CGRect(x: 61.0, y: 238.0, width: 720.0, height: 445.0).dictionaryRepresentation,
+        .cgAlpha: Float(1.0),
+        .cgOwnerPID: Int32(16649),
+        .cgOwnerName: "TextMate",
+        .cgName: "untitled 8",
+        .cgIsOnscreen: true,
+        .cgDisplayID: UInt32(69732800),
+        .nsFrame: NSRect(x: 61.0, y: 217.0, width: 720.0, height: 445.0),
+        .isFullscreen: false,
+        .canActivate: true,
+        .isAppActive: false,
+      ]),
+    ])
     let state = SwitcherState()
-    state.update(windows: WindowInfoGroup.list(from: windowList))
+    state.incrementSelection()
+    state.update(windows: windowGroupList)
+    state.hotKeyReleased()
+    state.incrementSelection(by: 0)
+    state.update(windows: windowGroupList)
     XCTAssertEqual(state.selection, 0)
   }
 
@@ -136,5 +264,220 @@ class SwitcherStateTests: XCTestCase {
     XCTAssertNil(state.selection)
     state.incrementSelection()
     XCTAssertNil(state.selection)
+  }
+
+  func testWantsTimerOnEachInvoke() {
+    var wantsWindowUpdates = false
+    var wantsTimer = false
+    let state = SwitcherState(
+      wantsTimerCallback: { assert(!wantsTimer); wantsTimer = true },
+      wantsTimerCancelledCallback: { assert(wantsTimer); wantsTimer = false },
+      wantsStartWindowListUpdates: { assert(!wantsWindowUpdates); wantsWindowUpdates = true },
+      wantsStopWindowListUpdates: { assert(wantsWindowUpdates); wantsWindowUpdates = false }
+    )
+
+    XCTAssertFalse(wantsTimer)
+    state.incrementSelection()
+    XCTAssertTrue(wantsTimer)
+    state.hotKeyReleased()
+    XCTAssertFalse(wantsTimer)
+
+    // While we're here, make sure the state obj wants window updates until it gets one
+    XCTAssertTrue(wantsWindowUpdates)
+    state.update(windows: [])
+    XCTAssertFalse(wantsWindowUpdates)
+
+    state.incrementSelection()
+    XCTAssertTrue(wantsTimer)
+  }
+
+  func testWantsInterfaceAfterTimerAndWindows() {
+    var wantsTimer = false
+    var showingInterface = false
+    var wantsWindowUpdates = false
+    let state = SwitcherState(
+      wantsTimerCallback: { assert(!wantsTimer); wantsTimer = true },
+      wantsTimerCancelledCallback: { assert(wantsTimer); wantsTimer = false },
+      wantsShowInterfaceCallback: { assert(!showingInterface); showingInterface = true },
+      wantsHideInterfaceCallback: { assert(showingInterface); showingInterface = false },
+      wantsStartWindowListUpdates: { assert(!wantsWindowUpdates); wantsWindowUpdates = true },
+      wantsStopWindowListUpdates: { assert(wantsWindowUpdates); wantsWindowUpdates = false },
+      wantsRaiseCallback: {_ in}
+    )
+    state.incrementSelection()
+    assert(wantsWindowUpdates)
+    state.timerFired(); wantsTimer = false
+    state.update(windows: [])
+    assert(showingInterface)
+
+    state.hotKeyReleased()
+
+    state.incrementSelection()
+    assert(wantsWindowUpdates)
+    state.update(windows: [])
+    state.timerFired(); wantsTimer = false
+    assert(showingInterface)
+  }
+
+  func testNoInterfaceAfterTimerAlone() {
+    var wantsTimer = false
+    var showingInterface = false
+    var wantsWindowUpdates = false
+    let state = SwitcherState(
+      wantsTimerCallback: { assert(!wantsTimer); wantsTimer = true },
+      wantsTimerCancelledCallback: { assert(wantsTimer); wantsTimer = false },
+      wantsShowInterfaceCallback: { assert(!showingInterface); showingInterface = true },
+      wantsHideInterfaceCallback: { assert(showingInterface); showingInterface = false },
+      wantsStartWindowListUpdates: { assert(!wantsWindowUpdates); wantsWindowUpdates = true },
+      wantsStopWindowListUpdates: { assert(wantsWindowUpdates); wantsWindowUpdates = false },
+      wantsRaiseCallback: {_ in}
+    )
+
+    state.incrementSelection()
+    assert(wantsWindowUpdates)
+    state.timerFired()
+    assert(!showingInterface)
+  }
+
+  func testNoInterfaceAfterWindowsAlone() {
+    var wantsTimer = false
+    var showingInterface = false
+    var wantsWindowUpdates = false
+    let state = SwitcherState(
+      wantsTimerCallback: { assert(!wantsTimer); wantsTimer = true },
+      wantsTimerCancelledCallback: { assert(wantsTimer); wantsTimer = false },
+      wantsShowInterfaceCallback: { assert(!showingInterface); showingInterface = true },
+      wantsHideInterfaceCallback: { assert(showingInterface); showingInterface = false },
+      wantsStartWindowListUpdates: { assert(!wantsWindowUpdates); wantsWindowUpdates = true },
+      wantsStopWindowListUpdates: { assert(wantsWindowUpdates); wantsWindowUpdates = false },
+      wantsRaiseCallback: {_ in}
+    )
+
+    state.incrementSelection()
+    assert(wantsWindowUpdates)
+    state.update(windows: [])
+    assert(wantsTimer)
+    assert(wantsWindowUpdates)
+    assert(!showingInterface)
+  }
+
+  func testFuzzIncrementAfterTimerFired() {
+    var wantsTimer = false
+    var showingInterface = false
+    var wantsWindowUpdates = false
+    let state = SwitcherState(
+      wantsTimerCallback: { assert(!wantsTimer); wantsTimer = true },
+      wantsTimerCancelledCallback: { assert(wantsTimer); wantsTimer = false },
+      wantsShowInterfaceCallback: { assert(!showingInterface); showingInterface = true },
+      wantsHideInterfaceCallback: { assert(showingInterface); showingInterface = false },
+      wantsStartWindowListUpdates: { assert(!wantsWindowUpdates); wantsWindowUpdates = true },
+      wantsStopWindowListUpdates: { assert(wantsWindowUpdates); wantsWindowUpdates = false },
+      wantsRaiseCallback: {_ in}
+    )
+
+    state.decrementSelection()
+    state.incrementSelection()
+    assert(wantsTimer)
+    state.timerFired(); wantsTimer = false
+    state.incrementSelection()
+  }
+
+  func testFuzzSomething() {
+    var wantsTimer = false
+    var showingInterface = false
+    var wantsWindowUpdates = false
+    let state = SwitcherState(
+      wantsTimerCallback: { assert(!wantsTimer); wantsTimer = true },
+      wantsTimerCancelledCallback: { assert(wantsTimer); wantsTimer = false },
+      wantsShowInterfaceCallback: { assert(!showingInterface); showingInterface = true },
+      wantsHideInterfaceCallback: { assert(showingInterface); showingInterface = false },
+      wantsStartWindowListUpdates: { assert(!wantsWindowUpdates); wantsWindowUpdates = true },
+      wantsStopWindowListUpdates: { assert(wantsWindowUpdates); wantsWindowUpdates = false },
+      wantsRaiseCallback: {_ in}
+    )
+
+    state.incrementSelection()
+    assert(wantsWindowUpdates)
+    state.update(windows: [])
+    assert(wantsTimer)
+    state.timerFired(); wantsTimer = false
+    state.decrementSelection()
+    assert(wantsWindowUpdates)
+    state.hotKeyReleased()
+    state.hotKeyReleased()
+    state.incrementSelection()
+    assert(wantsWindowUpdates)
+  }
+
+  func testFuzzIncrementAfterRaise() {
+    var wantsTimer = false
+    var showingInterface = false
+    var wantsWindowUpdates = false
+    let state = SwitcherState(
+      wantsTimerCallback: { assert(!wantsTimer); wantsTimer = true },
+      wantsTimerCancelledCallback: { assert(wantsTimer); wantsTimer = false },
+      wantsShowInterfaceCallback: { assert(!showingInterface); showingInterface = true },
+      wantsHideInterfaceCallback: { assert(showingInterface); showingInterface = false },
+      wantsStartWindowListUpdates: { assert(!wantsWindowUpdates); wantsWindowUpdates = true },
+      wantsStopWindowListUpdates: { assert(wantsWindowUpdates); wantsWindowUpdates = false },
+      wantsRaiseCallback: {_ in}
+    )
+
+    state.incrementSelection()
+    assert(wantsWindowUpdates)
+    state.hotKeyReleased()
+    state.incrementSelection()
+    assert(wantsWindowUpdates)
+    state.update(windows: [])
+    state.hotKeyReleased()
+    state.incrementSelection()
+    assert(wantsWindowUpdates)
+  }
+
+  func testFuzz() {
+    var wantsTimer = false
+    var showingInterface = false
+    var wantsWindowUpdates = false
+    let state = SwitcherState(
+      wantsTimerCallback: { assert(!wantsTimer); wantsTimer = true },
+      wantsTimerCancelledCallback: { assert(wantsTimer); wantsTimer = false },
+      wantsShowInterfaceCallback: { assert(!showingInterface); showingInterface = true },
+      wantsHideInterfaceCallback: { assert(showingInterface); showingInterface = false },
+      wantsStartWindowListUpdates: { assert(!wantsWindowUpdates); wantsWindowUpdates = true },
+      wantsStopWindowListUpdates: { assert(wantsWindowUpdates); wantsWindowUpdates = false },
+      wantsRaiseCallback: {_ in}
+    )
+
+    var active = false
+    let start = Date()
+    while -start.timeIntervalSinceNow < 0.1 {
+      // swiftlint:disable opening_brace
+      [
+        {
+          active = true
+          print("state.incrementSelection()\nassert(wantsWindowUpdates)")
+          state.incrementSelection(); assert(wantsWindowUpdates)
+        },
+        {
+          active = true
+          print("state.decrementSelection()\nassert(wantsWindowUpdates)")
+          state.decrementSelection(); assert(wantsWindowUpdates)
+        },
+        { if active {
+          print("state.hotKeyReleased()\nassert(!showingInterface)")
+          state.hotKeyReleased(); assert(!showingInterface)
+          active = false
+        } },
+        { if wantsTimer {
+          print("assert(wantsTimer)\nstate.timerFired(); wantsTimer = false")
+          state.timerFired(); wantsTimer = false
+        } },
+        { if wantsWindowUpdates {
+          print("assert(wantsWindowUpdates)\nstate.update(windows: [])")
+          state.update(windows: [])
+        } },
+      ].randomElement()!()
+      // swiftlint:enable opening_brace
+    }
   }
 }
