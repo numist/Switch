@@ -3,19 +3,11 @@ import OSLog
 import CoreData
 
 /*
- DELETE FROM pasteboardItems WHERE used < ?
- SELECT appName, bundleId, snippet,
-   datetime(used, 'unixepoch', 'localtime') as used,
-   datetime(created, 'unixepoch', 'localtime') AS created
- FROM pasteboardItems WHERE snippet LIKE '%?%' ORDER BY used DESC LIMIT ?
-
- What's the perf implication of super fuzzy search? May as well allow wildcards in the query str
-
- [pasteboard setString: @"org.nspasteboard.SampleApp" forType: @"org.nspasteboard.source"];
-
- if let path = workspace.absolutePathForApplication(withBundleIdentifier:bundleId) {
-   print("icon for app \(bundleId): \(workspace.icon(forFile: path))")
- }
+ * TODO: When pushing a historical item into the pasteboard, use type org.nspasteboard.source to properly attribute its
+ * source:
+ *
+ *     [pasteboard setString: @"org.nspasteboard.SampleApp" forType: @"org.nspasteboard.source"];
+ *
  */
 
 class PasteboardHistory {
@@ -48,7 +40,7 @@ class PasteboardHistory {
     ]
     let types = Set(pasteboard.types!.map { $0.rawValue })
     if types.intersects(filteredTypes) {
-      os_log(.info, "filtered type identifier, skipping")
+      os_log(.info, "PasteboardHistory: filtered type identifier, skipping")
       return
     }
 
@@ -69,17 +61,18 @@ class PasteboardHistory {
     // NSPasteboard.PasteboardType.textFinderOptions
     // NSPasteboard.PasteboardType.URL
     // NSPasteboard.PasteboardType.fileURL
+    print(types) // TODO(numist): collect types and build heuristics wrt snippet output formatting?
     // But for now we'll just grab NSStringPboardType, if available.
     guard let snippet = pasteboard.string(forType: .string) else {
-      os_log(.info, "no item for type NSStringPboardType, skipping")
+      os_log(.info, "PasteboardHistory: no item for type NSStringPboardType, skipping")
       return
     }
     if snippet.allSatisfy({ $0.isWhitespace }) {
-      os_log(.info, "item is all whitespace, skipping")
+      os_log(.info, "PasteboardHistory: item is all whitespace, skipping")
       return
     }
     if snippet.count > sizeLimit {
-      os_log(.info, "item is too big, skipping")
+      os_log(.info, "PasteboardHistory: item is too big, skipping")
       return
     }
 
@@ -95,7 +88,7 @@ class PasteboardHistory {
       item.lastUsed = Date()
       // TODO(numist): possible for db corruption to manifest here and not anywhere else
       try? context.save()
-      os_log(.info, "recorded pasteboard item")
+      os_log(.info, "PasteboardHistory: recorded pasteboard item")
     }
   }
 
