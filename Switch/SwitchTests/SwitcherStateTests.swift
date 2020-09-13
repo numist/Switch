@@ -246,20 +246,9 @@ class SwitcherStateTests: XCTestCase {
     XCTAssertEqual(state.selection, 0)
   }
 
-  func testAccessSelectionBeforeUpdate() {
-    let state = SwitcherState()
-    _ = state.selection
-    state.incrementSelection()
-    _ = state.selection
-    state.decrementSelection(by: 2)
-    _ = state.selection
-  }
-
   func testNilSelectorWithoutWindows() {
     let state = SwitcherState()
-    XCTAssertNil(state.selection)
     state.incrementSelection()
-    XCTAssertNil(state.selection)
     state.update(windows: [])
     XCTAssertNil(state.selection)
     state.incrementSelection()
@@ -438,19 +427,45 @@ class SwitcherStateTests: XCTestCase {
     var wantsTimer = false
     var showingInterface = false
     var wantsWindowUpdates = false
+    var hasUpdatedWindows = false
     let state = SwitcherState(
-      wantsTimerCallback: { assert(!wantsTimer); wantsTimer = true },
-      wantsTimerCancelledCallback: { assert(wantsTimer); wantsTimer = false },
-      wantsShowInterfaceCallback: { assert(!showingInterface); showingInterface = true },
-      wantsHideInterfaceCallback: { assert(showingInterface); showingInterface = false },
-      wantsStartWindowListUpdates: { assert(!wantsWindowUpdates); wantsWindowUpdates = true },
-      wantsStopWindowListUpdates: { assert(wantsWindowUpdates); wantsWindowUpdates = false },
-      wantsRaiseCallback: {_ in}
+      wantsTimerCallback: {
+        print("// wantsTimer → true")
+        assert(!wantsTimer); wantsTimer = true
+      },
+      wantsTimerCancelledCallback: {
+        print("// wantsTimer → false")
+        assert(wantsTimer); wantsTimer = false
+      },
+      wantsShowInterfaceCallback: {
+        print("// wantsInterface → true")
+        assert(!showingInterface); showingInterface = true
+      },
+      wantsHideInterfaceCallback: {
+        print("// wantsInterface → false")
+        assert(showingInterface); showingInterface = false
+      },
+      wantsStartWindowListUpdates: {
+        print("// wantsWindows → true")
+        assert(!wantsWindowUpdates); wantsWindowUpdates = true
+      },
+      wantsStopWindowListUpdates: {
+        print("// wantsWindows → false")
+        assert(wantsWindowUpdates); wantsWindowUpdates = false; hasUpdatedWindows = false
+      },
+      wantsRaiseCallback: {_ in print("// wantsRaise") }
     )
 
     var active = false
     let start = Date()
     while -start.timeIntervalSinceNow < 0.1 {
+      if showingInterface { assert(hasUpdatedWindows) }
+      if hasUpdatedWindows {
+        assert(wantsWindowUpdates)
+        _ = state.selection
+        _ = state.windows
+      }
+
       // swiftlint:disable opening_brace
       [
         {
@@ -474,7 +489,7 @@ class SwitcherStateTests: XCTestCase {
         } },
         { if wantsWindowUpdates {
           print("assert(wantsWindowUpdates)\nstate.update(windows: [])")
-          state.update(windows: [])
+          hasUpdatedWindows = true; state.update(windows: [])
         } },
       ].randomElement()!()
       // swiftlint:enable opening_brace

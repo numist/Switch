@@ -1,14 +1,70 @@
+/** # Switcher state machine
+ *
+ * Logic core responsible for powering switcher interface and window management behaviour.
+ *
+ * Ignoring transitions from one state to itself, the core functionality of the state machine is to implement the following DFA:
+ *
+ * ```
+ * ╔════╗ {in,de}crementSelection()    ┌─────────────────────────────┐
+ * ║Idle╠─────────────────────────────▶│Active (awaiting window list)│
+ * ╚════╝ →wantsStartWindowListUpdates └──────────────┬──────────────┘
+ * ▲                                                  │
+ * │→wantsStopWindowListUpdates                  ┌────┴────────────┐
+ * │→?wantsRaise                 update(windows:)│                 │hotKeyReleased()
+ * │                                             ▼                 ▼
+ * │                                         ┌──────┐  ┌──────────────────────┐
+ * ├─────────────────────────────────────────┤Active│  │Active (pending raise)│
+ * │           hotKeyReleased()              └──────┘  └───────────┬──────────┘
+ * │                                                               │
+ * └───────────────────────────────────────────────────────────────┘
+ *                                 update(windows:)
+ * ```
+ *
+ * Mixed in with the above is logic for controlling the display of the switcher interface (again, ignoring self-transitions):
+ *
+ * ```
+ *                                   ╔════╗
+ *                     ┌────────────▶║Idle║◀──────────────────────────────┐
+ * →wantsTimerCancelled│             ╚══╦═╝                               │
+ *                     │                │{in,de}crementSelection()        │
+ *     hotKeyReleased()│                │                                 │
+ *                     │                ▼→wantsTimer callback             │
+ *                     ├─────────────────────────────────┐                │
+ *                     │Active (awaiting: timer, windows)│                │
+ *                     └─┬─────────────────────────────┬─┘                │→wantsHideInterface
+ *           timerFired()▼                             ▼update(windows:)  │
+ *         ┌──────────────────────────┐   ┌────────────────────────┐      │hotKeyReleased()
+ *         │Active (awaiting: windows)│   │Active (awaiting: timer)│      │
+ *         └─────────────┬────────────┘   └───────────┬────────────┘      │
+ *       update(windows:)└──────────────┬─────────────┘timerFired()       │
+ *                                      │                                 │
+ *                                      ▼→wantsShowInterface              │
+ *                                  ┌──────┐                              │
+ *                                  │Active│──────────────────────────────┘
+ *                                  └──────┘
+ * ```
+ */
+
 class SwitcherState {
   // MARK: - Ins/outs
 
-  let wantsTimerCallback: () -> Void
-  let wantsTimerCancelledCallback: () -> Void
-  let wantsShowInterfaceCallback: () -> Void
-  let wantsHideInterfaceCallback: () -> Void
-  let wantsStartWindowListUpdates: () -> Void
-  let wantsStopWindowListUpdates: () -> Void
-  let wantsRaiseCallback: (WindowInfoGroup) -> Void
+  private let wantsTimerCallback: () -> Void
+  private let wantsTimerCancelledCallback: () -> Void
+  private let wantsShowInterfaceCallback: () -> Void
+  private let wantsHideInterfaceCallback: () -> Void
+  private let wantsStartWindowListUpdates: () -> Void
+  private let wantsStopWindowListUpdates: () -> Void
+  private let wantsRaiseCallback: (WindowInfoGroup) -> Void
 
+  /// Creates a new SwitcherState instance with configured callbacks
+  /// - Parameters:
+  ///   - wantsTimerCallback: Invoked when the state machine wants to perform an action after a delay
+  ///   - wantsTimerCancelledCallback: Invoked when the state machine wants to cancel the issued timer
+  ///   - wantsShowInterfaceCallback: Invoked when the owner should present the switching interface
+  ///   - wantsHideInterfaceCallback: Invoked when the owner should hide the switching interface
+  ///   - wantsStartWindowListUpdates: Invoked when the state machine wishes to recieve window list updates
+  ///   - wantsStopWindowListUpdates: Invoked when the state machine no longer desires window list updates
+  ///   - wantsRaiseCallback: Invoked when the owner should raise the window passed to the closure
   init(
     wantsTimerCallback: @escaping () -> Void = {},
     wantsTimerCancelledCallback: @escaping () -> Void = {},
@@ -27,6 +83,7 @@ class SwitcherState {
     self.wantsRaiseCallback = wantsRaiseCallback
   }
 
+  /// Call this function after the timer requested by this state machine has fired
   func timerFired() {
     assert(_wantsTimer)
     assert(!_timerFired)
@@ -36,6 +93,8 @@ class SwitcherState {
   }
 
   private var _active = false
+
+  /// Call this function when the hotkey modifier driving the interaction has been released
   func hotKeyReleased() {
     guard _active else { return }
 
@@ -47,6 +106,7 @@ class SwitcherState {
     raiseIfReady()
   }
 
+  /// Call this function when the forward hotkey has been pressed
   func incrementSelection(by amt: Int = 1) {
     guard !_wantsRaiseOnWindowUpdate else { return }
 
@@ -58,10 +118,12 @@ class SwitcherState {
     _updateSelection(by: amt)
   }
 
+  /// Call this function when the reverse hotkey has been pressed
   func decrementSelection(by amt: Int = 1) {
     incrementSelection(by: -amt)
   }
 
+  /// Call this function when the state machine has requested window list updates and a new list is available
   func update(windows list: [WindowInfoGroup]) {
     assert(_wantsWindowUpdates)
     guard _hasUpdatedWindows else {
@@ -71,7 +133,7 @@ class SwitcherState {
         _selection -= 1
       }
 
-      windows = list
+      _windows = list
       _hasUpdatedWindows = true
       _updateSelection()
       showInterfaceIfReady()
@@ -88,7 +150,7 @@ class SwitcherState {
         _selection = min(_selection, list.count) - 1
       }
     }
-    windows = list
+    _windows = list
     showInterfaceIfReady()
     raiseIfReady()
   }
@@ -109,23 +171,36 @@ class SwitcherState {
   }
 
   // MARK: - Publicly read-only properties
-  private(set) var windows = [WindowInfoGroup]()
 
-  private var _selection = 0
+  /// The window list from the last call to `update(windows:)`
+  ///
+  /// Do not access this property before the first `update(windows:)` after `→wantsStartWindowListUpdates`
+  var windows: [WindowInfoGroup] {
+    guard _hasUpdatedWindows else {
+      assertionFailure()
+      return [WindowInfoGroup]()
+    }
+    return _windows
+  }
+  private var _windows = [WindowInfoGroup]()
+
+  /// The index of the selected window in `windows`, or `nil` if `windows.isEmpty`
+  ///
+  /// Do not access this property before the first `update(windows:)` after `→wantsStartWindowListUpdates`
   var selection: Int? {
-    guard !windows.isEmpty else {
-      assert(_selection == -1 || !_hasUpdatedWindows)
+    guard _hasUpdatedWindows else {
+      assertionFailure()
+      return nil
+    }
+    guard !_windows.isEmpty else {
+      assert(_selection == -1)
       return nil
     }
     assert(_hasUpdatedWindows)
-    assert(_selection >= 0 && _selection < windows.count)
-    return _selection % windows.count
+    assert(_selection >= 0 && _selection < _windows.count)
+    return _selection % _windows.count
   }
-
-  var selectedWindow: WindowInfoGroup? {
-    guard let index = selection else { return nil }
-    return windows[index]
-  }
+  private var _selection = 0
 
   // MARK: - Timer management
   private var _timerFired = false
@@ -171,8 +246,8 @@ class SwitcherState {
 
       stopWindowUpdates()
 
-      if let selectedWindow = selectedWindow, selection != 0 || !selectedWindow.mainWindow.isAppActive {
-        wantsRaiseCallback(selectedWindow)
+      if let selection = selection, selection != 0 || !windows[selection].mainWindow.isAppActive {
+        wantsRaiseCallback(windows[selection])
       }
       _selection = 0
       _hasUpdatedWindows = false
