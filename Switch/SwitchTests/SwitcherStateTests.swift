@@ -3,7 +3,7 @@ import XCTest
 
 class SwitcherStateTests: XCTestCase {
   func testBumpBackOnInactiveFrontmostWindow() {
-    let window1 = [
+    let windowList = [
       WindowInfo([
         .cgNumber: UInt32(510),
         .cgLayer: Int32(0),
@@ -19,8 +19,6 @@ class SwitcherStateTests: XCTestCase {
         .canActivate: true,
         .isAppActive: false,
       ]),
-    ]
-    let window2 = [
       WindowInfo([
         .cgNumber: UInt32(5275),
         .cgLayer: Int32(0),
@@ -39,10 +37,7 @@ class SwitcherStateTests: XCTestCase {
     ]
     let state = SwitcherState()
     state.incrementSelection()
-    state.update(windows: [
-      WindowInfoGroup(mainWindow: window1.first!, windows: window1),
-      WindowInfoGroup(mainWindow: window2.first!, windows: window2),
-    ])
+    state.update(windows: WindowInfoGroup.list(from: windowList))
     XCTAssertEqual(state.selection, 0)
   }
 
@@ -53,5 +48,16 @@ class SwitcherStateTests: XCTestCase {
     _ = state.selection
     state.decrementSelection(by: 2)
     _ = state.selection
+  }
+
+  func testNilSelectorWithoutWindows() {
+    let state = SwitcherState()
+    XCTAssertNil(state.selection)
+    state.incrementSelection()
+    XCTAssertNil(state.selection)
+    state.update(windows: [])
+    XCTAssertNil(state.selection)
+    state.incrementSelection()
+    XCTAssertNil(state.selection)
   }
 }
