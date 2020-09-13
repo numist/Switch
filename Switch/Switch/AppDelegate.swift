@@ -48,6 +48,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     ServiceManager.start(.longCmdQ)
     ServiceManager.start(.pasteboardHistory)
+    ServiceManager.start(.switcher)
 
     os_log(.info, "Switch is ready!")
   }

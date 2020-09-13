@@ -5,11 +5,13 @@ enum Service {
   case axPoller
   case longCmdQ
   case pasteboardHistory
+  case switcher
 
   fileprivate func implementation() -> Any {
     switch self {
     case .longCmdQ: return LongCmdQ()
     case .pasteboardHistory: return PasteboardHistory()
+    case .switcher: return Switcher()
     case .axPoller:
       return Timer.publish(every: 0.25, on: .main, in: .common)
         .autoconnect()

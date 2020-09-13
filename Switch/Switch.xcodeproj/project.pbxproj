@@ -25,6 +25,7 @@
 		BCA9E288250CB2A400EB5540 /* NSThread+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E287250CB2A400EB5540 /* NSThread+Extensions.swift */; };
 		BCA9E28A250DA35F00EB5540 /* SwitcherState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E289250DA35F00EB5540 /* SwitcherState.swift */; };
 		BCA9E28D250DF2B000EB5540 /* Set+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E28C250DF2B000EB5540 /* Set+Extensions.swift */; };
+		BCA9E28F250DF32A00EB5540 /* Switcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E28E250DF32A00EB5540 /* Switcher.swift */; };
 		BCA9E291250E006700EB5540 /* WeakBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E290250E006700EB5540 /* WeakBox.swift */; };
 		BCD18FD424DD41C000941A86 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD18FD324DD41C000941A86 /* AppDelegate.swift */; };
 		BCD18FD824DD41C800941A86 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCD18FD724DD41C800941A86 /* Assets.xcassets */; };
@@ -105,6 +106,7 @@
 		BCA9E287250CB2A400EB5540 /* NSThread+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSThread+Extensions.swift"; sourceTree = "<group>"; };
 		BCA9E289250DA35F00EB5540 /* SwitcherState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitcherState.swift; sourceTree = "<group>"; };
 		BCA9E28C250DF2B000EB5540 /* Set+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Set+Extensions.swift"; sourceTree = "<group>"; };
+		BCA9E28E250DF32A00EB5540 /* Switcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Switcher.swift; sourceTree = "<group>"; };
 		BCA9E290250E006700EB5540 /* WeakBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakBox.swift; sourceTree = "<group>"; };
 		BCD18FD024DD41C000941A86 /* Switch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Switch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCD18FD324DD41C000941A86 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 				BC56728D24E23BA300206A39 /* WindowInfoGroup.swift */,
 				BC2121DE24E63F7C009EAE3B /* SwitcherView.swift */,
 				BCA9E289250DA35F00EB5540 /* SwitcherState.swift */,
+				BCA9E28E250DF32A00EB5540 /* Switcher.swift */,
 			);
 			path = Switcher;
 			sourceTree = "<group>";
@@ -492,6 +495,7 @@
 				BCD1901B24DF9D1400941A86 /* LongCmdQ.swift in Sources */,
 				BCD18FD424DD41C000941A86 /* AppDelegate.swift in Sources */,
 				BC56728E24E23BA300206A39 /* WindowInfoGroup.swift in Sources */,
+				BCA9E28F250DF32A00EB5540 /* Switcher.swift in Sources */,
 				BCA9E291250E006700EB5540 /* WeakBox.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
