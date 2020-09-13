@@ -28,7 +28,7 @@
 		BCD18FD824DD41C800941A86 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCD18FD724DD41C800941A86 /* Assets.xcassets */; };
 		BCD18FDB24DD41C800941A86 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCD18FDA24DD41C800941A86 /* Preview Assets.xcassets */; };
 		BCD18FDE24DD41C800941A86 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BCD18FDC24DD41C800941A86 /* Main.storyboard */; };
-		BCD18FEA24DD41C800941A86 /* SwitchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD18FE924DD41C800941A86 /* SwitchTests.swift */; };
+		BCD18FEA24DD41C800941A86 /* SwitcherStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD18FE924DD41C800941A86 /* SwitcherStateTests.swift */; };
 		BCD18FF524DD41C900941A86 /* SwitchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD18FF424DD41C900941A86 /* SwitchUITests.swift */; };
 		BCD1901324DF773100941A86 /* Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD1901224DF773100941A86 /* Keyboard.swift */; };
 		BCD1901724DF77B200941A86 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCD1901524DF77A700941A86 /* Carbon.framework */; };
@@ -109,7 +109,7 @@
 		BCD18FDD24DD41C800941A86 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		BCD18FDF24DD41C800941A86 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BCD18FE524DD41C800941A86 /* SwitchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwitchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		BCD18FE924DD41C800941A86 /* SwitchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTests.swift; sourceTree = "<group>"; };
+		BCD18FE924DD41C800941A86 /* SwitcherStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitcherStateTests.swift; sourceTree = "<group>"; };
 		BCD18FEB24DD41C800941A86 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BCD18FF024DD41C800941A86 /* SwitchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwitchUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCD18FF424DD41C900941A86 /* SwitchUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchUITests.swift; sourceTree = "<group>"; };
@@ -237,7 +237,7 @@
 		BCD18FE824DD41C800941A86 /* SwitchTests */ = {
 			isa = PBXGroup;
 			children = (
-				BCD18FE924DD41C800941A86 /* SwitchTests.swift */,
+				BCD18FE924DD41C800941A86 /* SwitcherStateTests.swift */,
 				BCD18FEB24DD41C800941A86 /* Info.plist */,
 			);
 			path = SwitchTests;
@@ -492,7 +492,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BCD18FEA24DD41C800941A86 /* SwitchTests.swift in Sources */,
+				BCD18FEA24DD41C800941A86 /* SwitcherStateTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

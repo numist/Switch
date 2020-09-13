@@ -6,19 +6,19 @@ import Haxcessibility
 enum WindowInfoDictionaryKey: String {
   // https://developer.apple.com/documentation/coregraphics/quartz_window_services/required_window_list_keys
   case cgNumber = "kCGWindowNumber"
-  case cgStoreType = "kCGWindowStoreType"
+//  case cgStoreType = "kCGWindowStoreType"
   case cgLayer = "kCGWindowLayer"
   case cgBounds = "kCGWindowBounds"
-  case cgSharingState = "kCGWindowSharingState"
+//  case cgSharingState = "kCGWindowSharingState"
   case cgAlpha = "kCGWindowAlpha"
   case cgOwnerPID = "kCGWindowOwnerPID"
-  case cgMemoryUsage = "kCGWindowMemoryUsage"
+//  case cgMemoryUsage = "kCGWindowMemoryUsage"
 
   // https://developer.apple.com/documentation/coregraphics/quartz_window_services/optional_window_list_keys
   case cgOwnerName = "kCGWindowOwnerName"
   case cgName = "kCGWindowName"
   case cgIsOnscreen = "kCGWindowIsOnscreen"
-  case cgBackingLocationVideoMemory = "kCGWindowBackingLocationVideoMemory"
+//  case cgBackingLocationVideoMemory = "kCGWindowBackingLocationVideoMemory"
 
   // https://developer.apple.com/documentation/appkit/nsscreen/1388360-devicedescription
   case cgDisplayID = "NSScreenNumber"
@@ -36,17 +36,13 @@ enum WindowInfoDictionaryKey: String {
 
 struct WindowInfo {
   let id: CGWindowID // swiftlint:disable:this identifier_name
-  let storeType: CGWindowBackingType
   let cgFrame: CGRect
-  let sharingState: CGWindowSharingType
   let alpha: Float
   let ownerPID: pid_t
-  let memoryUsage: Int64
 
   let ownerName: String?
   let name: String?
-  let isOnscreen: Bool?
-  let backingLocationVideoMemory: Bool?
+  let isOnScreen: Bool?
 
   let cgDisplayID: CGDirectDisplayID?
   let nsFrame: NSRect?
@@ -57,18 +53,14 @@ struct WindowInfo {
 
   init(_ infoDict: [WindowInfoDictionaryKey: Any]) {
     id = infoDict[.cgNumber] as! CGWindowID
-    storeType = CGWindowBackingType(rawValue: infoDict[.cgStoreType] as! UInt32)!
     assert(infoDict[.cgLayer] as! CGWindowLevel == kCGNormalWindowLevel)
     cgFrame = CGRect(dictionaryRepresentation: infoDict[.cgBounds] as! CFDictionary)!
-    sharingState = CGWindowSharingType(rawValue: infoDict[.cgSharingState] as! UInt32)!
     alpha = infoDict[.cgAlpha] as! Float
     ownerPID = infoDict[.cgOwnerPID] as! Int32
-    memoryUsage = infoDict[.cgMemoryUsage] as! Int64
 
     ownerName = infoDict[.cgOwnerName] as? String
     name = infoDict[.cgName] as? String
-    isOnscreen = infoDict[.cgIsOnscreen] as? Bool
-    backingLocationVideoMemory = infoDict[.cgBackingLocationVideoMemory] as? Bool
+    isOnScreen = infoDict[.cgIsOnscreen] as? Bool
 
     cgDisplayID = infoDict[.cgDisplayID] as? CGDirectDisplayID
     nsFrame = infoDict[.nsFrame] as? NSRect
@@ -90,7 +82,9 @@ extension WindowInfo {
     return (CGWindowListCopyWindowInfo(options, kCGNullWindowID) as! [[String: Any]])
     .filter({ $0[WindowInfoDictionaryKey.cgLayer.rawValue] as! CGWindowLevel == kCGNormalWindowLevel })
     .map({ Dictionary(uniqueKeysWithValues:
-      $0.map({ (key, value) in (WindowInfoDictionaryKey(rawValue: key)!, value) }))
+      $0
+      .filter({ (key, _) in WindowInfoDictionaryKey(rawValue: key) != nil })
+      .map({ (key, value) in (WindowInfoDictionaryKey(rawValue: key)!, value) }))
     })
     .map({ infoDict in
       // Try to cons up a HAXWindow for this CGWindow
@@ -128,8 +122,42 @@ extension WindowInfo {
 
 extension WindowInfo: Identifiable, Hashable {}
 
-//extension WindowInfo: CustomStringConvertible {
-//  var description: String {
-// TODO(numist): description should be directly pastable into a unit test to create a functionally identical instance
-//  }
-//}
+extension WindowInfo: CustomStringConvertible {
+  var description: String {
+    var result = """
+    WindowInfo([
+      .cgNumber: UInt32(\(id)),
+      .cgLayer: Int32(0),
+      .cgBounds: CGRect(
+         x: \(cgFrame.origin.x),
+         y: \(cgFrame.origin.y),
+         width: \(cgFrame.size.width),
+         height: \(cgFrame.size.height)
+      ).dictionaryRepresentation,
+      .cgAlpha: Float(\(alpha)),
+      .cgOwnerPID: Int32(\(ownerPID)),
+
+    """
+    if let ownerName = ownerName { result += "  .cgOwnerName: \"\(ownerName)\",\n" }
+    if let name = name { result += "  .cgName: \"\(name)\",\n" }
+    if let isOnScreen = isOnScreen { result += "  .cgIsOnscreen: \(isOnScreen),\n" }
+    if let cgDisplayID = cgDisplayID { result += "  .cgDisplayID: UInt32(\(cgDisplayID)),\n" }
+    if let frm = nsFrame {
+      result += """
+        .nsFrame: NSRect(
+          x: \(frm.origin.x),
+          y: \(frm.origin.y),
+          width: \(frm.size.width),
+          height: \(frm.size.height)
+        ),
+
+      """
+    }
+    if let isFullscreen = isFullscreen { result += "  .isFullscreen: \(isFullscreen),\n" }
+    return result + """
+      .canActivate: \(canActivate),
+      .isAppActive: \(isAppActive),
+    ])
+    """
+  }
+}
