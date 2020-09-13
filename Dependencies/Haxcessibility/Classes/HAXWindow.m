@@ -33,12 +33,12 @@ extern AXError _AXUIElementGetWindow(AXUIElementRef, CGWindowID* out);
     }
     if ([self performAction:(__bridge NSString *)kAXRaiseAction error:NULL]) {
         ProcessSerialNumber psn;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         if (pid && GetProcessForPID (pid, &psn) == 0) {
-            #pragma clang diagnostic push
-            #pragma clang diagnostic ignored "-Wdeprecated-declarations"
             success = (noErr == SetFrontProcessWithOptions(&psn, kSetFrontProcessFrontWindowOnly));
-            #pragma clang diagnostic pop
         }
+#pragma clang diagnostic pop
     }
     return success;
 }

@@ -7,9 +7,9 @@ Second to that, Haxcessibility is a use case–driven remote control for Mac app
 
 # Use it
 
-Resize the focused app’s focused window to fullscreen on a 27" iMac:
+Resize the focused app’s focused window to fullscreen:
 
-	[HAXSystem system].focusedApplication.focusedWindow.size = NSMakeRect(0, 0, 2560, 1440);
+	[HAXSystem system].focusedApplication.focusedWindow.frame = NSScreen.mainScreen.frame
 
 Close all windows in the focused app:
 
@@ -17,7 +17,7 @@ Close all windows in the focused app:
 
 # Improve it
 
-Don’t see the feature you want? Fortunately, it’s pretty easy to add your own convenience methods. [Fork Haxcessibility](https://github.com/robrix/Haxcessibility/fork) and send me a pull request with your code.
+Don’t see the feature you want? Fortunately, it’s pretty easy to add your own convenience methods. [Fork Haxcessibility](https://github.com/numist/Haxcessibility/fork) and send me a pull request with your code.
 
 You’ll want to pay special attention to the HAXElement+Protected.h private header. `HAXElement` is the root of most functionality in Haxcessibility, and this header declares the conveniences defined for wrapping more of the Accessibility APIs’ functionality.
 
@@ -25,8 +25,8 @@ You’ll want to pay special attention to the HAXElement+Protected.h private hea
 
 This framework would not be what it is without the help of:
 
+- [Rob Rix](https://github.com/robrix) for creating and curating Haxcessibility for the first five years of its existence.
+
 - [Decimus Software](http://decimus.net) for DTerm, which showed us what you can do with the Accessibility APIs
 
 - [DEVONtechnologies, LLC](http://devontechnologies.com/) for their patronage of [Grid](https://github.com/robrix/Grid), the original _raison d’être_ of this framework
-
-- [Scott Perry](https://github.com/numist) for his industrious work on Haxcessibility, which modernized it and increased its functionality greatly; and also for his project [Switch](https://github.com/numist/Switch), a window-based context switcher that motivated a lot of this effort

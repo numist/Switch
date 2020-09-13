@@ -8,11 +8,11 @@
 
 @interface HAXApplication : HAXElement
 
-@property (nonatomic, readonly) HAXWindow *focusedWindow;
-@property (nonatomic, readonly) NSArray<HAXWindow *> *windows;
-@property (nonatomic, copy, readonly) NSString *localizedName;
+@property (readonly, nullable) HAXWindow * focusedWindow;
+@property (readonly, nonnull) NSArray<HAXWindow *> *windows;
+@property (readonly, nullable) NSString *localizedName;
 
-+(HAXApplication *)applicationWithPID:(pid_t)pid;
++(nullable HAXApplication *)applicationWithPID:(pid_t)pid;
 
 -(nullable HAXWindow *)windowWithID:(CGWindowID)cgWindowID;
 
