@@ -47,6 +47,11 @@ extension WindowInfoGroup {
 
 extension WindowInfoGroup {
   // TODO(numist): this is gonna get more sophisticated but let's get off the ground first
+  /* Heuristics:
+   *   * window grouping is not accurate when title is not set
+   *   * group non-activatable windows with nearest mainwindow candidate
+   *   * …maybe just recreate/port tests from old source
+   */
   static func list(from infos: [WindowInfo]) -> [WindowInfoGroup] {
     return infos
       .filter({ $0.alpha != 0.0 && $0.canActivate && $0.name?.count ?? 0 > 0 })

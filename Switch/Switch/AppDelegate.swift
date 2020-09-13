@@ -22,7 +22,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     if ProcessInfo.processInfo.environment["XCTestBundlePath"] != nil {
-      // Don't set up the app when running for unit testing
+      // Don't set up the app when running unit tests
       return
     }
 
@@ -35,14 +35,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       ServiceManager.start(.axPoller)
       return
     }
-
-    do {
-      // This *should* only fail when !AXIsProcessTrusted
-      try Keyboard.enableHotKeys()
-    } catch {
-      precondition(AXIsProcessTrustedWithOptions(nil))
-      os_log(.info, "Switch is sad :(")
-    }
+    // The only acceptable reason for an event tap to fail is when `!AXIsProcessTrustedWithOptions(nil)`
+    try! Keyboard.enableHotKeys() // swiftlint:disable:this force_try
 
     ServiceManager.start(.longCmdQ)
     ServiceManager.start(.pasteboardHistory)
