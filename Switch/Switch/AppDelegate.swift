@@ -40,9 +40,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       // This *should* only fail when !AXIsProcessTrusted
       try Keyboard.enableHotKeys()
     } catch {
-      if AXIsProcessTrustedWithOptions(nil) {
-        os_log(.fault, "Failed to create event tap!?")
-      }
+      precondition(AXIsProcessTrustedWithOptions(nil))
       os_log(.info, "Switch is sad :(")
     }
 

@@ -5,14 +5,14 @@ class Switcher {
   private var state: SwitcherState!
   private var releaseTap: EventTap?
 
-  private func setUpReleaseTapIfNeeded() {
+  private func setUpReleaseTapIfNeeded() -> Bool {
     assert(Thread.isMainThread)
-    guard releaseTap == nil else { return }
+    guard releaseTap == nil else { return true }
 
     // TODO: support for closeWindow hotkey (registered here, deregistered when releaseTap is deactivated)
 
     // swiftlint:disable:next force_try
-    releaseTap = try! EventTap(observing: .flagsChanged, callback: { [weak self] (_, event) -> CGEvent? in
+    releaseTap = try? EventTap(observing: .flagsChanged, callback: { [weak self] (_, event) -> CGEvent? in
       guard let self = self else { return event }
 
       if !event.flags.contains(.maskAlternate) {
@@ -25,6 +25,9 @@ class Switcher {
       }
       return event
     })
+
+    // Do not engage the state machine if the releaseTap can not be created
+    return releaseTap != nil
   }
 
   init() {
@@ -46,16 +49,18 @@ class Switcher {
     Keyboard.register(.init(.option, .tab)) { [weak self] keyDown -> Bool in
       guard let self = self else { return true }
       if keyDown { DispatchQueue.main.async {
-        self.setUpReleaseTapIfNeeded()
-        self.state.incrementSelection()
+        if self.setUpReleaseTapIfNeeded() {
+          self.state.incrementSelection()
+        }
       } }
       return false
     }
     Keyboard.register(.init([.option, .shift], .tab)) { [weak self] keyDown -> Bool in
       guard let self = self else { return true }
       if keyDown { DispatchQueue.main.async {
-        self.setUpReleaseTapIfNeeded()
-        self.state.decrementSelection()
+        if self.setUpReleaseTapIfNeeded() {
+          self.state.decrementSelection()
+        }
       } }
       return false
     }

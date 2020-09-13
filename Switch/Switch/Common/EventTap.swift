@@ -88,9 +88,11 @@ class EventTap {
   }
 
   deinit {
-    CGEvent.tapEnable(tap: eventTap, enable: false)
-    EventTap.eventThread.sync {
-      RunLoop.current.remove(self.eventTap, forMode: .common)
+    if let eventTap = eventTap {
+      CGEvent.tapEnable(tap: eventTap, enable: false)
+      EventTap.eventThread.sync {
+        RunLoop.current.remove(self.eventTap, forMode: .common)
+      }
     }
     Unmanaged.passUnretained(selfBox).release()
   }
