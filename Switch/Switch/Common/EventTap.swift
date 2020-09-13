@@ -8,7 +8,7 @@ private func eventCallback(
   userInfo: UnsafeMutableRawPointer?
 ) -> Unmanaged<CGEvent>? {
   let box = Unmanaged<WeakBox<EventTap>>.fromOpaque(userInfo!).takeUnretainedValue()
-  guard let this = box.value else { return Unmanaged.passRetained(event) }
+  guard let this = box.value else { return Unmanaged.passUnretained(event) }
 
   if type == .tapDisabledByTimeout {
     os_log(.fault, "tap disabled: tapDisabledByTimeout")
@@ -16,10 +16,9 @@ private func eventCallback(
       os_log("Re-enabling event tap")
       CGEvent.tapEnable(tap: this.eventTap, enable: true)
     }
-    return Unmanaged.passRetained(event)
+    return Unmanaged.passUnretained(event)
   } else if type == .tapDisabledByUserInput {
-    os_log(.fault, "tap disabled: tapDisabledByUserInput")
-    return Unmanaged.passRetained(event)
+    return Unmanaged.passUnretained(event)
   }
 
   if let result = this.callback(type, event) {
