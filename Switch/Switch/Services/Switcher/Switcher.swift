@@ -7,25 +7,24 @@ class Switcher {
 
   private func setUpReleaseTapIfNeeded() {
     assert(Thread.isMainThread)
+    guard releaseTap == nil else { return }
 
-    if releaseTap == nil {
-      // TODO: support for closeWindow hotkey (registered here, deregistered when releaseTap is deactivated)
+    // TODO: support for closeWindow hotkey (registered here, deregistered when releaseTap is deactivated)
 
-      // swiftlint:disable:next force_try
-      releaseTap = try! EventTap(observing: .flagsChanged, callback: { [weak self] (_, event) -> CGEvent? in
-        guard let self = self else { return event }
+    // swiftlint:disable:next force_try
+    releaseTap = try! EventTap(observing: .flagsChanged, callback: { [weak self] (_, event) -> CGEvent? in
+      guard let self = self else { return event }
 
-        if !event.flags.contains(.maskAlternate) {
-          DispatchQueue.main.async {
-            assert(self.releaseTap != nil)
-            self.releaseTap = nil
-            self.state.hotKeyReleased()
-          }
-          return nil
+      if !event.flags.contains(.maskAlternate) {
+        DispatchQueue.main.async {
+          assert(self.releaseTap != nil)
+          self.releaseTap = nil
+          self.state.hotKeyReleased()
         }
-        return event
-      })
-    }
+        return nil
+      }
+      return event
+    })
   }
 
   init() {
@@ -70,6 +69,11 @@ class Switcher {
 //    // It's about 20ms on average, and it varies enough to absolutely require async polling
   }
 
+  deinit {
+    Keyboard.deregister(.init(.option, .tab))
+    Keyboard.deregister(.init([.option, .shift], .tab))
+  }
+
   // MARK: -
   // This section implements the state machine's callbacks
 
@@ -95,10 +99,8 @@ class Switcher {
     assert(Thread.isMainThread)
     assert(self.timer != nil)
 
-    if let timer = self.timer {
-      timer.invalidate()
-      self.timer = nil
-    }
+    timer?.invalidate()
+    timer = nil
   }
 
   // MARK: Interface management
