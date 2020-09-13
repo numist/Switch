@@ -3,22 +3,34 @@ import CoreGraphics
 import Haxcessibility
 
 // Work around the CFString casts and other nonsense by declaring all the keys used in the infoDict passed to WindowInfo
-private let cgNumberKey = "kCGWindowNumber"
-private let cgStoreTypeKey = "kCGWindowStoreType"
-private let cgLayerKey = "kCGWindowLayer"
-private let cgBoundsKey = "kCGWindowBounds"
-private let cgSharingStateKey = "kCGWindowSharingState"
-private let cgAlphaKey = "kCGWindowAlpha"
-private let cgOwnerPIDKey = "kCGWindowOwnerPID"
-private let cgMemoryUsageKey = "kCGWindowMemoryUsage"
-private let cgOwnerNameKey = "kCGWindowOwnerName"
-private let cgNameKey = "kCGWindowName"
-private let cgIsOnscreenKey = "kCGWindowIsOnscreen"
-private let cgBackingLocationVideoMemoryKey = "kCGWindowBackingLocationVideoMemory"
-private let cgDisplayIDKey = "NSScreenNumber"
-private let nsFrameKey = "NSFrame"
-private let isFullscreenKey = "IsFullscreen"
-private let canActivateKey = "FriendlyActivationPolicy"
+enum WindowInfoDictionaryKey: String {
+  // https://developer.apple.com/documentation/coregraphics/quartz_window_services/required_window_list_keys
+  case cgNumber = "kCGWindowNumber"
+  case cgStoreType = "kCGWindowStoreType"
+  case cgLayer = "kCGWindowLayer"
+  case cgBounds = "kCGWindowBounds"
+  case cgSharingState = "kCGWindowSharingState"
+  case cgAlpha = "kCGWindowAlpha"
+  case cgOwnerPID = "kCGWindowOwnerPID"
+  case cgMemoryUsage = "kCGWindowMemoryUsage"
+
+  // https://developer.apple.com/documentation/coregraphics/quartz_window_services/optional_window_list_keys
+  case cgOwnerName = "kCGWindowOwnerName"
+  case cgName = "kCGWindowName"
+  case cgIsOnscreen = "kCGWindowIsOnscreen"
+  case cgBackingLocationVideoMemory = "kCGWindowBackingLocationVideoMemory"
+
+  // https://developer.apple.com/documentation/appkit/nsscreen/1388360-devicedescription
+  case cgDisplayID = "NSScreenNumber"
+
+  // Custom keys filled by AX
+  case nsFrame = "NSFrame"
+  case isFullscreen = "IsFullscreen"
+
+  // Custom keys filled by NSRunningApplication
+  case canActivate = "FriendlyActivationPolicy"
+  case isAppActive = "AppIsActive"
+}
 
 // swiftlint:disable force_cast
 
@@ -41,32 +53,33 @@ struct WindowInfo {
   let isFullscreen: Bool?
 
   let canActivate: Bool
+  let isAppActive: Bool
 
-  init(_ infoDict: [String: Any]) {
-    // Required Window List Keys
-    // https://developer.apple.com/documentation/coregraphics/quartz_window_services/required_window_list_keys
-    id = infoDict[cgNumberKey] as! CGWindowID
-    storeType = CGWindowBackingType(rawValue: infoDict[cgStoreTypeKey] as! UInt32)!
-    assert(infoDict[cgLayerKey] as! CGWindowLevel == kCGNormalWindowLevel)
-    cgFrame = CGRect(dictionaryRepresentation: infoDict[cgBoundsKey] as! CFDictionary)!
-    sharingState = CGWindowSharingType(rawValue: infoDict[cgSharingStateKey] as! UInt32)!
-    alpha = infoDict[cgAlphaKey] as! Float
-    ownerPID = infoDict[cgOwnerPIDKey] as! Int32
-    memoryUsage = infoDict[cgMemoryUsageKey] as! Int64
+  init(_ infoDict: [WindowInfoDictionaryKey: Any]) {
+    id = infoDict[.cgNumber] as! CGWindowID
+    storeType = CGWindowBackingType(rawValue: infoDict[.cgStoreType] as! UInt32)!
+    assert(infoDict[.cgLayer] as! CGWindowLevel == kCGNormalWindowLevel)
+    cgFrame = CGRect(dictionaryRepresentation: infoDict[.cgBounds] as! CFDictionary)!
+    sharingState = CGWindowSharingType(rawValue: infoDict[.cgSharingState] as! UInt32)!
+    alpha = infoDict[.cgAlpha] as! Float
+    ownerPID = infoDict[.cgOwnerPID] as! Int32
+    memoryUsage = infoDict[.cgMemoryUsage] as! Int64
 
-    // Optional Window List Keys
-    // https://developer.apple.com/documentation/coregraphics/quartz_window_services/optional_window_list_keys
-    ownerName = infoDict[cgOwnerNameKey] as? String
-    name = infoDict[cgNameKey] as? String
-    isOnscreen = infoDict[cgIsOnscreenKey] as? Bool
-    backingLocationVideoMemory = infoDict[cgBackingLocationVideoMemoryKey] as? Bool
+    ownerName = infoDict[.cgOwnerName] as? String
+    name = infoDict[.cgName] as? String
+    isOnscreen = infoDict[.cgIsOnscreen] as? Bool
+    backingLocationVideoMemory = infoDict[.cgBackingLocationVideoMemory] as? Bool
 
-    // Data from AX
-    cgDisplayID = infoDict[cgDisplayIDKey] as? CGDirectDisplayID
-    nsFrame = infoDict[nsFrameKey] as? NSRect
-    isFullscreen = infoDict[isFullscreenKey] as? Bool
+    cgDisplayID = infoDict[.cgDisplayID] as? CGDirectDisplayID
+    nsFrame = infoDict[.nsFrame] as? NSRect
+    isFullscreen = infoDict[.isFullscreen] as? Bool
 
-    canActivate = infoDict[canActivateKey] as? Bool ?? false
+    canActivate = infoDict[.canActivate] as? Bool ?? false
+    /* Usually true for first window in list, usually false for subsequents. This value should never be missing for
+     * main windows, but the default value is chosen to provide the best state machine behaviour (and least crashing)
+     * if it's ever missing.
+     */
+    isAppActive = infoDict[.isAppActive] as? Bool ?? true
   }
 }
 
@@ -75,11 +88,22 @@ extension WindowInfo {
     var options = CGWindowListOption.excludeDesktopElements
     if onScreenOnly { options.insert(.optionOnScreenOnly) }
     return (CGWindowListCopyWindowInfo(options, kCGNullWindowID) as! [[String: Any]])
-    .filter({ $0[cgLayerKey] as! CGWindowLevel == kCGNormalWindowLevel })
+    .filter({ $0[WindowInfoDictionaryKey.cgLayer.rawValue] as! CGWindowLevel == kCGNormalWindowLevel })
+    .map({ Dictionary(uniqueKeysWithValues:
+      $0.map({ (key, value) in (WindowInfoDictionaryKey(rawValue: key)!, value) }))
+    })
     .map({ infoDict in
       // Try to cons up a HAXWindow for this CGWindow
-      let windowID = infoDict[kCGWindowNumber as String] as! CGWindowID
-      let processID = infoDict[cgOwnerPIDKey] as! Int32
+      let windowID = infoDict[.cgNumber] as! CGWindowID
+      let processID = infoDict[.cgOwnerPID] as! Int32
+
+      // Add extra keys from NSRunningApplication to the info dict
+      var additionalInfo = [WindowInfoDictionaryKey: Any]()
+      if let runningApp = NSRunningApplication(processIdentifier: processID) {
+        additionalInfo[.canActivate] = (runningApp.activationPolicy != .prohibited)
+        additionalInfo[.isAppActive] = runningApp.isActive
+      }
+
       guard let haxWindow = HAXApplication(pid: processID)?
         .windows
         .filter({ $0.cgWindowID() == windowID })
@@ -89,21 +113,15 @@ extension WindowInfo {
       }
 
       // Add extra keys from hax to the info dict
-      var haxInfo: [String: Any] = [
-        cgDisplayIDKey: haxWindow.screen.deviceDescription[.init(rawValue: "NSScreenNumber")] as! CGDirectDisplayID,
-        nsFrameKey: haxWindow.frame,
-        isFullscreenKey: haxWindow.isFullscreen,
-      ]
+      additionalInfo[.cgDisplayID] =
+        haxWindow.screen.deviceDescription[.init(rawValue: "NSScreenNumber")] as! CGDirectDisplayID
+      additionalInfo[.nsFrame] = haxWindow.frame
+      additionalInfo[.isFullscreen] = haxWindow.isFullscreen
       if let title = haxWindow.title {
-        haxInfo[cgNameKey] = title
+        additionalInfo[.cgName] = title
       }
 
-      // Add extra keys from NSRunningApplication to the info dict
-      if let runningApp = NSRunningApplication(processIdentifier: processID) {
-        haxInfo[canActivateKey] = (runningApp.activationPolicy != .prohibited)
-      }
-
-      return WindowInfo(infoDict.merging(haxInfo as [String: Any], uniquingKeysWith: { $1 }))
+      return WindowInfo(infoDict.merging(additionalInfo, uniquingKeysWith: { $1 }))
     })
   }
 }

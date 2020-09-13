@@ -23,6 +23,7 @@
 		BC56728924E0F0E200206A39 /* Haxcessibility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC56728824E0F0E200206A39 /* Haxcessibility.framework */; };
 		BC56728E24E23BA300206A39 /* WindowInfoGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC56728D24E23BA300206A39 /* WindowInfoGroup.swift */; };
 		BCA9E288250CB2A400EB5540 /* NSThread+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E287250CB2A400EB5540 /* NSThread+Extensions.swift */; };
+		BCA9E28A250DA35F00EB5540 /* SwitcherState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E289250DA35F00EB5540 /* SwitcherState.swift */; };
 		BCD18FD424DD41C000941A86 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD18FD324DD41C000941A86 /* AppDelegate.swift */; };
 		BCD18FD824DD41C800941A86 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCD18FD724DD41C800941A86 /* Assets.xcassets */; };
 		BCD18FDB24DD41C800941A86 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCD18FDA24DD41C800941A86 /* Preview Assets.xcassets */; };
@@ -100,6 +101,7 @@
 		BC56728824E0F0E200206A39 /* Haxcessibility.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Haxcessibility.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC56728D24E23BA300206A39 /* WindowInfoGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowInfoGroup.swift; sourceTree = "<group>"; };
 		BCA9E287250CB2A400EB5540 /* NSThread+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSThread+Extensions.swift"; sourceTree = "<group>"; };
+		BCA9E289250DA35F00EB5540 /* SwitcherState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitcherState.swift; sourceTree = "<group>"; };
 		BCD18FD024DD41C000941A86 /* Switch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Switch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCD18FD324DD41C000941A86 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BCD18FD724DD41C800941A86 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -181,6 +183,7 @@
 				BC56728624E0BABC00206A39 /* WindowInfo.swift */,
 				BC56728D24E23BA300206A39 /* WindowInfoGroup.swift */,
 				BC2121DE24E63F7C009EAE3B /* SwitcherView.swift */,
+				BCA9E289250DA35F00EB5540 /* SwitcherState.swift */,
 			);
 			path = Switcher;
 			sourceTree = "<group>";
@@ -477,6 +480,7 @@
 				BC56728724E0BABC00206A39 /* WindowInfo.swift in Sources */,
 				BC2121B624E29323009EAE3B /* Debugger Support.swift in Sources */,
 				BC56727F24DFC84B00206A39 /* Service.swift in Sources */,
+				BCA9E28A250DA35F00EB5540 /* SwitcherState.swift in Sources */,
 				BC2121B924E3B4AF009EAE3B /* PasteboardHistory.xcdatamodeld in Sources */,
 				BCD1901B24DF9D1400941A86 /* LongCmdQ.swift in Sources */,
 				BCD18FD424DD41C000941A86 /* AppDelegate.swift in Sources */,
