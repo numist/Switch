@@ -20,6 +20,10 @@ class SwitcherState {
         _selection = -1
       } else {
         _selection = (_selection + amt) % windows.count
+        if _selection < 0 {
+          _selection += windows.count
+        }
+        assert(_selection >= 0 && _selection < windows.count)
       }
     } else {
       _selection += amt
@@ -34,7 +38,7 @@ class SwitcherState {
     guard hasUpdatedWindows else {
       // On first window update, bump the selection back if the first window is not active
       // This way, a quick opt-tab will increment 1, bump back, and activate the topmost window
-      if !(list.first?.mainWindow.isAppActive ?? true) {
+      if _selection > 0 && !(list.first?.mainWindow.isAppActive ?? true) {
         _selection -= 1
       }
 
