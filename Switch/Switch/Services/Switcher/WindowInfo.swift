@@ -123,17 +123,13 @@ extension WindowInfo {
 extension WindowInfo: Identifiable, Hashable {}
 
 extension WindowInfo: CustomStringConvertible {
+  // swiftlint:disable line_length
   var description: String {
     var result = """
     WindowInfo([
       .cgNumber: UInt32(\(id)),
       .cgLayer: Int32(0),
-      .cgBounds: CGRect(
-         x: \(cgFrame.origin.x),
-         y: \(cgFrame.origin.y),
-         width: \(cgFrame.size.width),
-         height: \(cgFrame.size.height)
-      ).dictionaryRepresentation,
+      .cgBounds: CGRect(x: \(cgFrame.origin.x), y: \(cgFrame.origin.y), width: \(cgFrame.size.width), height: \(cgFrame.size.height)).dictionaryRepresentation,
       .cgAlpha: Float(\(alpha)),
       .cgOwnerPID: Int32(\(ownerPID)),
 
@@ -143,15 +139,7 @@ extension WindowInfo: CustomStringConvertible {
     if let isOnScreen = isOnScreen { result += "  .cgIsOnscreen: \(isOnScreen),\n" }
     if let cgDisplayID = cgDisplayID { result += "  .cgDisplayID: UInt32(\(cgDisplayID)),\n" }
     if let frm = nsFrame {
-      result += """
-        .nsFrame: NSRect(
-          x: \(frm.origin.x),
-          y: \(frm.origin.y),
-          width: \(frm.size.width),
-          height: \(frm.size.height)
-        ),
-
-      """
+      result += "  .nsFrame: NSRect(x: \(frm.origin.x), y: \(frm.origin.y), width: \(frm.size.width), height: \(frm.size.height)),\n"
     }
     if let isFullscreen = isFullscreen { result += "  .isFullscreen: \(isFullscreen),\n" }
     return result + """
@@ -160,4 +148,5 @@ extension WindowInfo: CustomStringConvertible {
     ])
     """
   }
+  // swiftlint:enable line_length
 }

@@ -1,44 +1,20 @@
 import XCTest
 @testable import Switch
 
-//func randomWindow() -> WindowInfo {
-//  return WindowInfo([
-//    .cgNumber: Int.random(in: 0..<1000),
-//    .cgStoreType: 2,
-//    .cgBounds: CGRect(
-//      x: Int.random(in: 0..<1000),
-//      y: Int.random(in: 0..<1000),
-//      width: Int.random(in: 0..<1000),
-//      height: Int.random(in: 0..<1000)).dictionaryRepresentation,
-//    .cgSharingState: 0,
-//    .cgAlpha: 1.0,
-//    .cgOwnerPID: Int.random(in: 0..<1000),
-//    .cgMemoryUsage: Int.random(in: 0..<1000),
-//
-//    .isFullscreen: false,
-//    .canActivate: true,
-//    .isAppActive: Bool.random(),
-//  ])
-//}
-//
-//func randomWindowGroup() -> WindowInfoGroup {
-//  let windowInfo = randomWindow()
-//  return WindowInfoGroup(mainWindow: windowInfo, windows: [windowInfo])
-//}
-
 class SwitcherStateTests: XCTestCase {
   func testBumpBackOnInactiveFrontmostWindow() {
     let window1 = [
       WindowInfo([
-        .cgNumber: UInt32.random(in: 0..<1000),
-        .cgLayer: kCGNormalWindowLevel,
-        .cgBounds: CGRect(
-          x: Int.random(in: 0..<1000),
-          y: Int.random(in: 0..<1000),
-          width: Int.random(in: 0..<1000),
-          height: Int.random(in: 0..<1000)).dictionaryRepresentation,
+        .cgNumber: UInt32(510),
+        .cgLayer: Int32(0),
+        .cgBounds: CGRect(x: 0.0, y: 23.0, width: 668.0, height: 573.0).dictionaryRepresentation,
         .cgAlpha: Float(1.0),
-        .cgOwnerPID: Int32.random(in: 0..<1000),
+        .cgOwnerPID: Int32(1426),
+        .cgOwnerName: "System Preferences",
+        .cgName: "Security & Privacy",
+        .cgIsOnscreen: true,
+        .cgDisplayID: UInt32(69732800),
+        .nsFrame: NSRect(x: 0.0, y: 304.0, width: 668.0, height: 573.0),
         .isFullscreen: false,
         .canActivate: true,
         .isAppActive: false,
@@ -46,15 +22,16 @@ class SwitcherStateTests: XCTestCase {
     ]
     let window2 = [
       WindowInfo([
-        .cgNumber: UInt32.random(in: 0..<1000),
-        .cgLayer: kCGNormalWindowLevel,
-        .cgBounds: CGRect(
-          x: Int.random(in: 0..<1000),
-          y: Int.random(in: 0..<1000),
-          width: Int.random(in: 0..<1000),
-          height: Int.random(in: 0..<1000)).dictionaryRepresentation,
+        .cgNumber: UInt32(5275),
+        .cgLayer: Int32(0),
+        .cgBounds: CGRect(x: 61.0, y: 238.0, width: 720.0, height: 445.0).dictionaryRepresentation,
         .cgAlpha: Float(1.0),
-        .cgOwnerPID: Int32.random(in: 0..<1000),
+        .cgOwnerPID: Int32(16649),
+        .cgOwnerName: "TextMate",
+        .cgName: "untitled 8",
+        .cgIsOnscreen: true,
+        .cgDisplayID: UInt32(69732800),
+        .nsFrame: NSRect(x: 61.0, y: 217.0, width: 720.0, height: 445.0),
         .isFullscreen: false,
         .canActivate: true,
         .isAppActive: false,
