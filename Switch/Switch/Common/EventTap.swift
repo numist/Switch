@@ -7,7 +7,8 @@ private func eventCallback(
   event: CGEvent,
   userInfo: UnsafeMutableRawPointer?
 ) -> Unmanaged<CGEvent>? {
-  let this = Unmanaged<EventTap>.fromOpaque(userInfo!).takeUnretainedValue()
+  let box = Unmanaged<WeakBox<EventTap>>.fromOpaque(userInfo!).takeUnretainedValue()
+  guard let this = box.value else { return Unmanaged.passRetained(event) }
 
   if type == .tapDisabledByTimeout {
     os_log(.fault, "tap disabled: tapDisabledByTimeout")
@@ -29,6 +30,15 @@ private func eventCallback(
 }
 
 class EventTap {
+  static var eventThread: Thread = {
+    let thread = Thread(block: { RunLoop.current.run() })
+    thread.name = "net.numist.switch.EventTapCallbackThread"
+    thread.qualityOfService = .userInteractive
+    thread.threadPriority = 1.0
+    thread.start()
+    return thread
+  }()
+
   struct Error: Swift.Error {}
   struct EventTypes: OptionSet {
     let rawValue: Int64
@@ -54,10 +64,12 @@ class EventTap {
 
   fileprivate let callback: (CGEventType, CGEvent) -> CGEvent?
   fileprivate var eventTap: CFMachPort!
-  private var eventThread: Thread!
+  private var selfBox: WeakBox<EventTap>!
 
   init(observing: EventTypes, callback: @escaping (CGEventType, CGEvent) -> CGEvent?) throws {
     self.callback = callback
+
+    selfBox = WeakBox<EventTap>(self)
 
     guard let tap = CGEvent.tapCreate(
       tap: .cgSessionEventTap,
@@ -65,28 +77,21 @@ class EventTap {
       options: .defaultTap,
       eventsOfInterest: CGEventMask(observing.rawValue),
       callback: eventCallback,
-      userInfo: Unmanaged.passRetained(self).toOpaque()
+      userInfo: Unmanaged.passRetained(selfBox).toOpaque()
     ) else {
       throw EventTap.Error()
     }
-    eventTap = tap
 
-    let eventThread = Thread(block: {
-      let runLoop = RunLoop.current
-      runLoop.add(tap, forMode: .common)
-      runLoop.run()
-    })
-    eventThread.name = "EventTap event callback thread"
-    eventThread.qualityOfService = .userInteractive
-    eventThread.threadPriority = 1.0
-    eventThread.start()
+    eventTap = tap
+    EventTap.eventThread.sync {
+      RunLoop.current.add(tap, forMode: .common)
+    }
   }
 
   deinit {
-    eventThread.sync {
-      CGEvent.tapEnable(tap: self.eventTap, enable: false)
+    EventTap.eventThread.sync {
       RunLoop.current.remove(self.eventTap, forMode: .common)
     }
-    eventThread.cancel()
+    Unmanaged.passUnretained(selfBox).release()
   }
 }
