@@ -30,8 +30,14 @@ private func eventCallback(
 
 class EventTap {
   static var eventThread: Thread = {
-    let thread = Thread(block: { RunLoop.current.run() })
-    thread.name = "net.numist.switch.EventTapCallbackThread"
+    let thread = Thread(block: {
+      while true {
+        // Docs: If no input sources or timers are attached to the run loop, this method exits immediately
+        RunLoop.current.run()
+        usleep(1000)
+      }
+    })
+    thread.name = "net.numist.Switch.EventTapCallbackThread"
     thread.qualityOfService = .userInteractive
     thread.threadPriority = 1.0
     thread.start()
