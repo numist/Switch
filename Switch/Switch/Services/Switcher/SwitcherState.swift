@@ -1,50 +1,48 @@
-/** # Switcher state machine
- *
- * Logic core responsible for powering switcher interface and window management behaviour.
- *
- * Ignoring transitions from one state to itself, the core functionality of the state machine is to implement the following DFA:
- *
- * ```
- * ╔════╗ {in,de}crementSelection()    ┌─────────────────────────────┐
- * ║Idle╠─────────────────────────────▶│Active (awaiting window list)│
- * ╚════╝ →wantsStartWindowListUpdates └──────────────┬──────────────┘
- * ▲                                                  │
- * │→wantsStopWindowListUpdates                  ┌────┴────────────┐
- * │→?wantsRaise                 update(windows:)│                 │hotKeyReleased()
- * │                                             ▼                 ▼
- * │                                         ┌──────┐  ┌──────────────────────┐
- * ├─────────────────────────────────────────┤Active│  │Active (pending raise)│
- * │           hotKeyReleased()              └──────┘  └───────────┬──────────┘
- * │                                                               │
- * └───────────────────────────────────────────────────────────────┘
- *                                 update(windows:)
- * ```
- *
- * Mixed in with the above is logic for controlling the display of the switcher interface (again, ignoring self-transitions):
- *
- * ```
- *                                   ╔════╗
- *                     ┌────────────▶║Idle║◀──────────────────────────────┐
- * →wantsTimerCancelled│             ╚══╦═╝                               │
- *                     │                │{in,de}crementSelection()        │
- *     hotKeyReleased()│                │                                 │
- *                     │                ▼→wantsTimer callback             │
- *                     ├─────────────────────────────────┐                │
- *                     │Active (awaiting: timer, windows)│                │
- *                     └─┬─────────────────────────────┬─┘                │→wantsHideInterface
- *           timerFired()▼                             ▼update(windows:)  │
- *         ┌──────────────────────────┐   ┌────────────────────────┐      │hotKeyReleased()
- *         │Active (awaiting: windows)│   │Active (awaiting: timer)│      │
- *         └─────────────┬────────────┘   └───────────┬────────────┘      │
- *       update(windows:)└──────────────┬─────────────┘timerFired()       │
- *                                      │                                 │
- *                                      ▼→wantsShowInterface              │
- *                                  ┌──────┐                              │
- *                                  │Active│──────────────────────────────┘
- *                                  └──────┘
- * ```
- */
-
+/// Logic core responsible for powering switcher interface and window management behaviour.
+///
+/// Ignoring transitions from one state to itself, the core functionality of the state machine is to implement the
+/// following DFA:
+///
+/// ```
+/// ╔════╗ {in,de}crementSelection()    ┌─────────────────────────────┐
+/// ║Idle╠─────────────────────────────▶│Active (awaiting window list)│
+/// ╚════╝ →wantsStartWindowListUpdates └──────────────┬──────────────┘
+/// ▲                                                  │
+/// │→wantsStopWindowListUpdates                  ┌────┴────────────┐
+/// │→wantsRaise (if needed)      update(windows:)│                 │hotKeyReleased()
+/// │                                             ▼                 ▼
+/// │                                         ┌──────┐  ┌──────────────────────┐
+/// ├─────────────────────────────────────────┤Active│  │Active (pending raise)│
+/// │           hotKeyReleased()              └──────┘  └───────────┬──────────┘
+/// │                                                               │
+/// └───────────────────────────────────────────────────────────────┘
+///                                 update(windows:)
+/// ```
+///
+/// Mixed in with the above is logic for controlling the display of the switcher interface (again, ignoring
+/// self-transitions):
+///
+/// ```
+///                                   ╔════╗
+///                     ┌────────────▶║Idle║◀──────────────────────────────┐
+/// →wantsTimerCancelled│             ╚══╦═╝                               │
+///                     │                │{in,de}crementSelection()        │
+///     hotKeyReleased()│                │                                 │
+///                     │                ▼→wantsTimer callback             │
+///                     ├─────────────────────────────────┐                │
+///                     │Active (awaiting: timer, windows)│                │
+///                     └─┬─────────────────────────────┬─┘                │→wantsHideInterface
+///           timerFired()▼                             ▼update(windows:)  │
+///         ┌──────────────────────────┐   ┌────────────────────────┐      │hotKeyReleased()
+///         │Active (awaiting: windows)│   │Active (awaiting: timer)│      │
+///         └─────────────┬────────────┘   └───────────┬────────────┘      │
+///       update(windows:)└──────────────┬─────────────┘timerFired()       │
+///                                      │                                 │
+///                                      ▼→wantsShowInterface              │
+///                                  ┌──────┐                              │
+///                                  │Active│──────────────────────────────┘
+///                                  └──────┘
+/// ```
 struct SwitcherState {
   // MARK: - Ins/outs
 
