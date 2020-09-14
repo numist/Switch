@@ -45,7 +45,7 @@
  * ```
  */
 
-class SwitcherState {
+struct SwitcherState {
   // MARK: - Ins/outs
 
   private let wantsTimerCallback: () -> Void
@@ -84,7 +84,7 @@ class SwitcherState {
   }
 
   /// Call this function after the timer requested by this state machine has fired
-  func timerFired() {
+  mutating func timerFired() {
     assert(_wantsTimer)
     assert(!_timerFired)
     _timerFired = true
@@ -95,7 +95,7 @@ class SwitcherState {
   private var _active = false
 
   /// Call this function when the hotkey modifier driving the interaction has been released
-  func hotKeyReleased() {
+  mutating func hotKeyReleased() {
     guard _active else { return }
 
     // If hotkey is released before presenting interface, don't bother
@@ -107,7 +107,7 @@ class SwitcherState {
   }
 
   /// Call this function when the forward hotkey has been pressed
-  func incrementSelection(by amt: Int = 1) {
+  mutating func incrementSelection(by amt: Int = 1) {
     guard !_wantsRaiseOnWindowUpdate else { return }
 
     _active = true
@@ -119,12 +119,12 @@ class SwitcherState {
   }
 
   /// Call this function when the reverse hotkey has been pressed
-  func decrementSelection(by amt: Int = 1) {
+  mutating func decrementSelection(by amt: Int = 1) {
     incrementSelection(by: -amt)
   }
 
   /// Call this function when the state machine has requested window list updates and a new list is available
-  func update(windows list: [WindowInfoGroup]) {
+  mutating func update(windows list: [WindowInfoGroup]) {
     assert(_wantsWindowUpdates)
     guard _hasUpdatedWindows else {
       // On first window update, bump the selection back if the first window is not active
@@ -158,13 +158,13 @@ class SwitcherState {
   // MARK: - Window list update logic
   private var _hasUpdatedWindows = false
   private var _wantsWindowUpdates = false
-  private func solicitWindowUpdatesIfNeeded() {
+  mutating private func solicitWindowUpdatesIfNeeded() {
     guard !_wantsWindowUpdates else { return }
     _wantsWindowUpdates = true
     wantsStartWindowListUpdates()
   }
 
-  private func stopWindowUpdates() {
+  mutating private func stopWindowUpdates() {
     assert(_wantsWindowUpdates)
     _wantsWindowUpdates = false
     wantsStopWindowListUpdates()
@@ -205,19 +205,19 @@ class SwitcherState {
   // MARK: - Timer management
   private var _timerFired = false
   private var _wantsTimer = false
-  private func wantsTimer() {
+  mutating private func wantsTimer() {
     assert(!_timerFired)
     _wantsTimer = true
     wantsTimerCallback()
   }
-  private func wantsTimerCancelled() {
+  mutating private func wantsTimerCancelled() {
     wantsTimerCancelledCallback()
     _wantsTimer = false
   }
 
   // MARK: - Interface management
   private var _showingInterface = false
-  private func showInterfaceIfReady() {
+  mutating private func showInterfaceIfReady() {
     guard !_showingInterface else { return }
     guard _hasUpdatedWindows else { return }
     guard _timerFired else {
@@ -227,7 +227,7 @@ class SwitcherState {
     wantsShowInterfaceCallback()
     _showingInterface = true
   }
-  private func hideInterface() {
+  mutating private func hideInterface() {
     assert(_showingInterface)
     wantsHideInterfaceCallback()
     _showingInterface = false
@@ -235,7 +235,7 @@ class SwitcherState {
 
   // MARK: - Raising logic
   private var _wantsRaiseOnWindowUpdate = false
-  private func raiseIfReady() {
+  mutating private func raiseIfReady() {
     if _wantsRaiseOnWindowUpdate && _hasUpdatedWindows {
       if _showingInterface {
         hideInterface()
@@ -258,7 +258,7 @@ class SwitcherState {
   }
 
   // MARK: - Private
-  private func _updateSelection(by amt: Int = 0) {
+  mutating private func _updateSelection(by amt: Int = 0) {
     if _hasUpdatedWindows {
       if windows.isEmpty {
         _selection = -1

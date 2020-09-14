@@ -3,6 +3,7 @@ import XCTest
 
 // swiftlint:disable file_length
 // swiftlint:disable type_body_length
+// swiftlint:disable function_body_length
 class SwitcherStateTests: XCTestCase {
   func testBumpBackOnInactiveFrontmostWindowWhenIncrementing() {
     var raised = false
@@ -38,7 +39,7 @@ class SwitcherStateTests: XCTestCase {
         .isAppActive: false,
       ]),
     ])
-    let state = SwitcherState(
+    var state = SwitcherState(
       wantsRaiseCallback: { windowGroup in
         raised = true
         XCTAssertEqual(windowGroup, windowGroupList[0])
@@ -85,7 +86,7 @@ class SwitcherStateTests: XCTestCase {
         .isAppActive: false,
       ]),
     ])
-    let state = SwitcherState(
+    var state = SwitcherState(
       wantsRaiseCallback: { windowGroup in
         raised = true
         XCTAssertEqual(windowGroup, windowGroupList[1])
@@ -132,7 +133,7 @@ class SwitcherStateTests: XCTestCase {
         .isAppActive: false,
       ]),
     ])
-    let state = SwitcherState(
+    var state = SwitcherState(
       wantsRaiseCallback: { windowGroup in
         raised = true
         XCTAssertEqual(windowGroup, windowGroupList[0])
@@ -179,7 +180,7 @@ class SwitcherStateTests: XCTestCase {
         .isAppActive: false,
       ]),
     ])
-    let state = SwitcherState(
+    var state = SwitcherState(
       wantsRaiseCallback: { _ in
         raised = true
       }
@@ -194,7 +195,7 @@ class SwitcherStateTests: XCTestCase {
   func testNoRaiseOnEmptyWindowList() {
     var raised = false
     let windowGroupList = WindowInfoGroup.list(from: [])
-    let state = SwitcherState(
+    var state = SwitcherState(
       wantsRaiseCallback: { _ in raised = true }
     )
     state.incrementSelection(by: 0)
@@ -237,7 +238,7 @@ class SwitcherStateTests: XCTestCase {
         .isAppActive: false,
       ]),
     ])
-    let state = SwitcherState()
+    var state = SwitcherState()
     state.incrementSelection()
     state.update(windows: windowGroupList)
     state.hotKeyReleased()
@@ -247,7 +248,7 @@ class SwitcherStateTests: XCTestCase {
   }
 
   func testNilSelectorWithoutWindows() {
-    let state = SwitcherState()
+    var state = SwitcherState()
     state.incrementSelection()
     state.update(windows: [])
     XCTAssertNil(state.selection)
@@ -258,7 +259,7 @@ class SwitcherStateTests: XCTestCase {
   func testWantsTimerOnEachInvoke() {
     var wantsWindowUpdates = false
     var wantsTimer = false
-    let state = SwitcherState(
+    var state = SwitcherState(
       wantsTimerCallback: { assert(!wantsTimer); wantsTimer = true },
       wantsTimerCancelledCallback: { assert(wantsTimer); wantsTimer = false },
       wantsStartWindowListUpdates: { assert(!wantsWindowUpdates); wantsWindowUpdates = true },
@@ -284,7 +285,7 @@ class SwitcherStateTests: XCTestCase {
     var wantsTimer = false
     var showingInterface = false
     var wantsWindowUpdates = false
-    let state = SwitcherState(
+    var state = SwitcherState(
       wantsTimerCallback: { assert(!wantsTimer); wantsTimer = true },
       wantsTimerCancelledCallback: { assert(wantsTimer); wantsTimer = false },
       wantsShowInterfaceCallback: { assert(!showingInterface); showingInterface = true },
@@ -312,7 +313,7 @@ class SwitcherStateTests: XCTestCase {
     var wantsTimer = false
     var showingInterface = false
     var wantsWindowUpdates = false
-    let state = SwitcherState(
+    var state = SwitcherState(
       wantsTimerCallback: { assert(!wantsTimer); wantsTimer = true },
       wantsTimerCancelledCallback: { assert(wantsTimer); wantsTimer = false },
       wantsShowInterfaceCallback: { assert(!showingInterface); showingInterface = true },
@@ -332,7 +333,7 @@ class SwitcherStateTests: XCTestCase {
     var wantsTimer = false
     var showingInterface = false
     var wantsWindowUpdates = false
-    let state = SwitcherState(
+    var state = SwitcherState(
       wantsTimerCallback: { assert(!wantsTimer); wantsTimer = true },
       wantsTimerCancelledCallback: { assert(wantsTimer); wantsTimer = false },
       wantsShowInterfaceCallback: { assert(!showingInterface); showingInterface = true },
@@ -354,7 +355,7 @@ class SwitcherStateTests: XCTestCase {
     var wantsTimer = false
     var showingInterface = false
     var wantsWindowUpdates = false
-    let state = SwitcherState(
+    var state = SwitcherState(
       wantsTimerCallback: { assert(!wantsTimer); wantsTimer = true },
       wantsTimerCancelledCallback: { assert(wantsTimer); wantsTimer = false },
       wantsShowInterfaceCallback: { assert(!showingInterface); showingInterface = true },
@@ -375,7 +376,7 @@ class SwitcherStateTests: XCTestCase {
     var wantsTimer = false
     var showingInterface = false
     var wantsWindowUpdates = false
-    let state = SwitcherState(
+    var state = SwitcherState(
       wantsTimerCallback: { assert(!wantsTimer); wantsTimer = true },
       wantsTimerCancelledCallback: { assert(wantsTimer); wantsTimer = false },
       wantsShowInterfaceCallback: { assert(!showingInterface); showingInterface = true },
@@ -402,7 +403,7 @@ class SwitcherStateTests: XCTestCase {
     var wantsTimer = false
     var showingInterface = false
     var wantsWindowUpdates = false
-    let state = SwitcherState(
+    var state = SwitcherState(
       wantsTimerCallback: { assert(!wantsTimer); wantsTimer = true },
       wantsTimerCancelledCallback: { assert(wantsTimer); wantsTimer = false },
       wantsShowInterfaceCallback: { assert(!showingInterface); showingInterface = true },
@@ -428,7 +429,7 @@ class SwitcherStateTests: XCTestCase {
     var showingInterface = false
     var wantsWindowUpdates = false
     var hasUpdatedWindows = false
-    let state = SwitcherState(
+    var state = SwitcherState(
       wantsTimerCallback: {
         print("// wantsTimer → true")
         assert(!wantsTimer); wantsTimer = true
