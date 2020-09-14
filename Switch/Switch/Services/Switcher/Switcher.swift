@@ -40,6 +40,8 @@ class Switcher {
       wantsStopWindowListUpdates: { [weak self] in self?.stopWindowListPoller() },
       wantsRaiseCallback: { windowGroup in
         let selectedWindow = windowGroup.mainWindow
+        print("Switcher: raising window \(selectedWindow.id) (\(selectedWindow.name ?? "(untitled)")) " +
+              "belonging to \(selectedWindow.ownerPID) (\(selectedWindow.ownerName ?? "(unknown)"))")
         let haxApp = HAXApplication(pid: selectedWindow.ownerPID)
         let haxWindow = haxApp?.window(withID: selectedWindow.id)
         haxWindow?.raise()
