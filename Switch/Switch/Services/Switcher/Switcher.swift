@@ -11,7 +11,6 @@ class Switcher {
 
     // TODO: support for closeWindow hotkey (registered here, deregistered when releaseTap is deactivated)
 
-    // swiftlint:disable:next force_try
     releaseTap = try? EventTap(observing: .flagsChanged, callback: { [weak self] (_, event) -> CGEvent? in
       guard let self = self else { return event }
 
