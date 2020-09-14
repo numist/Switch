@@ -12,15 +12,13 @@ class Switcher {
     // TODO: support for closeWindow hotkey (registered here, deregistered when releaseTap is deactivated)
 
     releaseTap = try? EventTap(observing: .flagsChanged, callback: { [weak self] (_, event) -> CGEvent? in
-      guard let self = self else { return event }
-
       if !event.flags.contains(.maskAlternate) {
         DispatchQueue.main.async {
+          guard let self = self else { return }
           assert(self.releaseTap != nil)
           self.releaseTap = nil
           self.state.hotKeyReleased()
         }
-        return nil
       }
       return event
     })
