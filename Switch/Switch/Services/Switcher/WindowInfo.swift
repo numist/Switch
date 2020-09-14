@@ -30,6 +30,7 @@ enum WindowInfoDictionaryKey: String {
   // Custom keys filled by NSRunningApplication
   case canActivate = "FriendlyActivationPolicy"
   case isAppActive = "AppIsActive"
+  case ownerBundleID = "BundleID"
 }
 
 // swiftlint:disable force_cast
@@ -50,6 +51,7 @@ struct WindowInfo {
 
   let canActivate: Bool
   let isAppActive: Bool
+  let ownerBundleID: String?
 
   init(_ infoDict: [WindowInfoDictionaryKey: Any]) {
     id = infoDict[.cgNumber] as! CGWindowID
@@ -72,6 +74,7 @@ struct WindowInfo {
      * if it's ever missing.
      */
     isAppActive = infoDict[.isAppActive] as? Bool ?? true
+    ownerBundleID = infoDict[.ownerBundleID] as? String
   }
 }
 
@@ -96,6 +99,7 @@ extension WindowInfo {
       if let runningApp = NSRunningApplication(processIdentifier: processID) {
         additionalInfo[.canActivate] = (runningApp.activationPolicy != .prohibited)
         additionalInfo[.isAppActive] = runningApp.isActive
+        additionalInfo[.ownerBundleID] = runningApp.bundleIdentifier
       }
 
       guard let haxWindow = HAXApplication(pid: processID)?
@@ -142,6 +146,7 @@ extension WindowInfo: CustomStringConvertible {
       result += "  .nsFrame: NSRect(x: \(frm.origin.x), y: \(frm.origin.y), width: \(frm.size.width), height: \(frm.size.height)),\n"
     }
     if let isFullscreen = isFullscreen { result += "  .isFullscreen: \(isFullscreen),\n" }
+    if let bundleID = ownerBundleID { result += "  .ownerBundleID: \"\(bundleID)\",\n" }
     return result + """
       .canActivate: \(canActivate),
       .isAppActive: \(isAppActive),

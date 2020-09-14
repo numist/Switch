@@ -27,6 +27,7 @@
 		BCA9E28D250DF2B000EB5540 /* Set+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E28C250DF2B000EB5540 /* Set+Extensions.swift */; };
 		BCA9E28F250DF32A00EB5540 /* Switcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E28E250DF32A00EB5540 /* Switcher.swift */; };
 		BCA9E291250E006700EB5540 /* WeakBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E290250E006700EB5540 /* WeakBox.swift */; };
+		BCA9E296250F34D100EB5540 /* CGSize+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E295250F34D100EB5540 /* CGSize+Extensions.swift */; };
 		BCD18FD424DD41C000941A86 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD18FD324DD41C000941A86 /* AppDelegate.swift */; };
 		BCD18FD824DD41C800941A86 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCD18FD724DD41C800941A86 /* Assets.xcassets */; };
 		BCD18FDB24DD41C800941A86 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCD18FDA24DD41C800941A86 /* Preview Assets.xcassets */; };
@@ -108,6 +109,7 @@
 		BCA9E28C250DF2B000EB5540 /* Set+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Set+Extensions.swift"; sourceTree = "<group>"; };
 		BCA9E28E250DF32A00EB5540 /* Switcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Switcher.swift; sourceTree = "<group>"; };
 		BCA9E290250E006700EB5540 /* WeakBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakBox.swift; sourceTree = "<group>"; };
+		BCA9E295250F34D100EB5540 /* CGSize+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGSize+Extensions.swift"; sourceTree = "<group>"; };
 		BCD18FD024DD41C000941A86 /* Switch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Switch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCD18FD324DD41C000941A86 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BCD18FD724DD41C800941A86 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -262,6 +264,7 @@
 		BCD1901124DF769700941A86 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				BCA9E295250F34D100EB5540 /* CGSize+Extensions.swift */,
 				BC2121B524E29323009EAE3B /* Debugger Support.swift */,
 				BCD1901824DF83DB00941A86 /* EventTap.swift */,
 				BCD1901224DF773100941A86 /* Keyboard.swift */,
@@ -497,6 +500,7 @@
 				BC56728E24E23BA300206A39 /* WindowInfoGroup.swift in Sources */,
 				BCA9E28F250DF32A00EB5540 /* Switcher.swift in Sources */,
 				BCA9E291250E006700EB5540 /* WeakBox.swift in Sources */,
+				BCA9E296250F34D100EB5540 /* CGSize+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
