@@ -1,130 +1,113 @@
 import SwiftUI
-import Combine
-
-private struct WindowView: View {
-  @State var window: WindowInfoGroup
-  // TODO: @ObservableObject WindowContents(for: WindowInfoGroup) publishes nsImage, conveniences view
-
-  func appIcon(for bundleID: String?, in size: CGSize) -> some View {
-    let workspace = NSWorkspace.shared
-    let nsImage: NSImage
-    if let bid = bundleID, let path = workspace.absolutePathForApplication(withBundleIdentifier: bid) {
-      nsImage = workspace.icon(forFile: path)
-    } else {
-      // TODO(numist): a default app icon doesn't seem to be available via API? copy a stand-in icns into the bundle
-      nsImage = NSImage(named: NSImage.applicationIconName)!
-    }
-    let scale = min(
-      size.width / nsImage.size.width,
-      size.height / nsImage.size.height
-    )
-    nsImage.size = CGSize(
-      width: nsImage.size.width * scale,
-      height: nsImage.size.height * scale
-    )
-    return Image(nsImage: nsImage)
-  }
-
-  func windowContents(for window: WindowInfoGroup, in size: CGSize) -> some View {
-    let scale = min(
-      size.width / window.cgFrame.size.width,
-      size.height / window.cgFrame.size.height
-    )
-    return Rectangle()
-      .fill(Color(NSColor.windowFrameColor))
-      .frame(
-        width: window.cgFrame.size.width * scale,
-        height: window.cgFrame.size.height * scale
-      )
-  }
-
-  var body: some View {
-    GeometryReader { geometry in
-      ZStack {
-        windowContents(for: window, in: geometry.size)
-        appIcon(for: window.mainWindow.ownerBundleID, in: geometry.size / 2.0)
-          .offset(
-            x: min(geometry.size.width, geometry.size.height) / 4,
-            y: min(geometry.size.width, geometry.size.height) / 4
-          )
-      }.frame(
-        width: min(geometry.size.width, geometry.size.height),
-        height: min(geometry.size.width, geometry.size.height)
-      )
-    }
-  }
-}
-
-struct WindowViewPreview: PreviewProvider {
-  static var previews: some View {
-    let window = WindowInfoGroup.list(from: [
-      // swiftlint:disable line_length
-      WindowInfo([.cgNumber: UInt32(100), .cgLayer: Int32(0), .cgBounds: CGRect(x: 0.0, y: 23.0, width: 1440.0, height: 877.0).dictionaryRepresentation, .cgAlpha: Float(1.0), .cgOwnerPID: Int32(425), .cgOwnerName: "Xcode-beta", .cgName: "Switcher.swift", .cgIsOnscreen: true, .cgDisplayID: UInt32(69732800), .nsFrame: NSRect(x: -0.0, y: 0.0, width: 1440.0, height: 877.0), .isFullscreen: false, .ownerBundleID: "com.apple.dt.Xcode", .canActivate: true, .isAppActive: false]),
-      // swiftlint:enable line_length
-    ]).first!
-    return WindowView(window: window).frame(width: 256, height: 256)
-  }
-}
 
 /* Full scale dimensions for SwitcherView:
  *
- *   8+3+8         3           8 8                128²
- * │◀────▶│       │↔│         │↔│↔│            │◀──────▶│
- * └ ┐  ┌ ┘       └─┘         | | |            |        |
- *   ┌─────────────┼──────────┼─┼─┼────────────┼────────┼──┬ ─ ─ ─ ─
+ *   8+4+8         4           8 8  128(²)
+ * │◀────▶│       │↔│         │↔│↔│◀──────▶│
+ * └ ┐  ┌ ┘       └─┘         | | |        |
+ *   ┌─────────────┼──────────┼─┼─┼────────┼───────────────┬ ─ ─ ─ ─
  *   │  │          ┌────────────┐                          │       ▲
- *   │  ┌────────┐ │ ┌────────┤ │ ├────────┐   ├────────┤  │       │
+ *   │  ┌────────┐ │ ┌────────┤ │ ├────────┤   ┌────────┐  │       │
  *   │  │        │ │ │        │ │ │        │   │        │  │       │
- *   │  │        │ │ │        │ │ │        │   │        │  │       │128 + 8×4 + 3×2
- *   │  │     .─.│ │ │     .─.│ │ │     .─.│   │     .─.├ ─│─ -    │= 166
- *   │  │    (   ) │ │    (   ) │ │    (   )   │    (   )  │  ↕64² │
- *   │  └─────`─'┘ │ └─────`─'┘ │ └─────`─'┘   └─────`─'┴ ─│─ -    │
+ *   │  │        │ │ │        │ │ │        │   │        │  │       │128+8×4+4×2
+ *   │  │     .─.│ │ │     .─.│ │ │     .─.│   │     .─.├ ─│─      │= 168
+ *   │  │    (   ) │ │    (   ) │ │    (   )   │    (   )  │↕64(²) │
+ *   │  └─────`─'┘ │ └─────`─'┘ │ └─────`─'┘   └─────`─'┴ ─│─      │
  *   │             └────────────┘                          │       ▼
  *   └─────────────────────────────────────────────────────┴ ─ ─ ─ ─
  *   │◀───────────────────────────────────────────────────▶│
- *                128×n + 3×(n+1) + 8×((n+1)*2)
+ *                128×n + 4×(n+1) + 8×((n+1)*2)
  *
  * window radius: 20
  * selection radius: 20(window radius) - 8(inset)
  */
 
+private let pThumbSz = CGFloat(128.0)
+private let pThumbPad = CGFloat(8.0)
+private let pSelThck = CGFloat(4.0)
+private let pSelPad = CGFloat(8.0)
+private let pHeight = (pThumbPad + pSelThck + pSelPad) * 2.0 + pThumbSz
+private let pWinRadius = CGFloat(20.0)
+private let pSelRadius = pWinRadius - pSelPad
+private func pWidth(for count: Int) -> CGFloat {
+  let cgn = CGFloat(max(count, 1))
+  return pThumbSz * cgn + (pThumbPad + pSelThck + pSelPad) * (cgn + CGFloat(1.0))
+}
+private func scalingFactor(for count: Int, in geometry: GeometryProxy) -> CGFloat {
+  min(
+    geometry.size.width / pWidth(for: count),
+    geometry.size.height / pHeight,
+    1.0
+  )
+}
+
 struct SwitcherView: View {
+
   @ObservedObject var state: SwitcherState
 
   private func cellSize(given geometry: GeometryProxy) -> CGFloat {
     return min(geometry.size.width / CGFloat(state.windows.count), geometry.size.height)
   }
 
+  private func middleIndex(for index: Int) -> CGFloat {
+    return (CGFloat(index) - (CGFloat(state.windows.count - 1) / 2.0))
+  }
+
+  private func hud(at scale: CGFloat) -> some View {
+    Rectangle()
+    .fill(Color(NSColor.shadowColor).opacity(0.8))
+    .cornerRadius(pWinRadius * scale)
+    .frame(
+      width: pWidth(for: state.windows.count) * scale,
+      height: pHeight * scale
+    )
+  }
+
+  private func selectionBox(at scale: CGFloat) -> some View {
+    RoundedRectangle(cornerRadius: pSelRadius * scale)
+    .stroke(Color.white.opacity(0.7), lineWidth: pSelThck * scale)
+    // TODO: none of the measurements here are correct. there is so much arithmetic still to be done.
+    .frame(
+      width: (pThumbSz + pThumbPad + pThumbPad + pSelThck) * scale,
+      height: (pThumbSz + pThumbPad + pThumbPad + pSelThck) * scale
+    )
+    .offset(
+      x: middleIndex(for: state.selection!) * scale *
+        (pThumbSz + pThumbPad + pSelThck + pSelPad)
+    )
+  }
+
   var body: some View {
     GeometryReader { geometry in
-      // TODO: scaling factor and ideal sizes for everything
+      let scale = scalingFactor(for: state.windows.count, in: geometry)
       ZStack {
-        // HUD background
-        Rectangle()
-        .fill(Color(NSColor.white).opacity(0.2))
-        .cornerRadius(16.0)
-        .frame(
-          width: cellSize(given: geometry) * CGFloat(max(state.windows.count, 1)),
-          height: cellSize(given: geometry)
-        )
+        // HUD/background
+        hud(at: scale)
 
         // Window list
-        HStack {
-          ForEach(state.windows, id: \.self) { window in
-            WindowView(window: window)
-          }
+        ForEach(Array(state.windows.enumerated()), id: \.element) { index, window in
+          WindowView(window: window)
+          .frame(
+            width: pThumbSz * scale,
+            height: pThumbSz * scale
+          )
+          .offset(
+            x: middleIndex(for: index) * scale *
+               (pThumbSz + pThumbPad + pSelThck + pSelPad)
+          )
+          // TODO: onHover? something like:
+//          .onHover { inside in
+//            if inside {
+//              state.incrementSelection(by: index - state.selection!)
+//            }
+//          }
         }
 
         // Selection frame
+        // TODO: animate!?
+        // REF: .onReceive per https://stackoverflow.com/a/62211888?
         if state.selection != nil {
-          RoundedRectangle(cornerRadius: 10)
-          .stroke(Color.white.opacity(0.7), lineWidth: 3)
-          .frame(
-            width: cellSize(given: geometry),
-            height: cellSize(given: geometry)
-          )
-          // TODO: none of the measurements here are correct. there is so much arithmetic still to be done.
-          .offset(x: (CGFloat(state.selection!) - (CGFloat(state.windows.count - 1) / 2.0)) * cellSize(given: geometry))
+          selectionBox(at: scale)
         }
       }
     }
@@ -132,6 +115,27 @@ struct SwitcherView: View {
 }
 
 struct SwitcherViewPreviews: PreviewProvider {
+
+  private static var desktopImage = {
+    NSImage(contentsOf: NSWorkspace.shared.desktopImageURL(for: NSScreen.main!)!)!
+  }()
+  private static func desktop() -> some View {
+    GeometryReader { geometry in
+      ZStack {
+        Image(nsImage: desktopImage)
+        Rectangle()
+        .fill(Color(NSColor.windowBackgroundColor))
+        .frame(width: geometry.size.width / 2.0, height: geometry.size.height)
+        .offset(x: geometry.size.width / 4.0)
+        // swiftlint:disable line_length
+        Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum bibendum nulla quis tincidunt pharetra. Suspendisse mattis aliquet pharetra. Nulla molestie libero sodales, varius felis vel, ullamcorper ante. Donec cursus elit at neque efficitur vestibulum. Ut arcu enim, bibendum eget ex quis, vulputate porta ante. Praesent sed turpis ligula. Aenean id diam leo. Morbi sodales dolor ut elementum eleifend. Curabitur in quam nunc. \n\nSuspendisse potenti. In dapibus, diam id rhoncus facilisis, sem purus luctus odio, vitae elementum nisl urna id orci. Nunc mollis, erat nec pulvinar fermentum, quam ligula accumsan orci, nec scelerisque sem turpis at tortor. Pellentesque")
+        // swiftlint:enable line_length
+        .frame(width: geometry.size.width / 2.0, height: geometry.size.height)
+        .offset(x: geometry.size.width / 4.0)
+      }
+    }
+  }
+
   static var previews: some View {
     let packedState = SwitcherState()
     packedState.incrementSelection(by: 3)
@@ -149,7 +153,7 @@ struct SwitcherViewPreviews: PreviewProvider {
     ]))
 
     let fullScaleState = SwitcherState()
-    fullScaleState.incrementSelection(by: 2)
+    fullScaleState.incrementSelection(by: 0)
     fullScaleState.update(windows: WindowInfoGroup.list(from: [
       // swiftlint:disable line_length
       WindowInfo([.cgNumber: UInt32(100), .cgLayer: Int32(0), .cgBounds: CGRect(x: 0.0, y: 23.0, width: 1440.0, height: 877.0).dictionaryRepresentation, .cgAlpha: Float(1.0), .cgOwnerPID: Int32(425), .cgOwnerName: "Xcode-beta", .cgName: "Switcher.swift", .cgIsOnscreen: true, .cgDisplayID: UInt32(69732800), .nsFrame: NSRect(x: -0.0, y: 0.0, width: 1440.0, height: 877.0), .isFullscreen: false, .ownerBundleID: "com.apple.dt.Xcode", .canActivate: true, .isAppActive: false]),
@@ -164,8 +168,17 @@ struct SwitcherViewPreviews: PreviewProvider {
 
     return Group {
       SwitcherView(state: packedState)
+      .frame(width: 588.0, height: 128.0)
+      .background(desktop())
       SwitcherView(state: fullScaleState)
+      .frame(
+        width: 588.0, // 128.0*3.0 + 3.0*(3.0+1.0) + 8.0*((3.0+1.0)*2.0) + 128.0
+        height: 200.0
+      )
+      .background(desktop())
       SwitcherView(state: emptyState)
+      .frame(width: 588.0, height: 200.0)
+      .background(desktop())
     }
   }
 }
