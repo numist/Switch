@@ -167,15 +167,26 @@ struct SwitcherViewPreviews: PreviewProvider {
     emptyState.update(windows: [])
 
     return Group {
-      SwitcherView(state: packedState)
-      .frame(width: 588.0, height: 128.0)
-      .background(desktop())
+      if #available(OSX 11.0, *) {
+        SwitcherView(state: packedState)
+        .preferredColorScheme(.light)
+        .frame(width: 588.0, height: 128.0)
+        .background(desktop())
+
+        SwitcherView(state: packedState)
+        .preferredColorScheme(.dark)
+        .frame(width: 588.0, height: 128.0)
+        .background(desktop())
+      } else {
+        SwitcherView(state: packedState)
+        .frame(width: 588.0, height: 128.0)
+        .background(desktop())
+      }
+
       SwitcherView(state: fullScaleState)
-      .frame(
-        width: 588.0, // 128.0*3.0 + 3.0*(3.0+1.0) + 8.0*((3.0+1.0)*2.0) + 128.0
-        height: 200.0
-      )
+      .frame(width: 588.0, height: 200.0)
       .background(desktop())
+
       SwitcherView(state: emptyState)
       .frame(width: 588.0, height: 200.0)
       .background(desktop())
