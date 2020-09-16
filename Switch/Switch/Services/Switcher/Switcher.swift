@@ -4,6 +4,7 @@ import Haxcessibility
 class Switcher {
   private var state: SwitcherState!
   private var releaseTap: EventTap?
+  private var window: SwitcherWindow?
 
   private func setUpReleaseTapIfNeeded() -> Bool {
     assert(Thread.isMainThread)
@@ -112,11 +113,13 @@ class Switcher {
   private func showInterface() {
     assert(Thread.isMainThread)
     print("Switcher: show interface")
+    window = SwitcherWindow(displaying: state)
   }
 
   private func hideInterface() {
     assert(Thread.isMainThread)
     print("Switcher: hide interface")
+    window = nil
   }
 
   // MARK: Window list polling

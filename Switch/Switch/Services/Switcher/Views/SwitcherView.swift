@@ -133,7 +133,7 @@ struct SwitcherViewPreviews: PreviewProvider {
         .frame(width: geometry.size.width / 2.0, height: geometry.size.height)
         .offset(x: geometry.size.width / 4.0)
       }
-    }
+    }.frame(maxWidth: .infinity, maxHeight: .infinity)
   }
 
   static var previews: some View {

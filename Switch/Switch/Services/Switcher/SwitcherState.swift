@@ -177,7 +177,7 @@ class SwitcherState: ObservableObject {
   /// Do not access this property before the first `update(windows:)` after `→wantsStartWindowListUpdates`
   var windows: [WindowInfoGroup] {
     guard _hasUpdatedWindows else {
-      assertionFailure()
+//      assertionFailure()
       return [WindowInfoGroup]()
     }
     return _windows
@@ -189,7 +189,7 @@ class SwitcherState: ObservableObject {
   /// Do not access this property before the first `update(windows:)` after `→wantsStartWindowListUpdates`
   var selection: Int? {
     guard _hasUpdatedWindows else {
-      assertionFailure()
+//      assertionFailure()
       return nil
     }
     guard !_windows.isEmpty else {
