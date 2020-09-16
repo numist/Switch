@@ -3,8 +3,10 @@ import SwiftUI
 
 class SwitcherWindow {
   let window: NSWindow!
+  let screen: NSScreen?
 
-  init(displaying state: SwitcherState) {
+  init(displaying state: SwitcherState, for screen: NSScreen?) {
+    self.screen = screen
     window = NSWindow(
       contentRect: NSScreen.main!.frame,
       styleMask: [.borderless, .fullSizeContentView],
@@ -21,7 +23,7 @@ class SwitcherWindow {
     window.setFrameOrigin(NSPoint(x: 0, y: 0))
     window.setFrameAutosaveName("Switcher Window")
 
-    window.contentView = NSHostingView(rootView: SwitcherView(state: state))
+    window.contentView = NSHostingView(rootView: SwitcherView(with: state, on: screen?.screenNumber))
 
     window.makeKeyAndOrderFront(nil)
   }

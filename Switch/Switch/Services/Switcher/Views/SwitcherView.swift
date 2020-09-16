@@ -45,6 +45,13 @@ private func scalingFactor(for count: Int, in geometry: GeometryProxy) -> CGFloa
 struct SwitcherView: View {
 
   @ObservedObject var state: SwitcherState
+  let displayID: CGDirectDisplayID?
+
+  init(with state: SwitcherState, on displayID: CGDirectDisplayID? = nil) {
+    assert(displayID == nil) // TODO: multimon support
+    self.state = state
+    self.displayID = displayID
+  }
 
   private func cellSize(given geometry: GeometryProxy) -> CGFloat {
     return min(geometry.size.width / CGFloat(state.windows.count), geometry.size.height)
@@ -168,26 +175,26 @@ struct SwitcherViewPreviews: PreviewProvider {
 
     return Group {
       if #available(OSX 11.0, *) {
-        SwitcherView(state: packedState)
+        SwitcherView(with: packedState)
         .preferredColorScheme(.light)
         .frame(width: 588.0, height: 128.0)
         .background(desktop())
 
-        SwitcherView(state: packedState)
+        SwitcherView(with: packedState)
         .preferredColorScheme(.dark)
         .frame(width: 588.0, height: 128.0)
         .background(desktop())
       } else {
-        SwitcherView(state: packedState)
+        SwitcherView(with: packedState)
         .frame(width: 588.0, height: 128.0)
         .background(desktop())
       }
 
-      SwitcherView(state: fullScaleState)
+      SwitcherView(with: fullScaleState)
       .frame(width: 588.0, height: 200.0)
       .background(desktop())
 
-      SwitcherView(state: emptyState)
+      SwitcherView(with: emptyState)
       .frame(width: 588.0, height: 200.0)
       .background(desktop())
     }

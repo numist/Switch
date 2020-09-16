@@ -113,7 +113,7 @@ class Switcher {
   private func showInterface() {
     assert(Thread.isMainThread)
     print("Switcher: show interface")
-    window = SwitcherWindow(displaying: state)
+    window = SwitcherWindow(displaying: state, for: nil)
   }
 
   private func hideInterface() {

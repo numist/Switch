@@ -111,8 +111,7 @@ extension WindowInfo {
       }
 
       // Add extra keys from hax to the info dict
-      additionalInfo[.cgDisplayID] =
-        haxWindow.screen.deviceDescription[.init(rawValue: "NSScreenNumber")] as! CGDirectDisplayID
+      additionalInfo[.cgDisplayID] = haxWindow.screen.screenNumber
       additionalInfo[.nsFrame] = haxWindow.frame
       additionalInfo[.isFullscreen] = haxWindow.isFullscreen
       if let title = haxWindow.title {
