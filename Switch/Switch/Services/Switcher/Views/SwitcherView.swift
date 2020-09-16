@@ -81,6 +81,7 @@ struct SwitcherView: View {
     .offset(
       x: middleIndex(for: state.selection!) * scale * pItemSz
     )
+    .animation(Animation.easeInOut(duration: 0.2))
   }
 
   var body: some View {
