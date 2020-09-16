@@ -29,6 +29,7 @@ private let pSelPad = CGFloat(8.0)
 private let pHeight = (pThumbPad + pSelThck + pSelPad) * 2.0 + pThumbSz
 private let pWinRadius = CGFloat(20.0)
 private let pSelRadius = pWinRadius - pSelPad
+private let pItemSz = pThumbSz + pThumbPad + pSelThck + pSelPad
 private func pWidth(for count: Int) -> CGFloat {
   let cgn = CGFloat(max(count, 1))
   return pThumbSz * cgn + (pThumbPad + pSelThck + pSelPad) * (cgn + CGFloat(1.0))
@@ -66,14 +67,12 @@ struct SwitcherView: View {
   private func selectionBox(at scale: CGFloat) -> some View {
     RoundedRectangle(cornerRadius: pSelRadius * scale)
     .stroke(Color.white.opacity(0.7), lineWidth: pSelThck * scale)
-    // TODO: none of the measurements here are correct. there is so much arithmetic still to be done.
     .frame(
       width: (pThumbSz + pThumbPad + pThumbPad + pSelThck) * scale,
       height: (pThumbSz + pThumbPad + pThumbPad + pSelThck) * scale
     )
     .offset(
-      x: middleIndex(for: state.selection!) * scale *
-        (pThumbSz + pThumbPad + pSelThck + pSelPad)
+      x: middleIndex(for: state.selection!) * scale * pItemSz
     )
   }
 
@@ -83,6 +82,13 @@ struct SwitcherView: View {
       ZStack {
         // HUD/background
         hud(at: scale)
+
+        // Selection frame
+        // TODO: animate!?
+        // REF: .onReceive per https://stackoverflow.com/a/62211888?
+        if state.selection != nil {
+          selectionBox(at: scale)
+        }
 
         // Window list
         ForEach(Array(state.windows.enumerated()), id: \.element) { index, window in
@@ -102,13 +108,6 @@ struct SwitcherView: View {
 //            }
 //          }
         }
-
-        // Selection frame
-        // TODO: animate!?
-        // REF: .onReceive per https://stackoverflow.com/a/62211888?
-        if state.selection != nil {
-          selectionBox(at: scale)
-        }
       }
     }
   }
@@ -118,6 +117,7 @@ struct SwitcherViewPreviews: PreviewProvider {
 
   private static var desktopImage = {
     NSImage(contentsOf: NSWorkspace.shared.desktopImageURL(for: NSScreen.main!)!)!
+    .cropped(to: NSSize(width: 600, height: 200))
   }()
   private static func desktop() -> some View {
     GeometryReader { geometry in

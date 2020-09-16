@@ -29,6 +29,7 @@
 		BCA9E291250E006700EB5540 /* WeakBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E290250E006700EB5540 /* WeakBox.swift */; };
 		BCA9E296250F34D100EB5540 /* CGSize+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E295250F34D100EB5540 /* CGSize+Extensions.swift */; };
 		BCA9E29C25101EEF00EB5540 /* WindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E29B25101EEF00EB5540 /* WindowView.swift */; };
+		BCA9E29E25117E4400EB5540 /* NSImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E29D25117E4300EB5540 /* NSImage+Extensions.swift */; };
 		BCD18FD424DD41C000941A86 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD18FD324DD41C000941A86 /* AppDelegate.swift */; };
 		BCD18FD824DD41C800941A86 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCD18FD724DD41C800941A86 /* Assets.xcassets */; };
 		BCD18FDB24DD41C800941A86 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCD18FDA24DD41C800941A86 /* Preview Assets.xcassets */; };
@@ -112,6 +113,7 @@
 		BCA9E290250E006700EB5540 /* WeakBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakBox.swift; sourceTree = "<group>"; };
 		BCA9E295250F34D100EB5540 /* CGSize+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGSize+Extensions.swift"; sourceTree = "<group>"; };
 		BCA9E29B25101EEF00EB5540 /* WindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowView.swift; sourceTree = "<group>"; };
+		BCA9E29D25117E4300EB5540 /* NSImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage+Extensions.swift"; sourceTree = "<group>"; };
 		BCD18FD024DD41C000941A86 /* Switch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Switch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCD18FD324DD41C000941A86 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BCD18FD724DD41C800941A86 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -283,6 +285,7 @@
 				BCA9E287250CB2A400EB5540 /* NSThread+Extensions.swift */,
 				BCA9E28C250DF2B000EB5540 /* Set+Extensions.swift */,
 				BCA9E290250E006700EB5540 /* WeakBox.swift */,
+				BCA9E29D25117E4300EB5540 /* NSImage+Extensions.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -509,6 +512,7 @@
 				BC2121B924E3B4AF009EAE3B /* PasteboardHistory.xcdatamodeld in Sources */,
 				BCD1901B24DF9D1400941A86 /* LongCmdQ.swift in Sources */,
 				BCD18FD424DD41C000941A86 /* AppDelegate.swift in Sources */,
+				BCA9E29E25117E4400EB5540 /* NSImage+Extensions.swift in Sources */,
 				BC56728E24E23BA300206A39 /* WindowInfoGroup.swift in Sources */,
 				BCA9E28F250DF32A00EB5540 /* Switcher.swift in Sources */,
 				BCA9E291250E006700EB5540 /* WeakBox.swift in Sources */,
