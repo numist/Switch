@@ -7,6 +7,7 @@ class SwitcherWindow {
 
   init(displaying state: SwitcherState, for screen: NSScreen?) {
     self.screen = screen
+    // Insert code here to initialize your application
     window = NSWindow(
       contentRect: NSScreen.main!.frame,
       styleMask: [.borderless, .fullSizeContentView],

@@ -81,7 +81,6 @@ struct SwitcherView: View {
     .offset(
       x: middleIndex(for: state.selection!) * scale * pItemSz
     )
-    .animation(Animation.easeInOut(duration: 0.2))
   }
 
   var body: some View {
@@ -90,12 +89,14 @@ struct SwitcherView: View {
       ZStack {
         // HUD/background
         hud(at: scale)
+        .animation(.default(duration: 0.2))
 
         // Selection frame
         // TODO: animate!?
         // REF: .onReceive per https://stackoverflow.com/a/62211888?
         if state.selection != nil {
           selectionBox(at: scale)
+          .animation(.default(duration: 0.2))
         }
 
         // Window list
@@ -109,10 +110,11 @@ struct SwitcherView: View {
             x: middleIndex(for: index) * scale *
                (pThumbSz + pThumbPad + pSelThck + pSelPad)
           )
+          .animation(.default(duration: 0.2))
           // TODO: onHover? something like:
 //          .onHover { inside in
-//            if inside {
-//              state.incrementSelection(by: index - state.selection!)
+//            if inside && state.selection != index {
+//              state.setSelection(to: index)
 //            }
 //          }
         }

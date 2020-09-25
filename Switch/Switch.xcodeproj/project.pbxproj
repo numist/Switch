@@ -137,6 +137,8 @@
 		BCD1901824DF83DB00941A86 /* EventTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTap.swift; sourceTree = "<group>"; };
 		BCD1901A24DF9D1400941A86 /* LongCmdQ.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongCmdQ.swift; sourceTree = "<group>"; };
 		BCD1901D24DFB1AF00941A86 /* Switch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Switch.entitlements; sourceTree = "<group>"; };
+		BCFEB15B251EAC2F00CFA605 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		BCFEB15C251EAFFF00CFA605 /* Structure.monopic */ = {isa = PBXFileReference; lastKnownFileType = file; path = Structure.monopic; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -198,24 +200,18 @@
 		BC56728024DFD22C00206A39 /* Switcher */ = {
 			isa = PBXGroup;
 			children = (
-				BCA9E29A25101EDC00EB5540 /* Views */,
+				BCFEB15C251EAFFF00CFA605 /* Structure.monopic */,
+				BCFEB15B251EAC2F00CFA605 /* README.md */,
 				BCA9E28E250DF32A00EB5540 /* Switcher.swift */,
 				BCA9E289250DA35F00EB5540 /* SwitcherState.swift */,
+				BC2121DE24E63F7C009EAE3B /* SwitcherView.swift */,
+				BCA9E29F2511AD1400EB5540 /* SwitcherWindow.swift */,
 				BC56728624E0BABC00206A39 /* WindowInfo.swift */,
 				BC56728D24E23BA300206A39 /* WindowInfoGroup.swift */,
 				BCA9E2A8251E871B00EB5540 /* WindowInfoGroupListPublisher.swift */,
+				BCA9E29B25101EEF00EB5540 /* WindowView.swift */,
 			);
 			path = Switcher;
-			sourceTree = "<group>";
-		};
-		BCA9E29A25101EDC00EB5540 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				BC2121DE24E63F7C009EAE3B /* SwitcherView.swift */,
-				BCA9E29B25101EEF00EB5540 /* WindowView.swift */,
-				BCA9E29F2511AD1400EB5540 /* SwitcherWindow.swift */,
-			);
-			path = Views;
 			sourceTree = "<group>";
 		};
 		BCD18FC724DD41C000941A86 = {
