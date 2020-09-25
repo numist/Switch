@@ -11,10 +11,14 @@ private func eventCallback(
   guard let this = box.value else { return Unmanaged.passUnretained(event) }
 
   if type == .tapDisabledByTimeout {
-    os_log(.fault, "tap disabled: tapDisabledByTimeout")
-    Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { _ in
-      os_log("Re-enabling event tap")
-      CGEvent.tapEnable(tap: this.eventTap, enable: true)
+    if !amIBeingDebugged() {
+      os_log(.fault, "tap disabled: tapDisabledByTimeout")
+      Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { _ in
+        os_log("Re-enabling event tap")
+        CGEvent.tapEnable(tap: this.eventTap, enable: true)
+      }
+    } else {
+      os_log("tap disabled: tapDisabledByTimeout, will not re-enable")
     }
     return Unmanaged.passUnretained(event)
   } else if type == .tapDisabledByUserInput {
