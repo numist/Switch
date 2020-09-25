@@ -1,10 +1,10 @@
 import Foundation
 import Haxcessibility
+import Combine
 
 class Switcher {
   private var state: SwitcherState!
   private var releaseTap: EventTap?
-  private var window: SwitcherWindow?
 
   private func setUpReleaseTapIfNeeded() -> Bool {
     assert(Thread.isMainThread)
@@ -79,11 +79,10 @@ class Switcher {
     Keyboard.deregister(.init([.option, .shift], .tab))
   }
 
-  // MARK: -
-  // This section implements the state machine's callbacks
+  // MARK: - Timer management
 
-  // MARK: Timer management
   private var timer: Timer?
+
   private func startTimer() {
     assert(Thread.isMainThread)
     assert(self.timer == nil)
@@ -108,7 +107,9 @@ class Switcher {
     timer = nil
   }
 
-  // MARK: Interface management
+  // MARK: - Interface management
+
+  private var window: SwitcherWindow?
 
   private func showInterface() {
     assert(Thread.isMainThread)
@@ -122,23 +123,19 @@ class Switcher {
     window = nil
   }
 
-  // MARK: Window list polling
+  // MARK: - Window list polling
+
+  private var windowListCancellable: AnyCancellable?
 
   private func startWindowListPoller() {
     assert(Thread.isMainThread)
-
-    // TODO: turn this into a more reliable polling situation
-    DispatchQueue.global(qos: .userInitiated).async {
-      let windowList = WindowInfoGroup.list(from: WindowInfo.get())
-      DispatchQueue.main.async { [weak self] in
-        guard let self = self else { return }
-        self.state.update(windows: windowList)
-        print("Switcher: Updated window list (\(windowList.count) windows: \(windowList.map { $0.mainWindow.name ?? "" }))")
-      }
+    windowListCancellable = WindowInfoGroupListPublisher().sink { [weak self] list in
+      self?.state.update(windows: list)
     }
   }
 
   private func stopWindowListPoller() {
     assert(Thread.isMainThread)
+    windowListCancellable = nil
   }
 }
