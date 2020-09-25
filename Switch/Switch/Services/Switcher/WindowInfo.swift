@@ -82,44 +82,46 @@ extension WindowInfo {
   static func get(onScreenOnly: Bool = true) -> [WindowInfo] {
     var options = CGWindowListOption.excludeDesktopElements
     if onScreenOnly { options.insert(.optionOnScreenOnly) }
-    return (CGWindowListCopyWindowInfo(options, kCGNullWindowID) as! [[String: Any]])
-    .filter({ $0[WindowInfoDictionaryKey.cgLayer.rawValue] as! CGWindowLevel == kCGNormalWindowLevel })
-    .map({ Dictionary(uniqueKeysWithValues:
-      $0
-      .filter({ (key, _) in WindowInfoDictionaryKey(rawValue: key) != nil })
-      .map({ (key, value) in (WindowInfoDictionaryKey(rawValue: key)!, value) }))
-    })
-    .map({ infoDict in
-      // Try to cons up a HAXWindow for this CGWindow
-      let windowID = infoDict[.cgNumber] as! CGWindowID
-      let processID = infoDict[.cgOwnerPID] as! Int32
-
-      // Add extra keys from NSRunningApplication to the info dict
-      var additionalInfo = [WindowInfoDictionaryKey: Any]()
-      if let runningApp = NSRunningApplication(processIdentifier: processID) {
-        additionalInfo[.canActivate] = (runningApp.activationPolicy != .prohibited)
-        additionalInfo[.isAppActive] = runningApp.isActive
-        additionalInfo[.ownerBundleID] = runningApp.bundleIdentifier
+    return stopwatch("CGWindowListCopyWindowInfo") {
+      (CGWindowListCopyWindowInfo(options, kCGNullWindowID) as! [[String: Any]])
+      .filter { $0[WindowInfoDictionaryKey.cgLayer.rawValue] as! CGWindowLevel == kCGNormalWindowLevel }
+      .map { Dictionary(uniqueKeysWithValues:
+        $0
+        .filter({ (key, _) in WindowInfoDictionaryKey(rawValue: key) != nil })
+        .map({ (key, value) in (WindowInfoDictionaryKey(rawValue: key)!, value) }))
       }
+      .map { infoDict in
+        // Try to cons up a HAXWindow for this CGWindow
+        let windowID = infoDict[.cgNumber] as! CGWindowID
+        let processID = infoDict[.cgOwnerPID] as! Int32
 
-      guard let haxWindow = HAXApplication(pid: processID)?
-        .windows
-        .filter({ $0.cgWindowID() == windowID })
-        .first
-      else {
-        return WindowInfo(infoDict)
+        // Add extra keys from NSRunningApplication to the info dict
+        var additionalInfo = [WindowInfoDictionaryKey: Any]()
+        if let runningApp = NSRunningApplication(processIdentifier: processID) {
+          additionalInfo[.canActivate] = (runningApp.activationPolicy != .prohibited)
+          additionalInfo[.isAppActive] = runningApp.isActive
+          additionalInfo[.ownerBundleID] = runningApp.bundleIdentifier
+        }
+
+        guard let haxWindow = HAXApplication(pid: processID)?
+          .windows
+          .filter({ $0.cgWindowID() == windowID })
+          .first
+        else {
+          return WindowInfo(infoDict)
+        }
+
+        // Add extra keys from hax to the info dict
+        additionalInfo[.cgDisplayID] = haxWindow.screen.screenNumber
+        additionalInfo[.nsFrame] = haxWindow.frame
+        additionalInfo[.isFullscreen] = haxWindow.isFullscreen
+        if let title = haxWindow.title {
+          additionalInfo[.cgName] = title
+        }
+
+        return WindowInfo(infoDict.merging(additionalInfo, uniquingKeysWith: { $1 }))
       }
-
-      // Add extra keys from hax to the info dict
-      additionalInfo[.cgDisplayID] = haxWindow.screen.screenNumber
-      additionalInfo[.nsFrame] = haxWindow.frame
-      additionalInfo[.isFullscreen] = haxWindow.isFullscreen
-      if let title = haxWindow.title {
-        additionalInfo[.cgName] = title
-      }
-
-      return WindowInfo(infoDict.merging(additionalInfo, uniquingKeysWith: { $1 }))
-    })
+    }
   }
 }
 
