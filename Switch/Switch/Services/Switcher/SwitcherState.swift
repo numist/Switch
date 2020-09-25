@@ -178,10 +178,9 @@ class SwitcherState: ObservableObject {
 
   /// The window list from the last call to `update(windows:)`
   ///
-  /// Do not access this property before the first `update(windows:)` after `→wantsStartWindowListUpdates`
+  /// This property returns `[]` until the first `update(windows:)` after `→wantsStartWindowListUpdates`
   var windows: [WindowInfoGroup] {
     guard _hasUpdatedWindows else {
-//      assertionFailure()
       return [WindowInfoGroup]()
     }
     return _windows
@@ -190,10 +189,9 @@ class SwitcherState: ObservableObject {
 
   /// The index of the selected window in `windows`, or `nil` if `windows.isEmpty`
   ///
-  /// Do not access this property before the first `update(windows:)` after `→wantsStartWindowListUpdates`
+  /// This property returns `nil` until the first `update(windows:)` after `→wantsStartWindowListUpdates`
   var selection: Int? {
     guard _hasUpdatedWindows else {
-//      assertionFailure()
       return nil
     }
     guard !_windows.isEmpty else {
