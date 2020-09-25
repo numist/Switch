@@ -10,14 +10,13 @@ class Switcher {
     assert(Thread.isMainThread)
     guard releaseTap == nil else { return true }
 
-    // TODO: support for closeWindow hotkey (registered here, deregistered when releaseTap is deactivated)
-
     releaseTap = try? EventTap(observing: .flagsChanged, callback: { [weak self] (_, event) -> CGEvent? in
       if !event.flags.contains(.maskAlternate) {
         DispatchQueue.main.async {
           guard let self = self else { return }
           assert(self.releaseTap != nil)
           self.releaseTap = nil
+          Keyboard.deregister(.init(.option, .w))
           self.state.hotKeyReleased()
         }
       }
@@ -25,7 +24,24 @@ class Switcher {
     })
 
     // Do not engage the state machine if the releaseTap can not be created
-    return releaseTap != nil
+    guard releaseTap != nil else { return false }
+
+    // TODO: support for closeWindow hotkey (registered here, deregistered when releaseTap is deactivated)
+    Keyboard.register(.init(.option, .w)) { [weak self] keyDown -> Bool in
+      guard let self = self else { return true }
+      if keyDown { DispatchQueue.main.async {
+        if let selectedWindow = self.state.selectedWindow?.mainWindow {
+          print("Switcher: closing window \(selectedWindow.id) (\(selectedWindow.name ?? "(untitled)")) " +
+                    "belonging to \(selectedWindow.ownerPID) (\(selectedWindow.ownerName ?? "(unknown)"))")
+          let haxApp = HAXApplication(pid: selectedWindow.ownerPID)
+          let haxWindow = haxApp?.window(withID: selectedWindow.id)
+          haxWindow?.close()
+        }
+      } }
+      return false
+    }
+
+    return true
   }
 
   init() {

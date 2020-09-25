@@ -206,6 +206,14 @@ class SwitcherState: ObservableObject {
   }
   @Published private var _selection = 0
 
+  /// The selected window group, if any
+  ///
+  /// This property returns `nil` until the first `update(windows:)` after `→wantsStartWindowListUpdates`
+  var selectedWindow: WindowInfoGroup? {
+    guard let selection = selection else { return nil }
+    return windows[selection]
+  }
+
   // MARK: - Timer management
   private var _timerFired = false
   private var _wantsTimer = false
