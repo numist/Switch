@@ -1,4 +1,5 @@
 import Darwin
+import Foundation
 
 func amIBeingDebugged() -> Bool {
   var info = kinfo_proc()
@@ -7,4 +8,14 @@ func amIBeingDebugged() -> Bool {
   let junk = sysctl(&mib, UInt32(mib.count), &info, &size, nil, 0)
   assert(junk == 0, "sysctl failed")
   return (info.kp_proc.p_flag & P_TRACED) != 0
+}
+
+func stopwatch<T>(_ title: String, threshold: Double = 0.1, _ closure: () -> T) -> T {
+  let start = Date()
+  let result = closure()
+  let elapsed = -start.timeIntervalSinceNow
+  if elapsed > threshold {
+    print("\(title) took \(elapsed) seconds")
+  }
+  return result
 }
