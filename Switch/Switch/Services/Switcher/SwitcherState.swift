@@ -106,8 +106,7 @@ class SwitcherState: ObservableObject {
     raiseIfReady()
   }
 
-  /// Call this function when the forward hotkey has been pressed
-  func incrementSelection(by amt: Int = 1) {
+  func setSelection(to index: Int) {
     guard !_wantsRaiseOnWindowUpdate else { return }
 
     _active = true
@@ -115,7 +114,12 @@ class SwitcherState: ObservableObject {
       wantsTimer()
     }
     solicitWindowUpdatesIfNeeded()
-    _updateSelection(by: amt)
+    _updateSelection(to: index)
+  }
+
+  /// Call this function when the forward hotkey has been pressed
+  func incrementSelection(by amt: Int = 1) {
+    setSelection(to: _selection + amt)
   }
 
   /// Call this function when the reverse hotkey has been pressed
@@ -135,7 +139,7 @@ class SwitcherState: ObservableObject {
 
       _windows = list
       _hasUpdatedWindows = true
-      _updateSelection()
+      _updateSelection(to: _selection)
       showInterfaceIfReady()
       raiseIfReady()
       return
@@ -258,19 +262,19 @@ class SwitcherState: ObservableObject {
   }
 
   // MARK: - Private
-  private func _updateSelection(by amt: Int = 0) {
+  private func _updateSelection(to index: Int) {
     if _hasUpdatedWindows {
       if windows.isEmpty {
         _selection = -1
       } else {
-        _selection = (_selection + amt) % windows.count
+        _selection = index % windows.count
         if _selection < 0 {
           _selection += windows.count
         }
         assert(_selection >= 0 && _selection < windows.count)
       }
     } else {
-      _selection += amt
+      _selection = index
     }
   }
 }
