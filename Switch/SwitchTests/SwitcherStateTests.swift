@@ -351,6 +351,35 @@ class SwitcherStateTests: XCTestCase {
     assert(!showingInterface)
   }
 
+  func testCloseFirstWindow() {
+    let groups = WindowInfoGroup.list(from: [
+      // swiftlint:disable line_length
+      WindowInfo([.cgNumber: UInt32(100), .cgLayer: Int32(0), .cgBounds: CGRect(x: 0.0, y: 23.0, width: 1440.0, height: 877.0).dictionaryRepresentation, .cgAlpha: Float(1.0), .cgOwnerPID: Int32(425), .cgOwnerName: "Xcode-beta", .cgName: "Switcher.swift", .cgIsOnscreen: true, .cgDisplayID: UInt32(69732800), .nsFrame: NSRect(x: -0.0, y: 0.0, width: 1440.0, height: 877.0), .isFullscreen: false, .ownerBundleID: "com.apple.dt.Xcode", .canActivate: true, .isAppActive: false]),
+      WindowInfo([.cgNumber: UInt32(510), .cgLayer: Int32(0), .cgBounds: CGRect(x: 0.0, y: 23.0, width: 668.0, height: 573.0).dictionaryRepresentation, .cgAlpha: Float(1.0), .cgOwnerPID: Int32(1426), .cgOwnerName: "System Preferences", .cgName: "Security & Privacy", .cgIsOnscreen: true, .cgDisplayID: UInt32(69732800), .nsFrame: NSRect(x: 0.0, y: 304.0, width: 668.0, height: 573.0), .isFullscreen: false, .ownerBundleID: "com.apple.systempreferences", .canActivate: true, .isAppActive: false]),
+      WindowInfo([.cgNumber: UInt32(10053), .cgLayer: Int32(0), .cgBounds: CGRect(x: 61.0, y: 23.0, width: 1369.0, height: 877.0).dictionaryRepresentation, .cgAlpha: Float(1.0), .cgOwnerPID: Int32(16649), .cgOwnerName: "TextMate", .cgName: "untitled 12", .cgIsOnscreen: true, .cgDisplayID: UInt32(69732800), .nsFrame: NSRect(x: 61.0, y: 0.0, width: 1369.0, height: 877.0), .isFullscreen: false, .ownerBundleID: "com.macromates.TextMate", .canActivate: true, .isAppActive: false]),
+      // swiftlint:enable line_length
+    ])
+
+    let state = SwitcherState()
+    state.setSelection(to: 0)
+    state.update(windows: groups)
+    XCTAssertEqual(0, state.selection)
+    state.update(windows: Array(groups.dropFirst()))
+    XCTAssertEqual(0, state.selection)
+  }
+}
+
+// MARK: - Fuzzer tests
+
+let groups = WindowInfoGroup.list(from: [
+  // swiftlint:disable line_length
+  WindowInfo([.cgNumber: UInt32(100), .cgLayer: Int32(0), .cgBounds: CGRect(x: 0.0, y: 23.0, width: 1440.0, height: 877.0).dictionaryRepresentation, .cgAlpha: Float(1.0), .cgOwnerPID: Int32(425), .cgOwnerName: "Xcode-beta", .cgName: "Switcher.swift", .cgIsOnscreen: true, .cgDisplayID: UInt32(69732800), .nsFrame: NSRect(x: -0.0, y: 0.0, width: 1440.0, height: 877.0), .isFullscreen: false, .ownerBundleID: "com.apple.dt.Xcode", .canActivate: true, .isAppActive: false]),
+  WindowInfo([.cgNumber: UInt32(510), .cgLayer: Int32(0), .cgBounds: CGRect(x: 0.0, y: 23.0, width: 668.0, height: 573.0).dictionaryRepresentation, .cgAlpha: Float(1.0), .cgOwnerPID: Int32(1426), .cgOwnerName: "System Preferences", .cgName: "Security & Privacy", .cgIsOnscreen: true, .cgDisplayID: UInt32(69732800), .nsFrame: NSRect(x: 0.0, y: 304.0, width: 668.0, height: 573.0), .isFullscreen: false, .ownerBundleID: "com.apple.systempreferences", .canActivate: true, .isAppActive: false]),
+  WindowInfo([.cgNumber: UInt32(10053), .cgLayer: Int32(0), .cgBounds: CGRect(x: 61.0, y: 23.0, width: 1369.0, height: 877.0).dictionaryRepresentation, .cgAlpha: Float(1.0), .cgOwnerPID: Int32(16649), .cgOwnerName: "TextMate", .cgName: "untitled 12", .cgIsOnscreen: true, .cgDisplayID: UInt32(69732800), .nsFrame: NSRect(x: 61.0, y: 0.0, width: 1369.0, height: 877.0), .isFullscreen: false, .ownerBundleID: "com.macromates.TextMate", .canActivate: true, .isAppActive: false]),
+  // swiftlint:enable line_length
+])
+
+extension SwitcherStateTests {
   func testFuzzIncrementAfterTimerFired() {
     var wantsTimer = false
     var showingInterface = false
@@ -424,6 +453,63 @@ class SwitcherStateTests: XCTestCase {
     assert(wantsWindowUpdates)
   }
 
+  func testFuzzNoMoreWindows() {
+    var wantsTimer = false
+    var showingInterface = false
+    var wantsWindowUpdates = false
+    let state = SwitcherState(
+      wantsTimerCallback: { assert(!wantsTimer); wantsTimer = true },
+      wantsTimerCancelledCallback: { assert(wantsTimer); wantsTimer = false },
+      wantsShowInterfaceCallback: { assert(!showingInterface); showingInterface = true },
+      wantsHideInterfaceCallback: { assert(showingInterface); showingInterface = false },
+      wantsStartWindowListUpdates: { assert(!wantsWindowUpdates); wantsWindowUpdates = true },
+      wantsStopWindowListUpdates: { assert(wantsWindowUpdates); wantsWindowUpdates = false },
+      wantsRaiseCallback: {_ in}
+    )
+
+    state.incrementSelection()
+    // wantsTimer → true
+    // wantsWindows → true
+    assert(wantsWindowUpdates)
+    state.update(windows: [groups[0], groups[2]])
+    assert(wantsWindowUpdates)
+    state.update(windows: [])
+    XCTAssertNil(state.selection)
+  }
+
+  func testFuzzAddingWindows() {
+    var wantsTimer = false
+    var showingInterface = false
+    var wantsWindowUpdates = false
+    let state = SwitcherState(
+      wantsTimerCallback: { assert(!wantsTimer); wantsTimer = true },
+      wantsTimerCancelledCallback: { assert(wantsTimer); wantsTimer = false },
+      wantsShowInterfaceCallback: { assert(!showingInterface); showingInterface = true },
+      wantsHideInterfaceCallback: { assert(showingInterface); showingInterface = false },
+      wantsStartWindowListUpdates: { assert(!wantsWindowUpdates); wantsWindowUpdates = true },
+      wantsStopWindowListUpdates: { assert(wantsWindowUpdates); wantsWindowUpdates = false },
+      wantsRaiseCallback: {_ in}
+    )
+
+    state.incrementSelection()
+    // wantsTimer → true
+    // wantsWindows → true
+    assert(wantsWindowUpdates)
+    state.update(windows: [groups[0], groups[2]])
+    assert(wantsWindowUpdates)
+    state.update(windows: Array(groups.dropLast()))
+    assert(wantsWindowUpdates)
+    state.update(windows: Array(groups.dropFirst()))
+    assert(wantsWindowUpdates)
+    state.update(windows: [groups[0], groups[2]])
+    state.decrementSelection()
+    assert(wantsWindowUpdates)
+    state.update(windows: [])
+    assert(wantsWindowUpdates)
+    state.update(windows: Array(groups.dropLast()))
+    XCTAssertEqual(0, state.selection)
+  }
+
   func testFuzz() {
     var wantsTimer = false
     var showingInterface = false
@@ -471,17 +557,20 @@ class SwitcherStateTests: XCTestCase {
       [
         {
           active = true
-          print("state.incrementSelection()\nassert(wantsWindowUpdates)")
+          print("state.incrementSelection()")
           state.incrementSelection(); assert(wantsWindowUpdates)
+          print("assert(wantsWindowUpdates)")
         },
         {
           active = true
-          print("state.decrementSelection()\nassert(wantsWindowUpdates)")
+          print("state.decrementSelection()")
           state.decrementSelection(); assert(wantsWindowUpdates)
+          print("assert(wantsWindowUpdates)")
         },
         { if active {
-          print("state.hotKeyReleased()\nassert(!showingInterface)")
+          print("state.hotKeyReleased()")
           state.hotKeyReleased(); assert(!showingInterface)
+          print("assert(!showingInterface)")
           active = false
         } },
         { if wantsTimer {
@@ -491,6 +580,22 @@ class SwitcherStateTests: XCTestCase {
         { if wantsWindowUpdates {
           print("assert(wantsWindowUpdates)\nstate.update(windows: [])")
           hasUpdatedWindows = true; state.update(windows: [])
+        } },
+        { if wantsWindowUpdates {
+          print("assert(wantsWindowUpdates)\nstate.update(windows: groups)")
+          hasUpdatedWindows = true; state.update(windows: groups)
+        } },
+        { if wantsWindowUpdates {
+          print("assert(wantsWindowUpdates)\nstate.update(windows: Array(groups.dropFirst()))")
+          hasUpdatedWindows = true; state.update(windows: Array(groups.dropFirst()))
+        } },
+        { if wantsWindowUpdates {
+          print("assert(wantsWindowUpdates)\nstate.update(windows: [groups[0], groups[2]])")
+          hasUpdatedWindows = true; state.update(windows: [groups[0], groups[2]])
+        } },
+        { if wantsWindowUpdates {
+          print("assert(wantsWindowUpdates)\nstate.update(windows: Array(groups.dropLast()))")
+          hasUpdatedWindows = true; state.update(windows: Array(groups.dropLast()))
         } },
       ].randomElement()!()
       // swiftlint:enable opening_brace

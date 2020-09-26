@@ -150,9 +150,13 @@ class SwitcherState: ObservableObject {
         // If possible, maintain selection on the same window
         _selection = selectedWindowInList
       } else {
-        // Otherwise, clamp selection to size of new list and fall back one
-        _selection = min(_selection, list.count) - 1
+        // Otherwise, clamp selection to size of new list
+        _selection = min(_selection, list.count - 1)
       }
+    } else if list.isEmpty {
+      _selection = -1
+    } else if windows.isEmpty {
+      _selection = 0
     }
     _windows = list
     showInterfaceIfReady()
