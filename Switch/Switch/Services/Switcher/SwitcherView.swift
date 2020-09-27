@@ -69,6 +69,7 @@ struct SwitcherView: View {
       width: pWidth(for: state.windows.count) * scale,
       height: pHeight * scale
     )
+    .animation(.default)
   }
 
   private func selectionBox(at scale: CGFloat) -> some View {
@@ -81,6 +82,7 @@ struct SwitcherView: View {
     .offset(
       x: middleIndex(for: state.selection!) * scale * pItemSz
     )
+    .animation(.default)
   }
 
   var body: some View {
@@ -106,12 +108,7 @@ struct SwitcherView: View {
             x: middleIndex(for: index) * scale *
                (pThumbSz + pThumbPad + pSelThck + pSelPad)
           )
-          // TODO: onHover? something like:
-//          .onHover { inside in
-//            if inside && state.selection != index {
-//              state.setSelection(to: index)
-//            }
-//          }
+          .animation(.default)
         }
       }
     }
