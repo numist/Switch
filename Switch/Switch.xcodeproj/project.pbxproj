@@ -43,6 +43,9 @@
 		BCD1901724DF77B200941A86 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCD1901524DF77A700941A86 /* Carbon.framework */; };
 		BCD1901924DF83DB00941A86 /* EventTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD1901824DF83DB00941A86 /* EventTap.swift */; };
 		BCD1901B24DF9D1400941A86 /* LongCmdQ.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD1901A24DF9D1400941A86 /* LongCmdQ.swift */; };
+		BCFEB15F251EE71B00CFA605 /* WindowInfoGroupTests+Chrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCFEB15E251EE71B00CFA605 /* WindowInfoGroupTests+Chrome.swift */; };
+		BCFEB16125200A3300CFA605 /* Collection+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCFEB16025200A3300CFA605 /* Collection+Extensions.swift */; };
+		BCFEB16425200C4B00CFA605 /* SwitcherStateFuzzerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCFEB16325200C4B00CFA605 /* SwitcherStateFuzzerTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -139,6 +142,9 @@
 		BCD1901D24DFB1AF00941A86 /* Switch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Switch.entitlements; sourceTree = "<group>"; };
 		BCFEB15B251EAC2F00CFA605 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		BCFEB15C251EAFFF00CFA605 /* Structure.monopic */ = {isa = PBXFileReference; lastKnownFileType = file; path = Structure.monopic; sourceTree = "<group>"; };
+		BCFEB15E251EE71B00CFA605 /* WindowInfoGroupTests+Chrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WindowInfoGroupTests+Chrome.swift"; sourceTree = "<group>"; };
+		BCFEB16025200A3300CFA605 /* Collection+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Extensions.swift"; sourceTree = "<group>"; };
+		BCFEB16325200C4B00CFA605 /* SwitcherStateFuzzerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitcherStateFuzzerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -263,8 +269,10 @@
 		BCD18FE824DD41C800941A86 /* SwitchTests */ = {
 			isa = PBXGroup;
 			children = (
-				BCD18FE924DD41C800941A86 /* SwitcherStateTests.swift */,
+				BCFEB16225200C3200CFA605 /* SwitcherState */,
+				BCFEB15D251EE47200CFA605 /* WindowInfoGroupTests */,
 				BCD18FEB24DD41C800941A86 /* Info.plist */,
+				BCFEB16025200A3300CFA605 /* Collection+Extensions.swift */,
 			);
 			path = SwitchTests;
 			sourceTree = "<group>";
@@ -316,6 +324,23 @@
 				BC56727E24DFC84B00206A39 /* Service.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		BCFEB15D251EE47200CFA605 /* WindowInfoGroupTests */ = {
+			isa = PBXGroup;
+			children = (
+				BCFEB15E251EE71B00CFA605 /* WindowInfoGroupTests+Chrome.swift */,
+			);
+			path = WindowInfoGroupTests;
+			sourceTree = "<group>";
+		};
+		BCFEB16225200C3200CFA605 /* SwitcherState */ = {
+			isa = PBXGroup;
+			children = (
+				BCD18FE924DD41C800941A86 /* SwitcherStateTests.swift */,
+				BCFEB16325200C4B00CFA605 /* SwitcherStateFuzzerTests.swift */,
+			);
+			path = SwitcherState;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -532,7 +557,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BCFEB16425200C4B00CFA605 /* SwitcherStateFuzzerTests.swift in Sources */,
 				BCD18FEA24DD41C800941A86 /* SwitcherStateTests.swift in Sources */,
+				BCFEB15F251EE71B00CFA605 /* WindowInfoGroupTests+Chrome.swift in Sources */,
+				BCFEB16125200A3300CFA605 /* Collection+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
