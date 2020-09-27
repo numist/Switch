@@ -30,13 +30,13 @@ struct WindowInfoGroupListPublisher: Publisher {
       _ = target.receive(list)
 
       // Enqueue the next call
-      self.poll(after: 0.25)
+      self.poll(after: 0.1)
     }
 
     fileprivate func poll(after delay: TimeInterval = 0.0) {
       assert(Thread.isMainThread)
 
-      // Reflect onto background thread for window list polling (it's slow, ~20ms)
+      // Reflect onto background thread for window list polling (it's slow, >20ms)
       DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + delay) { [weak self] in
         let list = WindowInfoGroup.list(from: WindowInfo.get())
 
