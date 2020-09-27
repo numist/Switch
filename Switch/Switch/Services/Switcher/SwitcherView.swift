@@ -100,6 +100,17 @@ struct SwitcherView: View {
         // Window list
         ForEach(Array(state.windows.enumerated()), id: \.element) { index, window in
           WindowView(window: window)
+          // TODO: onHover works:
+          //    too well (overrides initial selection without mouse movement)
+          //  but also:
+          //    not very well (sometimes requires click to function)
+          //    must be used before `.offset` or all hover events will come from the middle of the view
+          // Seems likely that manual implementation via event tap might be necessary to get desired behaviour
+//          .onHover { inside in
+//            if inside && state.selection != index {
+//              state.setSelection(to: index)
+//            }
+//          }
           .frame(
             width: pThumbSz * scale,
             height: pThumbSz * scale
