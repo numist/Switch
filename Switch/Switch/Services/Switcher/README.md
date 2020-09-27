@@ -50,4 +50,4 @@ Some visible windows on the system are represented by more than one `NSWindow`. 
 
 Unfortunately window groups can not be determined via public API, so `list(from:)` uses some heuristics to convert a `[WindowInfo]` into a reasonable `[WindowInfoGroup]`, but the heuristics are imperfect and a sufficiently rich source of issues that [the "quirk" label](https://github.com/numist/Switch/issues?q=is%3Aissue+label%3Aquirk) was created to track them.
 
-_TODO:_ The corpus of window grouping tests shall live in `WindowInfoGroupTests/`, but a lot of porting from Switch 0.0.10 (β) is required.
+The corpus of window grouping tests lives in `WindowInfoGroupTests/`, but a lot of porting from Switch 0.0.10 (β) is still required.

@@ -14,25 +14,15 @@ Getting Started
 
 Download the [latest release](https://github.com/numist/Switch/releases), put the application bundle in your `/Applications` or `~/Applications` directory, and run it! It will check for updates automatically so you can stay up to date as the project develops.
 
-Switch requires Mac OS X version 10.14 or newer and is still in development. For a list of known issues, check out the [bug tag](https://github.com/numist/Switch/issues?labels=bug&state=open) for general badness and the [quirk tag](https://github.com/numist/Switch/issues?labels=quirk&state=open) for windows being improperly shown or omitted from the interface.
+Switch requires Mac OS X version 10.15 or newer and is still in development. For a list of known issues, check out the [bug tag](https://github.com/numist/Switch/issues?labels=bug&state=open) for general badness and the [quirk tag](https://github.com/numist/Switch/issues?labels=quirk&state=open) for windows being improperly shown/omitted in the interface.
 
 Contributing
 ------------
-
-[![Build Status](https://travis-ci.org/numist/Switch.png?branch=develop)](https://travis-ci.org/numist/Switch)
 
 To check out the project, its submodules, and open in Xcode:
 
     git clone git://github.com/numist/Switch.git
     cd Switch/
-    rake deps
     open Switch.xcworkspace
 
-At this point, `⌘R` should have you up and running!
-
-The release process uses the project `Rakefile`; if you have a Developer ID certificate installed, you should be able to run `rake release` without any issues. Without a Developer ID, the `analyze`, `test`, and `app` targets (and their dependencies) should succeed.
-
-Thanks!
--------
-
-Switch relies on a number of external frameworks, either as [submodules](https://github.com/numist/Switch/tree/develop/Frameworks) or [pods](https://github.com/numist/Switch/tree/develop/Podfile). Thanks to the people responsible for them, you've saved me time and tears.
+`⌘R` should have you up and running! Any changes require Accessibility re-authorization in the Security & Privacy preferences pane—it's useful to just keep it open when iterating.
