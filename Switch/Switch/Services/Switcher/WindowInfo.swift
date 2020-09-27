@@ -120,6 +120,8 @@ extension WindowInfo {
   }
 }
 
+// MARK: Conformances
+
 extension WindowInfo: Identifiable, Hashable {}
 
 extension WindowInfo: CustomStringConvertible {

@@ -6,6 +6,8 @@ struct WindowInfoGroup: Hashable {
   let windows: [WindowInfo]
 }
 
+// MARK: Conformances
+
 extension WindowInfoGroup: Identifiable {
   // swiftlint:disable:next identifier_name
   var id: CGWindowID { return mainWindow.id }
@@ -16,6 +18,8 @@ extension WindowInfoGroup: CustomStringConvertible {
     "<\(mainWindow.id) (\(mainWindow.name ?? "<nil>")), \(windows.count) window\(windows.count == 1 ? "" : "s")>"
   }
 }
+
+// MARK: Computed properties
 
 extension WindowInfoGroup {
   var cgFrame: CGRect {
@@ -50,6 +54,8 @@ extension WindowInfoGroup {
     )
   }
 }
+
+// MARK: Group inference
 
 extension WindowInfoGroup {
   // TODO(numist): this is gonna get more sophisticated but let's get off the ground first
