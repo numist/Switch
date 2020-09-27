@@ -1,18 +1,40 @@
 # Dependency Management
 
-Unlike dynamic linking of binaries, weak associations between source projects provide no benefit and ask developers to shoulder a large amount of complexity. After a string of bad experiences over the years with `git submodule`, repositories going away, and using build tools to manage dependencies I have settled on the dumbest solution I can think of: all dependencies are checked into the repository and a shell script is the first line treatment for keeping them up to date. 
+After a string of bad experiences over the years with:
 
-The goal? People using this project should be able to get up and running with nothing more than a `git clone` of this project and a `⌘R` in Xcode.
+* `git submodule`
+* repositories going away
+* sophisticated build tools
 
-## Adding Dependencies
+I have settled on the dumbest solution I can think of to solve these problems:
 
-1) Create a file with the name of the project directory suffixed with `.giturl` that contains a URI suitable for passing to `git clone`
-2) Run `update_dependencies.sh`
+All of Switch's dependencies are checked into the repository.
 
-## Updating Dependencies
+## The Goal
 
-2) Run `update_dependencies.sh`
+People using this project should be able to get up and running with a `git clone`, `open *.xcworkspace`, and `⌘R`.
 
-## Determining Dependency Version
+## `git` Dependencies
 
-For simplicity, dependencies are stored without `.git` directories, stripping them of their SCM metadata. `update_dependencies.sh` writes the updated branch and sha to `$PROJECT.gitcheckout` for posterity.
+Switch uses:
+
+* [Haxcessibility](https://github.com/numist/Haxcessibility), a use case–driven remote control framework for Mac apps by Mac apps
+
+### Adding a new dependency
+
+1. Create a file with the name of the project directory suffixed with `.giturl` that contains a URI suitable for passing to `git clone`
+1. Run `update_dependencies.sh`
+
+### Updating a dependency
+
+1. Run `update_dependencies.sh`
+
+### Determining dependency version
+
+Dependencies are stored without `.git` directories, so `update_dependencies.sh` records the cloned branch and sha to `$PROJECT.gitcheckout`.
+
+<!-- There are none yet!
+## Other dependencies
+
+Non-`git` dependencies are checked into an appropriate subdirectory of `Dependencies/` along with a `README.md` and `LICENSE` to explain their provenance.
+-->
