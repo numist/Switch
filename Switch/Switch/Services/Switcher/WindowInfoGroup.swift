@@ -11,6 +11,12 @@ extension WindowInfoGroup: Identifiable {
   var id: CGWindowID { return mainWindow.id }
 }
 
+extension WindowInfoGroup: CustomStringConvertible {
+  var description: String {
+    "<\(mainWindow.id) (\(mainWindow.name ?? "<nil>")), \(windows.count) window\(windows.count == 1 ? "" : "s")>"
+  }
+}
+
 extension WindowInfoGroup {
   var cgFrame: CGRect {
     var minPoint = mainWindow.cgFrame.origin
