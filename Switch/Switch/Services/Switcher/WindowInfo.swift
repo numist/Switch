@@ -91,7 +91,6 @@ extension WindowInfo {
         .map({ (key, value) in (WindowInfoDictionaryKey(rawValue: key)!, value) }))
       }
       .map { infoDict in
-        // Try to cons up a HAXWindow for this CGWindow
         let windowID = infoDict[.cgNumber] as! CGWindowID
         let processID = infoDict[.cgOwnerPID] as! Int32
 
@@ -103,20 +102,16 @@ extension WindowInfo {
           additionalInfo[.ownerBundleID] = runningApp.bundleIdentifier
         }
 
-        guard let haxWindow = HAXApplication(pid: processID)?
-          .windows
-          .filter({ $0.cgWindowID() == windowID })
-          .first
-        else {
-          return WindowInfo(infoDict)
-        }
-
-        // Add extra keys from hax to the info dict
-        additionalInfo[.cgDisplayID] = haxWindow.screen.screenNumber
-        additionalInfo[.nsFrame] = haxWindow.frame
-        additionalInfo[.isFullscreen] = haxWindow.isFullscreen
-        if let title = haxWindow.title {
-          additionalInfo[.cgName] = title
+        // Add extra keys from HAXcessibility to the info dict
+        if let haxWindow = HAXApplication(pid: processID)?.window(withID: windowID) {
+          additionalInfo[.nsFrame] = haxWindow.frame
+          additionalInfo[.isFullscreen] = haxWindow.isFullscreen
+          if let title = haxWindow.title {
+            additionalInfo[.cgName] = title
+          }
+          if let screenNumber = haxWindow.screen?.screenNumber {
+            additionalInfo[.cgDisplayID] = screenNumber
+          }
         }
 
         return WindowInfo(infoDict.merging(additionalInfo, uniquingKeysWith: { $1 }))

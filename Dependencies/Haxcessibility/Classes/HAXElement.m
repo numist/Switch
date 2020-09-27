@@ -32,14 +32,10 @@
 	}
 }
 
--(BOOL)isEqualToElement:(HAXElement *)other {
-	return
-		[other isKindOfClass:self.class]
-	&&	CFEqual(self.elementRef, other.elementRef);
-}
-
 -(BOOL)isEqual:(id)object {
-	return [self isEqualToElement:object];
+	return
+		[object isKindOfClass:self.class]
+	&&	CFEqual(self.elementRef, [object elementRef]);
 }
 
 -(NSUInteger)hash {
@@ -190,18 +186,21 @@ static void axCallback(AXObserverRef observer, AXUIElementRef element, CFStringR
 
 -(NSArray *) buttons {
     NSArray *axChildren = self.children;
-    NSMutableArray *result = [NSMutableArray array];
-    
-    NSString * axRole;
-    for (HAXElement *haxElementI in axChildren) {
-        axRole = CFBridgingRelease([haxElementI copyAttributeValueForKey:(__bridge NSString *)kAXRoleAttribute error:NULL]);
-        if (axRole == nil) {
-            result = nil;
-            break;
-        }
-        if ([axRole isEqualToString:(__bridge NSString *)kAXButtonRole]) {
-            HAXButton *button = [[HAXButton alloc] initWithElementRef:(AXUIElementRef)haxElementI.elementRef];
-            [result addObject:button];
+    NSMutableArray *result = nil;
+
+    if (axChildren) {
+        result = [NSMutableArray arrayWithCapacity:axChildren.count];
+
+        for (HAXElement *haxElementI in axChildren) {
+            NSString * axRole = CFBridgingRelease([haxElementI copyAttributeValueForKey:(__bridge NSString *)kAXRoleAttribute error:NULL]);
+            if (axRole == nil) {
+                result = nil;
+                break;
+            }
+            if ([axRole isEqualToString:(__bridge NSString *)kAXButtonRole]) {
+                HAXButton *button = [[HAXButton alloc] initWithElementRef:(AXUIElementRef)haxElementI.elementRef];
+                [result addObject:button];
+            }
         }
     }
 

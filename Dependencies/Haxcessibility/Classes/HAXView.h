@@ -7,13 +7,14 @@
 
 @interface HAXView : HAXElement
 
-@property (nonatomic, assign) CGPoint carbonOrigin;
-@property (nonatomic, assign, readonly) NSPoint origin;
-@property (nonatomic, assign) NSSize size;
-@property (nonatomic, assign) CGRect carbonFrame;
-@property (nonatomic, assign, readonly) NSRect frame;
-@property (nonatomic, readonly) NSString *title;
-@property (nonatomic, readonly) NSScreen *screen;
-@property (nonatomic, readonly, getter=isFullscreen) BOOL fullscreen;
+@property (nonatomic) CGPoint carbonOrigin;
+@property (nonatomic) NSPoint origin;
+@property (nonatomic) CGSize size;
+@property (nonatomic) CGRect carbonFrame;
+@property (nonatomic) NSRect frame;
+@property (nullable, readonly) NSString *title;
+@property (nullable, readonly) NSScreen *screen;
+@property (readonly, getter=isFullscreen) BOOL fullscreen;
 
 @end
+

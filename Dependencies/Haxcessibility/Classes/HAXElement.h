@@ -10,20 +10,18 @@
 
 @interface HAXElement : NSObject
 
-@property (nonatomic, weak) id<HAXElementDelegate> delegate;
-@property (nonatomic, readonly) NSString *title;
-@property (nonatomic, readonly) NSString *role;
+@property (nonatomic, nullable, weak) id<HAXElementDelegate> delegate;
+@property (nonatomic, nullable, readonly) NSString *title;
+@property (nonatomic, nullable, readonly) NSString *role;
 @property (nonatomic, readonly) BOOL hasChildren;
-@property (nonatomic, readonly) NSArray<HAXElement *> *children;
-@property (nonatomic, readonly) NSArray<NSString *> *attributeNames;
-@property (nonatomic, readonly) NSArray<HAXButton *> *buttons;
+@property (nonatomic, nullable, readonly) NSArray<HAXElement *> *children;
+@property (nonatomic, nullable, readonly) NSArray<NSString *> *attributeNames;
+@property (nonatomic, nullable, readonly) NSArray<HAXButton *> *buttons;
 @property (nonatomic, readonly) pid_t processIdentifier;
-
--(BOOL)isEqualToElement:(HAXElement *)other;
 
 @end
 
 @protocol HAXElementDelegate <NSObject>
 @optional
--(void)elementWasDestroyed:(HAXElement *)element;
+-(void)elementWasDestroyed:(nonnull HAXElement *)element;
 @end

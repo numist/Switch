@@ -4,7 +4,7 @@
 
 #import "HAXView.h"
 #import "HAXElement+Protected.h"
-#import "NSScreen+HAXPointConvert.h"
+#import "NSScreen+Helpers.h"
 
 @implementation HAXView
 
@@ -26,7 +26,11 @@
 }
 
 -(NSPoint)origin {
-    return [NSScreen hax_cocoaScreenFrameFromCarbonScreenFrame:self.carbonFrame].origin;
+    return cocoaScreenFrameFromCarbonScreenFrame(self.carbonFrame).origin;
+}
+
+-(void)setOrigin:(NSPoint)origin {
+    self.carbonOrigin = carbonScreenPointFromCocoaScreenPoint(origin);
 }
 
 -(NSSize)size {
@@ -56,7 +60,12 @@
 }
 
 -(NSRect)frame {
-    return [NSScreen hax_cocoaScreenFrameFromCarbonScreenFrame:self.carbonFrame];
+    return cocoaScreenFrameFromCarbonScreenFrame(self.carbonFrame);
+}
+
+-(void)setFrame:(NSRect)frame {
+    self.origin = frame.origin;
+    self.size = frame.size;
 }
 
 -(NSString *)title {

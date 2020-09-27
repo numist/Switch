@@ -33,9 +33,7 @@ class Switcher {
         if let selectedWindow = self.state.selectedWindow?.mainWindow {
           print("Switcher: closing window \(selectedWindow.id) (\(selectedWindow.name ?? "(untitled)")) " +
                     "belonging to \(selectedWindow.ownerPID) (\(selectedWindow.ownerName ?? "(unknown)"))")
-          let haxApp = HAXApplication(pid: selectedWindow.ownerPID)
-          let haxWindow = haxApp?.window(withID: selectedWindow.id)
-          haxWindow?.close()
+          HAXApplication(pid: selectedWindow.ownerPID)?.window(withID: selectedWindow.id)?.close()
         }
       } }
       return false
@@ -56,9 +54,7 @@ class Switcher {
         let selectedWindow = windowGroup.mainWindow
         print("Switcher: raising window \(selectedWindow.id) (\(selectedWindow.name ?? "(untitled)")) " +
               "belonging to \(selectedWindow.ownerPID) (\(selectedWindow.ownerName ?? "(unknown)"))")
-        let haxApp = HAXApplication(pid: selectedWindow.ownerPID)
-        let haxWindow = haxApp?.window(withID: selectedWindow.id)
-        haxWindow?.raise()
+        HAXApplication(pid: selectedWindow.ownerPID)?.window(withID: selectedWindow.id)?.raise()
       }
     )
 

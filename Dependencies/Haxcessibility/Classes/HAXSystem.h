@@ -8,8 +8,8 @@
 
 @interface HAXSystem : HAXElement
 
-+(instancetype)system;
++(nonnull instancetype)system;
 
-@property (nonatomic, readonly) HAXApplication *focusedApplication;
+@property (readonly, nullable) HAXApplication *focusedApplication;
 
 @end

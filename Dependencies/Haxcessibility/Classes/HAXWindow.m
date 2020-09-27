@@ -11,14 +11,17 @@ extern AXError _AXUIElementGetWindow(AXUIElementRef, CGWindowID* out);
 
 -(NSArray *)views {
 	NSArray *axChildren = self.children;
-    NSMutableArray *result = [NSMutableArray array];
-    
-    NSString * axRole;
-    for (HAXElement * haxElementI in axChildren) {
-        axRole = [haxElementI getAttributeValueForKey:(__bridge NSString *)kAXRoleAttribute error:NULL];
-        if ([axRole isEqualToString:@"AXView"]) {
-            HAXView * haxView = [[HAXView init] initWithElementRef:(AXUIElementRef)haxElementI.elementRef];
-            [result addObject:haxView];
+    NSMutableArray *result = nil;
+
+    if (axChildren) {
+        result = [NSMutableArray arrayWithCapacity:axChildren.count];
+
+        for (HAXElement * haxElementI in axChildren) {
+            NSString * axRole = [haxElementI getAttributeValueForKey:(__bridge NSString *)kAXRoleAttribute error:NULL];
+            if ([axRole isEqualToString:@"AXView"]) {
+                HAXView * haxView = [[HAXView init] initWithElementRef:(AXUIElementRef)haxElementI.elementRef];
+                [result addObject:haxView];
+            }
         }
     }
 	return result;

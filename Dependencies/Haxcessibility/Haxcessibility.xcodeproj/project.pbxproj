@@ -11,8 +11,8 @@
 		BC3B3B76175E9FD4002AD452 /* HAXElement+Protected.h in Headers */ = {isa = PBXBuildFile; fileRef = D44E051312D75B3D00541D6A /* HAXElement+Protected.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		C3E21520194F381400C85776 /* HAXButton.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E2151C194F381400C85776 /* HAXButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C3E21521194F381400C85776 /* HAXButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C3E2151D194F381400C85776 /* HAXButton.m */; };
-		C3E21526194F38BE00C85776 /* NSScreen+HAXPointConvert.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E21524194F38BD00C85776 /* NSScreen+HAXPointConvert.h */; };
-		C3E21527194F38BE00C85776 /* NSScreen+HAXPointConvert.m in Sources */ = {isa = PBXBuildFile; fileRef = C3E21525194F38BD00C85776 /* NSScreen+HAXPointConvert.m */; };
+		C3E21526194F38BE00C85776 /* NSScreen+Helpers.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E21524194F38BD00C85776 /* NSScreen+Helpers.h */; };
+		C3E21527194F38BE00C85776 /* NSScreen+Helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = C3E21525194F38BD00C85776 /* NSScreen+Helpers.m */; };
 		C3E2152A194F38FB00C85776 /* HAXView.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E21528194F38FB00C85776 /* HAXView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C3E2152B194F38FB00C85776 /* HAXView.m in Sources */ = {isa = PBXBuildFile; fileRef = C3E21529194F38FB00C85776 /* HAXView.m */; };
 		D4D2103412D6957000509E57 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4D2103312D6957000509E57 /* Carbon.framework */; };
@@ -34,8 +34,8 @@
 		8DC2EF5B0486A6940098B216 /* Haxcessibility.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Haxcessibility.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3E2151C194F381400C85776 /* HAXButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HAXButton.h; sourceTree = "<group>"; };
 		C3E2151D194F381400C85776 /* HAXButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HAXButton.m; sourceTree = "<group>"; };
-		C3E21524194F38BD00C85776 /* NSScreen+HAXPointConvert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSScreen+HAXPointConvert.h"; sourceTree = "<group>"; };
-		C3E21525194F38BD00C85776 /* NSScreen+HAXPointConvert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSScreen+HAXPointConvert.m"; sourceTree = "<group>"; };
+		C3E21524194F38BD00C85776 /* NSScreen+Helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSScreen+Helpers.h"; sourceTree = "<group>"; };
+		C3E21525194F38BD00C85776 /* NSScreen+Helpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSScreen+Helpers.m"; sourceTree = "<group>"; };
 		C3E21528194F38FB00C85776 /* HAXView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HAXView.h; sourceTree = "<group>"; };
 		C3E21529194F38FB00C85776 /* HAXView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HAXView.m; sourceTree = "<group>"; };
 		D44E051312D75B3D00541D6A /* HAXElement+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HAXElement+Protected.h"; sourceTree = "<group>"; };
@@ -106,6 +106,8 @@
 			children = (
 				D4D2113C12D6AAF000509E57 /* Haxcessibility.h */,
 				32DBCF5E0370ADEE00C91783 /* Haxcessibility.pch */,
+				C3E21524194F38BD00C85776 /* NSScreen+Helpers.h */,
+				C3E21525194F38BD00C85776 /* NSScreen+Helpers.m */,
 			);
 			path = "Other Sources";
 			sourceTree = "<group>";
@@ -113,8 +115,6 @@
 		D4D2102E12D6947D00509E57 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				C3E21524194F38BD00C85776 /* NSScreen+HAXPointConvert.h */,
-				C3E21525194F38BD00C85776 /* NSScreen+HAXPointConvert.m */,
 				D4D2106B12D69C8900509E57 /* HAXApplication.h */,
 				D4D2106C12D69C8B00509E57 /* HAXApplication.m */,
 				C3E2151C194F381400C85776 /* HAXButton.h */,
@@ -145,7 +145,7 @@
 				D4D2113E12D6AB0400509E57 /* HAXApplication.h in Headers */,
 				C3E21520194F381400C85776 /* HAXButton.h in Headers */,
 				D4D2113F12D6AB0400509E57 /* HAXWindow.h in Headers */,
-				C3E21526194F38BE00C85776 /* NSScreen+HAXPointConvert.h in Headers */,
+				C3E21526194F38BE00C85776 /* NSScreen+Helpers.h in Headers */,
 				D4D2113D12D6AAF000509E57 /* Haxcessibility.h in Headers */,
 				BC3B3B76175E9FD4002AD452 /* HAXElement+Protected.h in Headers */,
 			);
@@ -221,7 +221,7 @@
 				D4D2105512D698F400509E57 /* HAXSystem.m in Sources */,
 				D4D2106D12D69C8B00509E57 /* HAXApplication.m in Sources */,
 				D4D2108212D6A08800509E57 /* HAXWindow.m in Sources */,
-				C3E21527194F38BE00C85776 /* NSScreen+HAXPointConvert.m in Sources */,
+				C3E21527194F38BE00C85776 /* NSScreen+Helpers.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,12 +268,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_UNDEFINED_BEHAVIOR_SANITIZER_NULLABILITY = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
@@ -281,6 +285,7 @@
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
@@ -294,7 +299,6 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Other Sources/Haxcessibility.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = NS_BUILD_32_LIKE_64;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -311,12 +315,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_UNDEFINED_BEHAVIOR_SANITIZER_NULLABILITY = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
@@ -324,19 +332,20 @@
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Other Sources/Haxcessibility.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = NS_BUILD_32_LIKE_64;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
