@@ -10,7 +10,7 @@ import Cocoa
 import SwiftUI
 import OSLog
 
-@main
+@NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
   func applicationDidFinishLaunching(_ aNotification: Notification) {
     // Ensure the Core Data stack is loaded before the FetchRequest is initialized

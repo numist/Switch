@@ -89,14 +89,10 @@ struct SwitcherView: View {
       ZStack {
         // HUD/background
         hud(at: scale)
-        .animation(.default(duration: 0.2))
 
         // Selection frame
-        // TODO: animate!?
-        // REF: .onReceive per https://stackoverflow.com/a/62211888?
         if state.selection != nil {
           selectionBox(at: scale)
-          .animation(.default(duration: 0.2))
         }
 
         // Window list
@@ -110,7 +106,6 @@ struct SwitcherView: View {
             x: middleIndex(for: index) * scale *
                (pThumbSz + pThumbPad + pSelThck + pSelPad)
           )
-          .animation(.default(duration: 0.2))
           // TODO: onHover? something like:
 //          .onHover { inside in
 //            if inside && state.selection != index {
@@ -177,21 +172,9 @@ struct SwitcherViewPreviews: PreviewProvider {
     emptyState.update(windows: [])
 
     return Group {
-      if #available(OSX 11.0, *) {
-        SwitcherView(with: packedState)
-        .preferredColorScheme(.light)
-        .frame(width: 588.0, height: 128.0)
-        .background(desktop())
-
-        SwitcherView(with: packedState)
-        .preferredColorScheme(.dark)
-        .frame(width: 588.0, height: 128.0)
-        .background(desktop())
-      } else {
-        SwitcherView(with: packedState)
-        .frame(width: 588.0, height: 128.0)
-        .background(desktop())
-      }
+      SwitcherView(with: packedState)
+      .frame(width: 588.0, height: 128.0)
+      .background(desktop())
 
       SwitcherView(with: fullScaleState)
       .frame(width: 588.0, height: 200.0)
