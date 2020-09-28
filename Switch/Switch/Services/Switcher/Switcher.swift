@@ -3,6 +3,18 @@ import Haxcessibility
 import Combine
 
 class Switcher {
+  let forwardHotKey = Keyboard.HotKey(.option, .tab)
+  let reverseHotKey = Keyboard.HotKey([.option, .shift], .tab)
+  let closeHotKey = Keyboard.HotKey(.option, .w)
+  let cancelHotKey = Keyboard.HotKey(.option, .escape)
+
+  private var commonModifiers: Keyboard.Modifiers {
+    forwardHotKey.modifiers
+      .intersection(reverseHotKey.modifiers)
+      .intersection(closeHotKey.modifiers)
+      .intersection(cancelHotKey.modifiers)
+  }
+
   private var state: SwitcherState!
   private var releaseTap: EventTap?
 
@@ -11,14 +23,13 @@ class Switcher {
     guard releaseTap == nil else { return true }
 
     releaseTap = try? EventTap(observing: .flagsChanged, callback: { [weak self] (_, event) -> CGEvent? in
-      if !event.flags.contains(.maskAlternate) {
+      guard let modifiers = self?.commonModifiers else { return event }
+      if event.flags.isEmpty || !Keyboard.Modifiers(event.flags).isSuperset(of: modifiers) {
         DispatchQueue.main.async {
           guard let self = self else { return }
           assert(self.releaseTap != nil)
-          self.releaseTap = nil
-          Keyboard.deregister(.init(.option, .w))
-          Keyboard.deregister(.init(.option, .escape))
           self.state.hotKeyReleased()
+          self.cleanUp()
         }
       }
       return event
@@ -28,7 +39,7 @@ class Switcher {
     guard releaseTap != nil else { return false }
 
     // TODO: support for closeWindow hotkey (registered here, deregistered when releaseTap is deactivated)
-    Keyboard.register(.init(.option, .w)) { [weak self] keyDown -> Bool in
+    Keyboard.register(closeHotKey) { [weak self] keyDown -> Bool in
       guard let self = self else { return true }
       if keyDown { DispatchQueue.main.async {
         if let selectedWindow = self.state.selectedWindow?.mainWindow {
@@ -39,7 +50,7 @@ class Switcher {
       } }
       return false
     }
-    Keyboard.register(.init(.option, .escape)) { [weak self] keyDown -> Bool in
+    Keyboard.register(cancelHotKey) { [weak self] keyDown -> Bool in
       guard let self = self else { return true }
       if keyDown { DispatchQueue.main.async {
         self.state.hotKeyReleased(cancel: true)
@@ -66,7 +77,7 @@ class Switcher {
       }
     )
 
-    Keyboard.register(.init(.option, .tab)) { [weak self] keyDown -> Bool in
+    Keyboard.register(forwardHotKey) { [weak self] keyDown -> Bool in
       guard let self = self else { return true }
       if keyDown { DispatchQueue.main.async {
         if self.setUpReleaseTapIfNeeded() {
@@ -75,7 +86,7 @@ class Switcher {
       } }
       return false
     }
-    Keyboard.register(.init([.option, .shift], .tab)) { [weak self] keyDown -> Bool in
+    Keyboard.register(reverseHotKey) { [weak self] keyDown -> Bool in
       guard let self = self else { return true }
       if keyDown { DispatchQueue.main.async {
         if self.setUpReleaseTapIfNeeded() {
@@ -84,19 +95,21 @@ class Switcher {
       } }
       return false
     }
+  }
 
-//    let iterations = 1000
-//    let start = Date()
-//    for _ in 0..<iterations {
-//      _ = WindowInfoGroup.list(from: WindowInfo.get())
-//    }
-//    print("Switcher: Time to fetch windows: \(-start.timeIntervalSinceNow / Double(iterations))")
-//    // It's about 20ms on average, and it varies enough to absolutely require async polling
+  private func cleanUp() {
+    assert(Thread.isMainThread)
+    if releaseTap != nil {
+      Keyboard.deregister(closeHotKey)
+      Keyboard.deregister(cancelHotKey)
+      releaseTap = nil
+    }
   }
 
   deinit {
-    Keyboard.deregister(.init(.option, .tab))
-    Keyboard.deregister(.init([.option, .shift], .tab))
+    cleanUp()
+    Keyboard.deregister(forwardHotKey)
+    Keyboard.deregister(reverseHotKey)
   }
 
   // MARK: - Timer management
