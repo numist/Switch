@@ -143,13 +143,11 @@ class Switcher {
 
   private func showInterface() {
     assert(Thread.isMainThread)
-    print("Switcher: show interface")
     window = SwitcherWindow(displaying: state, for: nil)
   }
 
   private func hideInterface() {
     assert(Thread.isMainThread)
-    print("Switcher: hide interface")
     window = nil
   }
 
@@ -162,7 +160,6 @@ class Switcher {
     windowListCancellable = WindowInfoGroupListPublisher().removeDuplicates().sink { [weak self] list in
       assert(Thread.isMainThread)
       guard let self = self, self.windowListCancellable != nil else { return }
-      print("Switcher: windows: \(list)")
       self.state.update(windows: list)
     }
   }
