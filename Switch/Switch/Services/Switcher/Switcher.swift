@@ -151,8 +151,9 @@ class Switcher {
     assert(Thread.isMainThread)
     windowListCancellable = WindowInfoGroupListPublisher().removeDuplicates().sink { [weak self] list in
       assert(Thread.isMainThread)
+      guard let self = self, self.windowListCancellable != nil else { return }
       print("Switcher: windows: \(list)")
-      self?.state.update(windows: list)
+      self.state.update(windows: list)
     }
   }
 
