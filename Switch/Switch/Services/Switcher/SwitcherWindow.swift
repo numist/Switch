@@ -30,6 +30,13 @@ class SwitcherWindow {
   }
 
   deinit {
-    window.orderOut(nil)
+    let window = self.window!
+    NSAnimationContext.runAnimationGroup({ context in
+      context.duration = 0.25
+      context.timingFunction = CAMediaTimingFunction(name: .default)
+      window.animator().alphaValue = 0.0
+    }, completionHandler: {
+      window.orderOut(nil)
+    })
   }
 }

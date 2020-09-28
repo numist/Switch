@@ -141,7 +141,7 @@ class SwitcherState: ObservableObject {
         _selection -= 1
       }
 
-      _windows = list
+      windows = list
       _hasUpdatedWindows = true
       _updateSelection(to: _selection)
       showInterfaceIfReady()
@@ -162,7 +162,7 @@ class SwitcherState: ObservableObject {
     } else if windows.isEmpty {
       _selection = 0
     }
-    _windows = list
+    windows = list
     showInterfaceIfReady()
     _raiseIfReady()
   }
@@ -185,15 +185,7 @@ class SwitcherState: ObservableObject {
   // MARK: - Publicly read-only properties
 
   /// The window list from the last call to `update(windows:)`
-  ///
-  /// This property returns `[]` until the first `update(windows:)` after `→wantsStartWindowListUpdates`
-  var windows: [WindowInfoGroup] {
-    guard _hasUpdatedWindows else {
-      return [WindowInfoGroup]()
-    }
-    return _windows
-  }
-  @Published private var _windows = [WindowInfoGroup]()
+  @Published private(set) var windows = [WindowInfoGroup]()
 
   /// The index of the selected window in `windows`, or `nil` if `windows.isEmpty`
   ///
@@ -202,13 +194,13 @@ class SwitcherState: ObservableObject {
     guard _hasUpdatedWindows else {
       return nil
     }
-    guard !_windows.isEmpty else {
+    guard !windows.isEmpty else {
       assert(_selection == -1)
       return nil
     }
     assert(_hasUpdatedWindows)
-    assert(_selection >= 0 && _selection < _windows.count)
-    return _selection % _windows.count
+    assert(_selection >= 0 && _selection < windows.count)
+    return _selection % windows.count
   }
   @Published private var _selection = 0
 
