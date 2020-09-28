@@ -106,7 +106,7 @@ class SwitcherStateFuzzerDerivedTests: XCTestCase {
 }
 
 class SwitcherStateFuzzerTests: XCTestCase {
-  // swiftlint:disable:next cyclomatic_complexity function_body_length
+  // swiftlint:disable:next function_body_length
   func testFuzz() {
     var script = ""
     var wantsTimer = false
