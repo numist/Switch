@@ -42,9 +42,8 @@ class Switcher {
     Keyboard.register(closeHotKey) { [weak self] keyDown -> Bool in
       guard let self = self else { return true }
       if keyDown { DispatchQueue.main.async {
-        if let selectedWindow = self.state.selectedWindow?.mainWindow {
-          print("Switcher: closing window \(selectedWindow.id) (\(selectedWindow.name ?? "(untitled)")) " +
-                    "belonging to \(selectedWindow.ownerPID) (\(selectedWindow.ownerName ?? "(unknown)"))")
+        if let selectedWindow = self.state.selectedWindow {
+          print("Switcher: closing \(selectedWindow)")
           HAXApplication(pid: selectedWindow.ownerPID)?.window(withID: selectedWindow.id)?.close()
         }
       } }
@@ -70,10 +69,8 @@ class Switcher {
       wantsStartWindowListUpdates: { [weak self] in self?.startWindowListPoller() },
       wantsStopWindowListUpdates: { [weak self] in self?.stopWindowListPoller() },
       wantsRaiseCallback: { windowGroup in
-        let selectedWindow = windowGroup.mainWindow
-        print("Switcher: raising window \(selectedWindow.id) (\(selectedWindow.name ?? "(untitled)")) " +
-              "belonging to \(selectedWindow.ownerPID) (\(selectedWindow.ownerName ?? "(unknown)"))")
-        HAXApplication(pid: selectedWindow.ownerPID)?.window(withID: selectedWindow.id)?.raise()
+        print("Switcher: raising \(windowGroup)")
+        HAXApplication(pid: windowGroup.ownerPID)?.window(withID: windowGroup.id)?.raise()
       }
     )
 
