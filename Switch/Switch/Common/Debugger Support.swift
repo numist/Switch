@@ -15,7 +15,7 @@ func stopwatch<T>(_ title: String, threshold: Double = 0.1, _ closure: () -> T) 
   let result = closure()
   let elapsed = -start.timeIntervalSinceNow
   if elapsed > threshold {
-    print("\(title) took \(elapsed) seconds")
+    print("⏱: \(title) took \(elapsed) seconds")
   }
   return result
 }
