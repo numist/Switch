@@ -143,7 +143,7 @@ class SwitcherStateFuzzerTests: XCTestCase {
 
     let start = Date()
     var iterations = 0
-    while -start.timeIntervalSinceNow < 0.1 {
+    while -start.timeIntervalSinceNow < 0.2 {
       if self.testRun!.failureCount > 0 {
         print(script)
         break
