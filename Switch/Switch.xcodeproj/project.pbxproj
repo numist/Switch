@@ -22,6 +22,7 @@
 		BC56728724E0BABC00206A39 /* WindowInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC56728624E0BABC00206A39 /* WindowInfo.swift */; };
 		BC56728924E0F0E200206A39 /* Haxcessibility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC56728824E0F0E200206A39 /* Haxcessibility.framework */; };
 		BC56728E24E23BA300206A39 /* WindowInfoGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC56728D24E23BA300206A39 /* WindowInfoGroup.swift */; };
+		BC9CE8AC25216A8A00262FC2 /* Keyboard+Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9CE8AB25216A8A00262FC2 /* Keyboard+Types.swift */; };
 		BCA9E288250CB2A400EB5540 /* NSThread+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E287250CB2A400EB5540 /* NSThread+Extensions.swift */; };
 		BCA9E28A250DA35F00EB5540 /* SwitcherState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E289250DA35F00EB5540 /* SwitcherState.swift */; };
 		BCA9E28D250DF2B000EB5540 /* Set+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E28C250DF2B000EB5540 /* Set+Extensions.swift */; };
@@ -112,6 +113,7 @@
 		BC56728624E0BABC00206A39 /* WindowInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowInfo.swift; sourceTree = "<group>"; };
 		BC56728824E0F0E200206A39 /* Haxcessibility.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Haxcessibility.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC56728D24E23BA300206A39 /* WindowInfoGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowInfoGroup.swift; sourceTree = "<group>"; };
+		BC9CE8AB25216A8A00262FC2 /* Keyboard+Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Keyboard+Types.swift"; sourceTree = "<group>"; };
 		BCA9E287250CB2A400EB5540 /* NSThread+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSThread+Extensions.swift"; sourceTree = "<group>"; };
 		BCA9E289250DA35F00EB5540 /* SwitcherState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitcherState.swift; sourceTree = "<group>"; };
 		BCA9E28C250DF2B000EB5540 /* Set+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Set+Extensions.swift"; sourceTree = "<group>"; };
@@ -282,6 +284,7 @@
 				BC2121B524E29323009EAE3B /* Debugger Support.swift */,
 				BCD1901824DF83DB00941A86 /* EventTap.swift */,
 				BCD1901224DF773100941A86 /* Keyboard.swift */,
+				BC9CE8AB25216A8A00262FC2 /* Keyboard+Types.swift */,
 				BC2121E024E669EB009EAE3B /* NSRect+Extensions.swift */,
 				BCA9E287250CB2A400EB5540 /* NSThread+Extensions.swift */,
 				BCA9E28C250DF2B000EB5540 /* Set+Extensions.swift */,
@@ -542,6 +545,7 @@
 				BCA9E2A02511AD1400EB5540 /* SwitcherWindow.swift in Sources */,
 				BC2121B624E29323009EAE3B /* Debugger Support.swift in Sources */,
 				BC56727F24DFC84B00206A39 /* Service.swift in Sources */,
+				BC9CE8AC25216A8A00262FC2 /* Keyboard+Types.swift in Sources */,
 				BCA9E28A250DA35F00EB5540 /* SwitcherState.swift in Sources */,
 				BC2121B924E3B4AF009EAE3B /* PasteboardHistory.xcdatamodeld in Sources */,
 				BCD1901B24DF9D1400941A86 /* LongCmdQ.swift in Sources */,
