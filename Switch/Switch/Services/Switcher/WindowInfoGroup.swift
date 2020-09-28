@@ -22,6 +22,8 @@ extension WindowInfoGroup: CustomStringConvertible {
 // MARK: Computed properties
 
 extension WindowInfoGroup {
+  var ownerPID: pid_t { return mainWindow.ownerPID }
+
   var cgFrame: CGRect {
     var minPoint = mainWindow.cgFrame.origin
     var maxPoint = minPoint
