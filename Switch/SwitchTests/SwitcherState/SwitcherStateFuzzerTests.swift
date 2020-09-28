@@ -141,7 +141,6 @@ class SwitcherStateFuzzerTests: XCTestCase {
       wantsRaiseCallback: {_ in script += "// wantsRaise\n" }
     )
 
-    var active = false
     let start = Date()
     var iterations = 0
     while -start.timeIntervalSinceNow < 0.1 {
@@ -152,30 +151,35 @@ class SwitcherStateFuzzerTests: XCTestCase {
       if wantsInterface { XCTAssertTrue(hasUpdatedWindows) }
       if hasUpdatedWindows {
         XCTAssertTrue(wantsWindowUpdates)
-        _ = state.selection
-        _ = state.windows
       }
+
+      // These properties don't always make sense, but they have sane default values and should never crash
+      _ = state.selection
+      _ = state.windows
+      _ = state.selectedWindow
 
       // swiftlint:disable opening_brace
       [
         {
-          active = true
           script += "state.incrementSelection()\n"
           state.incrementSelection(); XCTAssertTrue(wantsWindowUpdates)
           script += "XCTAssertTrue(wantsWindowUpdates)\n"
         },
         {
-          active = true
           script += "state.decrementSelection()\n"
           state.decrementSelection(); XCTAssertTrue(wantsWindowUpdates)
           script += "XCTAssertTrue(wantsWindowUpdates)\n"
         },
-        { if active {
+        {
           script += "state.hotKeyReleased()\n"
           state.hotKeyReleased(); XCTAssertFalse(wantsInterface)
           script += "XCTAssertFalse(wantsInterface)\n"
-          active = false
-        } },
+        },
+        {
+          script += "state.hotKeyReleased(cancel: true)\n"
+          state.hotKeyReleased(cancel: true); XCTAssertFalse(wantsInterface)
+          script += "XCTAssertFalse(wantsInterface)\n"
+        },
         { if wantsTimer {
           script += "XCTAssertTrue(wantsTimer)\nstate.timerFired(); wantsTimer = false\n"
           state.timerFired(); wantsTimer = false

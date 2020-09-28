@@ -17,6 +17,7 @@ class Switcher {
           assert(self.releaseTap != nil)
           self.releaseTap = nil
           Keyboard.deregister(.init(.option, .w))
+          Keyboard.deregister(.init(.option, .escape))
           self.state.hotKeyReleased()
         }
       }
@@ -35,6 +36,13 @@ class Switcher {
                     "belonging to \(selectedWindow.ownerPID) (\(selectedWindow.ownerName ?? "(unknown)"))")
           HAXApplication(pid: selectedWindow.ownerPID)?.window(withID: selectedWindow.id)?.close()
         }
+      } }
+      return false
+    }
+    Keyboard.register(.init(.option, .escape)) { [weak self] keyDown -> Bool in
+      guard let self = self else { return true }
+      if keyDown { DispatchQueue.main.async {
+        self.state.hotKeyReleased(cancel: true)
       } }
       return false
     }

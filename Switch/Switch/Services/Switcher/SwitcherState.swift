@@ -95,15 +95,19 @@ class SwitcherState: ObservableObject {
   private var _active = false
 
   /// Call this function when the hotkey modifier driving the interaction has been released
-  func hotKeyReleased() {
+  func hotKeyReleased(cancel: Bool = false) {
     guard _active else { return }
 
-    // If hotkey is released before presenting interface, don't bother
-    if _wantsTimer {
-      wantsTimerCancelled()
+    if cancel {
+      _deactivate()
+    } else {
+      // If hotkey is released before presenting interface, don't bother
+      if _wantsTimer {
+        wantsTimerCancelled()
+      }
+      _wantsRaiseOnWindowUpdate = true
+      _raiseIfReady()
     }
-    _wantsRaiseOnWindowUpdate = true
-    raiseIfReady()
   }
 
   func setSelection(to index: Int) {
@@ -141,7 +145,7 @@ class SwitcherState: ObservableObject {
       _hasUpdatedWindows = true
       _updateSelection(to: _selection)
       showInterfaceIfReady()
-      raiseIfReady()
+      _raiseIfReady()
       return
     }
 
@@ -160,7 +164,7 @@ class SwitcherState: ObservableObject {
     }
     _windows = list
     showInterfaceIfReady()
-    raiseIfReady()
+    _raiseIfReady()
   }
 
   // MARK: - Window list update logic
@@ -249,29 +253,38 @@ class SwitcherState: ObservableObject {
 
   // MARK: - Raising logic
   private var _wantsRaiseOnWindowUpdate = false
-  private func raiseIfReady() {
+  private func _windowToRaise() -> WindowInfoGroup? {
+    if let selection = selection, selection != 0 || !windows[selection].mainWindow.isAppActive {
+      return windows[selection]
+    }
+    return nil
+  }
+  private func _raiseIfReady() {
     if _wantsRaiseOnWindowUpdate && _hasUpdatedWindows {
-      if _showingInterface {
-        hideInterface()
+      if let window = _windowToRaise() {
+        wantsRaiseCallback(window)
       }
-      if _wantsTimer {
-        wantsTimerCancelled()
-      }
-
-      stopWindowUpdates()
-
-      if let selection = selection, selection != 0 || !windows[selection].mainWindow.isAppActive {
-        wantsRaiseCallback(windows[selection])
-      }
-      _selection = 0
-      _hasUpdatedWindows = false
-      _wantsRaiseOnWindowUpdate = false
-      _timerFired = false
-      _active = false
+      _deactivate()
     }
   }
 
   // MARK: - Private
+
+  private func _deactivate() {
+    if _showingInterface {
+      hideInterface()
+    }
+    if _wantsTimer {
+      wantsTimerCancelled()
+    }
+    stopWindowUpdates()
+    _selection = 0
+    _hasUpdatedWindows = false
+    _wantsRaiseOnWindowUpdate = false
+    _timerFired = false
+    _active = false
+  }
+
   private func _updateSelection(to index: Int) {
     if _hasUpdatedWindows {
       if windows.isEmpty {
