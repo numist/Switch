@@ -2,7 +2,7 @@ import SwiftUI
 
 struct WindowView: View {
   @State var window: WindowInfoGroup
-  // TODO: @ObservableObject WindowContents(for: WindowInfoGroup) publishes nsImage, conveniences view
+  // TODO(numist): @ObservableObject WindowContents(for: WindowInfoGroup) publishes nsImage, conveniences view
   // Might wind up creating a Big Cache for these images to improve liveness
 
   func appIcon(for bundleID: String?, in size: CGSize) -> some View {

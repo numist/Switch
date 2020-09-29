@@ -48,7 +48,7 @@ struct SwitcherView: View {
   let displayID: CGDirectDisplayID?
 
   init(with state: SwitcherState, on displayID: CGDirectDisplayID? = nil) {
-    assert(displayID == nil) // TODO: multimon support
+    assert(displayID == nil) // TODO(numist): multimon support
     self.state = state
     self.displayID = displayID
   }
@@ -100,7 +100,7 @@ struct SwitcherView: View {
         // Window list
         ForEach(Array(state.windows.enumerated()), id: \.element) { index, window in
           WindowView(window: window)
-          // TODO: onHover works:
+          // TODO(numist): onHover works:
           //    too well (overrides initial selection without mouse movement)
           //  but also:
           //    not very well (sometimes requires click to function)

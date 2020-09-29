@@ -38,7 +38,6 @@ class Switcher {
     // Do not engage the state machine if the releaseTap can not be created
     guard releaseTap != nil else { return false }
 
-    // TODO: support for closeWindow hotkey (registered here, deregistered when releaseTap is deactivated)
     Keyboard.register(closeHotKey) { [weak self] keyDown -> Bool in
       guard let self = self else { return true }
       if keyDown { DispatchQueue.main.async {

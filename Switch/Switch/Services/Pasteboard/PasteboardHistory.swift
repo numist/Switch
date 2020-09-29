@@ -3,7 +3,7 @@ import OSLog
 import CoreData
 
 /*
- * TODO: When pushing a historical item into the pasteboard, use type org.nspasteboard.source to properly attribute its
+ * TODO(numist): When pushing a historical item into the pasteboard, use type org.nspasteboard.source to properly attribute its
  * source:
  *
  *     [pasteboard setString: @"org.nspasteboard.SampleApp" forType: @"org.nspasteboard.source"];
