@@ -13,5 +13,11 @@
       <FileRef
          location = "group:Haxcessibility/Haxcessibility.xcodeproj">
       </FileRef>
+      <FileRef
+         location = "group:LetsMove/LetsMove.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Sparkle">
+      </FileRef>
    </Group>
 </Workspace>

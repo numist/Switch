@@ -9,13 +9,12 @@
 import Cocoa
 import SwiftUI
 import OSLog
+import LetsMove
+import Sparkle
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
   func applicationDidFinishLaunching(_ aNotification: Notification) {
-    // Ensure the Core Data stack is loaded before the FetchRequest is initialized
-    _ = PasteboardHistory.persistentContainer
-
     if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != nil {
       // Don't set up the app when running for previews
       return
@@ -24,6 +23,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     if ProcessInfo.processInfo.environment["XCTestBundlePath"] != nil {
       // Don't set up the app when running unit tests
       return
+    }
+
+    if !amIBeingDebugged() {
+      PFMoveToApplicationsFolderIfNecessary()
     }
 
     // AX permissions shenanigans
