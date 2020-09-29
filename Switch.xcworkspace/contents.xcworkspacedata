@@ -11,6 +11,9 @@
       location = "container:Dependencies"
       name = "Dependencies">
       <FileRef
+         location = "group:Defaults/Defaults.xcodeproj">
+      </FileRef>
+      <FileRef
          location = "group:Haxcessibility/Haxcessibility.xcodeproj">
       </FileRef>
       <FileRef

@@ -8,6 +8,7 @@
 
 import Cocoa
 import Combine
+import Defaults
 import LetsMove
 import OSLog
 import Sparkle
@@ -37,6 +38,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     // The only acceptable reason for an event tap to fail is when `!AXIsProcessTrustedWithOptions(nil)`
     try! Keyboard.enableHotKeys() // swiftlint:disable:this force_try
+
+    Defaults.observe(.SUFeedURL) { change in
+      SUUpdater.shared()?.feedURL = URL(string: change.newValue)!
+    }.tieToLifetime(of: self)
 
     Services.start(.switcher)
 
