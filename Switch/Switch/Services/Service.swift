@@ -2,7 +2,6 @@ import OSLog
 import Combine
 
 enum Service {
-  case axPoller
   case longCmdQ
   case pasteboardHistory
   case switcher
@@ -12,23 +11,6 @@ enum Service {
     case .longCmdQ: return LongCmdQ()
     case .pasteboardHistory: return PasteboardHistory()
     case .switcher: return Switcher()
-    case .axPoller:
-      return Timer.publish(every: 0.25, on: .main, in: .common)
-        .autoconnect()
-        .map({ _ in
-          AXIsProcessTrustedWithOptions(nil)
-        })
-        .removeDuplicates()
-        .filter({ isTrusted in
-          isTrusted
-        })
-        .sink { _ in
-          os_log(.info, "AX now trusts us")
-          if !amIBeingDebugged() {
-            // TODO(numist): time to relaunch!
-            os_log(.info, "time to relaunch!")
-          }
-        }
     }
   }
 }

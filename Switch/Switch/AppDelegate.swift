@@ -7,10 +7,11 @@
  */
 
 import Cocoa
-import SwiftUI
-import OSLog
+import Combine
 import LetsMove
+import OSLog
 import Sparkle
+import SwiftUI
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -31,11 +32,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     // AX permissions shenanigans
     guard AXIsProcessTrustedWithOptions(nil) else {
-      // TODO(numist): show some instructions
-      os_log(.info, "Switch is not trusted, prompting for AX permissions")
-      AXIsProcessTrustedWithOptions([kAXTrustedCheckOptionPrompt.takeUnretainedValue(): true] as CFDictionary)
-      // axPoller monitors AX state and relaunches when the process becomes trusted
-      ServiceManager.start(.axPoller)
+      promptForAccessibilityPermissions()
       return
     }
     // The only acceptable reason for an event tap to fail is when `!AXIsProcessTrustedWithOptions(nil)`
@@ -48,4 +45,32 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     os_log(.info, "Switch is ready!")
   }
 
+}
+
+// MARK: Accessibility dance
+
+private var timerCancellable: AnyCancellable?
+
+private func promptForAccessibilityPermissions() {
+  assert(timerCancellable == nil, "promptForAccessibilityPermissions() was called more than once")
+
+  os_log(.info, "Switch is not trusted, prompting for AX permissions")
+  AXIsProcessTrustedWithOptions([kAXTrustedCheckOptionPrompt.takeUnretainedValue(): true] as CFDictionary)
+
+  timerCancellable = Timer.publish(every: 0.25, on: .main, in: .common)
+    .autoconnect()
+    .map({ _ in
+      AXIsProcessTrustedWithOptions(nil)
+    })
+    .removeDuplicates()
+    .filter({ isTrusted in
+      isTrusted
+    })
+    .sink { _ in
+      os_log(.info, "AX now trusts us")
+      if !amIBeingDebugged() {
+        // TODO(numist): time to relaunch!
+        os_log(.info, "time to relaunch!")
+      }
+    }
 }
