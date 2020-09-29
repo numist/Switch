@@ -10,7 +10,7 @@ func amIBeingDebugged() -> Bool {
   return (info.kp_proc.p_flag & P_TRACED) != 0
 }
 
-func stopwatch<T>(_ title: String, threshold: Double = 0.1, _ closure: () -> T) -> T {
+func stopwatch<T>(_ title: String, threshold: Double, _ closure: () -> T) -> T {
   let start = Date()
   let result = closure()
   let elapsed = -start.timeIntervalSinceNow

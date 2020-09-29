@@ -82,13 +82,14 @@ extension WindowInfo {
   static func get(onScreenOnly: Bool = true) -> [WindowInfo] {
     var options = CGWindowListOption.excludeDesktopElements
     if onScreenOnly { options.insert(.optionOnScreenOnly) }
-    return stopwatch("CGWindowListCopyWindowInfo") {
+    return stopwatch("CGWindowListCopyWindowInfo", threshold: 0.25) {
       (CGWindowListCopyWindowInfo(options, kCGNullWindowID) as! [[String: Any]])
       .filter { $0[WindowInfoDictionaryKey.cgLayer.rawValue] as! CGWindowLevel == kCGNormalWindowLevel }
       .map { Dictionary(uniqueKeysWithValues:
-        $0
-        .filter({ (key, _) in WindowInfoDictionaryKey(rawValue: key) != nil })
-        .map({ (key, value) in (WindowInfoDictionaryKey(rawValue: key)!, value) }))
+        $0.compactMap({ (key, value) -> (WindowInfoDictionaryKey, Any)? in
+          guard let newKey = WindowInfoDictionaryKey(rawValue: key) else { return nil }
+          return (newKey, value)
+        }))
       }
       .map { infoDict in
         let windowID = infoDict[.cgNumber] as! CGWindowID
