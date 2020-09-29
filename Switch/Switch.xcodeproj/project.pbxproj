@@ -22,7 +22,7 @@
 		BC56728724E0BABC00206A39 /* WindowInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC56728624E0BABC00206A39 /* WindowInfo.swift */; };
 		BC56728924E0F0E200206A39 /* Haxcessibility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC56728824E0F0E200206A39 /* Haxcessibility.framework */; };
 		BC56728E24E23BA300206A39 /* WindowInfoGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC56728D24E23BA300206A39 /* WindowInfoGroup.swift */; };
-		BC9CE8AC25216A8A00262FC2 /* Keyboard+Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9CE8AB25216A8A00262FC2 /* Keyboard+Types.swift */; };
+		BC9CE8AC25216A8A00262FC2 /* Keyboard+NestedTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9CE8AB25216A8A00262FC2 /* Keyboard+NestedTypes.swift */; };
 		BC9CE8CA2522CE1000262FC2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC9CE8C92522CE1000262FC2 /* Sparkle.framework */; };
 		BC9CE8CB2522CE2900262FC2 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC2121D524E3DE80009EAE3B /* AppKit.framework */; };
 		BC9CE8E72522DAA000262FC2 /* LetsMove.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC9CE8E62522DAA000262FC2 /* LetsMove.framework */; };
@@ -135,7 +135,7 @@
 		BC56728624E0BABC00206A39 /* WindowInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowInfo.swift; sourceTree = "<group>"; };
 		BC56728824E0F0E200206A39 /* Haxcessibility.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Haxcessibility.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC56728D24E23BA300206A39 /* WindowInfoGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowInfoGroup.swift; sourceTree = "<group>"; };
-		BC9CE8AB25216A8A00262FC2 /* Keyboard+Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Keyboard+Types.swift"; sourceTree = "<group>"; };
+		BC9CE8AB25216A8A00262FC2 /* Keyboard+NestedTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Keyboard+NestedTypes.swift"; sourceTree = "<group>"; };
 		BC9CE8C92522CE1000262FC2 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = ../Dependencies/Sparkle/Sparkle.framework; sourceTree = "<group>"; };
 		BC9CE8E62522DAA000262FC2 /* LetsMove.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LetsMove.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC9CE8EC2522DAC200262FC2 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -254,6 +254,20 @@
 			path = Switcher;
 			sourceTree = "<group>";
 		};
+		BC9CE95B2523EEC500262FC2 /* Platform Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				BCA9E295250F34D100EB5540 /* CGSize+Extensions.swift */,
+				BC2121E024E669EB009EAE3B /* NSRect+Extensions.swift */,
+				BCA9E287250CB2A400EB5540 /* NSThread+Extensions.swift */,
+				BCA9E28C250DF2B000EB5540 /* Set+Extensions.swift */,
+				BCA9E29D25117E4300EB5540 /* NSImage+Extensions.swift */,
+				BCA9E2A42511C59F00EB5540 /* NSScreen+Extensions.swift */,
+				BC9CE9462523CB0E00262FC2 /* Publishers+Extensions.swift */,
+			);
+			path = "Platform Extensions";
+			sourceTree = "<group>";
+		};
 		BCD18FC724DD41C000941A86 = {
 			isa = PBXGroup;
 			children = (
@@ -281,6 +295,7 @@
 			isa = PBXGroup;
 			children = (
 				BCD1901124DF769700941A86 /* Common */,
+				BC9CE95B2523EEC500262FC2 /* Platform Extensions */,
 				BCD1901C24DF9D1B00941A86 /* Services */,
 				BCFEB165252011BB00CFA605 /* Supporting Files */,
 				BCD18FD324DD41C000941A86 /* AppDelegate.swift */,
@@ -311,18 +326,11 @@
 		BCD1901124DF769700941A86 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				BCA9E295250F34D100EB5540 /* CGSize+Extensions.swift */,
 				BC2121B524E29323009EAE3B /* Debugger Support.swift */,
 				BCD1901824DF83DB00941A86 /* EventTap.swift */,
 				BCD1901224DF773100941A86 /* Keyboard.swift */,
-				BC9CE8AB25216A8A00262FC2 /* Keyboard+Types.swift */,
-				BC2121E024E669EB009EAE3B /* NSRect+Extensions.swift */,
-				BCA9E287250CB2A400EB5540 /* NSThread+Extensions.swift */,
-				BCA9E28C250DF2B000EB5540 /* Set+Extensions.swift */,
+				BC9CE8AB25216A8A00262FC2 /* Keyboard+NestedTypes.swift */,
 				BCA9E290250E006700EB5540 /* WeakBox.swift */,
-				BCA9E29D25117E4300EB5540 /* NSImage+Extensions.swift */,
-				BCA9E2A42511C59F00EB5540 /* NSScreen+Extensions.swift */,
-				BC9CE9462523CB0E00262FC2 /* Publishers+Extensions.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -584,7 +592,7 @@
 				BCA9E2A02511AD1400EB5540 /* SwitcherWindow.swift in Sources */,
 				BC2121B624E29323009EAE3B /* Debugger Support.swift in Sources */,
 				BC56727F24DFC84B00206A39 /* Services.swift in Sources */,
-				BC9CE8AC25216A8A00262FC2 /* Keyboard+Types.swift in Sources */,
+				BC9CE8AC25216A8A00262FC2 /* Keyboard+NestedTypes.swift in Sources */,
 				BCA9E28A250DA35F00EB5540 /* SwitcherState.swift in Sources */,
 				BC2121B924E3B4AF009EAE3B /* PasteboardHistory.xcdatamodeld in Sources */,
 				BCD1901B24DF9D1400941A86 /* LongCmdQ.swift in Sources */,
