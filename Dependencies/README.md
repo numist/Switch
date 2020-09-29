@@ -16,9 +16,11 @@ People using this project should be able to get up and running with a `git clone
 
 ## `git` Dependencies
 
-Switch uses:
+Switch includes source checkouts of:
 
+* [Defaults](https://github.com/sindresorhus/Defaults), Swifty and modern UserDefaults
 * [Haxcessibility](https://github.com/numist/Haxcessibility), a use case–driven remote control framework for Mac apps by Mac apps
+* [LetsMove](https://github.com/potionfactory/LetsMove/), encourages users to move the app to `/Applications`
 
 ### Adding a new dependency
 
@@ -33,8 +35,12 @@ Switch uses:
 
 Dependencies are stored without `.git` directories, so `update_dependencies.sh` records the cloned branch and sha to `$PROJECT.gitcheckout`.
 
-<!-- There are none yet!
 ## Other dependencies
 
-Non-`git` dependencies are checked into an appropriate subdirectory of `Dependencies/` along with a `README.md` and `LICENSE` to explain their provenance.
--->
+Switch includes manually-managed releases of:
+
+* [Sparkle](https://github.com/sparkle-project/Sparkle), a software update framework for macOS
+
+### Convention
+
+Non-`git` dependencies are checked into the appropriate subdirectory of `Dependencies/` along with a `README.md`/`VERSION` and `LICENSE` to explain their provenance.
