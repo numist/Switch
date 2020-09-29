@@ -43,6 +43,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       SUUpdater.shared()?.feedURL = URL(string: change.newValue)!
     }.tieToLifetime(of: self)
 
+    if Defaults[.firstLaunch] {
+      print("This is our first launch!!")
+      // TODO(numist): show prefs
+    }
+
     Services.start(.switcher)
 
     let infoDictionary = Bundle.main.infoDictionary!
