@@ -28,6 +28,7 @@
 		BC9CE8E72522DAA000262FC2 /* LetsMove.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC9CE8E62522DAA000262FC2 /* LetsMove.framework */; };
 		BC9CE8ED2522DAC200262FC2 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC9CE8EC2522DAC200262FC2 /* Security.framework */; };
 		BC9CE8F72522DBD700262FC2 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = BC9CE8C92522CE1000262FC2 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BC9CE9472523CB0E00262FC2 /* Publishers+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9CE9462523CB0E00262FC2 /* Publishers+Extensions.swift */; };
 		BC9CE94C2523D27C00262FC2 /* Sparkle.dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = BC9CE94B2523D27C00262FC2 /* Sparkle.dsa_pub.pem */; };
 		BC9CE9502523D2A900262FC2 /* Haxcessibility.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = BC56728824E0F0E200206A39 /* Haxcessibility.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BC9CE9542523D33F00262FC2 /* LetsMove.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = BC9CE8E62522DAA000262FC2 /* LetsMove.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -138,6 +139,7 @@
 		BC9CE8C92522CE1000262FC2 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = ../Dependencies/Sparkle/Sparkle.framework; sourceTree = "<group>"; };
 		BC9CE8E62522DAA000262FC2 /* LetsMove.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LetsMove.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC9CE8EC2522DAC200262FC2 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		BC9CE9462523CB0E00262FC2 /* Publishers+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publishers+Extensions.swift"; sourceTree = "<group>"; };
 		BC9CE94B2523D27C00262FC2 /* Sparkle.dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Sparkle.dsa_pub.pem; sourceTree = "<group>"; };
 		BCA9E287250CB2A400EB5540 /* NSThread+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSThread+Extensions.swift"; sourceTree = "<group>"; };
 		BCA9E289250DA35F00EB5540 /* SwitcherState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitcherState.swift; sourceTree = "<group>"; };
@@ -320,6 +322,7 @@
 				BCA9E290250E006700EB5540 /* WeakBox.swift */,
 				BCA9E29D25117E4300EB5540 /* NSImage+Extensions.swift */,
 				BCA9E2A42511C59F00EB5540 /* NSScreen+Extensions.swift */,
+				BC9CE9462523CB0E00262FC2 /* Publishers+Extensions.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -574,6 +577,7 @@
 				BC56728224DFD27400206A39 /* PasteboardHistory.swift in Sources */,
 				BC2121B424E25CE9009EAE3B /* PasteboardHistoryView.swift in Sources */,
 				BCA9E29C25101EEF00EB5540 /* WindowView.swift in Sources */,
+				BC9CE9472523CB0E00262FC2 /* Publishers+Extensions.swift in Sources */,
 				BCA9E28D250DF2B000EB5540 /* Set+Extensions.swift in Sources */,
 				BCD1901924DF83DB00941A86 /* EventTap.swift in Sources */,
 				BC56728724E0BABC00206A39 /* WindowInfo.swift in Sources */,

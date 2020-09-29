@@ -157,7 +157,10 @@ class Switcher {
 
   private func startWindowListPoller() {
     assert(Thread.isMainThread)
-    windowListCancellable = WindowInfoGroupListPublisher().removeDuplicates().sink { [weak self] list in
+    windowListCancellable = WindowInfoListPublisher.shared
+    .removeDuplicates()
+    .map({ WindowInfoGroup.list(from: $0) })
+    .sink { [weak self] list in
       assert(Thread.isMainThread)
       guard let self = self, self.windowListCancellable != nil else { return }
       self.state.update(windows: list)
