@@ -42,7 +42,7 @@
 		BCA9E29E25117E4400EB5540 /* NSImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E29D25117E4300EB5540 /* NSImage+Extensions.swift */; };
 		BCA9E2A02511AD1400EB5540 /* SwitcherWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E29F2511AD1400EB5540 /* SwitcherWindow.swift */; };
 		BCA9E2A52511C59F00EB5540 /* NSScreen+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E2A42511C59F00EB5540 /* NSScreen+Extensions.swift */; };
-		BCA9E2A9251E871C00EB5540 /* WindowInfoGroupListPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E2A8251E871B00EB5540 /* WindowInfoGroupListPublisher.swift */; };
+		BCA9E2A9251E871C00EB5540 /* WindowInfoListPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E2A8251E871B00EB5540 /* WindowInfoListPublisher.swift */; };
 		BCD18FD424DD41C000941A86 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD18FD324DD41C000941A86 /* AppDelegate.swift */; };
 		BCD18FD824DD41C800941A86 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCD18FD724DD41C800941A86 /* Assets.xcassets */; };
 		BCD18FDB24DD41C800941A86 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCD18FDA24DD41C800941A86 /* Preview Assets.xcassets */; };
@@ -151,7 +151,7 @@
 		BCA9E29D25117E4300EB5540 /* NSImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage+Extensions.swift"; sourceTree = "<group>"; };
 		BCA9E29F2511AD1400EB5540 /* SwitcherWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitcherWindow.swift; sourceTree = "<group>"; };
 		BCA9E2A42511C59F00EB5540 /* NSScreen+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSScreen+Extensions.swift"; sourceTree = "<group>"; };
-		BCA9E2A8251E871B00EB5540 /* WindowInfoGroupListPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowInfoGroupListPublisher.swift; sourceTree = "<group>"; };
+		BCA9E2A8251E871B00EB5540 /* WindowInfoListPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowInfoListPublisher.swift; sourceTree = "<group>"; };
 		BCD18FD024DD41C000941A86 /* Switch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Switch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCD18FD324DD41C000941A86 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BCD18FD724DD41C800941A86 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -248,7 +248,7 @@
 				BCA9E29F2511AD1400EB5540 /* SwitcherWindow.swift */,
 				BC56728624E0BABC00206A39 /* WindowInfo.swift */,
 				BC56728D24E23BA300206A39 /* WindowInfoGroup.swift */,
-				BCA9E2A8251E871B00EB5540 /* WindowInfoGroupListPublisher.swift */,
+				BCA9E2A8251E871B00EB5540 /* WindowInfoListPublisher.swift */,
 				BCA9E29B25101EEF00EB5540 /* WindowView.swift */,
 			);
 			path = Switcher;
@@ -592,7 +592,7 @@
 				BCA9E29E25117E4400EB5540 /* NSImage+Extensions.swift in Sources */,
 				BC56728E24E23BA300206A39 /* WindowInfoGroup.swift in Sources */,
 				BCA9E28F250DF32A00EB5540 /* Switcher.swift in Sources */,
-				BCA9E2A9251E871C00EB5540 /* WindowInfoGroupListPublisher.swift in Sources */,
+				BCA9E2A9251E871C00EB5540 /* WindowInfoListPublisher.swift in Sources */,
 				BCA9E291250E006700EB5540 /* WeakBox.swift in Sources */,
 				BCA9E296250F34D100EB5540 /* CGSize+Extensions.swift in Sources */,
 			);
