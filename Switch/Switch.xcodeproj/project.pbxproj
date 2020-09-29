@@ -28,6 +28,9 @@
 		BC9CE8E72522DAA000262FC2 /* LetsMove.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC9CE8E62522DAA000262FC2 /* LetsMove.framework */; };
 		BC9CE8ED2522DAC200262FC2 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC9CE8EC2522DAC200262FC2 /* Security.framework */; };
 		BC9CE8F72522DBD700262FC2 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = BC9CE8C92522CE1000262FC2 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BC9CE94C2523D27C00262FC2 /* Sparkle.dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = BC9CE94B2523D27C00262FC2 /* Sparkle.dsa_pub.pem */; };
+		BC9CE9502523D2A900262FC2 /* Haxcessibility.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = BC56728824E0F0E200206A39 /* Haxcessibility.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BC9CE9542523D33F00262FC2 /* LetsMove.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = BC9CE8E62522DAA000262FC2 /* LetsMove.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BCA9E288250CB2A400EB5540 /* NSThread+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E287250CB2A400EB5540 /* NSThread+Extensions.swift */; };
 		BCA9E28A250DA35F00EB5540 /* SwitcherState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E289250DA35F00EB5540 /* SwitcherState.swift */; };
 		BCA9E28D250DF2B000EB5540 /* Set+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA9E28C250DF2B000EB5540 /* Set+Extensions.swift */; };
@@ -105,6 +108,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				BC9CE9502523D2A900262FC2 /* Haxcessibility.framework in Copy Frameworks */,
+				BC9CE9542523D33F00262FC2 /* LetsMove.framework in Copy Frameworks */,
 				BC9CE8F72522DBD700262FC2 /* Sparkle.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
@@ -133,6 +138,7 @@
 		BC9CE8C92522CE1000262FC2 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = ../Dependencies/Sparkle/Sparkle.framework; sourceTree = "<group>"; };
 		BC9CE8E62522DAA000262FC2 /* LetsMove.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LetsMove.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC9CE8EC2522DAC200262FC2 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		BC9CE94B2523D27C00262FC2 /* Sparkle.dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Sparkle.dsa_pub.pem; sourceTree = "<group>"; };
 		BCA9E287250CB2A400EB5540 /* NSThread+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSThread+Extensions.swift"; sourceTree = "<group>"; };
 		BCA9E289250DA35F00EB5540 /* SwitcherState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitcherState.swift; sourceTree = "<group>"; };
 		BCA9E28C250DF2B000EB5540 /* Set+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Set+Extensions.swift"; sourceTree = "<group>"; };
@@ -368,6 +374,7 @@
 				BCD18FDF24DD41C800941A86 /* Info.plist */,
 				BCD18FDC24DD41C800941A86 /* Main.storyboard */,
 				BCD18FDA24DD41C800941A86 /* Preview Assets.xcassets */,
+				BC9CE94B2523D27C00262FC2 /* Sparkle.dsa_pub.pem */,
 				BCD1901D24DFB1AF00941A86 /* Switch.entitlements */,
 			);
 			path = "Supporting Files";
@@ -502,6 +509,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BCD18FDE24DD41C800941A86 /* Main.storyboard in Resources */,
+				BC9CE94C2523D27C00262FC2 /* Sparkle.dsa_pub.pem in Resources */,
 				BCD18FDB24DD41C800941A86 /* Preview Assets.xcassets in Resources */,
 				BCD18FD824DD41C800941A86 /* Assets.xcassets in Resources */,
 			);
