@@ -38,11 +38,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // The only acceptable reason for an event tap to fail is when `!AXIsProcessTrustedWithOptions(nil)`
     try! Keyboard.enableHotKeys() // swiftlint:disable:this force_try
 
-    ServiceManager.start(.longCmdQ)
-    ServiceManager.start(.pasteboardHistory)
-    ServiceManager.start(.switcher)
+    Services.start(.switcher)
 
-    os_log(.info, "Switch is ready!")
+    let infoDictionary = Bundle.main.infoDictionary!
+    let version = infoDictionary["CFBundleShortVersionString"] as? String
+    let appName = infoDictionary[kCFBundleNameKey as String] as? String
+    print("Launched \(appName!) \(version!)")
   }
 
 }
