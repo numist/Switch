@@ -31,6 +31,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       PFMoveToApplicationsFolderIfNecessary()
     }
 
+    Services.start(.statusItem)
+
     // AX permissions shenanigans
     guard AXIsProcessTrustedWithOptions(nil) else {
       promptForAccessibilityPermissions()
@@ -56,6 +58,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     print("Launched \(appName!) \(version!)")
   }
 
+  @objc func showPreferences(sender: NSObject?) {
+    // TODO(numist): preferences window
+  }
 }
 
 // MARK: Accessibility dance

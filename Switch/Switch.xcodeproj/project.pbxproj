@@ -56,6 +56,8 @@
 		BCF7E2152523F216002C4D67 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF7E2142523F216002C4D67 /* Defaults.swift */; };
 		BCF7E22D2523F597002C4D67 /* Defaults.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCF7E22C2523F597002C4D67 /* Defaults.framework */; };
 		BCF7E2312523F5A3002C4D67 /* Defaults.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = BCF7E22C2523F597002C4D67 /* Defaults.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BCF7E236252407C2002C4D67 /* StatusItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF7E235252407C2002C4D67 /* StatusItem.swift */; };
+		BCF7E23B252412DF002C4D67 /* NSMenuItem+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF7E23A252412DF002C4D67 /* NSMenuItem+Extensions.swift */; };
 		BCFEB15F251EE71B00CFA605 /* WindowInfoGroupTests+Chrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCFEB15E251EE71B00CFA605 /* WindowInfoGroupTests+Chrome.swift */; };
 		BCFEB16125200A3300CFA605 /* Collection+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCFEB16025200A3300CFA605 /* Collection+Extensions.swift */; };
 		BCFEB16425200C4B00CFA605 /* SwitcherStateFuzzerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCFEB16325200C4B00CFA605 /* SwitcherStateFuzzerTests.swift */; };
@@ -175,6 +177,8 @@
 		BCD1901D24DFB1AF00941A86 /* Switch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Switch.entitlements; sourceTree = "<group>"; };
 		BCF7E2142523F216002C4D67 /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		BCF7E22C2523F597002C4D67 /* Defaults.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Defaults.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BCF7E235252407C2002C4D67 /* StatusItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItem.swift; sourceTree = "<group>"; };
+		BCF7E23A252412DF002C4D67 /* NSMenuItem+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSMenuItem+Extensions.swift"; sourceTree = "<group>"; };
 		BCFEB15B251EAC2F00CFA605 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		BCFEB15C251EAFFF00CFA605 /* Structure.monopic */ = {isa = PBXFileReference; lastKnownFileType = file; path = Structure.monopic; sourceTree = "<group>"; };
 		BCFEB15E251EE71B00CFA605 /* WindowInfoGroupTests+Chrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WindowInfoGroupTests+Chrome.swift"; sourceTree = "<group>"; };
@@ -271,6 +275,7 @@
 				BCA9E29D25117E4300EB5540 /* NSImage+Extensions.swift */,
 				BCA9E2A42511C59F00EB5540 /* NSScreen+Extensions.swift */,
 				BC9CE9462523CB0E00262FC2 /* Publishers+Extensions.swift */,
+				BCF7E23A252412DF002C4D67 /* NSMenuItem+Extensions.swift */,
 			);
 			path = "Platform Extensions";
 			sourceTree = "<group>";
@@ -365,6 +370,7 @@
 				BC56728024DFD22C00206A39 /* Switcher */,
 				BCD1901A24DF9D1400941A86 /* LongCmdQ.swift */,
 				BC56727E24DFC84B00206A39 /* Services.swift */,
+				BCF7E235252407C2002C4D67 /* StatusItem.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -594,6 +600,7 @@
 				BC56728224DFD27400206A39 /* PasteboardHistory.swift in Sources */,
 				BC2121B424E25CE9009EAE3B /* PasteboardHistoryView.swift in Sources */,
 				BCA9E29C25101EEF00EB5540 /* WindowView.swift in Sources */,
+				BCF7E236252407C2002C4D67 /* StatusItem.swift in Sources */,
 				BC9CE9472523CB0E00262FC2 /* Publishers+Extensions.swift in Sources */,
 				BCA9E28D250DF2B000EB5540 /* Set+Extensions.swift in Sources */,
 				BCD1901924DF83DB00941A86 /* EventTap.swift in Sources */,
@@ -610,6 +617,7 @@
 				BCA9E29E25117E4400EB5540 /* NSImage+Extensions.swift in Sources */,
 				BC56728E24E23BA300206A39 /* WindowInfoGroup.swift in Sources */,
 				BCA9E28F250DF32A00EB5540 /* Switcher.swift in Sources */,
+				BCF7E23B252412DF002C4D67 /* NSMenuItem+Extensions.swift in Sources */,
 				BCA9E2A9251E871C00EB5540 /* WindowInfoListPublisher.swift in Sources */,
 				BCA9E291250E006700EB5540 /* WeakBox.swift in Sources */,
 				BCA9E296250F34D100EB5540 /* CGSize+Extensions.swift in Sources */,

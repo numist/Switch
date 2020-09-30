@@ -8,12 +8,14 @@ final class Services {
   enum Service: CaseIterable {
     case longCmdQ
     case pasteboardHistory
+    case statusItem
     case switcher
   }
 
   // Service starting takes advantage of the fact that static members are initialized lazily
   private static let longCmdQ = LongCmdQ()
   private static let pasteboardHistory = PasteboardHistory()
+  private static let statusItem = StatusItem()
   private static let switcher = Switcher()
 
   /// Start an app service
@@ -30,6 +32,7 @@ final class Services {
     switch service {
     case .longCmdQ: _ = longCmdQ
     case .pasteboardHistory: _ = pasteboardHistory
+    case .statusItem: _ = statusItem
     case .switcher: _ = switcher
     }
   }
