@@ -26,31 +26,40 @@ class StatusItem: NSObject, NSMenuDelegate {
 
 //    NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Status Bar Menu"];
     let menu = NSMenu(title: "Status Bar Menu") // TODO(numist): how much of this is actually necessary anyway
-    menu.addItem(NSMenuItem(title: "Preferences…", target: NSApplication.shared.delegate, action: #selector(AppDelegate.showPreferences(sender:)), keyEquivalent: ""))
+    menu.addItem(
+      NSMenuItem(
+        title: "Preferences…",
+        target: NSApplication.shared.delegate,
+        action: #selector(AppDelegate.showPreferences(sender:)),
+        keyEquivalent: ""
+      )
+    )
     menu.addItem(NSMenuItem.separator())
 
-    var debugItems = Set<NSMenuItem>()
+    do {
+      var debugItems = Set<NSMenuItem>()
 
-    var menuItem = NSMenuItem(title: "Hi there!")
-    menuItem.isEnabled = false
-    menu.addItem(menuItem)
-    debugItems.insert(menuItem)
+      var menuItem = NSMenuItem(title: "Hi there!")
+      menuItem.isEnabled = false
+      menu.addItem(menuItem)
+      debugItems.insert(menuItem)
 
-    // initWithTitle:@"Take Snapshot…" action:NNSelfSelector1(snapshot:)
-    menuItem = NSMenuItem(title: "Take snapshot…")
-    menu.addItem(menuItem)
-    debugItems.insert(menuItem)
+      // initWithTitle:@"Take Snapshot…" action:NNSelfSelector1(snapshot:)
+      menuItem = NSMenuItem(title: "Take snapshot…")
+      menu.addItem(menuItem)
+      debugItems.insert(menuItem)
 
-    // initWithTitle:@"Open Log Folder…" action:NNSelfSelector1(openLogFolder:)
-    menuItem = NSMenuItem(title: "Open Log Folder…")
-    menu.addItem(menuItem)
-    debugItems.insert(menuItem)
+      // initWithTitle:@"Open Log Folder…" action:NNSelfSelector1(openLogFolder:)
+      menuItem = NSMenuItem(title: "Open Log Folder…")
+      menu.addItem(menuItem)
+      debugItems.insert(menuItem)
 
-    menuItem = NSMenuItem.separator()
-    menu.addItem(menuItem)
-    debugItems.insert(menuItem)
+      menuItem = NSMenuItem.separator()
+      menu.addItem(menuItem)
+      debugItems.insert(menuItem)
 
-    self.debugItems = debugItems
+      self.debugItems = debugItems
+    }
 
     menu.addItem(
       NSMenuItem(
@@ -71,7 +80,6 @@ class StatusItem: NSObject, NSMenuDelegate {
 
   @objc func menuNeedsUpdate(_ menu: NSMenu) {
     let hideDebugItems = NSEvent.modifierFlags != .option
-
     for item in debugItems {
       item.isHidden = hideDebugItems
     }
