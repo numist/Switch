@@ -52,9 +52,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     Services.start(.switcher)
 
-    let infoDictionary = Bundle.main.infoDictionary!
-    let version = infoDictionary["CFBundleShortVersionString"] as? String
-    let appName = infoDictionary[kCFBundleNameKey as String] as? String
+    let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString")
+    let appName = Bundle.main.object(forInfoDictionaryKey: kCFBundleNameKey as String)
     print("Launched \(appName!) \(version!)")
   }
 

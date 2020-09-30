@@ -54,7 +54,7 @@ class StatusItem: NSObject, NSMenuDelegate {
 
     menu.addItem(
       NSMenuItem(
-        title: "Quit \(Bundle.main.infoDictionary![kCFBundleNameKey as String]!)",
+        title: "Quit \(Bundle.main.object(forInfoDictionaryKey: kCFBundleNameKey as String)!)",
         target: NSApplication.shared,
         action: #selector(NSApplication.terminate(_:))
       )

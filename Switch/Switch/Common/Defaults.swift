@@ -10,6 +10,6 @@ extension Defaults.Keys {
   // This would be better as a URL, but previous shipping versions of Switch already used a string for this default
   static let SUFeedURL = Key<String>(
     "SUFeedURL",
-    default: Bundle.main.infoDictionary!["SUFeedURL"]! as! String // swiftlint:disable:this force_cast
+    default: Bundle.main.object(forInfoDictionaryKey: "SUFeedURL")! as! String // swiftlint:disable:this force_cast
   )
 }
