@@ -10,11 +10,11 @@
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		Qx3R0vHJH9EcE0aYRqQBVWWxOYY=
+		CqKRIzdSJsTqOaqq3Utza9cAcgQ=
 		</data>
 		<key>Resources/SUUpdateSettingsWindowController.nib</key>
 		<data>
-		hAy/X9xjCChUrme8n6COHZkgfG4=
+		AsgFbsA33n5f51idWjGdo4FpKAc=
 		</data>
 		<key>Resources/ar.lproj/InfoPlist.strings</key>
 		<dict>
@@ -92,7 +92,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			uNoJ8t36JcCK7AtsEjVa8Kyr8y8=
+			MFOca3mjNRm0TEBQD5MktMkVuck=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -360,10 +360,10 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			dG5+IOQ1jyjbyAmH4p/ctodkObU=
+			pvnL86lTt4ubdNn5KMoA79N9DII=
 			</data>
 			<key>requirement</key>
-			<string>cdhash H"c1fffbf14a34cbb8bcda0a035bf6aa453e8b4536" or cdhash H"746e7e20e4358f28dbc80987e29fdcb6876439b5"</string>
+			<string>cdhash H"dbc99dfb29b01d1cfcae7d3db853b269e8e1df12" or cdhash H"a6f9cbf3a953b78b9b74d9f928ca00efd37d0c82" or cdhash H"eb212b0642030345f57d7d6f6b6c1ea095cfb6c4" or cdhash H"9c25b6327cb130977f43cbeb8f1dc88226efe4f5"</string>
 		</dict>
 		<key>Resources/AppIcon.icns</key>
 		<dict>
@@ -380,22 +380,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			Qx3R0vHJH9EcE0aYRqQBVWWxOYY=
+			CqKRIzdSJsTqOaqq3Utza9cAcgQ=
 			</data>
 			<key>hash2</key>
 			<data>
-			3mkpngbdH+32eHl01qJqd1CN49o1Ru49KaWZK+DEipk=
+			g37uu5QJDD4PPlCEOo36l8dLPCFQJ2nS/llrmInNYGY=
 			</data>
 		</dict>
 		<key>Resources/SUUpdateSettingsWindowController.nib</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			hAy/X9xjCChUrme8n6COHZkgfG4=
+			AsgFbsA33n5f51idWjGdo4FpKAc=
 			</data>
 			<key>hash2</key>
 			<data>
-			A0382SyjJLI5SdoRtKnvYA44ancci0F9NPmPtDgloOw=
+			q0YlT8rSpgw8FfZhikrVncoCyMSMhxR253yXo0+VnC0=
 			</data>
 		</dict>
 		<key>Resources/ar.lproj/InfoPlist.strings</key>
@@ -506,11 +506,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			uNoJ8t36JcCK7AtsEjVa8Kyr8y8=
+			MFOca3mjNRm0TEBQD5MktMkVuck=
 			</data>
 			<key>hash2</key>
 			<data>
-			Fn8Ajhshh8Y1iXMMPDG9S/S/SEMi7WxDxG7ddaHpa0E=
+			5M1Q9kfALnumtlbUv9oqUieZA8+7bN2EP7XbalKxaaU=
 			</data>
 			<key>optional</key>
 			<true/>
