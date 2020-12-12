@@ -89,7 +89,13 @@ struct PasteboardHistoryView: View {
         .cornerRadius(4)
         .padding(.horizontal, 8)
       ResultsList(query: query)
-    }.padding(8).background(Color(NSColor.underPageBackgroundColor).opacity(0.9).cornerRadius(10))
+    }
+    .padding(8)
+    .background(
+      Color(NSColor.underPageBackgroundColor)
+        .opacity(0.9)
+        .cornerRadius(10)
+    )
   }
 }
 
