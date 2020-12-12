@@ -85,7 +85,9 @@ struct PasteboardHistoryView: View {
       TextField("Filter…", text: $query)
         .lineLimit(1)
         .textFieldStyle(RoundedBorderTextFieldStyle())
-        .background(Color(NSColor.windowBackgroundColor).opacity(0.9)).cornerRadius(4)
+        .background(Color(NSColor.windowBackgroundColor).opacity(0.9))
+        .cornerRadius(4)
+        .padding(.horizontal, 8)
       ResultsList(query: query)
     }.padding(8).background(Color(NSColor.underPageBackgroundColor).opacity(0.9).cornerRadius(10))
   }
@@ -94,6 +96,7 @@ struct PasteboardHistoryView: View {
 struct PasteboardHistoryView_Previews: PreviewProvider {
   static var previews: some View {
     return PasteboardHistoryView()
+      .frame(width: 500, height: 400, alignment: .center)
       .environment(\.managedObjectContext, PasteboardHistory.persistentContainer.viewContext)
   }
 }
