@@ -63,7 +63,7 @@ struct SwitcherView: View {
 
   private func hud(at scale: CGFloat) -> some View {
     Rectangle()
-    .fill(Color(NSColor.shadowColor).opacity(0.8))
+    .fill(Color(NSColor.shadowColor).opacity(0.25))
     .cornerRadius(pWinRadius * scale)
     .frame(
       width: pWidth(for: state.windows.count) * scale,
@@ -73,12 +73,20 @@ struct SwitcherView: View {
   }
 
   private func selectionBox(at scale: CGFloat) -> some View {
-    RoundedRectangle(cornerRadius: pSelRadius * scale)
-    .stroke(Color.white.opacity(0.7), lineWidth: pSelThck * scale)
-    .frame(
-      width: (pThumbSz + pThumbPad + pThumbPad + pSelThck) * scale,
-      height: (pThumbSz + pThumbPad + pThumbPad + pSelThck) * scale
-    )
+    ZStack { // can't fill *and* stroke a Shape!
+      RoundedRectangle(cornerRadius: pSelRadius * scale)
+      .fill(Color(NSColor.shadowColor).opacity(0.5))
+      .frame(
+        width: (pThumbSz + pThumbPad + pThumbPad) * scale,
+        height: (pThumbSz + pThumbPad + pThumbPad) * scale
+      )
+      RoundedRectangle(cornerRadius: pSelRadius * scale)
+      .stroke(Color.white.opacity(0.7), lineWidth: pSelThck * scale)
+      .frame(
+        width: (pThumbSz + pThumbPad + pThumbPad + pSelThck) * scale,
+        height: (pThumbSz + pThumbPad + pThumbPad + pSelThck) * scale
+      )
+    }
     .offset(
       x: middleIndex(for: state.selection!) * scale * pItemSz
     )
