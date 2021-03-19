@@ -69,13 +69,21 @@ struct WindowViewPreview: PreviewProvider {
     return Group {
       WindowView(window: WindowInfoGroup.list(from: [
         WindowInfo([.cgNumber: UInt32(100), .cgLayer: Int32(0), .cgBounds: CGRect(x: 0.0, y: 23.0, width: 1440.0, height: 877.0).dictionaryRepresentation, .cgAlpha: Float(1.0), .cgOwnerPID: Int32(425), .cgOwnerName: "Xcode-beta", .cgName: "Switcher.swift", .cgIsOnscreen: true, .cgDisplayID: UInt32(69732800), .nsFrame: NSRect(x: -0.0, y: 0.0, width: 1440.0, height: 877.0), .isFullscreen: false, .ownerBundleID: "com.apple.dt.Xcode", .canActivate: true, .isAppActive: false]),
-      ]).first!).frame(width: 256, height: 256)
+      ]).first!)
+      .frame(width: 256, height: 256)
+      .background(previewBackground())
+
       WindowView(window: WindowInfoGroup.list(from: [
         WindowInfo([.cgNumber: UInt32(100), .cgLayer: Int32(0), .cgBounds: CGRect(x: 0.0, y: 23.0, width: 484.0, height: 168.0).dictionaryRepresentation, .cgAlpha: Float(1.0), .cgOwnerPID: Int32(425), .cgOwnerName: "Xcode-beta", .cgName: "Switcher.swift", .cgIsOnscreen: true, .cgDisplayID: UInt32(69732800), .nsFrame: NSRect(x: -0.0, y: 0.0, width: 484.0, height: 168.0), .isFullscreen: false, .ownerBundleID: "net.numist.Switch", .canActivate: true, .isAppActive: false]),
-      ]).first!).frame(width: 256, height: 128)
+      ]).first!)
+      .frame(width: 512, height: 128)
+      .background(previewBackground())
+
       WindowView(window: WindowInfoGroup.list(from: [
         WindowInfo([.cgNumber: UInt32(100), .cgLayer: Int32(0), .cgBounds: CGRect(x: 0.0, y: 23.0, width: 877.0, height: 1440.0).dictionaryRepresentation, .cgAlpha: Float(1.0), .cgOwnerPID: Int32(425), .cgOwnerName: "Xcode-beta", .cgName: "Switcher.swift", .cgIsOnscreen: true, .cgDisplayID: UInt32(69732800), .nsFrame: NSRect(x: -0.0, y: 0.0, width: 877.0, height: 1440.0), .isFullscreen: false, .ownerBundleID: "com.example.NoSuch", .canActivate: true, .isAppActive: false]),
-      ]).first!).frame(width: 128, height: 256)
+      ]).first!)
+      .frame(width: 128, height: 256)
+      .background(previewBackground())
     }
     // swiftlint:enable line_length
   }

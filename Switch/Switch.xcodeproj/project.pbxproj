@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BC1A123D260471E400DB3906 /* Previews.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1A123C260471E400DB3906 /* Previews.swift */; };
 		BC2121B424E25CE9009EAE3B /* PasteboardHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2121B324E25CE9009EAE3B /* PasteboardHistoryView.swift */; };
 		BC2121B624E29323009EAE3B /* Debugger Support.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2121B524E29323009EAE3B /* Debugger Support.swift */; };
 		BC2121B924E3B4AF009EAE3B /* PasteboardHistory.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BC2121B724E3B4AF009EAE3B /* PasteboardHistory.xcdatamodeld */; };
@@ -125,6 +126,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		BC1A123C260471E400DB3906 /* Previews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Previews.swift; sourceTree = "<group>"; };
 		BC2121B324E25CE9009EAE3B /* PasteboardHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteboardHistoryView.swift; sourceTree = "<group>"; };
 		BC2121B524E29323009EAE3B /* Debugger Support.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Debugger Support.swift"; sourceTree = "<group>"; };
 		BC2121B824E3B4AF009EAE3B /* PasteboardHistory.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PasteboardHistory.xcdatamodel; sourceTree = "<group>"; };
@@ -344,6 +346,7 @@
 				BC9CE8AB25216A8A00262FC2 /* Keyboard+NestedTypes.swift */,
 				BCA9E290250E006700EB5540 /* WeakBox.swift */,
 				BCF7E2142523F216002C4D67 /* Defaults.swift */,
+				BC1A123C260471E400DB3906 /* Previews.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -620,6 +623,7 @@
 				BCF7E23B252412DF002C4D67 /* NSMenuItem+Extensions.swift in Sources */,
 				BCA9E2A9251E871C00EB5540 /* WindowInfoListPublisher.swift in Sources */,
 				BCA9E291250E006700EB5540 /* WeakBox.swift in Sources */,
+				BC1A123D260471E400DB3906 /* Previews.swift in Sources */,
 				BCA9E296250F34D100EB5540 /* CGSize+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
