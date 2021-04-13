@@ -2,9 +2,28 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Switch.xcodeproj">
+      location = "group:README.md">
    </FileRef>
    <FileRef
-      location = "group:Pods/Pods.xcodeproj">
+      location = "group:Switch/Switch.xcodeproj">
    </FileRef>
+   <Group
+      location = "container:Dependencies"
+      name = "Dependencies">
+      <FileRef
+         location = "group:README.md">
+      </FileRef>
+      <FileRef
+         location = "group:Defaults/Defaults.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Haxcessibility/Haxcessibility.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:LetsMove/LetsMove.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Sparkle">
+      </FileRef>
+   </Group>
 </Workspace>

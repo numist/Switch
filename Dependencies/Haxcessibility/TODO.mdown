@@ -1,0 +1,13 @@
+# To-do
+
+- HAXWindow
+	- window elements should subclass a general widget class of some description
+	- animate size/position/frame changes?
+		- Maybe something like the NSWindow -setFrame:animate: method for that.
+
+- Overall
+	- wrap AXAPIEnabled/AXIsProcessTrusted
+	- handle AX trust authorization
+		- getting auth
+		- setting the trust bit or whatever
+		- relaunching the app at the client’s request (so they can in turn ask the user, if they deem it necessary)
