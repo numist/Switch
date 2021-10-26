@@ -2,21 +2,20 @@
 
 The files in this directory make up the window switcher service.
 
-```
-┌────────┐                                                     
-│Switcher│                                                     
-└────────┘                                                     
-     │   ┌─────────────┐  ╱┌───────────────┐  ╱┌──────────────┐
-     ├──┼│SwitcherState│─○─│WindowInfoGroup│┼──│  WindowInfo  │
-     │   └─────────────┘  ╲└───────────────┘  ╲└──────────────┘
-     │                                                         
-     │  ╱┌──────────────┐   ┌────────────┐  ╱┌──────────┐      
-     ├─○─│SwitcherWindow│──┼│SwitcherView│─○─│WindowView│      
-     │  ╲└──────────────┘   └────────────┘  ╲└──────────┘      
-     │                                                         
-     │   ┌────────────────────────────┐                        
-     └─○┼│WindowInfoGroupListPublisher│                        
-         └────────────────────────────┘                        
+``` graphviz
+digraph {
+	concentrate=true
+	Switcher -> SwitcherState [arrowhead="tee"]
+	SwitcherState -> WindowInfoGroup [arrowhead="invodot"]
+	WindowInfoGroup -> WindowInfo [arrowhead="inv"]
+	
+	Switcher -> SwitcherWindow [arrowhead="invodot"]
+	SwitcherWindow -> SwitcherView [arrowhead="tee"]
+	SwitcherView -> WindowView [arrowhead="invodot"]
+	
+	Switcher -> WindowInfoGroupListPublisher [arrowhead="odot"]
+}
+
 ```
 
 ## `Switcher`

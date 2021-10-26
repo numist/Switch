@@ -6,13 +6,13 @@
 
 ### 0.0.10β parity
 
-* [ ] Window content rendering
+1. [ ] Window content rendering
 * [ ] Preferences
 	* [ ] Launch at login
 		* Probably copy whatever I was doing before (Preserve history??), but there's also [sindresorhus/LaunchAtLogin](https://github.com/sindresorhus/LaunchAtLogin/blob/master/before-after.md)
 * [x] Status bar item
 	* [ ] Snapshots/logging
-* [x] Sparkle
+* [x] Sparkle (ish)
 * [ ] Mouse/[scroll](https://github.com/numist/Switch/blob/develop/SwitchTests/SWScrollControlTests.m) support in switcher
 * [ ] Backport quirks tests
 	* [ ] [SWDashTests](https://github.com/numist/Switch/blob/develop/SwitchTests/SWDashTests.m)
@@ -33,6 +33,8 @@
 
 ## Future
 
-* [ ] Pasteboard history
 * [ ] Icons?
 * [ ] First launch experience?
+* [ ] [Feature parity with Witch](https://manytricks.com/osticket/kb/faq.php?id=96)?
+* [ ] Pasteboard history
+* [ ] Programmer's calculator
