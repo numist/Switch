@@ -4,6 +4,8 @@
 
 #import <Haxcessibility/HAXElement.h>
 
+#include <ApplicationServices/ApplicationServices.h>
+
 @interface HAXElement ()
 
 -(instancetype)initWithElementRef:(AXUIElementRef)elementRef __attribute__((nonnull(1)));

@@ -4,6 +4,8 @@
 
 #import <Haxcessibility/HAXElement.h>
 
+#import <CoreGraphics/CGWindow.h>
+
 @class HAXWindow;
 
 @interface HAXApplication : HAXElement
