@@ -26,8 +26,7 @@ class Switcher {
       guard let modifiers = self?.commonModifiers else { return event }
       if event.flags.isEmpty || !Keyboard.Modifiers(event.flags).isSuperset(of: modifiers) {
         DispatchQueue.main.async {
-          guard let self = self else { return }
-          assert(self.releaseTap != nil)
+          guard let self = self, self.releaseTap != nil else { return }
           self.state.hotKeyReleased()
           self.cleanUp()
         }
