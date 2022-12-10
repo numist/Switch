@@ -110,6 +110,10 @@ class SwitcherState: ObservableObject {
     }
   }
 
+  func setSelection(to window: WindowInfoGroup) {
+    setSelection(to: windows.firstIndex(of: window)!)
+  }
+
   func setSelection(to index: Int) {
     guard !_wantsRaiseOnWindowUpdate else { return }
 

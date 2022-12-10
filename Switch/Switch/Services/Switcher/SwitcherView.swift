@@ -45,6 +45,7 @@ private func scalingFactor(for count: Int, in geometry: GeometryProxy) -> CGFloa
 struct SwitcherView: View {
 
   @ObservedObject var state: SwitcherState
+  @State private var hoverLocation: CGPoint = .zero
   let displayID: CGDirectDisplayID?
 
   init(with state: SwitcherState, on displayID: CGDirectDisplayID? = nil) {
@@ -108,17 +109,20 @@ struct SwitcherView: View {
         // Window list
         ForEach(Array(state.windows.enumerated()), id: \.element) { index, window in
           WindowView(window: window)
-          // TODO(numist): onHover works:
-          //    too well (overrides initial selection without mouse movement)
-          //  but also:
-          //    not very well (sometimes requires click to function)
-          //    must be used before `.offset` or all hover events will come from the middle of the view
-          // Seems likely that manual implementation via event tap might be necessary to get desired behaviour
-//          .onHover { inside in
-//            if inside && state.selection != index {
-//              state.setSelection(to: index)
-//            }
-//          }
+          .onContinuousHover { phase in
+            // The selection state should only change when the mouse moves within a view
+            // This is important in case the Switcher happens to get invoked
+            // while the cursor is idling within the view's bounds
+            switch phase {
+            case .active(let location):
+              if hoverLocation != .zero && state.selection != index {
+                state.setSelection(to: window)
+              }
+              hoverLocation = location
+            case .ended:
+              hoverLocation = .zero
+            }
+          }
           .frame(
             width: pThumbSz * scale,
             height: pThumbSz * scale
