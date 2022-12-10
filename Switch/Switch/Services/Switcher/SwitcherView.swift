@@ -70,7 +70,7 @@ struct SwitcherView: View {
       width: pWidth(for: state.windows.count) * scale,
       height: pHeight * scale
     )
-    .animation(.default)
+    .animation(.default, value: state.windows)
   }
 
   private func selectionBox(at scale: CGFloat) -> some View {
@@ -91,7 +91,7 @@ struct SwitcherView: View {
     .offset(
       x: middleIndex(for: state.selection!) * scale * pItemSz
     )
-    .animation(.default)
+    .animation(.easeInOut.speed(2), value: state.selection)
   }
 
   var body: some View {
@@ -131,7 +131,7 @@ struct SwitcherView: View {
             x: middleIndex(for: index) * scale *
                (pThumbSz + pThumbPad + pSelThck + pSelPad)
           )
-          .animation(.default)
+          .animation(.default.speed(2), value: state.windows)
         }
       }
       .position(
